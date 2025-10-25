@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Minimal Camera Test</title>
+</head>
+<body>
+    <h1>Minimal Camera Test</h1>
+    <video id="video" width="640" height="480" controls autoplay playsinline muted style="background: black; border: 2px solid red;"></video>
+    <p id="status">Loading...</p>
+
+    <script>
+        const video = document.getElementById('video');
+        const status = document.getElementById('status');
+
+        console.log('Starting...');
+        status.textContent = 'Starting camera...';
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                console.log('Got stream:', stream);
+                status.textContent = 'Stream obtained, assigning to video...';
+
+                video.srcObject = stream;
+
+                console.log('Video srcObject set');
+                status.textContent = 'Waiting for video to load...';
+
+                return video.play();
+            })
+            .then(() => {
+                console.log('Video is playing!');
+                status.textContent = '✅ Video is playing!';
+                status.style.color = 'green';
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                status.textContent = '❌ Error: ' + err.message;
+                status.style.color = 'red';
+            });
+
+        // イベントリスナー
+        video.addEventListener('loadedmetadata', () => {
+            console.log('Metadata loaded:', video.videoWidth, 'x', video.videoHeight);
+        });
+
+        video.addEventListener('playing', () => {
+            console.log('Playing event fired');
+        });
+
+        video.addEventListener('error', (e) => {
+            console.error('Video error:', e);
+        });
+    </script>
+</body>
+</html>

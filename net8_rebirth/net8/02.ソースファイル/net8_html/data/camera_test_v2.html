@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Camera Test V2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #video {
+            border: 2px solid #333;
+            background: #000;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Camera Test V2</h1>
+
+    <video id="video" width="640" height="480" autoplay playsinline muted></video>
+
+    <div id="status" class="status info">Initializing...</div>
+    <div id="log" style="margin-top: 20px;"></div>
+
+    <button id="retryBtn" style="display:none; margin-top: 10px;">Retry Camera Access</button>
+
+    <script>
+        const video = document.getElementById('video');
+        const statusDiv = document.getElementById('status');
+        const logDiv = document.getElementById('log');
+        const retryBtn = document.getElementById('retryBtn');
+
+        function log(message, type = 'info') {
+            console.log(message);
+            const p = document.createElement('p');
+            p.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            p.style.margin = '5px 0';
+            logDiv.appendChild(p);
+        }
+
+        function updateStatus(message, className) {
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + className;
+        }
+
+        async function startCamera() {
+            try {
+                log('🔍 Requesting camera access...');
+                updateStatus('Requesting camera access...', 'info');
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+
+                log('✅ Camera stream obtained');
+
+                video.srcObject = stream;
+                log('📹 Stream assigned to video element');
+
+                // 明示的にplayを実行
+                await video.play();
+                log('▶️ Video playback started');
+
+                updateStatus('✅ Camera is working!', 'success');
+
+                // ストリーム情報をログ
+                const tracks = stream.getVideoTracks();
+                log(`📊 Video tracks: ${tracks.length}`);
+                tracks.forEach((track, i) => {
+                    const settings = track.getSettings();
+                    log(`Track ${i}: ${settings.width}x${settings.height} @ ${settings.frameRate}fps`);
+                });
+
+                // videoエレメントの状態をログ
+                video.addEventListener('loadedmetadata', () => {
+                    log(`🎬 Video dimensions: ${video.videoWidth}x${video.videoHeight}`);
+                });
+
+            } catch (err) {
+                log('❌ Error: ' + err.name + ' - ' + err.message, 'error');
+                updateStatus('❌ Camera access failed: ' + err.message, 'error');
+                retryBtn.style.display = 'block';
+                console.error('Full error:', err);
+            }
+        }
+
+        // デバイス一覧を表示
+        async function listDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                log('📱 Available devices:');
+                devices.forEach((device, i) => {
+                    if (device.kind === 'videoinput') {
+                        log(`  Camera ${i}: ${device.label || 'Unknown Camera'}`);
+                    }
+                });
+            } catch (err) {
+                log('❌ Error listing devices: ' + err.message);
+            }
+        }
+
+        retryBtn.addEventListener('click', () => {
+            retryBtn.style.display = 'none';
+            startCamera();
+        });
+
+        // 起動
+        log('🚀 Starting camera test...');
+        listDevices();
+        startCamera();
+    </script>
+</body>
+</html>

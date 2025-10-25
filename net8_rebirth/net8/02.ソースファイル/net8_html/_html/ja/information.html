@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - お知らせ一覧</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+
+		<h1 class="h3 text-center my-4">お知らせ一覧</h1>
+		
+		<div class="row" width="100%">
+			<div class="col-md-12"><hr class="info-hr"></div>
+			<!--if:{IS_DATA}-->
+			<!--loop:{LIST}-->
+			<div class="col-md-4 info-caption">{%NOTICE_DT%}<span class="info-badge-{%NOTICE_TYPE%} ml-4">{%NOTICE_TYPE_NAME%}</span></div>
+			<div class="col-md-8">
+				<!--if:{IS_LINK}--><a href="{%LINK_URL%}"{%OTHER_LINK%}><!--/if:{IS_LINK}-->
+				{%NOTICE_TITLE%}
+				<!--if:{IS_LINK}--></a><!--/if:{IS_LINK}-->
+				<!--if:{IS_CORNER}--> が追加されました<!--/if:{IS_CORNER}-->
+			</div>
+			<div class="col-md-12"><hr class="info-hr"></div>
+			<!--/loop:{LIST}-->
+			<!--/if:{IS_DATA}-->
+		</div>
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	
+	</body>
+</html>

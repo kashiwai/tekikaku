@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 購入履歴情報</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="M" value="">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-coins"></i> 購入履歴情報</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">&nbsp;<small class="text-muted">（完全一致　※0埋め不要）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ニックネーム</div>
+											<div>
+												<input type="text" class="form-control" name="S_NICKNAME" value="{%S_NICKNAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">購入受付日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_RECEPT_DT_FROM" value="{%S_RECEPT_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_RECEPT_DT_TO" value="{%S_RECEPT_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">購入日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_PURCHASE_DT_FROM" value="{%S_PURCHASE_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_PURCHASE_DT_TO" value="{%S_PURCHASE_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ステータス</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_STATUS" style="width:180px;">
+													{%SEL_STATUS%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">購入方法</div>
+											<div>
+												{%CHK_PURCHASE_TYPE%}
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">購入金額</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group">
+													<input type="text" class="form-control" name="S_AMOUNT_FROM" value="{%S_AMOUNT_FROM%}">
+													<div class="input-group-append">
+														<span class="input-group-text px-1">{%AMOUNTTYPE_12%}/{%AMOUNTTYPE_11%}</span>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group">
+													<input type="text" class="form-control" name="S_AMOUNT_TO" value="{%S_AMOUNT_TO%}">
+													<div class="input-group-append">
+														<span class="input-group-text px-1">{%AMOUNTTYPE_12%}/{%AMOUNTTYPE_11%}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">購入{%CURRENCY_1%}</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group">
+													<input type="text" class="form-control" name="S_POINT_FROM" value="{%S_POINT_FROM%}">
+													<div class="input-group-append">
+														<span class="input-group-text">{%CURRENCY_1%}</span>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group">
+													<input type="text" class="form-control" name="S_POINT_TO" value="{%S_POINT_TO%}">
+													<div class="input-group-append">
+														<span class="input-group-text">{%CURRENCY_1%}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<!--if:{PURCHASEHISTORY_DOWNLOAD}-->
+								<div>
+									<a href="javascript:void(0);" class="btn btn-warning" onClick="output();">ダウンロード</a>
+								</div>
+								<!--/if:{PURCHASEHISTORY_DOWNLOAD}-->
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th style="width:140px;">購入受付日時
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="recept_dt asc" onClick="reSort('recept_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="recept_dt desc" onClick="reSort('recept_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:140px;">購入日時
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="purchase_dt asc, recept_dt desc" onClick="reSort('purchase_dt asc, recept_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="purchase_dt desc, recept_dt desc" onClick="reSort('purchase_dt desc, recept_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">会員No
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="member_no asc, recept_dt desc" onClick="reSort('member_no asc, recept_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="member_no desc, recept_dt desc" onClick="reSort('member_no desc, recept_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>ニックネーム</th>
+											<th style="width:140px;">購入方法</th>
+											<th style="width:120px;">購入金額</th>
+											<th style="width:120px;">購入{%CURRENCY_1%}</th>
+											<th style="width:120px;">ステータス</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center">{%RECEPT_DT%}</td>
+											<td class="text-center">{%PURCHASE_DT%}</td>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetailMember('{%MEMBER_NO%}');">{%MEMBER_NO_PAD%}</a></td>
+											<td>{%NICKNAME%}
+												<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+												<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+											</td>
+											<td>{%DISP_PURCHASE_TYPE%}</td>
+											<td class="text-right">{%DISP_AMOUNT%} {%DISP_AMOUNT_CURRENCY%}</td>
+											<td class="text-right">{%DISP_POINT%}</td>
+											<td class="text-center">{%DISP_RESULT_STATUS%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_number("{%A0560%}", frm["S_MEMBER_NO"].value, false)) return false;
+				if (!chk_date("{%A0113%}", frm["S_RECEPT_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A0113%}", frm["S_RECEPT_DT_TO"].value, false)) return false;
+				if (frm["S_RECEPT_DT_FROM"].value.length > 0 && frm["S_RECEPT_DT_TO"].value.length > 0) {
+					if (!compare_date("{%A0114%}", frm["S_RECEPT_DT_FROM"].value, frm["S_RECEPT_DT_TO"].value)) return false;
+				}
+				if (!chk_date("{%A0115%}", frm["S_PURCHASE_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A0115%}", frm["S_PURCHASE_DT_TO"].value, false)) return false;
+				if (frm["S_PURCHASE_DT_FROM"].value.length > 0 && frm["S_PURCHASE_DT_TO"].value.length > 0) {
+					if (!compare_date("{%A0116%}", frm["S_PURCHASE_DT_FROM"].value, frm["S_PURCHASE_DT_TO"].value)) return false;
+				}
+				
+				if (!chk_number("{%A0110%}", frm["S_AMOUNT_FROM"].value, false)) return false;
+				if (!chk_number("{%A0110%}", frm["S_AMOUNT_TO"].value, false)) return false;
+				if (frm["S_AMOUNT_FROM"].value.length > 0 && frm["S_AMOUNT_TO"].value.length > 0) {
+					if (parseInt(frm["S_AMOUNT_FROM"].value, 10) > parseInt(frm["S_AMOUNT_TO"].value, 10)) {
+						chkAlert("{%A0117%}");
+						return false;
+					}
+				}
+				if (!chk_number("{%A0111%}", frm["S_POINT_FROM"].value, false)) return false;
+				if (!chk_number("{%A0111%}", frm["S_POINT_TO"].value, false)) return false;
+				if (frm["S_POINT_FROM"].value.length > 0 && frm["S_POINT_TO"].value.length > 0) {
+					if (parseInt(frm["S_POINT_FROM"].value, 10) > parseInt(frm["S_POINT_TO"].value, 10)) {
+						chkAlert("{%A0118%}");
+						return false;
+					}
+				}
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&SEQ=" + key.split('-')[0] + "&NO=" + key.split('-')[1], "admin_detail", 820, 900);
+			}
+			
+			// 会員詳細画面Open
+			function openDetailMember(key) {
+				win_open("member.php", "M=detail&NO=" + key, "admin_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			<!--if:{PURCHASEHISTORY_DOWNLOAD}-->
+			// CSV出力
+			function output() {
+				var frm = window.document.MAINFORM;
+				frm.reset();		// フォームリセット
+				frm["M"].value = "output";
+				frm.submit();
+				frm["M"].value = "";
+			}
+			<!--/if:{PURCHASEHISTORY_DOWNLOAD}-->
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

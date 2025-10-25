@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Application histry</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">Application history</h1>
+		<hr>
+		<div class="d-flex w-100 justify-content-end">
+			<div class="input-group input-group-sm w-auto mb-3">
+				<div class="input-group-prepend">
+					<label class="input-group-text" for="listType">Type</label>
+				</div>
+				<select class="custom-select" id="listType" name="TYPE">
+					{%SEL_TYPE%}
+				</select>
+				<div class="input-group-append">
+					<button id="typeselect" class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+				</div>
+			</div>
+		</div>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				There is no application history.
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>Name of Items</th>
+					<th>{%CURRENCY_3%}</th>
+					<th>Application Results</th>
+					<th>Date and Time of Applications</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="Name of Items" class="text-center">{%GOODS_NAME%}</td>
+					<td aria-label="{%CURRENCY_3%}" class="text-right">{%DRAW_POINT%} {%CURRENCY_3%}</td>
+					<td aria-label="Application Results" class="text-center">{%RESULT%}</td>
+					<td aria-label="Date and Time of Applications" class="text-center">{%REQUEST_DT%}</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}apply_history.html"-->
+	
+	</body>
+</html>

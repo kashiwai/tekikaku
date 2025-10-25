@@ -1,0 +1,1513 @@
+/****************************
+ プレイモニタ　横長バージョン
+***************************** */
+
+/*
+ Base
+***************************** */
+body {
+	padding-top: 54px;
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-webkit-touch-callout: none;
+	overflow-x: hidden;
+}
+
+@media (min-width: 992px) {
+	body {
+		padding-top: 56px;
+	}
+}
+
+button::-moz-focus-inner {
+	border-style: none;
+}
+
+
+/*
+ iOS ダブルタップによるズーム抑止
+ 2本指でのピンチ操作によるズームは制限しない
+***************************** */
+* {
+	touch-action: manipulation;
+}
+/*
+ Loader
+***************************** */
+#loading {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, .9);
+	color: #fff;
+	text-align: center;
+	vertical-align: middle;
+	overflow: hidden;
+	z-index: 5000;
+}
+#loading::-webkit-scrollbar {
+	display: none;
+}
+.loader,
+.loader:after {
+	border-radius: 50%;
+	width: 5em;
+	height: 5em;
+}
+.loader {
+	margin: 100px auto 50px;
+	font-size: 8px;
+	position: relative;
+	text-indent: -9999em;
+	border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+	border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+	border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+	border-left: 1.1em solid #ffffff;
+	-webkit-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-animation: load8 1.1s infinite linear;
+	animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes load8 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+#loading_pay {
+	display: none;
+}
+
+/*
+ playground
+***************************** */
+body.playground {
+	padding-top: 103px;
+	background-color: #0D0000;
+	color: #fff;
+}
+
+body.playground .fixed-top {
+	padding: 1rem 0;
+	height: 103px;
+	background: url("../img/bg_playground.png") #0D0000;
+}
+
+.machine-no {
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	display: inline-block;
+	padding: 4px 6px;
+	padding-bottom: 0;
+	min-width: 100px;
+	background-color: #2b3035;
+	border: 4px solid #212529;
+	border-radius: 4px;
+	color: #fff;
+}
+.machine-no div {
+	font-size: 1rem;
+}
+.machine-no span {
+	display: inline-block;
+	width: 100%;
+	font-size: 1.6rem;
+	text-align: right;
+}
+
+/* .game-situation-group-wrap {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	background: -webkit-radial-gradient(orange 60%, red);
+	background: -moz-radial-gradient(orange 60%, red);
+	background: radial-gradient(orange 60%, red);
+	border: 2px solid red;
+	box-shadow: 0px 0px 2px 2px rgba(255, 0, 0, 0.8);
+	padding: 2px;
+}
+.game-situation-group {
+	display: inline-block;
+	padding: 4px;
+	width: 100%;
+	background-color: #0D0000;
+} */
+.game-situation-group {
+	display: inline-block;
+	padding: 4px;
+	width: 100%;
+	background-color: #0D0000;
+	border: 2px solid red;
+}
+.game-situation {
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	margin: 0 5px;
+	display: inline-block;
+	min-width: 120px;
+}
+.game-situation div {
+	font-size: 1rem;
+	line-height: 1;
+	text-align: center;
+}
+.game-situation span {
+	display: inline-block;
+	width: 100%;
+	font-size: 2.2rem;
+	line-height: 1;
+	text-align: center;
+}
+.game-situation .situation-bb div,
+.game-situation .situation-rb div {
+	display: inline-block;
+	font-size: 1.6rem;
+}
+.game-situation .situation-bb span,
+.game-situation .situation-rb span {
+	width: 60px;
+	font-size: 1.6rem;
+	text-align: right;
+}
+.situation-bc {
+	color: #dc143c;
+}
+.situation-gc {
+	color: #00A83A;
+}
+/* .situation-bb {
+	color: #dc143c;
+}
+.situation-rb {
+	color: #ffa500;
+} */
+
+.txt-btn-group {
+}
+.txt-btn-group .num-unit {
+	display: inline-block;
+	padding: 2px 6px;
+	margin-left: -1px;
+	background-color: #0D0000;
+	border: 1px solid #007cc8;
+	font-family: 'Inter', sans-serif;
+	font-size: 1.2rem;
+	font-weight: 400;
+}
+.txt-btn-group .num-value {
+	font-family: 'Inter', sans-serif;
+	display: inline-block;
+	padding: 2px 4px;
+	width: 120px;
+	background-color: #0D0000;
+	border: 1px solid #007cc8;
+	font-size: 1.2rem;
+	font-weight: 400;
+	text-align: right;
+}
+.txt-btn-group button {
+	padding: 0;
+	width: 54px;
+	height: 35px;
+	background:none;
+	border:0;
+	cursor: pointer;
+	outline: none;
+}
+.txt-btn-group button img {
+	width: 54px;
+	height: 35px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+.txt-btn-group button:active img {
+	object-position: 0 100%;
+}
+
+.fixed-top .num-value {
+	margin-left: -1px;
+}
+
+.fixed-top .num-title {
+	display: inline-block;
+}
+
+.operation-right {
+	width: 50%;
+}
+
+.credit-area {
+	width: 180px;
+}
+
+.credit-area .credit-title {
+	display: block;
+	width: 155px;
+}
+
+.credit-area .credit-title img {
+	width: 100%;
+}
+
+.credit-area .num-value-wrap {
+	margin-top: 2px;
+	max-width: 180px;
+	padding: 1rem;
+	/* position: relative; */
+	background: linear-gradient(to bottom right, tomato, purple);
+	padding: 2px;
+}
+
+.credit-area .num-value {
+	padding: 4px 10px;
+	width: 100%;
+	background: #222;
+	/* border: 0; */
+	border-radius: 0;
+	font-size: 1.85rem;
+
+	margin-top: 2px;
+	border: 2px solid purple;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active,
+.btn-secondary:not(:disabled):not(.disabled):active,
+.show>.btn-secondary.dropdown-toggle {
+	background-color: #E95420;
+	border-color: #E95420;
+}
+
+/* リール・設定タブ */
+/* タブレット以下版 */
+.slidemenu-bg {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 1030;
+	background-color: rgba(51, 51, 51, 0.8);
+	display: none;
+	top: 0;
+	left: 0;
+}
+.btn-slidemenu-reel,
+.btn-slidemenu-set {
+	display: block;
+	position: fixed;
+	left: -4px;
+	right: auto;
+	padding: 10px 0;
+	width: 55px;
+	transition: all 0.2s;
+	transform: translate(0);
+	background-color: #1b1e21;
+	border: 4px solid #343a40;
+	border-left: 0;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 1rem;
+	line-height: 1;
+	text-align: center;
+	z-index: 1040;
+	cursor: pointer;
+}
+.btn-slidemenu-reel {
+	top: 110px;
+}
+.btn-slidemenu-reel i {
+	transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+}
+.btn-slidemenu-set {
+	top: 165px;
+}
+.btn-slidemenu-reel.open,
+.btn-slidemenu-set.open {
+	transform: translate(326px);
+}
+.btn-slidemenu-reel span,
+.btn-slidemenu-set span {
+	font-size: 9px;
+}
+
+.slide-reel,
+.slide-setting {
+	padding: 100px 20px 20px;
+	width: 330px;
+	height: 100%;
+	transition: all 0.2s;
+	transform: translate(-330px);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1500;
+	background-color: #1b1e21;
+}
+.slide-reel {
+	text-align: center;
+}
+.slide-setting {
+}
+.slide-reel.open,
+.slide-setting.open {
+	transform: translate(0);
+}
+
+/* PC版 */
+.playground .nav-tabs {
+	border-bottom: 4px solid #343a40;
+}
+.playground .nav-tabs .nav-item {
+	margin-bottom: -4px;
+}
+.playground .nav-tabs .nav-item .nav-link {
+	color: #fff;
+}
+.playground .nav-tabs .nav-link:hover {
+	background-color: #1b1e21;
+	border: 1px solid #343a40;
+}
+.playground .nav-tabs .nav-item.show .nav-link,
+.playground .nav-tabs .nav-link.active {
+	background-color: #1b1e21;
+	border: 4px solid #343a40;
+	border-bottom: 0;
+}
+.playground .nav-tabs .nav-item.show .nav-link:hover,
+.playground .nav-tabs .nav-link.active:hover {
+	margin: 0;
+}
+.playground .tab-content {
+	padding: 20px;
+	background-color: #1b1e21;
+	border: 4px solid #343a40;
+	border-top-width: 0;
+	border-radius: 4px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+.playground .img-reel {
+	width: 100%;
+	max-width: 200px;
+}
+
+.play-container {
+	margin-bottom: 50px;
+}
+
+/* プレイエリア */
+.playing-screen {
+	position: relative;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+#video {
+
+}
+.portrait {
+	top: 100px;
+	left: -140px;
+	height: 400px;
+	transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+}
+
+.controls-area {
+	margin: 0 auto;
+	max-width: 650px;
+}
+
+.playing-btn-top-wrap {
+	width: 100%;
+	max-width: 650px;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	position: relative;
+	background: linear-gradient(to right, orangered, tomato, gold, tomato);
+	padding: 2px 0;
+}
+
+.playing-btn-top {
+	padding: 15px 15px;
+	background: url("../img/bg_playground.png") #0D0000;
+}
+
+.playing-btn {
+	padding: 10px 15px;
+	width: 100%;
+}
+
+.panel-menu-btn {
+	display: inline-block;
+	padding: 6px;
+}
+
+/* 立体ボタンベース */
+.btn-pressable {
+	display: inline-block;
+	margin: 0;
+	padding: 0.6em 1.2em;
+	background: transparent;
+	background-color: #E6EAEF;
+	background-image: linear-gradient(0deg, #cdd5df, #E6EAEF, #f6f7f9);
+	border-width: 0;
+	border-style: solid;
+	border-radius: 10% / 50%;
+	color: #252730;
+	font-size: 1.2rem;
+	font-weight: bold;
+	line-height: 1.42;
+	vertical-align: bottom;
+	text-decoration: none;
+	box-shadow: 0 2px 0 0 #a8b6c7,
+				0 1.31em 2em 0 rgba(255, 255, 255, 0) inset,
+				0 2px 1px 0 rgba(255, 255, 255, 0.1) inset,
+				0 2px 3px 1px rgba(0, 0, 0, 0.4),
+				/* 0 0 12px 1px rgba(230, 234, 239, 0.5), */
+				0 2px 1px -1px rgba(0, 0, 0, 0) inset;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	transition: box-shadow 0.1s, transform 0.1s, color 0.1s;
+	cursor: pointer;
+	user-select: none;
+}
+
+/* Reel Start */
+.btn-pressable.reel-start {
+	padding: 0;
+	width: 72px;
+	height: 70px;
+	line-height: 70px;
+	background-color: #2c2c2c;
+	background-image: linear-gradient(0deg, #242424, #2c2c2c, #393939);
+	/* border: 1px solid #fff; */
+	border-radius: 50%;
+	box-shadow: 0 2px 0 0 #000,
+				0 0.8em 2em 0 rgba(255, 255, 255, 0) inset,
+				0 2px 1px 0 rgba(255, 255, 255, 0.1) inset,
+				0 2px 3px 1px rgba(0, 0, 0, 0.4),
+				0 2px 1px -1px rgba(0, 0, 0, 0) inset;
+	color: #fff;
+	font-size: 1rem;
+	text-align: center;
+}
+
+/* Reel Start hover,active */
+.btn-pressable.reel-start:hover {
+	background-color: #2c2c2c;
+	background-image: linear-gradient(0deg, #242424, #2c2c2c, #393939);
+	color: #fff;
+	box-shadow: 0 2px 0 0 #000,
+				0 1.31em 1em 0 rgba(255, 255, 255, 0.05) inset,
+				0 2px 1px 0 rgba(255, 255, 255, 0.15) inset,
+				0 2px 3px 1px rgba(0, 0, 0, 0.6),
+				/* 0 0 10px 1px rgba(230, 234, 239, 0.4), */
+				0 2px 1px -1px rgba(0, 0, 0, 0) inset;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.btn-pressable.reel-start:active {
+	background-color: #232323;
+	background-image: linear-gradient(180deg, #242424, #2c2c2c);
+	color: #000;
+	box-shadow: 0 0px 0 0 #000,
+				0 1.31em 1em 0 rgba(255, 255, 255, 0.05) inset,
+				0 2px 2px 0 rgba(255, 255, 255, 0) inset,
+				0 1px 4px 0px rgba(0, 0, 0, 0),
+				/* 0 0 10px 1px rgba(230, 234, 239, 0.1), */
+				0 2px 2px -1px rgba(0, 0, 0, 0.7) inset;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.reel-operation-left {
+}
+
+.reel-operation-right {
+	padding: 12px 50px;
+	width: 460px;
+	height: 125px;
+	background: url("../img/bg_reel_stop.png") no-repeat;
+	background-size: 100% 125px;
+	/* background-size: contain; */
+}
+
+/* MAXBETボタン */
+button.maxbet {
+	padding: 0;
+	width: 120px;
+	height: 89px;
+	background:none;
+	border:0;
+}
+button.maxbet img {
+	width: 120px;
+	height: 89px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.maxbet:active img {
+	object-position: 0 100%;
+}
+
+/* auto play ボタン */
+button.btn-autoplay {
+	padding: 0;
+	width: 91px;
+	height: 91px;
+	background:none;
+	border:0;
+	cursor: pointer;
+	outline: none;
+}
+button.btn-autoplay img {
+	width: 91px;
+	height: 91px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.btn-autoplay:active img {
+	object-position: 0 33.3%;
+}
+button.btn-autoplay.auto-on img {
+	object-position: 0 66.6%;
+}
+button.btn-autoplay.auto-on:active img {
+	object-position: 0 100%;
+}
+
+/* Chanceボタン */
+button.chance {
+	padding: 0;
+	width: 150px;
+	height: 91px;
+	background:none;
+	border:0;
+}
+button.chance img {
+	width: 150px;
+	height: 91px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.chance:active img {
+	object-position: 0 100%;
+}
+
+/* Pushボタン(オートプレイ時のチャンスボタン) */
+button.autopush {
+	padding: 0;
+	width: 150px;
+	height: 91px;
+	background:none;
+	border:0;
+}
+button.autopush img {
+	width: 150px;
+	height: 91px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.autopush:active img {
+	object-position: 0 100%;
+}
+
+/* 縦並びボタン */
+.btn-vertical-arr button {
+	cursor: pointer;
+	outline: none;
+}
+
+/* +(plus)ボタン */
+button.credit-plus {
+	padding: 0;
+	width: 100px;
+	height: 42px;
+	background:none;
+	border:0;
+}
+button.credit-plus img {
+	width: 100px;
+	height: 42px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.credit-plus:active img {
+	object-position: 0 100%;
+}
+
+/* payボタン */
+button.payoff {
+	padding: 0;
+	width: 100px;
+	height: 42px;
+	background:none;
+	border:0;
+}
+button.payoff img {
+	width: 100px;
+	height: 42px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.payoff:active img {
+	object-position: 0 100%;
+}
+
+/* MAXBET&スタート */
+button.maxstart {
+	padding: 0;
+	width: 140px;
+	height: 104px;
+	background:none;
+	border:0;
+	cursor: pointer;
+	outline: none;
+}
+button.maxstart img {
+	width: 140px;
+	height: 104px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.maxstart:active img {
+	object-position: 0 99%;
+}
+
+/* リールストップ */
+button.reel-stop,
+button.reel-stop-topush {
+	padding: 0;
+	width: 100px;
+	height: 100px;
+	background:none;
+	border:0;
+}
+button.reel-stop-topush img,
+button.reel-stop img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.reel-stop-topush:active img {
+	object-position: 0 100%;
+}
+button.reel-stop img {
+	object-position: 0 100%;
+}
+/* button.reel-stop:active img {
+	object-position: 0 100%;
+} */
+
+/* オートプレイ スタート・ストップ */
+/* button.reel-start.autoplay-ss {
+	padding: 0;
+	width: 205px;
+	height: 59px;
+	background:none;
+	border:0;
+	cursor: pointer;
+	outline: none;
+}
+button.reel-start.autoplay-ss img {
+	width: 205px;
+	height: 59px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.reel-start.autoplay-ss:active img {
+	object-position: 0 33.3%;
+} */
+
+button.autoplay-ss {
+	padding: 0;
+	width: 205px;
+	height: 59px;
+	background:none;
+	border:0;
+	cursor: pointer;
+	outline: none;
+}
+button.autoplay-ss img {
+	width: 205px;
+	height: 59px;
+	object-fit: cover;
+	object-position: 0 0;
+}
+button.autoplay-ss.autoplay-off:not(.autoplay-wait) img {
+	object-position: 0 0;
+}
+button.autoplay-ss.autoplay-off:not(.autoplay-wait):active img {
+	object-position: 0 25%;
+}
+button.autoplay-ss.autoplay-on:not(.autoplay-wait) img {
+	object-position: 0 50%;
+}
+button.autoplay-ss.autoplay-on:not(.autoplay-wait):active img {
+	object-position: 0 75%;
+}
+button.autoplay-ss.autoplay-wait img {
+	object-position: 0 100%;
+}
+
+/* MAX+ ボタン */
+.btn-pressable.maxplus {
+	padding: 0.6em 0.55em;
+}
+
+/* PUSH,TRIGGER */
+.btn-pressable.push,
+.btn-pressable.trigger {
+	padding: 0;
+	width: 80px;
+	height: 50px;
+	text-align: center;
+}
+.btn-pressable.push::before {
+	content: "";
+	display: inline-block;
+	width: 60px;
+	height: 40px;
+	margin: 12px 0 0;
+	background: url("../img/push.png") no-repeat;
+	background-size: contain;
+	vertical-align: middle;
+}
+.btn-pressable.trigger::before {
+	content: "";
+	display: inline-block;
+	width: 60px;
+	height: 40px;
+	margin: 12px 0 0;
+	background: url("../img/trigger.png") no-repeat;
+	background-size: contain;
+	vertical-align: middle;
+}
+
+/* Sound */
+.btn-pressable.sound-on,
+.btn-pressable.sound-off {
+	padding: 0;
+	width: 80px;
+	height: 50px;
+	text-align: center;
+}
+.btn-pressable.sound-on::before {
+	content: "\f028";
+	display: inline-block;
+	font-family: "Font Awesome 5 Free";
+	margin: 8px 0 0;
+	color: #0984ff;
+	font-size: 1.6rem;
+}
+.btn-pressable.sound-off::before {
+	content: "\f6a9";
+	display: inline-block;
+	font-family: "Font Awesome 5 Free";
+	margin: 8px 0 0;
+	color: #808080;
+	font-size: 1.6rem;
+}
+/* Sound(右上固定用) */
+.btn-pressable.sound-on.sound-tr,
+.btn-pressable.sound-off.sound-tr {
+	position: fixed;
+	top: 120px;
+	right: 15px;
+	width: 45px;
+	height: 45px;
+	border-radius: 45px;
+	z-index: 100;
+}
+.btn-pressable.sound-on.sound-tr::before,
+.btn-pressable.sound-off.sound-tr::before {
+	margin: 7px 0 0;
+	font-size: 1.4rem;
+}
+
+/* ベース hover,active */
+.btn-pressable:hover {
+	border-color: transparent;
+	color: #252730;
+	text-decoration: none;
+	box-shadow: 0 2px 0 0 #a8b6c7,
+				0 1.31em 1em 0 rgba(255, 255, 255, 0.05) inset,
+				0 2px 1px 0 rgba(255, 255, 255, 0.15) inset,
+				0 2px 3px 1px rgba(0, 0, 0, 0.6),
+				/* 0 0 10px 1px rgba(230, 234, 239, 0.4), */
+				0 2px 1px -1px rgba(0, 0, 0, 0) inset;
+}
+.btn-pressable:active {
+	background-color: #d6dde5;
+	background-image: linear-gradient(180deg, #c7d0db, #dae0e7);
+	color: #a8b6c7;
+	box-shadow: 0 0px 0 0 #98a9bd,
+				0 1.31em 1em 0 rgba(255, 255, 255, 0.05) inset,
+				0 2px 2px 0 rgba(255, 255, 255, 0) inset,
+				0 1px 4px 0px rgba(0, 0, 0, 0),
+				0 0 10px 1px rgba(230, 234, 239, 0.1),
+				0 2px 2px -1px rgba(0, 0, 0, 0.7) inset;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+	transition: 0s;
+	transform: translateY(2px);
+}
+
+/* PUSH hover,active */
+.btn-pressable.push:hover {
+	box-shadow: 0 2px 0 0 #a8b6c7,
+				0 1.31em 1em 0 rgba(255, 255, 255, 0.05) inset,
+				0 2px 1px 0 rgba(255, 255, 255, 0.15) inset,
+				0 2px 3px 1px rgba(0, 0, 0, 0.6),
+				0 0 10px 1px rgba(230, 234, 239, 0.4),
+				0 2px 1px -1px rgba(0, 0, 0, 0) inset;
+}
+.btn-pressable.push:active {
+	box-shadow: 0 0px 0 0 #98a9bd,
+				0 1.31em 1em 0 rgba(255, 255, 255, 0.05) inset,
+				0 2px 2px 0 rgba(255, 255, 255, 0) inset,
+				0 1px 4px 0px rgba(0, 0, 0, 0),
+				0 0 10px 1px rgba(230, 234, 239, 0.1),
+				0 2px 2px -1px rgba(0, 0, 0, 0.7) inset;
+}
+
+/* AUTOPLAY Bit */
+.auto-bit .form-control {
+	font-family: 'Inter', sans-serif;
+	background-color: #0D0000;
+	border: 1px solid #007cc8;
+	color: #fff;
+	font-weight: 400;
+	text-align: right;
+}
+.auto-bit .input-group-prepend .input-group-text,
+.auto-bit .input-group-append .input-group-text {
+	font-family: 'Inter', sans-serif;
+	padding: .375rem;
+	background-color: #0D0000;
+	border: 1px solid #007cc8;
+	color: #fff;
+	font-weight: 400;
+}
+.auto-bit .input-group-append .input-group-text {
+	border-radius: 0;
+}
+.auto-bit .input-group-prepend .input-group-text {
+	background: #00a0df;
+	background: -moz-linear-gradient( #007ac6 0%, #007ac6 52%, #00a5e2 71%, #00a0df 90%, #00a0df 100%);
+	background: -webkit-gradient(linear, left top, left bottom, from(#007ac6), color-stop(52%, #007ac6), color-stop(71%, #00a5e2), color-stop(90%, #00a0df), to(#00a0df));
+	background: -webkit-linear-gradient( #007ac6 0%, #007ac6 52%, #00a5e2 71%, #00a0df 90%, #00a0df 100%);
+	background: -o-linear-gradient( #007ac6 0%, #007ac6 52%, #00a5e2 71%, #00a0df 90%, #00a0df 100%);
+	background: linear-gradient( #007ac6 0%, #007ac6 52%, #00a5e2 71%, #00a0df 90%, #00a0df 100%);
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}
+
+/* form */
+#play-auto .form-group {
+	margin-bottom: 0;
+	max-width: 300px;
+}
+#play-auto .form-group input[type="text"],
+#play-auto .form-group input[type="tel"] {
+	font-family: 'Inter', sans-serif;
+	background-color: #2b3035;
+	border: 4px solid #212529;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 17px;
+	/* font-size: 1.2rem; */
+	text-align: right;
+}
+
+/* modal */
+.playground .modal {
+	color: #000;
+}
+.playground .modal .btn-primary,
+.playground .modal .btn-primary:hover,
+.playground .modal .btn-primary:active {
+	color: #fff;
+	background-color: #E95420;
+	border-color: #E95420;
+}
+
+/* エラー表示 */
+.playground .card-errmsg {
+	margin-bottom: 50px;
+	background-color: #32383e;
+	border: 1px solid #ee5f5b;
+}
+.playground .card-errmsg .card-title,
+.playground .card-errmsg .card-text {
+	color: #ee5f5b;
+}
+
+/* アニメ表示追加分 */
+#creditbox {
+	position: relative;
+}
+#animeField {
+	position: absolute;
+}
+#animeNumber {
+	position: absolute;
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	font-size: 1.2rem;
+	text-align: right;
+	font-weight: 400;
+	line-height: 1.5;
+	opacity: 0;
+}
+
+
+@media (max-width: 767px) {
+	body.playground {
+		padding-top: 137px;
+	}
+
+	body.playground .fixed-top {
+		padding: 0.5rem 0;
+		height: auto;
+	}
+
+	.playground .play-container.container {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	/* プレイエリア */
+	.playing-screen{
+		/* height: 400px; */
+	}
+	#video {
+	}
+	.portrait {
+		top: 0px;
+		left: 0px;
+		height: 375px;
+		transform: rotate(-90deg);
+		-webkit-transform: rotate(-90deg);
+	}
+
+	/* ヘッダー情報表示部 */
+	.machine-no {
+		width: 70px;
+		border: 2px solid #212529;
+	}
+	.machine-no div {
+		font-size: 0.8rem;
+	}
+	.machine-no span {
+		font-size: 1.2rem;
+	}
+
+	.fixed-top .txt-btn-group {
+		margin-bottom: 10px;
+	}
+
+	.btn-slidemenu-reel {
+		top: 140px;
+	}
+	.btn-slidemenu-set {
+		top: 196px;
+	}
+
+	/* プレイボタン類 */
+	.playground .controls-area {
+		/* max-width: 450px; */
+		max-width: 100%;
+	}
+
+	.playing-btn {
+		text-align: center;
+	}
+
+	#play-auto .form-group {
+		max-width: 280px;
+	}
+	#play-auto .form-group input[type="text"],
+	#play-auto .form-group input[type="tel"] {
+		padding: 2px;
+		width: 70px;
+		/* width: 60px; */
+		font-size: 17px;
+		/* font-size: 0.9rem */
+	}
+	#play-auto .form-group .col-form-label {
+		font-size: 0.8rem;
+		text-align: left;
+	}
+
+	.btn-pressable.sound-on.sound-tr,
+	.btn-pressable.sound-off.sound-tr {
+		top: 145px;
+	}
+
+	/* 画像ボタン版 */
+	
+	.playing-btn-top-wrap {
+		max-width: 100%;
+	}
+	.playing-btn-top {
+		padding: 10px 20px;
+	}
+
+	.credit-area .num-value-wrap {
+		max-width: 150px;
+		padding: 1px;
+	}
+
+	.credit-area .num-value {
+		padding: 0 6px;
+		font-size: 1.7rem;
+	}
+
+	.reel-operation-right {
+		padding: 0 30px;
+		width: 400px;
+	}
+
+	/* MAXBETボタン */
+	button.maxbet,
+	button.maxbet img {
+		width: 100px;
+		height: 74px;
+	}
+
+	/* Chanceボタン */
+	button.chance,
+	button.chance img {
+		width: 121px;
+		height: 73px;
+	}
+
+	/* Pushボタン(オートプレイ時のチャンスボタン) */
+	button.autopush,
+	button.autopush img {
+		width: 121px;
+		height: 73px;
+	}
+
+	/* autoplayボタン */
+	button.btn-autoplay,
+	button.btn-autoplay img {
+		width: 73px;
+		height: 73px;
+	}
+
+	/* +(plus)ボタン */
+	button.credit-plus,
+	button.credit-plus img {
+		width: 85px;
+		height: 36px;
+	}
+
+	/* payボタン */
+	button.payoff,
+	button.payoff img {
+		width: 85px;
+		height: 36px;
+	}
+
+	/* MAXBET&リールスタート */
+	button.maxstart,
+	button.maxstart img {
+		width: 110px;
+		height: 81px;
+	}
+
+	/* リールストップ */
+	button.reel-stop,
+	button.reel-stop img,
+	button.reel-stop-topush,
+	button.reel-stop-topush img {
+		width: 80px;
+		height: 80px;
+	}
+
+	/* オートプレイ スタート・ストップ */
+	button.autoplay-ss.autoplay-off,
+	button.autoplay-ss.autoplay-off img,
+	button.autoplay-ss.autoplay-on,
+	button.autoplay-ss.autoplay-on img {
+		width: 180px;
+		height: 52px;
+	}
+
+	.auto-bit {
+		width: 80%;
+	}
+}
+
+@media (max-width: 470px) {
+	body.playground {
+		padding-top: 130px;
+	}
+
+	/* プレイエリア */
+	.playing-screen.landscape {
+		/* height: 280px; */
+	}
+	.playing-screen.portrait{
+		height: 380px;
+	}
+	#video.portrait {
+		top: 0px;
+		left: 0px;
+		height: 375px;
+		transform: rotate(-90deg);
+		-webkit-transform: rotate(-90deg);
+	}
+
+	/* ヘッダー情報表示部 */
+	.fixed-top .container .row {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.machine-no {
+		display: none;
+	}
+
+	.game-situation {
+		min-width: 100px;
+	}
+	.game-situation div {
+		font-size: 1rem;
+	}
+	.game-situation span {
+		font-size: 2rem;
+	}
+	.game-situation .situation-bb div,
+	.game-situation .situation-rb div {
+		font-size: 1.4rem;
+	}
+	.game-situation .situation-bb span,
+	.game-situation .situation-rb span {
+		font-size: 1.4rem;
+	}
+
+	/* 設定タブ */
+	.btn-slidemenu-reel,
+	.btn-slidemenu-set {
+		padding: 14px 5px;
+		width: 50px;
+		font-size: 0.8rem;
+	}
+	.btn-slidemenu-reel {
+		top: 140px;
+	}
+	.btn-slidemenu-set {
+		top: 196px;
+	}
+	.btn-slidemenu-reel.open,
+	.btn-slidemenu-set.open {
+		transform: translate(276px);
+	}
+	.slide-reel,
+	.slide-setting {
+		padding: 50px 20px 20px;
+		width: 280px;
+		transform: translate(-280px);
+	}
+
+	/* プレイボタン類 */
+	.controls-area {
+		max-width: 100%;
+	}
+
+	.playing-btn {
+		text-align: center;
+	}
+
+	.btn-pressable.sound-on.sound-tr,
+	.btn-pressable.sound-off.sound-tr {
+		top: 145px;
+	}
+
+	#play-auto .form-group {
+		max-width: 280px;
+	}
+	#play-auto .form-group input[type="text"],
+	#play-auto .form-group input[type="tel"] {
+		padding: 2px;
+		width: 70px;
+		/* width: 60px; */
+		font-size: 17px;
+		/* font-size: 0.8rem */
+	}
+	#play-auto .form-group .col-form-label {
+		font-size: 0.8rem;
+		text-align: left;
+	}
+
+	/* 画像ボタン版 */
+	.playing-btn-top {
+		padding: 10px;
+	}
+
+	.credit-area {
+		width: 150px;
+	}
+
+	.credit-area .credit-title {
+		width: 100px;
+	}
+
+	.credit-area .num-value-wrap {
+		max-width: 150px;
+		padding: 1px;
+	}
+
+	.credit-area .num-value {
+		padding: 0 6px;
+		font-size: 1.3rem;
+	}
+
+	.reel-operation-right {
+		padding: 0 35px;
+		width: 75%;
+		max-width: 300px;
+		max-height: 80px;
+		background-size: 100% 80px;
+	}
+
+	/* MAXBETボタン */
+	button.maxbet,
+	button.maxbet img {
+		width: 75px;
+		height: 56px;
+	}
+
+	/* Chanceボタン */
+	button.chance,
+	button.chance img {
+		width: 101px;
+		height: 61px;
+	}
+
+	/* Pushボタン(オートプレイ時のチャンスボタン) */
+	button.autopush,
+	button.autopush img {
+		width: 101px;
+		height: 61px;
+	}
+
+	/* autoplayボタン */
+	button.btn-autoplay,
+	button.btn-autoplay img {
+		width: 60px;
+		height: 60px;
+	}
+
+	/* +(plus)ボタン */
+	button.credit-plus,
+	button.credit-plus img {
+		width: 65px;
+		height: 27px;
+	}
+
+	/* payボタン */
+	button.payoff,
+	button.payoff img {
+		width: 65px;
+		height: 27px;
+	}
+
+	/* MAXBET&リールスタート */
+	button.maxstart,
+	button.maxstart img {
+		width: 101px;
+		height: 75px;
+	}
+
+	/* リールストップ */
+	button.reel-stop,
+	button.reel-stop img,
+	button.reel-stop-topush,
+	button.reel-stop-topush img {
+		width: 55px;
+		height: 55px;
+	}
+}
+
+@media (max-width: 375px) {
+	body.playground {
+		padding-top: 124px;
+	}
+
+	.game-situation {
+		min-width: 85px;
+	}
+	.game-situation div {
+		font-size: 0.9rem;
+	}
+	.game-situation span {
+		font-size: 1.8rem;
+	}
+	.game-situation .situation-bb div,
+	.game-situation .situation-rb div {
+		font-size: 1.2rem;
+	}
+	.game-situation .situation-bb span,
+	.game-situation .situation-rb span {
+		width: 50px;
+		font-size: 1.2rem;
+	}
+	.reel-operation-right {
+		margin-top: 2px;
+		max-height: 70px;
+		padding: 0 25px;
+		background-size: 100% 70px;
+	}
+
+	/* Chanceボタン */
+	button.chance,
+	button.chance img {
+		width: 94px;
+		height: 57px;
+	}
+
+	/* Pushボタン(オートプレイ時のチャンスボタン) */
+	button.autopush,
+	button.autopush img {
+		width: 94px;
+		height: 57px;
+	}
+
+	/* autoplayボタン */
+	button.btn-autoplay,
+	button.btn-autoplay img {
+		width: 56px;
+		height: 56px;
+	}
+
+	/* MAXBET&リールスタート */
+	button.maxstart,
+	button.maxstart img {
+		width: 92px;
+		height: 68px;
+	}
+}
+
+.sendBtn, #autoplay {
+	cursor: pointer;
+	outline: none;
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-webkit-touch-callout: none;
+}
+
+#video {
+	position: relative;
+	z-index: -10;
+}
+
+#consolelog {
+	position: absolute;
+	background-color: rgba(64,64,64,0.7);
+	z-index: 300;
+	top: 0px;
+	width: 100%;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 1.1;
+	overflow-y: scroll;
+	display: none;
+}
+#consolelog::-webkit-scrollbar {
+	display: none;
+}
+.countdown-container {
+	position: absolute;
+	top: 0px;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+	z-index: 305;
+	background-color: translate;
+	width: 100%;
+	font-family: 'Inter', sans-serif;
+	font-size: 1.2rem;
+	font-weight: 400;
+	text-align: center;
+}
+.countdown-container.warning{
+	color: #f00;
+}
+.marquee-container {
+	position: absolute;
+	bottom: 5px;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+	z-index: 304;
+	background-color: translate;
+}
+.marquee-container > .message {
+	animation-name: marquee;
+	animation-timing-function: linear;
+	animation-duration: 8s;
+	animation-iteration-count: 5;
+
+	display: inline-block;
+	white-space:nowrap;
+	margin: 5px;
+	padding-left: 100%;
+	z-index: 306;
+}
+.marquee-container.on-message {
+	background-color: rgba(0,0,0,0.8);
+	color: #fff;
+}
+
+@keyframes marquee {
+	from { transform: translate(0); }
+	to { transform: translate(-100%); }
+}
+
+.black {
+	border-top:4px solid black;
+}
+
+/* loading */
+/* #loading {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #24282d;
+	color: #fff;
+	z-index: 5000;
+}
+#loading::-webkit-scrollbar {
+  display: none;
+}
+.loading_message {
+	text-align: center;
+	width: 300px;
+	height: 200px;
+	margin: auto;
+} */

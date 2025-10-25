@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - プレイ履歴</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="M" value="">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-history"></i> プレイ履歴</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">&nbsp;<small class="text-muted">（完全一致　※0詰め不要）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ニックネーム</div>
+											<div>
+												<input type="text" class="form-control" name="S_NICKNAME" value="{%S_NICKNAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">実機</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_MACHINE_NO">
+													{%SEL_MACHINE_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">プレイ日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_START_DT_FROM" value="{%S_START_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_START_DT_TO" value="{%S_START_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<!--if:{MEMBERPLAYHISTORY_DOWNLOAD}-->
+								<div>
+									<a href="javascript:void(0);" class="btn btn-warning" onClick="output();">ダウンロード</a>
+								</div>
+								<!--/if:{MEMBERPLAYHISTORY_DOWNLOAD}-->
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0">
+									<thead>
+										<tr>
+											<th rowspan="2" style="width:140px;">
+												開始日時<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="start_dt asc" onClick="reSort('start_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="start_dt desc" onClick="reSort('start_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th rowspan="2" style="width:140px;">
+												終了日時<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="end_dt asc" onClick="reSort('end_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="end_dt desc" onClick="reSort('end_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th rowspan="2" style="width:70px;">実機No</th>
+											<th rowspan="2">機種名</th>
+											<th rowspan="2" style="width:70px;">会員No<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="member_no asc, start_dt desc" onClick="reSort('member_no asc, start_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="member_no desc, start_dt desc" onClick="reSort('member_no desc, start_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th rowspan="2">ニックネーム</th>
+											<th rowspan="2" style="width:70px;">{%CURRENCY_1%}<br />消費</th>
+											<th colspan="3">{%CURRENCY_2%}</th>
+											<th rowspan="2" style="width:70px;">{%CURRENCY_3%}<br />払出</th>
+											<th rowspan="2" style="width:70px;">期限付<br />{%CURRENCY_1%}失効</th>
+											<th rowspan="2" style="width:70px;">ゲーム<br />数</th>
+											<th rowspan="2" style="width:50px;">BB</th>
+											<th rowspan="2" style="width:50px;">RB</th>
+											<th rowspan="2" style="width:65px;">精算<br />種別</th>
+										</tr>
+										<tr>
+											<th style="width:70px;">消費</th>
+											<th style="width:70px;">払出</th>
+											<th style="width:70px;">差分</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center">
+												{%START_DT%}
+											</td>
+											<td class="text-center">
+												{%END_DT%}
+											</td>
+											<td class="text-center">
+												<!--if:{VALID_MACHINE}--><a href="javascript:void(0);" onClick="openDetailMachine('{%MACHINE_NO%}');"><!--/if:{VALID_MACHINE}-->{%MACHINE_NO_PAD%}<!--if:{VALID_MACHINE}--></a><!--/if:{VALID_MACHINE}-->
+											</td>
+											<td>
+												<!--if:{VALID_MODEL}--><a href="javascript:void(0);" onClick="openDetailModel('{%MODEL_NO%}');"><!--/if:{VALID_MODEL}-->{%MODEL_NAME%}<!--if:{VALID_MODEL}--></a><!--/if:{VALID_MODEL}-->
+											</td>
+											<td class="text-center">
+												<a href="javascript:void(0);" onClick="openDetailMember('{%MEMBER_NO%}');">{%MEMBER_NO_PAD%}</a>
+											</td>
+											<td>{%NICKNAME%}
+												<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+												<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+											</td>
+											<td aria-label="LP消費" class="text-right">{%IN_POINT%}</td>
+											<td aria-label="メダル消費" class="text-right">{%IN_CREDIT%}</td>
+											<td aria-label="メダル払出" class="text-right">{%OUT_CREDIT%}</td>
+											<td aria-label="メダル差分" class="text-right">{%CREDIT_DIFFERENCE%}</td>
+											<td aria-label="払出" class="text-right">{%OUT_DRAW_POINT%}</td>
+											<td aria-label="失効" class="text-right">{%LOST_POINT%}</td>
+											<td class="text-right">{%PLAY_COUNT%}</td>
+											<td class="text-right">{%BB_COUNT%}</td>
+											<td class="text-right">{%RB_COUNT%}</td>
+											<td class="text-center">{%OUT_ACTION_TYPE%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_number("{%A0560%}", frm["S_MEMBER_NO"].value, false)) return false;
+				if (!chk_date("{%A0120%}", frm["S_START_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A0121%}", frm["S_START_DT_TO"].value, false)) return false;
+				if (frm["S_START_DT_FROM"].value.length > 0 && frm["S_START_DT_TO"].value.length > 0) {
+					if (!compare_date("{%A0122%}", frm["S_START_DT_FROM"].value, frm["S_START_DT_TO"].value)) return false;
+				}
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 実機詳細画面Open
+			function openDetailMachine(key) {
+				win_open("search.php", "M=detail&NO=" + key, "search_detail", 820, 900);
+			}
+			
+			// 機種詳細画面Open
+			function openDetailModel(key) {
+				win_open("model.php", "M=detail&NO=" + key, "model_detail", 820, 900);
+			}
+			
+			// 会員詳細画面Open
+			function openDetailMember(key) {
+				win_open("member.php", "M=detail&NO=" + key, "member_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			<!--if:{MEMBERPLAYHISTORY_DOWNLOAD}-->
+			// CSV出力
+			function output() {
+				var frm = window.document.MAINFORM;
+				frm.reset();		// フォームリセット
+				frm["M"].value = "output";
+				frm.submit();
+				frm["M"].value = "";
+			}
+			<!--/if:{MEMBERPLAYHISTORY_DOWNLOAD}-->
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - コーナー管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> コーナー管理</h3>
+						
+						<div class="card">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th style="width:120px;">コーナーNo<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="corner_no asc" onClick="reSort('corner_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="corner_no desc" onClick="reSort('corner_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>コーナー名</th>
+											<th>コーナー名（英）</th>
+											<th style="width:100px;">お知らせ表示</th>
+											<th style="width:100px;">実機リスト</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%CORNER_NO%}');">{%CORNER_NO_PAD%}</a></td>
+											<td>{%CORNER_NAME%}</td>
+											<td>{%CORNER_ROMAN%}</td>
+											<td class="text-center">
+												<!--if:{DISP_NOTICE}-->あり<!--/if:{DISP_NOTICE}-->
+												<!--if:{NO_DISP_NOTICE}-->なし<!--/if:{NO_DISP_NOTICE}-->
+											</td>
+											<td class="text-center">
+												<!--if:{EXISTS_LIST}--><a href="search.php?S_CORNER_NO={%CORNER_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
+												<!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
+											</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "corner_detail", 820, 750);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

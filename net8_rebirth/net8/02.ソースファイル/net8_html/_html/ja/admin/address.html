@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 発送先管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-address-card"></i> 発送先管理</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ニックネーム</div>
+											<div class="d-flex flex-row align-items-center">
+												<input type="text" class="form-control" name="S_NICKNAME" value="{%S_NICKNAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">発送先氏名</div>
+											<div class="d-flex flex-row align-items-center">
+												<input type="text" class="form-control" name="S_NAME" value="{%S_NAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">電話番号</div>
+											<div class="d-flex flex-row align-items-center">
+												<input type="text" class="form-control" name="S_TEL" value="{%S_TEL%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">郵便番号</div>
+											<div class="d-flex flex-row align-items-center">
+												<input type="text" class="form-control" name="S_POSTAL" value="{%S_POSTAL%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">発送先住所</div>
+											<div class="d-flex flex-row align-items-center">
+												<input type="text" class="form-control" name="S_ADDRESS" value="{%S_ADDRESS%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<!--<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>-->
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th>会員No
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="da.member_no asc" onClick="reSort('da.member_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="da.member_no desc" onClick="reSort('da.member_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>ニックネーム
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="mm.nickname asc" onClick="reSort('mm.nickname asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="mm.nickname desc" onClick="reSort('mm.nickname desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>発送先氏名</th>
+											<th>発送先住所</th>
+											<th>電話番号</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetailMember('{%MEMBER_NO%}');">{%MEMBER_NO_PAD%}</a></td>
+											<td>
+												{%NICKNAME%}
+												<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+												<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+											</td>
+											<td><a href="javascript:void(0);" onClick="openDetail('{%SEQ%}-{%MEMBER_NO%}');">{%SYLL%} {%NAME%}</a></td>
+											<td>〒{%POSTAL%} {%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}</td>
+											<td>{%TEL%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_number("{%A2401%}", frm["S_MEMBER_NO"].value, false)) return false;
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&SEQ=" + key.split('-')[0] + "&NO=" + key.split('-')[1], "address_detail", 820, 900);
+			}
+			
+			// 会員詳細画面Open
+			function openDetailMember(key) {
+				win_open("member.php", "M=detail&NO=" + key, "member_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 特典使用一覧</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-trophy"></i> 特典使用一覧</h3>
+						<table class="table table-bordered table-list th-center-bg mt-3" style="min-width:100%;">
+							<tbody>
+								<tr>
+									<th style="width:140px;">特典No</th>
+									<td>{%BENEFITS_NO_PAD%}</td>
+									<th style="width:140px;">終了日時</th>
+									<td>{%END_DT%}</td>
+								</tr>
+								<tr>
+									<th>付与ポイント</th>
+									<td>{%POINT%}&nbsp;{%CURRENCY_1%}</td>
+									<th>ポイント有効期限</th>
+									<td>{%LIMIT_DAYS%}&nbsp;日</td>
+								</tr>
+								<tr>
+									<th>登録日時</th>
+									<td>{%ADD_DT%}</td>
+									<th>利用停止日時</th>
+									<td>{%STOP_DT%}</td>
+								</tr>
+								<tr>
+									<th>発行数</th>
+									<td>{%ISSUED%}&nbsp;件</td>
+									<th>使用数</th>
+									<td>{%USE_CNT%}&nbsp;件</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:100%;">
+								<thead>
+									<tr>
+										<th style="width:120px;">特典コード</th>
+										<th style="width:100px;">会員No</th>
+										<th>ニックネーム</th>
+										<th style="width:120px;">使用日時</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!--loop:{LIST}-->
+									<tr>
+										<td class="text-center">{%BENEFITS_CD%}</td>
+										<td class="text-center">{%MEMBER_NO_PAD%}</td>
+										<td>
+											{%NICKNAME%}
+											<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+											<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+											<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+										</td>
+										<td class="text-center">{%USE_DT%}</td>
+									</tr>
+									<!--/loop:{LIST}-->
+								</tbody>
+							</table>
+						</div><!-- /.table-responsive -->
+
+					</div><!-- /.container-fluid -->
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+	</body>
+
+</html>

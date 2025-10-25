@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - パスワード再設定</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">パスワード再設定</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="proc">
+			<div class="input-form mb-5">
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				
+				<div class="alert alert-secondary">
+					<small>登録されているメールアドレス宛にパスワード再設定情報を送信します。</small>
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="mail">メールアドレス</label>
+					<input type="text" class="form-control" placeholder="登録しているメールアドレスを入力してください" id="mail" name="MAIL" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　送信する</button>
+					<hr>
+					<a href="{%SITE_SSL_URL%}login.php" class="btn btn-sm btn-secondary mt-2">ログインへ戻る</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}pass_reset.html"-->
+	
+	</body>
+</html>

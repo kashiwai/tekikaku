@@ -1,0 +1,25 @@
+	<!-- Navigation -->
+	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="/">{%SITE_TITLE%}</a>
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		</div>
+	</nav>
+
+	<div class="sub-navbar fixed-top">
+		<div class="container">
+			<ul class="sub-navbar-nav">
+				<!--if:{NON_LOGIN}-->
+				<li><a href="{%SITE_SSL_URL%}regist.php"><i class="fas fa-user"></i> New Member Registration</a></li>
+				<li><a href="{%SITE_SSL_URL%}login.php"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+				<!--/if:{NON_LOGIN}-->
+				<!--if:{LOGIN}-->
+				<li><i class="fas fa-user"></i> {%LOGIN_USER%}</li>
+				<li><i class="fas fa-copyright"></i> {%USER_DRAW_PT%}</li>
+				<li><i class="fas fa-coins"></i> {%USER_PT%}</li>
+				<!--/if:{LOGIN}-->
+			</ul>
+		</div>
+	</div>

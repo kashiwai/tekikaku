@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 特典情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="USE_COUNT" value="{%USE_COUNT%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-trophy"></i> 特典情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>付与ポイント&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="input-group" style="width:180px;">
+											<input type="text" class="form-control" name="POINT" value="{%POINT%}" maxlength="5">
+											<div class="input-group-append">
+												<span class="input-group-text">{%CURRENCY_3%}</span>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>有効期限（日数）&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="text" class="form-control" name="LIMIT_DAYS" value="{%LIMIT_DAYS%}" maxlength="3"> <span class="text-danger"><i class="fas fa-asterisk"></i> 有効期限無しは「0」指定</span></td>
+								</tr>
+								<tr>
+									<th>終了日時<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="d-flex justify-content-start align-items-center">
+											<div class="input-group flatpickr mr-3" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="END_DT" value="{%END_DT%}" maxlength="10" placeholder="例：2000/01/01">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											<div>
+												時刻
+												<select class="custom-select custom-select-sm" name="END_TIME_HR">
+													{%SEL_END_TIME_HR%}
+												</select>
+												：
+												<select class="custom-select custom-select-sm" name="END_TIME_MIN">
+													{%SEL_END_TIME_MIN%}
+												</select>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>発行数&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="text" class="form-control" name="ISSUED" value="{%ISSUED%}" maxlength="4"></td>
+								</tr>
+								<!--if:{UPD}-->
+								<tr>
+									<th>使用数</th>
+									<td>
+										{%DSP_USE_COUNT%}
+									</td>
+								</tr>
+								<!--/if:{UPD}-->
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{DEL}-->
+								<!--if:{STOP}--><a href="javascript:void(0);" class="btn btn-danger" onClick="stop();">利用停止</a><!--/if:{STOP}-->
+							</div>
+							<div class="col-6 text-right">
+								<!--if:{NEW}--><input type="submit" class="btn btn-primary" value="登　録"><!--/if:{NEW}-->
+								<!--if:{UPD}--><a href="javascript:void(0);" class="btn btn-warning" onClick="output();">ダウンロード</a><!--/if:{UPD}-->
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_indis("{%A2818%}", frm["POINT"].value)) return false;
+				if (!chk_number("{%A2819%}", frm["POINT"].value)) return false;
+				if (!chk_indis("{%A2820%}", frm["LIMIT_DAYS"].value)) return false;
+				if (!chk_number("{%A2821%}", frm["LIMIT_DAYS"].value)) return false;
+				if (!chk_indis("{%A2822%}", frm["END_DT"].value)) return false;
+				if (!chk_date( "{%A2823%}", frm["END_DT"].value)) return false;
+				if (!chk_indis("{%A2824%}", frm["END_TIME_HR"].value)) return false;
+				if (!chk_indis("{%A2825%}", frm["END_TIME_MIN"].value)) return false;
+				if (!compare_date("{%A2826%}", "{%TODAY%}", frm["END_DT"].value)) return false;
+				if ("{%TODAY%}" == frm["END_DT"].value) {
+					if (!compare_numeric("{%A2826%}", '{%HOURS%}', frm["END_TIME_HR"].value)) return false;
+					if ('{%HOURS%}' == frm["END_TIME_HR"].value) {
+						if (!compare_numeric("{%A2826%}", '{%MINUTES%}', frm["END_TIME_MIN"].value)) return false;
+					}
+				}
+				if (!chk_indis("{%A2827%}", frm["ISSUED"].value)) return false;
+				if (!chk_number("{%A2828%}", frm["ISSUED"].value)) return false;
+				if (parseInt(frm["ISSUED"].value, 10) < 1) {
+					chkAlert("{%A2829%}");
+					return false;
+				}
+				
+				//
+				swal({
+					title: '特典情報登録',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// 削除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '特典情報削除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+			
+			// 利用停止
+			function stop() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '特典情報更新',
+					text: "{%A2830%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=stop&NO={%NO%}";
+				});
+				return;
+			}
+			
+			// CSV出力
+			function output() {
+				// 実行
+				location.href = "{%SELF%}?M=output&NO={%NO%}";
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

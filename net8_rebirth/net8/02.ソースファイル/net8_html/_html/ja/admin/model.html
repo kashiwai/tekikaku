@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 機種管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> 機種管理</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_NO" value="{%S_MODEL_NO%}">&nbsp;<small class="text-muted">（完全一致　※0埋め不要）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種CD</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_CD" value="{%S_MODEL_CD%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種名</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">カテゴリ</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_CATEGORY">
+													{%SEL_CATEGORY%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">メーカー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_MAKER_NO">
+													{%SEL_MAKER%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">タイプ</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_TYPE_NO">
+													{%SEL_TYPE%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">号機</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_UNIT_NO">
+													{%SEL_UNIT%}
+												</select>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0">
+									<thead>
+										<tr>
+											<th style="width:100px;">機種No<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="model_no asc" onClick="reSort('model_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="model_no desc" onClick="reSort('model_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">機種CD<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="model_cd asc" onClick="reSort('model_cd asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="model_cd desc" onClick="reSort('model_cd desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">カテゴリ</th>
+											<th>機種名</th>
+											<th>機種名（英）</th>
+											<th style="width:100px;">タイプ<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="type_name asc" onClick="reSort('type_name asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="type_name desc" onClick="reSort('type_name desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">号機<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="unit_name asc" onClick="reSort('unit_name asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="unit_name desc" onClick="reSort('unit_name desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>メーカー</th>
+											<th style="width:80px;">実機リスト</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%MODEL_NO%}');">{%MODEL_NO_PAD%}</a></td>
+											<td>{%MODEL_CD%}</td>
+											<td>{%CATEGORY_LABEL%}</td>
+											<td>{%MODEL_NAME%}</td>
+											<td>{%MODEL_ROMAN%}</td>
+											<td>{%TYPE_NAME%}</td>
+											<td>{%UNIT_NAME%}</td>
+											<td>{%MAKER_NAME%}</td>
+											<td class="text-center">
+												<!--if:{EXISTS_LIST}--><a href="search.php?S_MODEL_NO={%MODEL_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
+												<!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
+											</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_number("{%A1458%}", frm["S_MODEL_NO"].value, false)) return false;
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "model_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

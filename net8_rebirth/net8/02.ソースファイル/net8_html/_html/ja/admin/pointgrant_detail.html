@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - ポイント付与設定詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="PROC_CD" value="{%PROC_CD%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fab fa-fw fa-product-hunt"></i> ポイント付与設定詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						
+						<h5 class="mt-4 botder-bottom">{%PROC_LABEL%}</h5>
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th class="required">付与ポイント<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="POINT" value="{%POINT%}" maxlength="7" placeholder="0">
+									</td>
+								</tr>
+								<tr>
+									<th>有効期限（日数）</th>
+									<td colspan="3">
+										<input type="text" class="form-control" name="LIMIT_DAYS" value="{%LIMIT_DAYS%}" maxlength="7" placeholder="0"> <span class="text-danger"><i class="fas fa-asterisk"></i> 有効期限無しは「0」指定</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<h5 class="mt-5">期間限定付与ポイント</h5>
+						<div class="text-danger border border-danger rounded px-3 py-2 mb-1">
+							期間限定付与ポイント期間中はこちらのポイント・有効期限(日数)が有効になります。
+						</div>
+						<table id="special_area" class="table table-input">
+							<tbody>
+								<tr>
+									<th>使用有無</th>
+									<td>
+										<div class="custom-control custom-radio custom-control-inline">
+											<input type="radio" class="custom-control-input" id="use_special_off" name="USE_SPECIAL" value="0"{%CHK_SPECIAL_0%}>
+											<label class="custom-control-label" for="use_special_off">使用しない</label>
+										</div>
+										<div class="custom-control custom-radio custom-control-inline">
+											<input type="radio" class="custom-control-input" id="use_special_on" name="USE_SPECIAL" value="1"{%CHK_SPECIAL_1%}>
+											<label class="custom-control-label" for="use_special_on">使用する</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>付与ポイント</th>
+									<td>
+										<input type="text" class="form-control" name="SPECIAL_POINT" value="{%SPECIAL_POINT%}" maxlength="7" placeholder="0">
+									</td>
+								</tr>
+								<tr>
+									<th>有効期限（日数）</th>
+									<td>
+										<input type="text" class="form-control" name="SPECIAL_LIMIT_DAYS" value="{%SPECIAL_LIMIT_DAYS%}" maxlength="7" placeholder="0"> <span class="text-danger"><i class="fas fa-asterisk"></i> 有効期限無しは「0」指定</span>
+									</td>
+								</tr>
+								<tr>
+									<th>期間</th>
+									<td>
+										<div class="d-flex flex-row align-items-center">
+											<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="SPECIAL_START_DT" value="{%SPECIAL_START_DT%}">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											<div class="px-2">～</div>
+											<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="SPECIAL_END_DT" value="{%SPECIAL_END_DT%}">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-12 text-right">
+								<input type="submit" class="btn btn-primary" value="変　更">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			$(function() {
+				$("input[name='USE_SPECIAL']").on('click', function() {
+					changeSpecial($(this).val() == '0');
+				});
+				changeSpecial($("input[name='USE_SPECIAL']:checked").val() == '0');
+			});
+			
+			// 期間限定使用有無
+			function changeSpecial(useBool) {
+				$("#special_area").find(':input').not(':radio').prop('disabled', useBool);
+			}
+		
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				//付与ポイント
+				if (!chk_indis("{%A2101%}", frm["POINT"].value)) return false;
+				if (!chk_numeric("{%A2102%}", frm["POINT"].value, false)) return false;
+				//付与ポイント有効期限
+				if ( frm["LIMIT_DAYS"].value.length > 0 ){
+					if (!chk_numeric("{%A2110%}", frm["LIMIT_DAYS"].value, false)) return false;
+				}
+				
+				//期間限定付与ポイント
+				if ( $("input[name='USE_SPECIAL']:checked").val() == "1" ) {
+					if (!chk_indis("{%A2103%}", frm["SPECIAL_POINT"].value)) return false;
+					if (!chk_numeric("{%A2104%}", frm["SPECIAL_POINT"].value, false)) return false;
+					if (!chk_numeric("{%A2112%}", frm["SPECIAL_LIMIT_DAYS"].value, false)) return false;
+					if (!chk_indis("{%A2105%}", frm["SPECIAL_START_DT"].value)) return false;
+					if (!chk_date("{%A2106%}", frm["SPECIAL_START_DT"].value, false)) return false;
+					if (!chk_indis("{%A2107%}", frm["SPECIAL_END_DT"].value)) return false;
+					if (!chk_date("{%A2108%}", frm["SPECIAL_END_DT"].value, false)) return false;
+					if (!compare_date("{%A2113%}", frm["SPECIAL_START_DT"].value, frm["SPECIAL_END_DT"].value)) return false;
+				}
+
+				swal({
+					title: 'ポイント付与変更',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					$("#special_area").find(':input').not(':radio').prop('disabled', false);
+					frm.submit();
+				});
+				return false;
+			}
+			
+		-->
+		</script>
+		
+	</body>
+
+</html>

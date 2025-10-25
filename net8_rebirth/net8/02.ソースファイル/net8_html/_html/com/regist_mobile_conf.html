@@ -1,0 +1,110 @@
+	<script type="text/javascript">
+	<!--
+		$('#errorform').hide();
+		$('#other').hide();
+		$('#error').hide();
+		$('#requestPinArea').show();
+		$('#pinArea').hide();
+		var frm = window.document.MAINFORM;
+		var svErr = '{%ERRMSG%}';
+		if (svErr.length > 0) {
+			showFail(svErr);
+		}
+		if( frm["MOBILE"].value.length > 0){
+			$('#international_cd option:not(:selected)').prop('disabled', true);
+			$('#telephone_no').attr('readonly', true);
+			$('#requestPinArea').hide();
+			$('#pinArea').show();
+		}
+		
+		function showFail( mes){
+			if( mes != ""){
+				$('#error').html(mes);
+				$('#inputform').show();
+				$('#errorform').show();
+				$('#other').hide();
+				$('#error').show();
+			}else{
+				$('#inputform').show();
+				$('#errorform').show();
+				$('#other').show();
+				$('#error').hide();
+			}
+		}
+		
+		function requestPinCode(){
+			//電話番号チェック
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U0451%}", frm["INTERNATIONAL_CD"].value)) return false;
+			if (!chk_indis("{%U0436%}", frm["MOBILE"].value)) return false;
+			if (!chk_number("{%U0437%}", frm["MOBILE"].value, false)) return false;
+			// 先頭Zero削除
+			frm["MOBILE"].value = Number(frm["MOBILE"].value);
+			if (frm["INTERNATIONAL_CD"].value.length + frm["MOBILE"].value.length > 16) {
+				chkAlert("{%U0452%}");
+				return false;
+			}
+			//sendデータ
+			var _sendData = {
+				 "no":frm["MOBILE"].value
+				, "icd":frm["INTERNATIONAL_CD"].value
+				, "id":frm["RID"].value
+				, "step":frm["SP"].value
+			}
+			$.ajax({
+				url: './api/authMemberMoble.php',
+				type: 'GET',
+				data: _sendData,
+				dataType: 'json'
+			}).done(function(data, textStatus, jqXHR){
+				if( data["status"] == "ng"){
+					//other error
+					showFail(data["error"]);
+				}else if( data["status"] == "ok"){
+					$('#international_cd option:not(:selected)').prop('disabled', true);
+					$('#telephone_no').attr('readonly', true);
+					$('#requestPinArea').hide();
+					$('#pinArea').show();
+					$('#errorform').hide();
+					$('#info').html('{%U0433%}');
+				}
+			}).fail(function(jqXHR, textStatus, errorThrown){
+				//other error
+				showFail("");
+			});
+		}
+		
+		// 携帯番号変更
+		function chgMobile(){
+			var frm = window.document.MAINFORM;
+			frm["MOBILE"].value = "";
+			frm["PIN"].value = "";
+			$('#international_cd option:not(:selected)').removeAttr('disabled');
+			$('#telephone_no').removeAttr('readonly');
+			$('#info').html('{%U0432%}');
+			$('#errorform').hide();
+			$('#other').hide();
+			$('#error').hide();
+			$('#requestPinArea').show();
+			$('#pinArea').hide();
+		}
+		
+		function _submit(){
+			//PIN check
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U0440%}", frm["PIN"].value)) return false;
+			if (!chk_number("{%U0441%}", frm["PIN"].value)) return false;
+			if (frm["PIN"].value.length != {%SMS_PINCODE_LENGTH%}){
+				chkAlert("{%U0442%}");
+				return false;
+			}
+			//
+			var _action = document.MAINFORM.getAttribute("action");
+			_action += "?M=auth";
+			document.MAINFORM.setAttribute("action", _action);
+			document.MAINFORM.submit();
+			return false;
+		}
+		
+	-->
+	</script>

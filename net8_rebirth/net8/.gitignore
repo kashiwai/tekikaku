@@ -1,0 +1,34 @@
+# Large files
+*.zip
+*.tar.gz
+
+# OS files
+.DS_Store
+.Trash/
+Thumbs.db
+
+# Environment files
+.env
+
+# Temporary files
+.tmp/
+*.log
+
+# Windows files
+windows_files/
+camera_localpcsetup/
+server_localpc/
+
+# IDE
+.vscode/
+.idea/
+
+# Docker volumes
+docker/mysql/data/
+docker/apache/logs/
+
+# Node modules
+node_modules/
+
+# Claude workspace
+.claude/

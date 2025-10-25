@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - ポイントギフト設定</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fas fa-fw fa-gift"></i> ポイントギフト設定</h3>
+					
+					<div class="card mt-3" style="max-width:680px;">
+						<div class="card-header">
+							<span class="panel-title">設定</span>
+						</div>
+						<div>
+							<table class="table table-search">
+								<tbody>
+									<tr>
+										<th style="width:180px;">最低ポイント</th>
+										<td>{%DISP_POINT%} {%CURRENCY_3%}</td>
+									</tr>
+									<tr>
+										<th style="width:180px;">ロット単位</th>
+										<td>
+											<!--if:{LOT}-->{%DISP_LOT%}<!--/if:{LOT}-->
+											<!--if:{NO_LOT}-->制限無し<!--/if:{NO_LOT}-->
+										</td>
+									</tr>
+									<tr>
+										<th style="width:180px;">手数料</th>
+										<td>{%RATE%} %</td>
+									</tr>
+									<tr>
+										<th style="width:180px;">手数料端数処理</th>
+										<td>{%DISP_ROUNDING%}</td>
+									</tr>
+									<tr>
+										<th style="width:180px;">手数料負担者</th>
+										<td>{%DISP_BEARER%}</td>
+									</tr>
+									<tr>
+										<td colspan="2" class="text-right">
+											<a href="javascript:void(0);" onClick="openDetail();" class="btn btn-primary">変更</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div><!-- /.card -->
+					
+				</div><!-- /.container-fluid -->
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail", "admin_detail", 820, 580);
+			}
+		</script>
+		
+	</body>
+</html>

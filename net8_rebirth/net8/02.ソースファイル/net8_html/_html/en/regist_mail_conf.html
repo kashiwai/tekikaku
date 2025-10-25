@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Account Creation</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<!--if:{ERROR}-->
+		<h1 class="h3 text-center my-4">Registration Failure</h1>
+		<div class="alert alert-secondary text-center">
+			<div class="alert alert-danger">
+				{%ERRMSG%}
+			</div>
+			<a href="{%SITE_SSL_URL%}{%SELF%}" class="btn btn-primary btn-block">Redo the new member registration.</a>
+		</div>
+		<!--/if:{ERROR}-->
+		
+		<!--if:{NO_ERROR}-->
+		<h1 class="h3 text-center my-4">Registration Completed</h1>
+		<div class="alert alert-secondary text-center">
+			<div class="alert-heading">
+				The definitive registration has been completed at the following email address.<br />
+				First of all, please confirm the operation methods in <a href="info.php?M=beginners">For the First Time Users</a>.
+
+			</div>
+			<hr>
+			<h3><i class="icon-envelope-o"></i> Email Address</h3>
+			<div class="panel panel-default panel-no-border">
+				<div class="panel-body">
+					{%MAIL%}
+				</div>
+			</div>
+		</div>
+		<!--/if:{NO_ERROR}-->
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	
+	</body>
+</html>

@@ -1,0 +1,145 @@
+■前提
+[basePpath] は「/var/www/」として記載しています
+※サーバの設定に応じて読み替えてください
+
+
+■ソースの解凍
+# tar jxvfp net8_html.tar.bz2
+	「net8_html」フォルダが生成される
+	※DocumentRootは、/var/www/net8_html/data にしてください
+# rm net8_html.tar.bz2
+
+
+■IP変更対象ファイル群
+.htpasswd
+.htpasswd-admine
+	Basic認証ユーザ
+/data/.htaccess
+/data/xxxadmin/.htaccess
+	Basic認証ファイルパス
+	接続許可IP
+/_api/sig/.htaccess
+/_api/turn/.htaccess
+	接続許可IP
+
+
+■サイト構築時に設定が必要なファイル群
+/_etc/license.php
+	LICENSE_CODE：英数記号32文字固定
+/_etc/setting_base.php
+	ドメインや各ユーザ情報等をサイトに応じて設定
+/_etc/setting.php
+	ベースパス
+/_etc/webRTC_setting.php
+	シグナリングとTURNサーバ名変更
+	※配列で複数台指定可
+/_etc/[言語]/setting_lang.php
+	サイト名、ポイント単位、購入方法、メール内容等をサイトに応じて設定
+/_etc/_payment/[決済会社]/payment_setting.php
+	決済接続情報等をサイトに応じて設定
+
+
+■サイトに応じた内容に変更が必要なファイル群
+※下記の使用有無は設定ファイル(/_etc/setting_base.php)で変更可能
+/_html/[言語]/inc_policy.html
+	プライバシーポリシー
+/_html/[言語]/inc_terms.html
+	利用規約
+/_html/[言語]/info_userguide.html
+	ユーザガイド
+/_html/[言語]/info_beginners.html
+	はじめての方へ
+/_html/[言語]/info_faq.html
+	FAQ
+/_html/[言語]/info_act.html
+	特定商取引法に基づく表記
+
+
+■本番稼働時に暗号化を行うファイル群
+/data/play_v2/js
+	view_auth.js
+	view_auth_pachi.js
+	view_functions.js
+	⇒上記ファイルのみ「https://obfuscator.io/」で難読化して本番稼働している
+		オプション設定は「Debug Protection」にチェックを入れて実施
+
+
+■決済会社単位のファイル群(決済会社追加時には以下ファイルを作成すること)
+/_etc/_payment/[決済会社]
+	payment_setting.php
+/_html/[言語]/payment/[決済会社]
+	point_buy.html
+	point_buy_conf.html
+	point_buy_end.html
+/_sys/payment/[決済会社]
+	SettlementPoint.php
+	※他決済処理に必要なファイル
+/data/payment/[決済会社]
+	 point_buy.php
+/data/api_public/
+	決済結果取得ファイル
+
+
+■cron設定
+例)営業時間：09:00～翌05:00、基準時間(当日の開始時刻)：08:00 の場合
+--------------------------------------------------
+55 7 * * * (cd /var/www/net8_html/_bin; ./update_daily.php)
+*/30 * * * * (cd /var/www/net8_html/_bin; ./drawpick.php)
+*/1 * * * * (cd /var/www/net8_html/_bin; ./send_magazine.php)
+*/10 * * * * (cd /var/www/net8_html/_bin; ./grant_coupon.php)
+*/5 * * * * (cd /var/www/net8_html/_bin; ./limitpoint.php)
+0 8 * * * (cd /var/www/net8_html/_bin; ./cls_dailylogin.php)
+1 8 * * * (cd /var/www/net8_html/_bin; ./add_giftpoint.php)
+5 1 * * * (cd /var/www/net8_html/_bin; ./garbage.php)
+--------------------------------------------------
+・処理内容
+update_daily.php
+	日次データ更新(ゲーム数のリセット)
+		※閉店後～開店前の間で設定
+drawpick.php
+	自動抽選処理
+send_magazine.php
+	メルマガ配送処理
+grant_coupon.php
+	クーポン自動処理
+limitpoint.php
+	ポイント有効期限処理
+cls_dailylogin.php
+	連続ログイン回数クリア
+		※基準時間(/_etc/setting_base.php)と同じ時間を設定
+add_giftpoint.php
+	ギフト可能ポイント加算処理
+		※基準時間(/_etc/setting_base.php)以降の時間を設定
+garbage.php
+	不要データ物理削除
+		※サイトに応じて設定条件等を見直して使用してください
+
+ssh -i /Users/kotarokashiwai/pachinko-gcp-deploy/pachinko-app/data/key-claude.pem　root@160.251.209.147
+
+====================================================================================================
+シグナリングサーバをWEBサーバと別に構築する場合
+	※WEBサーバと兼用する場合は、cron設定はWEBサーバ側へ追記すること
+====================================================================================================
+■シグナリングサーバで必要なファイル群
+※WEB側からコピーする
+/net8_html/_api/
+
+
+■IP変更対象ファイル群
+/_api/sig/.htaccess
+/_api/turn/.htaccess
+	接続許可IP
+
+
+■cron設定
+--------------------------------------------------
+0 */1 * * * /etc/turnserver/turnkey/turnkey.sh
+0 7 * * * systemctl restart peerjs-server.service
+--------------------------------------------------
+・処理内容
+turnkey.sh
+	認証キーのローテーション処理
+peerjs-server.serviceの再起動
+	シグナリングサービスの再起動
+		※プロセス数がいっぱいになると接続できなくなるため
+		※再起動の時間はサイトの閉店時間中でカメラ端末の自動再起動時間より少し前に設定しておく

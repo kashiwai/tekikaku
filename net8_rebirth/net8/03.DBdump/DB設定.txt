@@ -1,0 +1,47 @@
+■ファイル概要
+net8_create.dump
+	全テーブルのcreate文のみ
+net8_init.dump
+	初期データが必要なテーブルのInsert文のみ
+		[対象テーブル]
+		・mst_admin
+		・mst_type
+		・mst_unit
+		・mst_maker
+		・mst_grantPoint
+		・mst_gift
+		・mst_setting
+
+
+■テーブル作成、初期データ登録
+# mysql -uroot -p --comments net8_xxx < net8_create.dump
+# mysql -uroot -p --comments net8_xxx < net8_init.dump
+※「net8_xxx」は作成しているスキーマ名に応じて変更
+
+
+■初回実行SQL
+> ALTER TABLE mst_camera AUTO_INCREMENT=10000001;
+
+
+■管理画面(初期ログインユーザ)
+ID：spadmin
+PW：passwd753951
+
+
+■サイト構築時に管理画面から設定が必要なデータ(上から順に登録)
+・ポイント変換設定
+	プレイに必要な変換レート設定
+・機種管理
+	機種情報を登録
+・オーナー管理
+	実機データを登録する際に必須のため、最低1件は登録
+・コーナー管理
+	カテゴリ分けを行う場合は実機管理より先に登録
+・実機管理
+	オーナー、カメラ、機種、変換レート、シグナリングの紐づけを行う
+	※カメラ端末側の事前設定(セットアップ時に自動登録される)が必須
+・ポイント購入設定
+	Coin交換のデータは最低限登録
+・会員管理
+	プレイユーザを登録(ユーザ画面から登録でも可)
+
