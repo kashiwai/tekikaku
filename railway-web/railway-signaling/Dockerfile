@@ -1,7 +1,9 @@
 FROM node:18-alpine
 WORKDIR /app
-COPY package*.json ./
+COPY package.json .
+COPY bin ./bin
+COPY lib ./lib
+COPY app.json .
 RUN npm install --production
-COPY . .
 EXPOSE 8080
-CMD ["npm", "start"]
+CMD ["node", "bin/peerjs", "--port", "8080"]
