@@ -1,0 +1,29 @@
+FROM node:14-alpine
+
+# sqlite3のビルドに必要なパッケージをインストール
+RUN apk add --no-cache python3 make g++ sqlite-dev
+
+WORKDIR /app
+
+# package.jsonとpackage-lock.jsonをコピー
+COPY net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/package*.json ./
+
+# 依存関係のインストール
+RUN npm ci --production
+
+# アプリケーションファイルをコピー
+COPY net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/bin ./bin
+COPY net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/lib ./lib
+COPY net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/db ./db
+
+# ログディレクトリ作成
+RUN mkdir -p /var/log/peerjs && chmod 777 /var/log/peerjs
+
+# Railwayの環境変数PORTを使用（デフォルト59000）
+ENV PORT=${PORT:-59000}
+ENV PEERJS_KEY=peerjs
+
+EXPOSE ${PORT}
+
+# PeerJSサーバー起動
+CMD node bin/peerjs -p ${PORT} -k ${PEERJS_KEY}
