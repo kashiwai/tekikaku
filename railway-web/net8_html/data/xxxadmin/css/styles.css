@@ -1,0 +1,596 @@
+/*!
+ * Start Bootstrap - SB Admin Bootstrap Admin Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+
+/* Global Styles
+================================================== */
+html {
+
+}
+body {
+	font-family: "Helvetica Neue",Helvetica,"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","メイリオ",Meiryo,sans-serif;
+	font-size: 0.85rem;
+}
+
+
+/* Bootstrap 打ち消し・上書き更新用
+================================================== */
+/* 元は1030だが、sweetalertのz-indexが1000なのでそれより低い値に変更 */
+.navbar-fixed-top {
+	z-index: 900;
+}
+
+#wrapper.main-win {
+	min-width: 1000px;
+}
+
+#wrapper.main-win #content-wrapper {
+	overflow-x: scroll;
+}
+
+/* Sidebar */
+.sidebar .nav-item {
+	line-height: 1rem;
+}
+.sidebar .nav-item .nav-link span {
+	font-size: 0.9rem;
+}
+.dropdown-item {
+	font-size: 0.9rem;
+	line-height: 1.0rem;
+}
+.sidebar .sidebar-heading {
+	text-align: center;
+	padding: 0 1rem;
+	font-weight: 600;
+	font-size: 80%;
+	color: rgba(255, 255, 255, 0.4);
+}
+.sidebar hr.sidebar-divider {
+	margin: 0 1rem 1rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+@media (min-width: 768px) {
+	.sidebar .sidebar-heading {
+		text-align: left;
+	}
+}
+
+/* IE */
+@media all and (-ms-high-contrast: none) {
+	.sidebar {
+		width: auto !important;
+	}
+
+	footer.sticky-footer {
+		padding: 2rem 0;
+		flex-shrink: 0;
+	}
+}
+@media all and (-ms-high-contrast: none) and (min-width: 768px) {
+	.sidebar.toggled {
+		width: 96px !important;
+	}
+}
+
+
+/* Form */
+input, input.form-control, textarea, textarea.form-control {
+	font-size: 0.9rem;
+}
+.form-control {
+	height: 30px;
+	padding: 4px;
+}
+.form-control::placeholder {
+	color: #d2d6d9;
+}
+.input-group-append span,
+.input-group-append button,
+.input-group-append a {
+	height: 30px;
+}
+.input-group-append button {
+	padding-top: 2px;
+}
+.input-group-text {
+	font-size: 0.8rem;
+}
+.custom-select-sm {
+	padding-top: .2rem;
+	padding-bottom: .2rem;
+	font-size: 0.9rem;
+}
+textarea.form-control {
+	width: 100% !important;
+}
+
+/* 行選択用チェックボックス */
+.custom-checkbox.listin-checkbox {
+	margin-right: 0;
+}
+.custom-checkbox.listin-checkbox .custom-control-label::before,
+.custom-checkbox.listin-checkbox .custom-control-label::after {
+	top: -0.5rem;
+	left: -1.3rem;
+	cursor: pointer;
+}
+
+
+/* 共通
+================================================== */
+#accordion div.card-header[data-toggle=collapse] {
+	cursor: pointer;
+}
+.collapse-arrow i {
+	font-size: 1.2rem;
+}
+#accordion .collapsed .collapse-arrow i {
+	transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+}
+
+/* sweetalertモーダル */
+.swal2-modal .swal2-content {
+	font-size: 1rem;
+}
+
+/* ボタン */
+.btn {
+	font-size: 0.85rem;
+}
+.btn-search, .btn-search:active {
+	width: 100px;
+	background-color: #007bff;
+	border-color: #007bff;
+	color: #fff;
+}
+.btn-search:hover {
+	background-color: #0069d9;
+	border-color: #0062cc;
+	color: #fff;
+}
+
+.btn-reset, .btn-reset:active {
+	width: 100px;
+	background-color: #fff;
+	border-color: #ccc;
+	color: #333;
+}
+.btn-reset:hover {
+	background-color: #f5f9fa;
+	border-color: #ccc;
+	color: #333;
+}
+
+
+.page-header {
+	padding-bottom: 4px;
+	border-bottom: 1px solid #eee;
+}
+
+/* 会員ステータスバッヂ */
+.badge.badge-black,
+.badge.badge-retired,
+.badge.badge-tester,
+.badge.badge-agent {
+	margin-left: 0.3rem;
+	padding: .2em .4em .15em;
+	background-color: transparent;
+	font-size: 0.78rem;
+	font-weight: normal;
+}
+.badge.badge-black {
+	border: 1px solid #6f42c1;
+	color: #6f42c1;
+}
+.badge.badge-retired {
+	border: 1px solid #dc3545;
+	color: #dc3545;
+}
+.badge.badge-tester {
+	border: 1px solid #007bff;
+	color: #007bff;
+}
+.badge.badge-agent {
+	border: 1px solid #008000;
+	color: #008000;
+}
+
+
+/* 入力画面用テーブル */
+.table-input {
+	margin: 0;
+	width: 100%;
+}
+.table-input > tbody > tr > th,
+.table-input > tbody > tr > td {
+	vertical-align: middle;
+}
+.table-input > tbody > tr > th {
+	width: 180px;
+}
+.table-input > tbody > tr:first-child > th,
+.table-input > tbody > tr:first-child > td {
+	border: none;
+}
+.table-input > tbody > tr > td textarea {
+	width: 100%;
+}
+
+/* 検索テーブル */
+.search div[class^="col"] {
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+.search .search-title {
+	width: 150px;
+	font-weight: bold;
+}
+.search .input-period {
+	max-width: 320px;
+}
+
+/* 表内テーブル */
+.table-inner {
+	border: 0;
+}
+.table-inner td {
+	padding: 0;
+	border: 0;
+}
+
+/* リスト関連 */
+.table-report tbody tr td {
+	padding: 0.5rem;
+}
+
+.table-hover tbody tr:hover {
+	background-color: rgba(248, 249, 250, 0.8);
+}
+
+.table-list {
+	min-width: 1180px;
+}
+.table-list tbody tr td {
+	padding: 4px 6px;
+	font-size: 0.78rem;
+	vertical-align: middle;
+	word-break: break-all;
+}
+.th-center > thead > tr > th,
+.th-center > tbody > tr > th,
+.th-center-bg > thead > tr > th,
+.th-center-bg > tbody > tr > th {
+	padding: 4px 6px;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 0.8rem;
+}
+
+.th-center-bg > thead > tr > th,
+.th-center-bg > tbody > tr > th {
+	background-color: #f5f5f5;
+}
+
+.vertical-center {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-justify-content: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+/* ソートボタン */
+.list-sort {
+	display: inline-block;
+	position: relative;
+	vertical-align: middle;
+}
+.list-sort > .sort-asc, .list-sort > .sort-desc {
+	display: inline-block;
+	position: relative;
+	float: left;
+	margin-bottom: 0;
+	padding: 1px 5px;
+	background-image: none;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	color: #333;
+	font-size: 12px;
+	line-height: 1.5;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	cursor: pointer;
+	-moz-user-select: none;
+}
+/* 昇順 */
+.list-sort > .sort-asc {
+	margin-left: 0;
+	border-bottom-right-radius: 0;
+	border-top-right-radius: 0;
+}
+/* 降順 */
+.list-sort > .sort-desc {
+	margin-left: -1px;
+	border-bottom-left-radius: 0;
+	border-top-left-radius: 0;
+}
+.list-sort a {
+	text-decoration: none;
+}
+.list-sort a:hover {
+	background-color: #f5f9fa;
+}
+
+/* アクティブ */
+.list-sort > .active {
+	background-color: #ffdab9;
+}
+.list-sort .active:hover {
+	background-color: #ffdab9;
+}
+
+/* ページネーション */
+#PAGEMOVE_TOP, #PAGEMOVE_BTM {
+	margin: 0 10px;
+}
+
+
+
+
+/* 20190201- add */
+.table tr.selfrow{
+	background-color:#fee4a6;
+}
+
+.prizeball_setting{list-style-type:none;padding-left:0;}
+.prizeball_setting li{margin-bottom:5px;}
+.prizeball_setting li span{display:inline-block;width:36%;text-align:left;}
+.prizeball_setting li input{width:20%;}
+
+
+.nav-tabs > li {
+	border-top: 3px solid transparent;
+	border-top-color: transparent;
+	margin-bottom: -2px;
+	margin-right: 5px;
+	float: left;
+	margin-bottom: -1px;
+}
+.nav-tabs > li:first-of-type {
+	margin-left: 0;
+}
+
+.nav-tabs > li.active {
+	border-top-color: #3c8dbc;
+	border-left: 1px solid #f4f4f4;
+	border-right: 1px solid #f4f4f4;
+}
+
+.nav-tabs > li > a{
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+}
+
+.nav-tabs > li:first-of-type.active > a {
+	border-left-color: transparent;
+}
+
+.nav-tabs > li.active > a {
+	border-top-color: transparent;
+	border-left-color: #f4f4f4;
+	border-right-color: #f4f4f4;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active:hover > a {
+	background-color: #fff;
+	color: #444;
+}
+
+.nav-tabs > li.header {
+    line-height: 35px;
+    padding: 0 10px;
+    font-size: 20px;
+    color: #444;
+}
+
+.huge {
+	font-size: 40px;
+}
+
+.bg-success-mild {
+    background-color: #5cb85c;
+}
+.bg-warning-mild {
+    background-color: #f0ad4e;
+}
+.bg-danger-mild {
+    background-color: #d9534f;
+}
+.bg-primary-mild {
+    background-color: #337ab7;
+}
+.bg-info-mild {
+    background-color: #bce8f1;
+}
+
+.weeks_0{
+	background-color: #ffebeb;
+}
+.weeks_6{
+	background-color: #ebf2ff;
+}
+.weeklabel_0{
+	font-weight:bold;
+	color: #ee3852;
+}
+.weeklabel_6{
+	font-weight:bold;
+	color: #0e5aec;
+}
+
+.totalrow{
+	background-color: #fbf5e5;
+}
+
+
+
+.monitering_item{
+	min-width:470px;
+	max-width:480px;
+}
+
+.machine_moniter{
+	position:relative;
+}
+
+.machine_moniter_deactive::before{
+	content:"";
+	display:block;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:#bbb;
+	opacity: 0.55;
+}
+
+.moniter_inner table{
+	width:100%;
+}
+
+.moniter_inner table.row_machine tr td:nth-child(1){
+	width:25%;
+}
+.moniter_inner table.row_machine tr td:nth-child(2){
+	width:25%;
+}
+.moniter_inner table.row_machine tr td:nth-child(3){
+	width:25%;
+}
+.moniter_inner table.row_machine tr td:nth-child(4){
+	width:25%;
+	position:relative;
+}
+
+.moniter_inner table.row_user tr td:nth-child(1){
+	width:25%;
+}
+.moniter_inner table.row_user tr td:nth-child(2){
+	width:31%;
+}
+.moniter_inner table.row_user tr td:nth-child(3){
+	width:40%;
+}
+
+
+.reel{
+	font-size:32px;
+}
+
+.reel1.red,.reel2.red,.reel3.red{
+	color:red;
+}
+.reel1.blue,.reel2.blue,.reel3.blue{
+	color:blue;
+}
+
+.machine_moniter_deactive>.moniter_inner{
+	/*visibility:hidden*/
+}
+
+.status_reg,.status_bb{
+	position:absolute;
+	visibility:hidden;
+	top:11px;
+	left:10px;
+	color:white;
+	font-weight:bold;
+	border-radius: 6px;
+}
+
+.status_reg.active{
+	visibility:visible;
+	padding:5px 10px;
+	background-color:#ffa500;
+}
+.status_bb.active{
+	visibility:visible;
+	padding:5px 10px;
+	background-color:#dc143c;
+}
+
+.page-header{
+	position:relative;
+}
+
+.page-header>.send_button{
+	position: absolute;
+	top: -4px;
+	left: 15rem;
+}
+
+.send_button{
+	position: absolute;
+	top: .50rem;
+	right: 1.2rem;
+}
+
+.send_button>.button_label{
+	font-size: 12px;
+	color:white;
+}
+
+.send_select{
+	display:none;
+	position:absolute;
+	top:35px;
+	left:-40px;
+	z-index: 1;
+}
+
+.send_select>li{
+	display:block;
+	font-size: 12px;
+	top: .50rem;
+	right: 1.2rem;
+	margin-top:2px;
+}
+
+.connect_status{
+	position:absolute;
+	top:-1px;
+	right:5px;
+	color:red;
+}
+.connect_status.active{
+	color:#0062cc;
+}
+.machine_filter{
+	float:right;
+	margin-right: 50px;
+}
+.machine_filter input{
+	display:none;
+}
+
+.machine_filter label{
+	font-size:12px;
+	margin-left:8px!important;
+}
+
+
+/*cursor: pointer;
+padding: 3px .75rem;
+margin: -6px auto 0px;
+font-size: 12px;*/
+
+

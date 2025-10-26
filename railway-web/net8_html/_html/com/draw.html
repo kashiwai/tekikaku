@@ -1,0 +1,21 @@
+	<script>
+		$('#typeselect').on('click', function(){
+			var _target_type = $('#listType').val();
+			var _ret = "";
+			var _qstr = document.location.search;
+			if (_qstr != "") {
+				var params = new URLSearchParams( _qstr);
+				params.set( "TYPE", _target_type);
+				params.set( "P"   , 1);
+				_ret = params.toString();
+			}else{
+				_ret = "TYPE=" + _target_type;
+			}
+			var _que = location.href.split("?");
+			if( _target_type != ""){
+				location.href = _que[0] +"?"+ _ret;
+			}else{
+				location.href = _que[0];
+			}
+		});
+	</script>

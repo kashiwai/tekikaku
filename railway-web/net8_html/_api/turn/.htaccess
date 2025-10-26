@@ -1,0 +1,7 @@
+order deny,allow
+deny from all
+# Web Server
+allow from xxx.xxx.xxx.xxx
+# Signaling Server
+allow from xxx.xxx.xxx.xxx
+allow from xxx.xxx.xxx.xxx

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 総合実機管理</title>
+
+		<link href="css/machines.css" rel="stylesheet">
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+				<!--
+				<input type="hidden" name="MODEL_NO" value="{%MODEL_NO%}">
+				<input type="hidden" name="OWNER_NO" value="{%OWNER_NO%}">
+				<input type="hidden" name="MAKER_NO" value="{%MAKER_NO%}">
+				-->
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-database"></i> 総合実機管理</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">公開開始日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_FROM" value="{%RELEASE_DATE_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_TO" value="{%RELEASE_DATE_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">公開終了日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
+													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_FROM" value="{%END_DATE_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
+													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_TO" value="{%END_DATE_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">オーナー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_OWNER_NO" style="width:250px;">
+													{%SEL_OWNER_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">カテゴリ</div>
+											<div>
+												{%RDO_CATEGORY%}
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">コーナー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_CORNER_NO" style="width:250px;">
+													{%SEL_CORNER_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">メーカー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_MAKER_NO" style="width:250px;">
+													{%SEL_MAKER%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種名</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}">
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種コード</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_CD" value="{%S_MODEL_CD%}">
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">シグナリング</div>
+											<div>
+												{%RDO_SIGNALING_ID%}
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ステータス</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_STATUS">
+													{%SEL_STATUS%}
+												</select>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset2();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									(全{%ALLROW%}件)
+								</div>
+								<a href="javascript:void(0);" onClick="openSetting('');" class="btn btn-primary">セッティング変更</a>
+							</div>
+							<div class="table-responsive">
+								<ul id="machineList">
+									<li>
+										<input type="checkbox" name="m_1" id="m_1" />
+										<label for="m_1">ファンキージャグラー</label>
+									</li>
+									<li>
+										<input type="checkbox" name="m_2" id="m_2" />
+										<label for="m_2">SLOT魔法少女まどか☆マギカ</label>
+									</li>
+								</ul>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									(全{%ALLROW%}件)
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			var machineList = [
+//					<!--loop:{LIST}-->
+					{
+						machine_no: '{%MACHINE_NO%}',
+						model_name: '{%MODEL_NAME%}',
+						camera_no:  '{%CAMERA_NO%}',
+						status:     '{%MACHINE_STATUS%}',
+						image:      '{%IMAGE_LIST%}',
+					},
+//					<!--/loop:{LIST}-->
+			];
+			
+			
+			
+			$(function(){
+				// リセット
+				window.reset2 = function reset2() {
+					$('#MAINFORM')
+						.find("input, select, textarea")
+						.not(":button, :submit, :reset, :hidden, :radio")
+						.val("")
+						.prop("checked", false)
+						.prop("selected", false)
+					;
+					$('#MAINFORM').find(":radio").filter("[value='']").prop("checked", true);
+				}
+			});
+			
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クエリ操作
+				
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openSetting(key) {
+				var nos = [];
+				$('.machine_checkbox:checked').map(function(index, element){
+					nos.push($(element).val());
+				});
+				var keys = nos.join(',');
+				if ( keys ){
+					win_open("{%SELF%}", "M=setting&NO=" + keys, "admin_detail", 820, 900);
+				}
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		<script src="js/machines.js"></script>
+		
+	</body>
+</html>

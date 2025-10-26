@@ -1,0 +1,21 @@
+	<script type="text/javascript">
+	<!--
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U0104%}", frm["PIN"].value)) return false;
+			if (!chk_number("{%U0105%}", frm["PIN"].value)) return false;
+			if (frm["PIN"].value.length != {%SMS_PINCODE_LENGTH%}){
+				chkAlert("{%U0106%}");
+				return false;
+			}
+		}
+		// PIN再送
+		function requestPinCode(){
+			var frm = window.document.MAINFORM;
+			frm["M"].value = "send_pin";
+			document.MAINFORM.submit();
+			return false;
+		}
+	-->
+	</script>

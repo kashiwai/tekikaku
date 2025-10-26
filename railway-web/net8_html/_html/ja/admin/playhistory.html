@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - プレイ状況</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fas fa-chart-area"></i> プレイ状況　<small>{%TO_MAX%}までの状況を確認できます</small></h3>
+					
+					<div class="card">
+						<div class="card-header d-flex justify-content-between" role="tab" id="headingOne">
+							<span class="panel-title">表示条件指定</span>
+						</div>
+						<div>
+							<div class="card-body">
+								<div class="row search">
+									<div class="col-lg-6 d-flex align-items-center">
+										<div class="search-title">実機</div>
+										<div>
+											<select class="custom-select custom-select-sm" name="NO" style="width:300px;">
+												{%SEL_MACHINE_NO%}
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-6 d-flex align-items-center">
+										<div class="search-title">期間</div>
+										<div class="d-flex flex-row align-items-center">
+											<div class="input-group flatpickr-max" data-wrap="true" data-clickOpens="false" style="width:200px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="PLAY_DATE_FROM" value="{%PLAY_DATE_FROM%}">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											<div class="px-2">～ {%PLAYHISTORY_PERIOD%}日間<small class="text-muted">（{%MAX_DT%}以前のみ指定可能）</small></div>
+										</div>
+									</div>
+
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">公開開始日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_FROM" value="{%RELEASE_DATE_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_TO" value="{%RELEASE_DATE_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">公開終了日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_FROM" value="{%END_DATE_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_TO" value="{%END_DATE_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">オーナー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_OWNER_NO" style="width:200px;">
+													{%SEL_OWNER_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">カテゴリ</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_CATEGORY" style="width:200px;">
+													{%SEL_CATEGORY%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">コーナー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_CORNER_NO" style="width:200px;">
+													{%SEL_CORNER_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">メーカー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_MAKER_NO" style="width:200px;">
+													{%SEL_MAKER%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種名</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}" style="width:200px;">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">機種コード</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_CD" value="{%S_MODEL_CD%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">シグナリング</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_SIGNALING_ID" style="width:200px;">
+													{%SEL_SIGNALING_ID%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ステータス</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_STATUS" style="width:200px;">
+													{%SEL_STATUS%}
+												</select>
+											</div>
+										</div>
+
+									<div class="col-12 text-center border-top">
+										<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+										<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+									</div>
+								</div>
+							</div><!-- /.panel-body -->
+						</div>
+					</div>
+					
+					<div class="card mt-3">
+						<div class="card-header d-flex justify-content-between">
+							<span class="panel-title">総ゲーム数</span>
+						</div>
+						<div  class="chart" id="totalGameCountGraph" style="height: 250px; width: 100%;"></div>
+					</div><!-- /.card -->
+						
+					<div class="card mt-3">
+						<div class="card-header d-flex justify-content-between">
+							<span class="panel-title">差枚数</span>
+						</div>
+						<div  class="chart" id="CreditGraph" style="height: 250px; width: 100%;"></div>
+					</div><!-- /.card -->
+						
+					<div class="card mt-3">
+						<div class="card-header d-flex justify-content-between">
+							<span class="panel-title">ボーナス回数</span>
+						</div>
+						<div  class="chart" id="BonusCountGraph" style="height: 250px; width: 100%;"></div>
+					</div><!-- /.card -->
+					
+				</div><!-- /.container-fluid -->
+				
+				</form>
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				// flatpickrを起動させるinputのID *classでも可
+				flatpickr('.flatpickr-max', {
+					dateFormat: 'Y/m/d',
+					maxDate: '{%MAX_DT%}'
+				});
+			});
+			
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_date("{%A0024%}", frm["PLAY_DATE_FROM"].value, false)) return false;
+				if (frm["PLAY_DATE_FROM"].value.length > 0) if (!compare_date("{%A0119%}", frm["PLAY_DATE_FROM"].value, "{%MAX_DT%}")) return false;
+
+				if (!chk_date("{%A1811%}", frm["RELEASE_DATE_FROM"].value, false)) return false;
+				if (!chk_date("{%A1812%}", frm["RELEASE_DATE_TO"].value, false)) return false;
+				if (chk_indis("", frm["RELEASE_DATE_FROM"].value) && chk_indis("", frm["RELEASE_DATE_TO"].value)) {
+					if (!compare_date("{%A1815%}", frm["RELEASE_DATE_FROM"].value, frm["RELEASE_DATE_TO"].value, false)) return false;
+				}
+				if (!chk_date("{%A1813%}", frm["END_DATE_FROM"].value, false)) return false;
+				if (!chk_date("{%A1814%}", frm["END_DATE_TO"].value, false)) return false;
+				if (chk_indis("", frm["END_DATE_FROM"].value) && chk_indis("", frm["END_DATE_TO"].value)) {
+					if (!compare_date("{%A1816%}", frm["END_DATE_FROM"].value, frm["END_DATE_TO"].value, false)) return false;
+				}
+				
+				trans();
+			}
+			
+			// 表示期間
+			var countDt = [new Date(){%DAYS_DATE%}];
+			countDt.shift();
+			
+			// 総ゲーム数カウント
+			var total_advName = ["Total Game"];
+			var totalClick = Array({%DAYS_COUNT%});
+			{%TOTAL_DATA%}
+			
+			// クレジット
+			var credit_advName = ["Credit"];
+			var creditClick = Array({%DAYS_COUNT%});
+			{%CREDIT_DATA%}
+			
+			// ボーナス関連
+			var advName = ["","Big Bonus","Regular  Bonus"];
+			advName.shift();	// 先頭削除
+			// ボーナスカウント
+			var Click = Array({%DAYS_COUNT%});
+			{%BOUNUS_DATA%}
+			
+			
+			
+			var daysFormat = "MM/dd";	// 月日書式
+			// グラフ描画
+			function drawBonusChart( noneAnimation) {
+				var duration = 0;
+				if (!noneAnimation) duration = 1000;
+				// Define the chart to be drawn.
+				var data = new google.visualization.DataTable();
+				data.addColumn('date', 'Day');		// 先頭が文字列だと棒グラフ扱いになりXY両方にグリッドラインがつかない
+				// 広告主分値カラム追加
+				for (var i = 0; i < advName.length; ++i) {
+					data.addColumn('number', advName[i]);
+				}
+				// 値追加
+				data.addRows( Click);
+				// オプション設定
+				var options = {
+					 pointSize: 6
+					,lineWidth: 2
+					,curveType: 'none'
+					,hAxis: {
+						format: daysFormat
+						,minorGridlines: {
+							color:'transparent'
+						}
+						,ticks: countDt
+					}
+					, vAxis: {	// Y軸
+						viewWindow: {
+							 min: 0
+							//,max:20
+						}
+						,format: '0'
+						,minValue: 1
+					}
+					, colors: ['red','orange']
+					, chartArea: {
+							left: 70
+							, width: '92%'
+							}
+					,legend: {
+							position: 'top'
+							}
+					,animation: {
+								startup: true
+								, duration: duration
+								, easing:'in'
+								}
+					,focusTarget: 'category'
+				}
+				//				var chart = new google.visualization.ColumnChart(document.getElementById('BonusCountGraph'));
+				var chart = new google.visualization.LineChart(document.getElementById('BonusCountGraph'));
+				var formatter = new google.visualization.DateFormat({pattern: daysFormat});
+				formatter.format(data, 0);
+				chart.draw(data, options);
+			}
+			
+			function drawCreditChart( noneAnimation) {
+				var duration = 0;
+				if (!noneAnimation) duration = 1000;
+				// Define the chart to be drawn.
+				var data = new google.visualization.DataTable();
+				data.addColumn('date', 'Day');		// 先頭が文字列だと棒グラフ扱いになりXY両方にグリッドラインがつかない
+				// 広告主分値カラム追加
+				for (var i = 0; i < credit_advName.length; ++i) {
+					data.addColumn('number', credit_advName[i]);
+				}
+				// 値追加
+				data.addRows( creditClick);
+				// オプション設定
+				var options = {
+					 pointSize: 6
+					,lineWidth: 2
+					,curveType: 'none'
+					,hAxis: {
+						format: daysFormat
+						,minorGridlines: {
+							color:'transparent'
+						}
+						,ticks: countDt
+					}
+					, vAxis: {	// Y軸
+					}
+					, colors: ['blue']
+					, chartArea: {
+							left: 70
+							, width: '92%'
+							}
+					,legend: {
+							position: 'top'
+							}
+					,animation: {
+								startup: true
+								, duration: duration
+								, easing:'in'
+								}
+					,focusTarget: 'category'
+				}
+				var chart = new google.visualization.LineChart(document.getElementById('CreditGraph'));
+				var formatter = new google.visualization.DateFormat({pattern: daysFormat});
+				formatter.format(data, 0);
+				chart.draw(data, options);
+			}
+			
+			function drawTotalChart( noneAnimation) {
+				var duration = 0;
+				if (!noneAnimation) duration = 1000;
+				// Define the chart to be drawn.
+				var data = new google.visualization.DataTable();
+				data.addColumn('date', 'Day');		// 先頭が文字列だと棒グラフ扱いになりXY両方にグリッドラインがつかない
+				// 広告主分値カラム追加
+				for (var i = 0; i < total_advName.length; ++i) {
+					data.addColumn('number', total_advName[i]);
+				}
+				// 値追加
+				data.addRows( totalClick);
+				// オプション設定
+				var options = {
+					 pointSize: 6
+					,lineWidth: 2
+					,curveType: 'none'
+					,hAxis: {
+						format: daysFormat
+						,minorGridlines: {
+							color:'transparent'
+						}
+						,ticks: countDt
+					}
+					, vAxis: {	// Y軸
+						viewWindow: {
+							 min: 0
+							//,max:20
+						}
+						,format: '0'
+						,minValue: 1
+					}
+					, colors: ['green']
+					, chartArea: {
+							left: 70
+							, width: '92%'
+							}
+					,legend: {
+							position: 'top'
+							}
+					,animation: {
+								startup: true
+								, duration: duration
+								, easing:'in'
+								}
+					,focusTarget: 'category'
+				}
+				var chart = new google.visualization.LineChart(document.getElementById('totalGameCountGraph'));
+				var formatter = new google.visualization.DateFormat({pattern: daysFormat});
+				formatter.format(data, 0);
+				chart.draw(data, options);
+			}
+			
+			
+			// 初期処理
+			function init() {
+				//グラフ描画時リサイズされたら再描画
+				$(window).resize(function() {
+					drawTotalChart(true);
+					drawCreditChart(true);
+					drawBonusChart(true);
+				});
+			}
+			
+			google.charts.load('46', {packages: ['corechart']});
+			google.charts.setOnLoadCallback( drawTotalChart);
+			google.charts.setOnLoadCallback( drawCreditChart);
+			google.charts.setOnLoadCallback( drawBonusChart);
+			
+		</script>
+		
+	</body>
+</html>

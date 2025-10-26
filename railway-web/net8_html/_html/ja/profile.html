@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - プロフィール確認・設定</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">プロフィール確認・設定</h1>
+		
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="regist">
+			
+			<div class="input-form">
+				<div class="form-group row">
+					<label for="invitationCode" class="col-sm-3 col-form-label text-secondary">招待コード</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" name="INV_CODE" id="invitationCode" value="{%INV_CODE%}" placeholder="1234567890" readonly>
+					</div>
+				</div>
+				
+				<div class="alert alert-secondary">
+					<small class="text-muted">
+						招待コードとは、お友達を招待するときに使うコードです。
+						招待したお友達があなたの招待コードを入力して会員登録すると、二人に{%CURRENCY_1%}をプレゼントします。
+					</small>
+				</div>
+			</div>
+			<hr>
+			<div class="input-form">
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">氏名</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="name" value="{%DISP_NAME%}" placeholder="未設定" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">生年月日</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="birthday" value="{%DISP_BIRTHDAY%}" placeholder="未設定" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">性別</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="sex" value="{%DISP_SEX%}" placeholder="未設定" readonly>
+					</div>
+				</div>
+				
+				<!--if:{PROFILE_EDIT}-->
+				<div class="alert alert-secondary text-center text-muted">
+					<small>プロフィール未設定</small>
+				</div>
+				<!--/if:{PROFILE_EDIT}-->
+				
+			</div>
+			
+			<hr>
+			<div class="input-form">
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">設定6イベントや新台導入情報を受け取る</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="magazine" value="{%DISP_MAGAZINE%}" placeholder="未設定" readonly>
+					</div>
+				</div>
+			</div>
+			
+		</form>
+		<hr>
+		<div class="text-center">
+			<a href="profile_detail.php" class="btn btn-primary">プロフィールを設定する</a>
+		</div>
+		
+		<hr>
+		<div class="text-center mb-5">
+			<a href="leave.php"  class="btn btn-danger">退会手続き</a>
+		</div>
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	
+	</body>
+</html>

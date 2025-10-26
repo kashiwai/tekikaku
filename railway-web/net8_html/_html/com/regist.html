@@ -1,0 +1,63 @@
+	<script type="text/javascript">
+	<!--
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			
+			if (!chk_indis("{%U0461%}", frm["NICKNAME"].value)) return false;
+			if (frm["NICKNAME"].value.length > {%NICKNAME_LIMIT%} ) {
+				chkAlert("{%U0448%}");
+				return false;
+			}
+			
+			if (!chk_indis("{%U0402%}", frm["MAIL"].value)) return false;
+			if (!chk_mail( "{%U0404%}", frm["MAIL"].value)) return false;
+			if (frm["MAIL"].value.length > {%MAIL_LIMIT%} ) {
+				chkAlert("{%U0449%}");
+				return false;
+			}
+			if (!chk_indis("{%U0403%}", frm["MAILCONF"].value)) return false;
+			if ( frm["MAILCONF"].value != frm["MAIL"].value) {
+				chkAlert("{%U0405%}");
+				return false;
+			}
+			if (!chk_indis("{%U0427%}", frm["PASS"].value)) return false;
+			if (frm["PASS"].value.length < {%MEMBER_PASS_MIN%} ) {
+				chkAlert("{%U0447%}");
+				return false;
+			}
+			if (frm["PASS"].value.length > {%MEMBER_PASS_MAX%} ) {
+				chkAlert("{%U0430%}");
+				return false;
+			}
+			if (!chk_pattern("{%U0470%}", frm["PASS"].value, "{%MEMBER_PASS_PATTERN%}", false)) return false;		//制約
+			
+			if (frm["CODE"].value != ""){
+				if (!chk_alnum("{%U0462%}", frm["CODE"].value)) return false;
+				if (frm["CODE"].value.length != {%INVITE_CODE_LENGTH%} ) {
+					chkAlert("{%U0462%}");
+					return false;
+				}
+			}
+			<!--if:{MEMBER_BENEFITS}-->
+			if (frm["BENEFITS_CD"].value != ""){
+				if (!chk_pattern("{%U0407%}", frm["BENEFITS_CD"].value, "^[{%BENEFITS_CODE_STR%}]{1,{%BENEFITS_CODE_LENGTH%}}$", false)) return false;
+			}
+			<!--/if:{MEMBER_BENEFITS}-->
+			<!--if:{FOOTER_DISP_TERMS}-->
+			if (frm["CHECK1"].checked==false){
+				chkAlert("{%U0401%}");
+				return false;
+			}
+			<!--/if:{FOOTER_DISP_TERMS}-->
+			<!--if:{FOOTER_DISP_POLICY}-->
+			if (frm["CHECK2"].checked==false){
+				chkAlert("{%U0491%}");
+				return false;
+			}
+			<!--/if:{FOOTER_DISP_POLICY}-->
+
+			return true;
+		}
+	-->
+	</script>

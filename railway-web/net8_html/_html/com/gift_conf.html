@@ -1,0 +1,106 @@
+	<script type="text/javascript">
+	<!--
+		$('#errorform').hide();
+		$('#nologin').hide();
+		$('#other').hide();
+		$('#error').hide();
+		$('#requestPinArea').show();
+		$('#pinArea').hide();
+		var frm = window.document.MAINFORM;
+		if( frm["TEL"].value.length > 0 && frm["INIT"].value.length <= 0){
+			$('#international_cd option:not(:selected)').prop('disabled', true);
+			$('#telephone_no').attr('readonly', true);
+			$('#requestPinArea').hide();
+			$('#pinArea').show();
+		}
+		
+		function showFailNoSession(){
+			$('#inputform').hide();
+			$('#errorform').show();
+			$('#nologin').show();
+			$('#other').hide();
+			$('#error').hide();
+		}
+		
+		function showFail( mes){
+			if( mes != ""){
+				$('#error').html(mes);
+				$('#inputform').show();
+				$('#errorform').show();
+				$('#nologin').hide();
+				$('#other').hide();
+				$('#error').show();
+			}else{
+				$('#inputform').show();
+				$('#errorform').show();
+				$('#nologin').hide();
+				$('#other').show();
+				$('#error').hide();
+			}
+		}
+		
+		function requestPinCode(){
+			//電話番号チェック
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U1908%}", frm["INTERNATIONAL_CD"].value)) return false;
+			if (!chk_indis("{%U1906%}", frm["TEL"].value)) return false;
+			if (!chk_number("{%U1907%}", frm["TEL"].value, false)) return false;
+			// 先頭Zero削除
+			frm["TEL"].value = Number(frm["TEL"].value);
+			if (frm["INTERNATIONAL_CD"].value.length + frm["TEL"].value.length > 16) {
+				chkAlert("{%U1909%}");
+				return false;
+			}
+			//sendデータ
+			var _sendData = {
+				 "t":frm["TEL"].value
+				, "icd":frm["INTERNATIONAL_CD"].value
+			}
+			$.ajax({
+				url: './api/sendGift.php',
+				type: 'GET',
+				data: _sendData,
+				dataType: 'json'
+			}).done(function(data, textStatus, jqXHR){
+				if( data["status"] == "ng"){
+					if( data["error"] == "not login"){
+						showFailNoSession();
+					}else{
+						//other error
+						showFail(data["error"]);
+					}
+				}else if( data["status"] == "ok"){
+					$('#international_cd option:not(:selected)').prop('disabled', true);
+					$('#telephone_no').attr('readonly', true);
+					$('#requestPinArea').hide();
+					$('#pinArea').show();
+					$('#errorform').hide();
+				}
+			}).fail(function(jqXHR, textStatus, errorThrown){
+				//other error
+				showFail("");
+			});
+		}
+		
+		function _submit(){
+			//PIN check
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U1921%}", frm["PIN"].value)) return false;
+			if (!chk_number("{%U1922%}", frm["PIN"].value)) return false;
+			if (frm["PIN"].value.length != {%SMS_PINCODE_LENGTH%}){
+				chkAlert("{%U1923%}");
+				return false;
+			}
+			//
+			var _action = document.MAINFORM.getAttribute("action");
+			_action += "?M=send";
+			document.MAINFORM.setAttribute("action", _action);
+			document.MAINFORM.submit();
+			return false;
+		}
+		
+		function _cancel(){
+			document.MAINFORM.submit();
+		}
+	-->
+	</script>

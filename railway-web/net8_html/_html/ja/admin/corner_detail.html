@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - コーナー情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="CORNER_NO" value="{%CORNER_NO%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> コーナー情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>コーナー名<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="CORNER_NAME" value="{%CORNER_NAME%}" maxlength="20" style="width:300px;">
+									</td>
+								</tr>
+								<tr>
+									<th>コーナー名（英語）</th>
+									<td>
+										<input type="text" class="form-control" name="CORNER_ROMAN" value="{%CORNER_ROMAN%}" maxlength="50" style="width:300px;">
+									</td>
+								</tr>
+								<tr>
+									<th>お知らせ表示</th>
+									<td>
+										<div class="custom-control custom-checkbox custom-control-inline">
+											<input type="checkbox" class="custom-control-input" id="customCheck" name="NOTICE_FLG" value="1"{%CHK_NOTICE_FLG%}>
+											<label class="custom-control-label" for="customCheck">表示する</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>備考</th>
+									<td><textarea class="form-control" rows="6" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{UPD}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{UPD}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+
+				//コーナー名
+				if (!chk_indis("{%A1201%}", frm["CORNER_NAME"].value)) return false;
+				if (frm["CORNER_NAME"].value.length > 20) {
+					chkAlert("{%A1202%}");
+					return false;
+				}
+				//コーナー名（英語）
+				if (frm["CORNER_ROMAN"].value.length > 50) {
+					chkAlert("{%A1203%}");
+					return false;
+				}
+				
+				swal({
+					title: 'コーナー情報登録',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				return false;
+			}
+			
+			// 削除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: 'コーナー情報削除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

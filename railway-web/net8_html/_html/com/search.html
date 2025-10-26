@@ -1,0 +1,42 @@
+	<script type="text/javascript">
+	<!--
+		function _move( _tag, _ord){
+			var _ret = "";
+			var _qstr = document.location.search;
+			if (_qstr !== "") {
+				var params = new URLSearchParams( _qstr);
+				if( _tag == "VIEW"){
+					params.set( "P", 1);
+				}
+				params.set( _tag, _ord);
+				_ret = params.toString();
+			}else{
+				_ret = _tag + "=" + _ord;
+			}
+			var _que = location.href.split("?");
+			location.href = _que[0] +"?"+ _ret;
+		}
+
+		//昇順
+		document.getElementById('ascBtn').addEventListener('click', function() {
+			_move( "ODR", document.getElementById('ORDERTYPE').value + "+asc");
+		});
+		//降順
+		document.getElementById('descBtn').addEventListener('click', function() {
+			_move( "ODR", document.getElementById('ORDERTYPE').value + "+desc");
+		});
+		//表示件数Btn
+		document.getElementById('viewBtn').addEventListener('click', function() {
+			_move( "VIEW", document.getElementById('VIEW').value);
+		});
+		// リセット
+		document.getElementById('clearFormBtn').addEventListener('click', function() {
+			window.document.MAINFORM.reset();
+			$('#searchMaker').find('option:selected').prop('selected', false);
+			$('#searchGeneration').find('option:selected').prop('selected', false);
+			$('#searchName').val('');
+			$('#searchFree').prop('checked', false);
+		});
+
+	-->
+	</script>

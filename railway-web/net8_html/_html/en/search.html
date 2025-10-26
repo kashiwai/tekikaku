@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Look for a Machine</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">Look for a Machine</h1>
+		<hr>
+		<div class="input-form">
+			<form action="{%SITE_SSL_URL%}{%SELF%}" method="GET" class="form-horizontal" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="VIEW" value="{%VIEW%}">
+
+				<div class="form-group row">
+					<label for="searchName" class="col-sm-3 col-form-label col-form-label-sm">Model Name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control form-control-sm" id="searchName" placeholder="Enter Model Name" name="NAME" value="{%NAME%}" maxlength="100">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="searchMaker" class="col-sm-3 col-form-label col-form-label-sm">Manufacturer</label>
+					<div class="col-sm-3">
+						<select class="custom-select custom-select-sm" id="searchMaker" name="MAKER">
+							{%SEL_MAKER%}
+						</select>
+					</div>
+					<label for="searchGeneration" class="col-sm-2 col-form-label col-form-label-sm">Generation</label>
+					<div class="col-sm-4">
+						<select class="custom-select custom-select-sm" id="searchGeneration" name="GENERATION">
+							{%SEL_GENERATION%}
+						</select>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label col-form-label-sm">Machine Status</label>
+					<div class="col-sm-5">
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="searchFree" value="1" name="FREE" {%CHK_FREE%}>
+							<label class="custom-control-label" for="searchFree"><small>Vacant Machines Only</small></label>
+						</div>
+					</div>
+					<div class="col-sm-4 text-right">
+						<button class="btn btn-sm btn-outline-secondary" type="button" id="clearFormBtn">Clear</button>
+						<button class="btn btn-sm btn-outline-info" type="submit"><i class="fas fa-search"></i> Search</button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+		<hr>
+		<div class="row justify-content-end mb-4">
+			<div class="col-7 col-md-5 col-lg-3">
+				<div class="input-group input-group-sm mb-3">
+					<select class="custom-select" id="ORDERTYPE" name="ORDERTYPE">
+						{%SEL_ODR%}
+					</select>
+					<div class="input-group-append">
+						<button class="btn btn-sm btn-outline-primary" type="button" id="ascBtn"><i class="fas fa-sort-alpha-down"></i> Asc</button>
+					</div>
+					<div class="input-group-append">
+						<button class="btn btn-sm btn-outline-primary" type="button" id="descBtn"><i class="fas fa-sort-alpha-up"></i> Desc</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-5 col-md-3 col-lg-3">
+				<div class="input-group input-group-sm mb-3">
+					<select class="custom-select" id="VIEW" name="VIEW">
+						{%SEL_VIEW%}
+					</select>
+					<div class="input-group-append">
+						<label class="input-group-text" for="inputGroupSelect02"> items </label>
+					</div>
+					<div class="input-group-append">
+						<button class="btn btn-sm btn-outline-primary" type="button" id="viewBtn">View</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-0">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		<hr class="mt-2">
+		<!--#include file="parts_machine_list.html"-->
+
+		<hr class="mb-0">
+		<div class="row mt-2 mb-4">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="parts_machine_modal.html"-->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}search.html"-->
+	
+	</body>
+</html>

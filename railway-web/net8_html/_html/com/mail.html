@@ -1,0 +1,19 @@
+	<script type="text/javascript">
+	<!--
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U0608%}", frm["MAIL"].value)) return false;
+			if (!chk_mail( "{%U0604%}", frm["MAIL"].value)) return false;
+			if (frm["MAIL"].value.length > {%MAIL_LIMIT%} ) {
+				chkAlert("{%U0610%}");
+				return false;
+			}
+			if (!chk_indis("{%U0609%}", frm["MAILCONF"].value)) return false;
+			if ( frm["MAILCONF"].value != frm["MAIL"].value) {
+				chkAlert("{%U0605%}");
+				return false;
+			}
+		}
+	-->
+	</script>

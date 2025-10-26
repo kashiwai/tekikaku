@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Send Gift</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">Send Gift</h1>
+		
+		<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
+		<div class="alert alert-primary now-point">
+			Possession :<strong>{%POINT_LABEL%}</strong> <small>{%CURRENCY_3%}</small>
+			<!--if:{NONE_AGENT}-->
+			<br />
+			<strong>Gifts can be sent {%CURRENCY_3%} {%DSP_GIFT_POINT%}</strong><br />
+			<small>* The amount sent will be subtracted from the gift transmission.</small>
+			<!--if:{EXIST_LIMIT}-->
+			<br /><strong>Current Accumulation{%CURRENCY_3%} {%DSP_TOTAL_GIFT_POINT%}</strong><br />
+			<!--if:{EXIST_SEND}-->
+			* The {%CURRENCY_3%} {%DSP_DAY_SEND%} you sent today. <br />
+			<!--/if:{EXIST_SEND}-->
+			<!--loop:{GIFT_LIMIT}-->
+			Accumulation less than  or equal {%SET_TOTAL_GIFT_POINT%}{%CURRENCY_3%}<br />Maximum daily sending {%SET_GIFT_LIMIT%}<br />
+			<!--/loop:{GIFT_LIMIT}-->
+			<small>* If the accumulation exceeds the above, the maximum daily sending is unlimited.</small>
+			<!--/if:{EXIST_LIMIT}-->
+			<!--/if:{NONE_AGENT}-->
+		</div>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=conf" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<div class="input-form">
+				<div class="form-group row">
+					<label for="invitationCode" class="col-sm-4 col-form-label">Destination Invitation Code</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" name="INV_CODE" id="invitationCode" value="{%INV_CODE%}" maxlength="{%INVITE_CODE_LENGTH%}">
+					</div>
+				</div>
+				<div id="invCodeAlert" class="alert alert-primary" style="display:none;">
+					<strong id="invCodeAlertMsg"></strong>
+				</div>
+				
+				<div class="form-group row">
+					<label for="sendCoin" class="col-sm-4 col-form-label">Send {%CURRENCY_3%}</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" name="SEND_COIN" id="sendCoin" value="{%SEND_COIN%}" placeholder="" maxlength="7">
+					</div>
+				</div>
+				<div id="sendCoinAlert" class="alert alert-primary" style="display:none;">
+					<strong id="sendCoinAlertMsg"></strong>
+				</div>
+				
+				<div class="form-group row">
+					 * <!--if:{ENABLE_MIN}-->minimum: {%DISP_MIN_POINT%}, <!--/if:{ENABLE_MIN}--><!--if:{ENABLE_LOT}-->per lot: {%DISP_LOT%}, <!--/if:{ENABLE_LOT}-->commission: <span id="comRate">{%RATE%}</span>% （{%DISP_BEARER%}）
+				</div>
+				
+				<div id="CommArea" class="alert alert-primary" style="display:none;">
+					commission :<strong id="calcComm"></strong> <small>{%CURRENCY_3%}</small>
+				</div>
+				
+				<div class="form-group text-center">
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="AGREE" name="AGREE" value="1" {%CHK_AGREE%}>
+						<label class="custom-control-label" for="AGREE">I agree to send a gift with the above information.</label>
+					</div>
+				</div>
+					
+				<div class="input-form">
+					<div class="text-center">
+						<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary">Confirm</a>
+					</div>
+				</div>
+				<br>
+				
+			</div>
+		</form>
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}gift.html"-->
+	
+	</body>
+</html>

@@ -1,0 +1,33 @@
+	<script type="text/javascript">
+	<!--
+		$(function(){
+			window.del_address = function(t){
+				var _self  = $(t).parents('.card');
+				var _modal = $('.modal .modal-dialog');
+				var _set   = _modal.find('.address_data');
+				var _btn   = _modal.find('.modal-body .card-subtitle').eq(1);
+				_set.find('h5').html( _self.find('.card-header h5').html());
+				_set.find('.list-group li').eq(0).html( _self.find('.list-group li').eq(0).html());
+				_set.find('.list-group li').eq(1).html( _self.find('.list-group li').eq(1).html());
+				//
+				_btn.find('.address_delete').find('a.address_sned_btn').attr('href', 'address_add.php?M=del&NO='+ _self.data('no'));
+				_btn.find('.btn_area').hide();
+				_btn.find('.address_delete').show();
+			}
+			
+			window.change_address = function(t){
+				var _self  = $(t).parents('.card');
+				var _modal = $('.modal .modal-dialog');
+				var _set   = _modal.find('.address_data');
+				var _btn   = _modal.find('.modal-body .card-subtitle').eq(1);
+				_set.find('h5').html( _self.find('.card-header h5').html());
+				_set.find('.list-group li').eq(0).html( _self.find('.list-group li').eq(0).html());
+				_set.find('.list-group li').eq(1).html( _self.find('.list-group li').eq(1).html());
+				//
+				_btn.find('.address_select').find('a.address_sned_btn').attr('href', 'address_add.php?M=change&NO='+ _self.data('no'));
+				_btn.find('.btn_area').hide();
+				_btn.find('.address_select').show();
+			}
+		});
+	-->
+	</script>

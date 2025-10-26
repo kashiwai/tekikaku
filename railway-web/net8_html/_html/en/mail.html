@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Reset Email Address</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">Reset Email Address</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="proc">
+			<div class="input-form mb-5">
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				<div class="alert alert-secondary">
+					<small>The Email Address reset information will be sent to the registered email address.</small>
+				</div>
+				<!--if:{OVERMAIL}-->
+				<div class="alert alert-danger">
+					現在のメールアドレス（{%NMAIL%}）は送信エラー回数が規定数を超えています。
+				</div>
+				<!--/if:{OVERMAIL}-->
+				
+				<div class="form-group">
+					<label class="col-form-label" for="mail">Email Address<span class="badge badge-indis">Required</span></label>
+					<input type="text" class="form-control" placeholder="" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="mailConf">Email address (Confirmation)<span class="badge badge-indis">Required</span></label>
+					<input type="text" class="form-control" placeholder="Enter the same email address as above." id="mailConf" name="MAILCONF" value="{%MAILCONF%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i> Send</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}mail.html"-->
+	
+	</body>
+</html>

@@ -1,0 +1,12 @@
+# Basic認証設定（Docker環境用に調整）
+AuthUserFile /var/www/html/.htpasswd-admin
+# AuthGroupFile /dev/null  # グループファイル不使用のためコメントアウト
+AuthName "NET8 Admin Area"
+AuthType Basic
+
+# Docker環境では全IPからのアクセスを許可
+# 本番環境では以下のRequire ip行のコメントを外して制限してください
+# Require ip xxx.xxx.xxx.xxx
+
+# 開発環境用：認証ユーザーのみアクセス可
+Require valid-user

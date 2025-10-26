@@ -1,0 +1,37 @@
+	<script type="text/javascript">
+	<!--
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			
+			if (!chk_indis("{%U0703%}", frm["MAIL"].value)) return false;
+			if (frm["MAIL"].value != ""){
+				if (!chk_mail("{%U0706%}", frm["MAIL"].value, false)) return false;
+			}
+			if (frm["MAIL"].value.length > {%MAIL_LIMIT%} ) {
+				chkAlert("{%U0708%}");
+				return false;
+			}
+			
+			if (!chk_indis("{%U0701%}", frm["INQUIRY_TITLE"].value)) return false;
+			if (frm["INQUIRY_TITLE"].value == 0){
+				chkAlert("{%U0701%}");
+				return false;
+			}
+			
+			<!--if:{LOGIN}-->
+			if (frm["MACHINENO"].value != ""){
+				if (!chk_number("{%U0707%}", frm["MACHINENO"].value)) return false;
+			}
+			
+			if (frm["TGDATE"].value != ""){
+				if (!chk_date("{%U0705%}", frm["TGDATE"].value, false)) return false;
+			}
+			<!--/if:{LOGIN}-->
+			
+			if (!chk_indis("{%U0702%}", frm["INQUIRY_BODY"].value)) return false;
+			
+			return true;
+		}
+	-->
+	</script>

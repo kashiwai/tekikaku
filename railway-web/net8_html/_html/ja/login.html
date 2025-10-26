@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - ログインページ</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">ログイン</h1>
+
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="proc">
+			<input type="hidden" name="NO" value="{%NO%}">
+			<input type="hidden" name="TRANS" value="{%TRANS%}">
+			
+			<div class="input-form mb-5">
+				<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
+				<div class="form-group">
+					<label class="col-form-label" for="mail">メールアドレス</label>
+					<input type="text" class="form-control" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="password">パスワード</label>
+					<input type="password" class="form-control" id="password" name="PASS" maxlength="{%MEMBER_PASS_MAX%}">
+				</div>
+				<input type="checkbox" id="cmail" name="CMAIL" value="1" {%CMAIL_CHECKED%}>
+				<label class="col-form-label" for="cmail">メールアドレスを保存する</label>
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary"><i class="fas fa-sign-in-alt"></i> ログイン</button>
+					<hr>
+					<a href="{%SITE_SSL_URL%}pass_reset.php" class="btn btn-sm btn-secondary">パスワードを忘れた方はこちら</a>
+					<hr>
+					初めての方はこちら<br />
+					<a href="{%SITE_SSL_URL%}regist.php" class="btn btn-sm btn-secondary mt-2">新規会員登録</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}login.html"-->
+	
+	</body>
+</html>

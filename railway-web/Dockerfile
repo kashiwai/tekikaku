@@ -34,13 +34,13 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 RUN a2enmod rewrite ssl headers
 
 # カスタムPHP設定
-COPY ../net8_rebirth/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Apacheカスタム設定
-COPY ../net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # アプリケーションファイルをコピー
-COPY ../net8_rebirth/net8/02.ソースファイル/net8_html /var/www/html
+COPY net8_html /var/www/html
 
 # 権限設定
 RUN chown -R www-data:www-data /var/www/html \

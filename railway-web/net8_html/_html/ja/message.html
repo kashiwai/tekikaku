@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 連絡BOX</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+
+		<h1 class="h3 text-center my-4">連絡BOX</h1>
+		
+		<hr>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				通知はありません。
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>種別</th>
+					<th>内容</th>
+					<th>配信日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="ID" class="text-center">
+						<!--if:{LINK_PLAYLIST}--><a href="playlist.php">{%SEQ_PAD%}</a><!--/if:{LINK_PLAYLIST}-->
+						<!--if:{LINK_POINT}--><a href="point.php">{%SEQ_PAD%}</a><!--/if:{LINK_POINT}-->
+						<!--if:{LINK_SHIPPING}--><a href="shipping.php">{%SEQ_PAD%}</a><!--/if:{LINK_SHIPPING}-->
+						<!--if:{LINK_DRAW}--><a href="draw.php">{%SEQ_PAD%}</a><!--/if:{LINK_DRAW}-->
+						<!--if:{NOLINK}-->{%SEQ_PAD%}<!--/if:{NOLINK}-->
+					</td>
+					<td aria-label="種別" class="text-center">{%TYPE_LABEL%}</td>
+					<td aria-label="内容">{%MESSAGE%}<!--if:{LINK_MODAL}--> <span class="couponinfo badge badge-indis btn" data-title="<!--if:{IS_COUPON}-->クーポン情報<!--/if:{IS_COUPON}--><!--if:{IS_MAGAZINE}-->メルマガ情報<!--/if:{IS_MAGAZINE}-->" data-contents="{%MODAL_CONTENTS%}">詳細</span><!--/if:{LINK_MODAL}--></td>
+					<td aria-label="配信日時" class="text-center">{%DELIVERY_DT%}</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+	
+	<!-- Modal -->
+	<div class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">クーポン情報</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p class="mainmessage"><p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}message.html"-->
+	
+	</body>
+</html>

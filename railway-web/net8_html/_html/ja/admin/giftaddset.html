@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - ギフト枠加算設定</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-fw fa-gift"></i> ギフト枠加算設定</h3>
+						
+						<div class="card mt-3" style="max-width:780px;">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:100%;">
+									<thead>
+										<tr>
+											<th style="width:180px;">設定No
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="addset_no asc" onClick="reSort('addset_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="addset_no desc" onClick="reSort('addset_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>集計タイプ
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="addset_type asc, base_val asc" onClick="reSort('addset_type asc, base_val asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="addset_type desc, base_val asc" onClick="reSort('addset_type desc, base_val asc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:200px;">しきい値
+											</th>
+											<th>加算{%CURRENCY_3%}枠
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="add_point asc" onClick="reSort('add_point asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="add_point desc" onClick="reSort('add_point desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%ADDSET_NO%}');">{%ADDSET_NO_PAD%}</a></td>
+											<td>{%ADDSET_TYPE_NAME%}</td>
+											<td class="text-right">{%BASE_VAL%}&nbsp;{%VALUNIT%}</td>
+											<td class="text-right">{%ADD_POINT%}&nbsp;{%CURRENCY_3%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key1) {
+				if( key1 == ''){
+					win_open("{%SELF%}", "M=detail", "giftaddset_detail", 820, 500);
+				}else{
+					win_open("{%SELF%}", "M=detail&NO=" + key1, "giftaddset_detail", 820, 500);
+				}
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 会員情報詳細</title>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation_sub.html"-->
+
+		<div id="wrapper">
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist" method="POST" class="form-inline" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+				<input type="hidden" name="NO" value="{%NO%}">
+				<input type="hidden" name="STATE" value="{%STATE%}">
+				<input type="hidden" name="TEMP_DT" value="{%TEMP_DT%}">
+				<input type="hidden" name="JOIN_DT" value="{%JOIN_DT%}">
+				<input type="hidden" name="LAST_LOGIN_DT" value="{%LAST_LOGIN_DT%}">
+				<input type="hidden" name="LAST_LOGIN_UA" value="{%LAST_LOGIN_UA%}">
+				<input type="hidden" name="QUIT_DT" value="{%QUIT_DT%}">
+				<input type="hidden" name="H_PLAY_POINT" value="{%H_PLAY_POINT%}">
+				<input type="hidden" name="BLACK_DT" value="{%BLACK_DT%}">
+				<input type="hidden" name="INVITE_CD" value="{%INVITE_CD%}">
+				<input type="hidden" name="INVITED_BY_NO" value="{%INVITED_BY_NO%}">
+				<input type="hidden" name="INVITED_BY_NAME" value="{%INVITED_BY_NAME%}">
+				<input type="hidden" name="MAIL_ERROR_DT" value="{%MAIL_ERROR_DT%}">
+				<input type="hidden" name="MOBILE_UPD_DT" value="{%MOBILE_UPD_DT%}">
+
+					<div class="container-fluid">
+						<h3 class="page-header mt-2"><i class="fas fa-users"></i> 会員情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>会員No</th>
+									<td>
+										<!--if:{NEW}-->自動発番<!--/if:{NEW}-->
+										<!--if:{EDIT}-->{%DISP_MEMBER_NO%}<!--/if:{EDIT}-->
+									</td>
+								</tr>
+								<tr>
+									<th>ニックネーム&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="text" class="form-control" name="NICKNAME" value="{%NICKNAME%}" maxlength="20"></td>
+								</tr>
+								<tr>
+									<th>メールアドレス&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="text" class="form-control" name="MAIL" value="{%MAIL%}" maxlength="255" style="width:300px;"></td>
+								</tr>
+								<!--if:{AUTH_MEMBER_MOBILE}-->
+								<tr>
+									<th>携帯番号&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" name="INTERNATIONAL_CD">
+											{%SEL_INTERNATIONAL_CD%}
+										</select>
+										<input type="text" class="form-control" name="MOBILE" value="{%MOBILE%}" maxlength="15" placeholder="先頭「0」を除く">
+										<!--if:{EXT_MOBILE_UPD_DT}--><div class="mt-2">（会員変更日時：{%MOBILE_UPD_DT%}）</div><!--/if:{EXT_MOBILE_UPD_DT}-->
+									</td>
+								</tr>
+								<!--if:{AUTH_MOBILE_VALID_DAYS}-->
+								<tr>
+									<th>携帯番号認証日</th>
+									<td>
+										<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+											<input type="text" class="form-control" data-altinput=true data-input name="MOBILE_CHECKED_DT" value="{%MOBILE_CHECKED_DT%}" maxlength="10" placeholder="例：2000/01/01">
+											<input type="hidden" name="MOBILE_CHECKED_TIME" value="{%MOBILE_CHECKED_TIME%}">
+											<div class="input-group-append">
+												<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<!--/if:{AUTH_MOBILE_VALID_DAYS}-->
+								<!--/if:{AUTH_MEMBER_MOBILE}-->
+								<!--if:{NEW}-->
+								<tr>
+									<th>パスワード&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="password" class="form-control" name="PASS" value="" maxlength="20" placeholder="英数字混在{%MEMBER_PASS_MIN%}文字以上"></td>
+								</tr>
+								<!--/if:{NEW}-->
+								
+								<!--if:{EDIT}-->
+								<tr>
+									<th>氏名(姓)</th>
+									<td><input type="text" class="form-control" name="LAST_NAME" value="{%LAST_NAME%}" maxlength="50"></td>
+								</tr>
+								<tr>
+									<th>氏名(名)</th>
+									<td><input type="text" class="form-control" name="FIRST_NAME" value="{%FIRST_NAME%}" maxlength="50"></td>
+								</tr>
+								<!--/if:{EDIT}-->
+
+								<tr>
+									<th>性別</th>
+									<td>
+										{%RDO_SEX%}
+									</td>
+								</tr>
+								<tr>
+									<th>生年月日</th>
+									<td>
+										<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+											<input type="text" class="form-control" data-altinput=true data-input name="BIRTH" value="{%BIRTH%}" maxlength="10" placeholder="例：2000/01/01">
+											<div class="input-group-append">
+												<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<!--if:{EDIT}-->
+								<tr>
+									<th>プレイポイント</th>
+									<td>{%PLAY_POINT%} {%CURRENCY_1%}</td>
+								</tr>
+								<tr>
+									<th>抽選ポイント&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="input-group" style="width:180px;">
+											<input type="text" class="form-control" name="DRAW_POINT" value="{%DRAW_POINT%}" maxlength="9">
+											<div class="input-group-append">
+												<span class="input-group-text">{%CURRENCY_3%}</span>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>メルマガ購読</th>
+									<td>{%MAGAZINE%}</td>
+								</tr>
+								
+								<tr>
+									<th>招待コード</th>
+									<td>{%INVITE_CD%}</td>
+								</tr>
+								
+								<!--if:{IS_PARENT}-->
+								<tr>
+									<th>招待元</th>
+									<td>会員No {%INVITED_BY_NO%}（&nbsp;{%INVITED_BY_NAME%}&nbsp;）</td>
+								</tr>
+								<!--/if:{IS_PARENT}-->
+								
+								<tr>
+									<th>状態</th>
+									<td>{%STATUS%}</td>
+								</tr>
+								<tr>
+									<th>本登録日時</th>
+									<td>{%JOIN_DT%}</td>
+								</tr>
+								<tr>
+									<th>仮登録日時</th>
+									<td>{%TEMP_DT%}</td>
+								</tr>
+								<tr>
+									<th>最終ログイン日時</th>
+									<td>{%LAST_LOGIN_DT%}<br />
+										{%LAST_LOGIN_UA%}
+									</td>
+								</tr>
+								<!--if:{WITHDRAWAL}-->
+								<tr>
+									<th>退会日時</th>
+									<td>{%QUIT_DT%}</td>
+								</tr>
+								<tr>
+									<th>退会理由</th>
+									<td><textarea class="form-control" rows="2" name="QUIT_REASON">{%QUIT_REASON%}</textarea></td>
+								</tr>
+								<!--/if:{WITHDRAWAL}-->
+								<tr>
+									<th>備考</th>
+									<td><textarea class="form-control" rows="4" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+								
+								<tr>
+									<th>ブラックフラグ</th>
+									<td>{%RD_BLACK_FLG%}</td>
+								</tr>
+								
+								<tr>
+									<th>ブラック理由</th>
+									<td><textarea class="form-control" rows="2" name="BLACK_REASON">{%BLACK_REASON%}</textarea></td>
+								</tr>
+								
+								<tr>
+									<th>ブラック登録日時</th>
+									<td>{%BLACK_DT%}</td>
+								</tr>
+								<!--/if:{EDIT}-->
+								
+								<tr>
+									<th>テスター</th>
+									<td>{%RD_TESTER%}</td>
+								</tr>
+								<!--if:{GIFT_AGENT}-->
+								<tr>
+									<th>{%GIFT_AGENT_DISPNAME%}</th>
+									<td>{%RD_AGENT%}</td>
+								</tr>
+								<!--/if:{GIFT_AGENT}-->
+								<!--if:{EDIT}-->
+								<!--if:{GIFT_AGENT}-->
+								<tr>
+									<th>ギフト枠&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="input-group" style="width:180px;">
+											<input type="text" class="form-control" name="GIFT_POINT" value="{%GIFT_POINT%}" maxlength="9">
+											<div class="input-group-append">
+												<span class="input-group-text">{%CURRENCY_3%}</span>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<!--/if:{GIFT_AGENT}-->
+								<!--if:{GIFT_LIMIT}-->
+								<tr>
+									<th>プレミアムポイント&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="TOTAL_GIFT_POINT" value="{%TOTAL_GIFT_POINT%}" maxlength="9">
+									</td>
+								</tr>
+								<!--/if:{GIFT_LIMIT}-->
+								<tr>
+									<th>メールエラー回数&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MAIL_ERROR_COUNT" value="{%MAIL_ERROR_COUNT%}" maxlength="1">
+										<!--if:{EXT_ERROR_DT}-->（最終日時：{%MAIL_ERROR_DT%}）<!--/if:{EXT_ERROR_DT}-->
+									</td>
+								</tr>
+								<!--/if:{EDIT}-->
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{BLACK}--><a href="javascript:void(0);" class="btn btn-warning" onClick="release();">ブラック解除</a><!--/if:{BLACK}-->
+							</div>
+							<!--if:{CANT_EDIT}-->
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+							<!--/if:{CANT_EDIT}-->
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+
+		<!--#include file="inc_script.html"-->
+
+	<script type="text/javascript">
+	// 入力チェック
+	function check() {
+		var frm = window.document.MAINFORM;
+
+		if (!chk_indis("{%A0501%}", frm["NICKNAME"].value)) return false;
+		if (frm["MAIL"].value.length == 0) {
+			chkAlert("{%A0502%}");
+			return false;
+		}
+		if (!chk_mail("{%A0503%}", frm["MAIL"].value, false)) return false;
+	<!--if:{AUTH_MEMBER_MOBILE}-->
+		if (!chk_indis("{%A0542%}", frm["INTERNATIONAL_CD"].value)) return false;
+		if (!chk_indis("{%A0537%}", frm["MOBILE"].value)) return false;
+		if (!chk_number("{%A0538%}", frm["MOBILE"].value, false)) return false;
+		// 先頭Zero削除
+		frm["MOBILE"].value = Number(frm["MOBILE"].value);
+		if (frm["MOBILE"].value.length > 15) {
+			chkAlert("{%A0539%}");
+			return false;
+		}
+		if (frm["INTERNATIONAL_CD"].value.length + frm["MOBILE"].value.length > 16) {
+			chkAlert("{%A0543%}");
+			return false;
+		}
+	<!--if:{AUTH_MOBILE_VALID_DAYS}-->
+		if (!chk_date("{%A0520%}", frm["MOBILE_CHECKED_DT"].value, false)) return false;
+	<!--/if:{AUTH_MOBILE_VALID_DAYS}-->
+	<!--/if:{AUTH_MEMBER_MOBILE}-->
+	<!--if:{NEW}-->
+		if (!chk_indis("{%A0504%}", frm["PASS"].value)) return false;
+		if (frm["PASS"].value.length > 0) {
+			if (!chk_alnum("{%A0517%}", frm["PASS"].value)) return false;
+			if (frm["PASS"].value.length < {%MEMBER_PASS_MIN%}) {
+				chkAlert("{%A0505%}");
+				return false;
+			}
+			if (frm["PASS"].value.length > 20) {
+				chkAlert("{%A0506%}");
+				return false;
+			}
+			if (!chk_pattern("{%A0518%}", frm["PASS"].value, "{%MEMBER_PASS_PATTERN%}", false)) return false;		//制約
+		}
+	<!--/if:{NEW}-->
+	
+		if( frm["BIRTH"].value != ""){
+			if (!chk_date("{%A0509%}", frm["BIRTH"].value, false)) return false;
+		}
+		
+		var qstMsg = "{%A0001%}";
+	<!--if:{EDIT}-->
+		if (!chk_indis("{%A0512%}", frm["DRAW_POINT"].value)) return false;
+		if (!chk_number("{%A0513%}", frm["DRAW_POINT"].value, false)) return false;
+		if (!chk_byte("{%A0519%}", frm["DRAW_POINT"].value, false, frm["DRAW_POINT"])) return false;
+		// ブラック退会確認メッセージ
+		if ($('input[name="BLACK_FLG"]:checked').val() == "1" &&  $('input[name="STATUS"]:checked').val() != "9") qstMsg = "{%A0534%}";
+		<!--if:{GIFT_AGENT}-->
+		if (!chk_indis("{%A0544%}", frm["GIFT_POINT"].value)) return false;
+		if (!chk_number("{%A0545%}", frm["GIFT_POINT"].value, false)) return false;
+		<!--/if:{GIFT_AGENT}-->
+		<!--if:{GIFT_LIMIT}-->
+		if (!chk_indis("{%A0546%}", frm["TOTAL_GIFT_POINT"].value)) return false;
+		if (!chk_number("{%A0547%}", frm["TOTAL_GIFT_POINT"].value, false)) return false;
+		<!--/if:{GIFT_LIMIT}-->
+
+		if (!chk_indis("{%A0535%}", frm["MAIL_ERROR_COUNT"].value)) return false;
+		if (!chk_number("{%A0536%}", frm["MAIL_ERROR_COUNT"].value, false)) return false;
+
+	<!--/if:{EDIT}-->
+		
+		swal({
+			title: '会員情報登録',
+			text: qstMsg,
+			type: 'question',
+			showCancelButton: true
+		}).then(function() {
+			// 実行
+			frm.submit();
+		});
+		return false;
+	}
+
+	// ブラック解除
+	function release() {
+		var frm = window.document.MAINFORM;
+		swal({
+			title: 'ブラック解除',
+			text: "{%A0548%}",
+			type: 'warning',
+			showCancelButton: true
+		}).then(function() {
+			frmact = frm.action;
+			frm.action = frmact + "&ACT=release&NO={%NO%}";
+			// 実行
+			frm.submit();
+			frm.action = frmact;
+		});
+		return;
+	}
+
+	</script>
+	</body>
+
+</html>

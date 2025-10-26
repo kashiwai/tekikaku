@@ -1,0 +1,80 @@
+/* contentSlide用 */
+
+#header{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 55px;
+	margin: 0px;
+	background-color: #ccc;
+}
+
+#footer{
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	height: 22px;
+	background-color: #ccc;
+}
+
+#tab{
+	/*overflow-x: hidden;
+	width: 574px;*/
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	margin: 0px;
+	padding: 0px;
+	-webkit-overflow-scrolling: touch;
+}
+
+#tab li{
+	list-style-type: none;
+	width: 80px;
+	border: solid 1px;
+	border-color: #ff0;
+	display: inline-block;
+}
+
+#tab li.select{
+	background-color: #cc0;
+}
+
+#content{
+	width: 100%;
+	margin-top: 55px;
+	margin-bottom: 22px;
+	margin-left:0px;
+	margin-right:0px;
+	padding: 0px;
+}
+
+#contents{
+	position: relative;
+	border-color: #f0f;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	margin: 0px;
+	padding: 0px;
+	white-space: nowrap;
+	/*-webkit-overflow-scrolling: touch;*/
+}
+
+#contents li{
+	vertical-align: top;
+	top: 0px;
+	width: 100%;
+	list-style-type: none;
+	display: inline-block;
+	
+	height: 100%;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	
+}
+
+#contents li.disable{
+	display: hidden;
+}

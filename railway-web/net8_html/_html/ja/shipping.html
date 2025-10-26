@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 発送手続き</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">発送手続き</h1>
+		<hr>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				発送手続きはありません。
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>商品名</th>
+					<th>当選日</th>
+					<th>状態</th>
+					<th>発送番号</th>
+					<th>住所</th>
+					<th>氏名</th>
+					<th>電話番号</th>
+					<th>発送先</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="商品名" class="text-center">{%GOODS_NAME%}</td>
+					<td aria-label="当選日時" class="text-center">{%DISP_ADD_DT%}</td>
+					<td aria-label="状態" class="text-center">{%STATE%}</td>
+					<td aria-label="発送番号" class="text-center">{%SHIPPING_NO%}</td>
+					<td aria-label="住所" class="text-left"><!--if:{POSTAL}-->〒<!--/if:{POSTAL}-->{%POSTAL%} {%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}</td>
+					<td aria-label="氏名" class="text-left">{%SYLL%} {%NAME%}</td>
+					<td aria-label="電話番号" class="text-left">{%TEL%}</td>
+					<td class="text-center">
+						<!--if:{EDIT}-->
+						<a href="{%SELF%}?M=select&SEQ={%SEQ%}&NO={%GOODS_NO%}">選択</a>
+						<!--/if:{EDIT}-->
+						<!--if:{NOEDIT}-->
+						-
+						<!--/if:{NOEDIT}-->
+					</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	</body>
+</html>

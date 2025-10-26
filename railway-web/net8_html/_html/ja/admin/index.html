@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - トップページ</title>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation.html"-->
+
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+
+				<div class="container-fluid">
+
+					<h3 class="page-header"><i class="fas fa-fw fa-tachometer-alt"></i> レポート</h3>
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover table-report text-right th-center-bg" style="min-width:900px;">
+							<thead>
+								<tr>
+									<th>&nbsp;</th>
+									<th style="width:25%;">昨日<br /><small>{%DISP_YESTADAY%}</small></th>
+									<th style="width:25%;">当月<br /><small>{%DISP_MONTH%}</small></th>
+									<th style="width:25%;">先月<br /><small>{%DISP_LASTMONTH%}</small></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>会員登録件数</th>
+									<td><!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_Y%}&JOIN_DT_TO={%DT_TO_Y%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_Y%}<!--if:{MENU_member}--></a><!--/if:{MENU_member}--></td>
+									<td><!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_M%}&JOIN_DT_TO={%DT_TO_M%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_M%}<!--if:{MENU_member}--></a><!--/if:{MENU_member}--></td>
+									<td><!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_L%}&JOIN_DT_TO={%DT_TO_L%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_L%}<!--if:{MENU_member}--></a><!--/if:{MENU_member}--></td>
+								</tr>
+								<tr>
+									<th>会員退会件数</th>
+									<td>{%DISP_UNSUB_MEMBER_Y%}</td>
+									<td>{%DISP_UNSUB_MEMBER_M%}</td>
+									<td>{%DISP_UNSUB_MEMBER_L%}</td>
+								</tr>
+								<!--if:{MENU_sales}-->
+								<tr>
+									<th>売上件数</th>
+									<td>{%DISP_SALES_COUNT_Y%}</td>
+									<td>{%DISP_SALES_COUNT_M%}</td>
+									<td>{%DISP_SALES_COUNT_L%}</td>
+								</tr>
+								<tr>
+									<th>売上金額</th>
+									<td>{%DISP_SALES_VALUE_Y%}</td>
+									<td>{%DISP_SALES_VALUE_M%}</td>
+									<td>{%DISP_SALES_VALUE_L%}</td>
+								</tr>
+								<!--/if:{MENU_sales}-->
+								<tr>
+									<th>総ゲーム数</th>
+									<td>{%DISP_GAME_COUNT_Y%}</td>
+									<td>{%DISP_GAME_COUNT_M%}</td>
+									<td>{%DISP_GAME_COUNT_L%}</td>
+								</tr>
+								<tr>
+									<th>差枚数</th>
+									<td>{%DISP_CREDIT_Y%}</td>
+									<td>{%DISP_CREDIT_M%}</td>
+									<td>{%DISP_CREDIT_L%}</td>
+								</tr>
+								<!--if:{MENU_gifthistory}-->
+								<!--if:{GIFT_AGENT}-->
+								<!--if:{ADMTOP_GIFT_AGENT}-->
+								<tr>
+									<th>{%GIFT_AGENT_DISPNAME%}ギフト送信</th>
+									<td><a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_Y%}&S_GIFT_DT_TO={%DT_TO_Y%}">{%DISP_AGENT_GIFTSEND_POINT_Y%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_Y%}件</a></td>
+									<td><a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_M%}&S_GIFT_DT_TO={%DT_TO_M%}">{%DISP_AGENT_GIFTSEND_POINT_M%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_M%}件</a></td>
+									<td><a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_L%}&S_GIFT_DT_TO={%DT_TO_L%}">{%DISP_AGENT_GIFTSEND_POINT_L%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_L%}件</a></td>
+								</tr>
+								<tr>
+									<th>{%GIFT_AGENT_DISPNAME%}ギフト受取</th>
+									<td><a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_Y%}&S_GIFT_DT_TO={%DT_TO_Y%}">{%DISP_AGENT_GIFTRECV_POINT_Y%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_Y%}件</a></td>
+									<td><a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_M%}&S_GIFT_DT_TO={%DT_TO_M%}">{%DISP_AGENT_GIFTRECV_POINT_M%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_M%}件</a></td>
+									<td><a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_L%}&S_GIFT_DT_TO={%DT_TO_L%}">{%DISP_AGENT_GIFTRECV_POINT_L%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_L%}件</a></td>
+								</tr>
+								<!--/if:{ADMTOP_GIFT_AGENT}-->
+								<!--/if:{GIFT_AGENT}-->
+								<!--/if:{MENU_gifthistory}-->
+							</tbody>
+						</table>
+					</div>
+
+					<!--if:{MENU_goods}-->
+					<br>
+					<h3 class="page-header"><i class="fas fa-gift"></i> 抽選状況<!--if:{DATE_SWITCH_ABNORMAL}-->&nbsp;&nbsp;<small>{%DSP_NOW%}&nbsp;現在</small><!--/if:{DATE_SWITCH_ABNORMAL}--></h3>
+					<!-- Draw Status -->
+					<div class="row">
+						<div class="col-xl-2 col-sm-4 mb-6">
+							<div class="card border bg-light o-hidden h-100">
+								<div class="card-body text-secondary bg-light">
+									<div class="card-body-icon">
+										<i class="far fa-fw fa-check-square"></i>
+									</div>
+									<div class="mr-3">受付中</div>
+									<div class="text-left huge">{%DISP_IN_GOODS%}</div>
+								</div>
+								<a class="card-footer text-info clearfix small z-1" href="goods.php?RECEPT_START_DT_TO={%DT_NOW%}&RECEPT_END_DT_FROM={%DT_NOW%}&S_DRAW_STATE=0">
+									<span class="float-left">View Details</span>
+									<span class="float-right">
+										<i class="fas fa-angle-right"></i>
+									</span>
+								</a>
+							</div>
+						</div>
+						<div class="col-xl-2 col-sm-4 mb-6">
+							<div class="card border-success bg-default o-hidden h-100">
+								<div class="card-body text-white bg-success-mild">
+									<div class="card-body-icon">
+										<i class="fas fa-fw fa-dice"></i>
+									</div>
+									<div class="mr-3">自動抽選待ち</div>
+									<div class="text-left huge">{%DISP_WAIT_GOODS%}</div>
+								</div>
+								<a class="card-footer text-success clearfix small z-1" href="goods.php?DRAW_DT_TO={%DT_NOW%}&S_DRAW_STATE=0&S_DRAW_TYPE=1">
+									<span class="float-left">View Details</span>
+									<span class="float-right">
+										<i class="fas fa-angle-right"></i>
+									</span>
+								</a>
+							</div>
+						</div>
+						<div class="col-xl-2 col-sm-4 mb-6">
+							<div class="card border-danger bg-default o-hidden h-100">
+								<div class="card-body text-white bg-danger-mild">
+									<div class="card-body-icon">
+										<i class="far fa-fw fa-hand-paper"></i>
+									</div>
+									<div class="mr-3">手動抽選待ち</div>
+									<div class="text-left huge">{%DISP_WAIT_MANUAL_GOODS%}</div>
+								</div>
+								<a class="card-footer text-danger clearfix small z-1" href="goods.php?DRAW_DT_TO={%DT_NOW%}&S_DRAW_STATE=0&S_DRAW_TYPE=2">
+									<span class="float-left">View Details</span>
+									<span class="float-right">
+										<i class="fas fa-angle-right"></i>
+									</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<!-- /.row -->
+					<!--/if:{MENU_goods}-->
+
+					<!--if:{MENU_shipping}-->
+					<br><br>
+					<h3 class="page-header"><i class="fas fa-fw fa-truck"></i> 発送状況</h3>
+					<!-- Draw Status -->
+					<div class="row">
+						<div class="col-xl-2 col-sm-4 mb-6">
+							<div class="card border-success bg-default o-hidden h-100">
+								<div class="card-body text-white bg-success-mild">
+									<div class="card-body-icon">
+										<i class="far fa-fw fa-edit"></i>
+									</div>
+									<div class="mr-3">発送先入力待ち</div>
+									<div class="text-left huge">{%DISP_WAIT_INPUT_ADDRESS%}</div>
+								</div>
+								<a class="card-footer text-success clearfix small z-1" href="shipping.php?CHK_STATUS%5B%5D=0">
+									<span class="float-left">View Details</span>
+									<span class="float-right">
+										<i class="fas fa-angle-right"></i>
+									</span>
+								</a>
+							</div>
+						</div>
+						<div class="col-xl-2 col-sm-4 mb-6">
+							<div class="card border-danger bg-default o-hidden h-100">
+								<div class="card-body text-white bg-danger-mild">
+									<div class="card-body-icon">
+										<i class="fas fa-fw fa-boxes"></i>
+									</div>
+									<div class="mr-3">発送待ち</div>
+									<div class="text-left huge">{%DISP_WAIT_SEND%}</div>
+								</div>
+								<a class="card-footer text-danger clearfix small z-1" href="shipping.php?CHK_STATUS%5B%5D=1&&CHK_STATUS%5B%5D=2">
+									<span class="float-left">View Details</span>
+									<span class="float-right">
+										<i class="fas fa-angle-right"></i>
+									</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<!-- /.row -->
+					<!--/if:{MENU_shipping}-->
+
+				</div><!-- /.container-fluid -->
+
+			<!--#include file="footer.html"-->
+			</div><!-- /#content-wrapper -->
+
+		</div><!-- /#wrapper -->
+
+	<!--#include file="inc_script.html"-->
+	</body>
+
+</html>

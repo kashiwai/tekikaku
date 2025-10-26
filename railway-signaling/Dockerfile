@@ -6,15 +6,15 @@ RUN apk add --no-cache python3 make g++ sqlite-dev
 WORKDIR /app
 
 # package.jsonとpackage-lock.jsonをコピー
-COPY ../net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/package*.json ./
+COPY net8peerjs-server/package*.json ./
 
 # 依存関係のインストール
 RUN npm ci --production
 
 # アプリケーションファイルをコピー
-COPY ../net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/bin ./bin
-COPY ../net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/lib ./lib
-COPY ../net8_rebirth/net8/01.サーバ構築手順/net8peerjs-server/db ./db
+COPY net8peerjs-server/bin ./bin
+COPY net8peerjs-server/lib ./lib
+COPY net8peerjs-server/db ./db
 
 # ログディレクトリ作成
 RUN mkdir -p /var/log/peerjs && chmod 777 /var/log/peerjs

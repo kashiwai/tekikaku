@@ -1,0 +1,15 @@
+	<script type="text/javascript">
+	<!--
+		$(function(){
+			$('.couponinfo').on('click', function(){
+				var _temp    = $(this).parent().clone();
+				_temp.find('span').remove();
+				var _message = _temp.html();
+				var _data    = $(this).data();
+				$('.detail-modal .modal-title').html( _data.title);
+				$('.detail-modal .mainmessage').html( _data.contents);
+				$('.detail-modal').modal('show');
+			});
+		});
+	-->
+	</script>
