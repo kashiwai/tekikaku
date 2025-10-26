@@ -7,10 +7,10 @@
  */
 
 // データベース接続設定
-define('DB_HOST', getenv('DB_HOST') ?: 'db');
-define('DB_NAME', getenv('DB_NAME') ?: 'net8_dev');
-define('DB_USER', getenv('DB_USER') ?: 'net8user');
-define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'net8pass');
+define('DB_HOST', getenv('DATABASE_HOST') ?: getenv('DB_HOST') ?: 'db');
+define('DB_NAME', getenv('DATABASE_NAME') ?: getenv('DB_NAME') ?: 'net8_dev');
+define('DB_USER', getenv('DATABASE_USER') ?: getenv('DB_USER') ?: 'net8user');
+define('DB_PASSWORD', getenv('DATABASE_PASSWORD') ?: getenv('DB_PASSWORD') ?: 'net8pass');
 define('DB_CHARSET', 'utf8mb4');
 
 // データベースDSN（Data Source Name）
@@ -29,8 +29,8 @@ define('DB_OPTIONS', [
 
 // シグナリングサーバ設定
 define('SIGNALING_HOST', getenv('SIGNALING_HOST') ?: 'localhost');
-define('SIGNALING_PORT', getenv('SIGNALING_PORT') ?: '59000');
-define('SIGNALING_KEY', getenv('SIGNALING_KEY') ?: 'peerjs');
+define('SIGNALING_PORT', getenv('SIGNALING_PORT') ?: '443');
+define('SIGNALING_KEY', getenv('PEERJS_KEY') ?: getenv('SIGNALING_KEY') ?: 'peerjs');
 define('SIGNALING_PATH', getenv('SIGNALING_PATH') ?: '/');
 
 // STUN/TURNサーバ設定（将来の実装用）
