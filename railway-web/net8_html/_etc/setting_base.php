@@ -312,11 +312,11 @@ $GLOBALS["GiftAddSetValUnitList"] = array(
 
 // RTC Signaling Servers（WebRTC用）
 // フォーマット: "host:port"
-// ngrok使用時はHTTPSポート443を使用
+// Railway使用時はHTTPSポート443を使用
 $GLOBALS["RTC_Signaling_Servers"] = array(
-    "default" => "dockerfile-signaling-production.up.railway.app:443",  // デフォルトシグナリングサーバー（Railway）
-    "1" => "dockerfile-signaling-production.up.railway.app:443",         // シグナリングサーバーID=1（Railway）
-    "2" => "dockerfile-signaling-production.up.railway.app:443"          // シグナリングサーバーID=2（予備）（Railway）
+    "default" => "dockerfilesignaling-production.up.railway.app:443",  // デフォルトシグナリングサーバー（Railway）
+    "1" => "dockerfilesignaling-production.up.railway.app:443",         // シグナリングサーバーID=1（Railway）
+    "2" => "dockerfilesignaling-production.up.railway.app:443"          // シグナリングサーバーID=2（予備）（Railway）
 );
 
 // WebRTC関連定数
