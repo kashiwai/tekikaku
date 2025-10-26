@@ -4,12 +4,12 @@ set_time_limit(300); // 5分
 
 echo "=== MySQL ダンプインポート ===\n\n";
 
-// 環境変数取得
+// 環境変数取得（Railway対応）
 $host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
 $port = getenv('MYSQLPORT') ?: '3306';
 $user = getenv('MYSQLUSER') ?: 'root';
-$password = getenv('MYSQLPASSWORD') ?: '';
-$database = getenv('MYSQLDATABASE') ?: 'railway';
+$password = getenv('MYSQL_ROOT_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: '';
+$database = getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE') ?: 'net8_dev';
 
 echo "接続情報:\n";
 echo "  Host: $host\n";
