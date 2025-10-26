@@ -6,11 +6,11 @@
  * 本番環境では.envファイルから環境変数を読み込んでください
  */
 
-// データベース接続設定
-define('DB_HOST', getenv('DATABASE_HOST') ?: getenv('DB_HOST') ?: 'db');
-define('DB_NAME', getenv('DATABASE_NAME') ?: getenv('DB_NAME') ?: 'net8_dev');
-define('DB_USER', getenv('DATABASE_USER') ?: getenv('DB_USER') ?: 'net8user');
-define('DB_PASSWORD', getenv('DATABASE_PASSWORD') ?: getenv('DB_PASSWORD') ?: 'net8pass');
+// データベース接続設定（Railway対応）
+define('DB_HOST', getenv('DATABASE_HOST') ?: getenv('MYSQLHOST') ?: getenv('DB_HOST') ?: 'db');
+define('DB_NAME', getenv('DATABASE_NAME') ?: getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE') ?: getenv('DB_NAME') ?: 'net8_dev');
+define('DB_USER', getenv('DATABASE_USER') ?: getenv('MYSQLUSER') ?: getenv('DB_USER') ?: 'net8user');
+define('DB_PASSWORD', getenv('DATABASE_PASSWORD') ?: getenv('MYSQL_ROOT_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: getenv('DB_PASSWORD') ?: 'net8pass');
 define('DB_CHARSET', 'utf8mb4');
 
 // データベースDSN（Data Source Name）
