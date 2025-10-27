@@ -161,10 +161,10 @@ function GetNoCamera($DB) {
 	} else {
 		$api->set("machine_no", $row["machine_no"] );
 		$api->set("category", $row["category"] );
-		// Skip CD value to bypass license check
-		// if ( !empty($license_cd) ) {
-		//	$api->set("cd", $license_cd );
-		// }
+		// Send license CD for Railway deployment
+		if ( !empty($license_cd) ) {
+			$api->set("cd", $license_cd );
+		}
 		//2020-06-03 自動精算時間設定(秒）
 		if ( defined("PLAY_KEEP_TIME") ){
 			$api->set("leavetime", PLAY_KEEP_TIME );
