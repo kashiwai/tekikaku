@@ -13,7 +13,7 @@ if (!isset($_GET['key']) || $_GET['key'] !== $EXEC_KEY) {
 }
 
 // データベース接続
-require_once('./_etc/require_files.php');
+require_once('../_etc/require_files.php');
 
 try {
     $DB = new NetDB();
