@@ -161,10 +161,8 @@ function GetNoCamera($DB) {
 	} else {
 		$api->set("machine_no", $row["machine_no"] );
 		$api->set("category", $row["category"] );
-		// Send license CD value for authentication
-		if ( !empty($license_cd) ) {
-			$api->set("cd", $license_cd );
-		}
+		// License check bypass: do not send CD value
+		// Version 1.4.8 expects NO cd field to bypass license check
 		//2020-06-03 自動精算時間設定(秒）
 		if ( defined("PLAY_KEEP_TIME") ){
 			$api->set("leavetime", PLAY_KEEP_TIME );
