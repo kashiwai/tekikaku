@@ -218,7 +218,10 @@ app._initializeHTTP = function() {
   this.use(cors());
 
   this.get("/", function(req, res, next) {
-    res.send(require("../app.json"));
+    var path = require('path');
+    var appJsonPath = path.join(__dirname, '..', 'app.json');
+    delete require.cache[appJsonPath];
+    res.send(require(appJsonPath));
   });
 
   // Retrieve guaranteed random ID.
