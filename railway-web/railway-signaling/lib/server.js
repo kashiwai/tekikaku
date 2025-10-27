@@ -218,10 +218,28 @@ app._initializeHTTP = function() {
   this.use(cors());
 
   this.get("/", function(req, res, next) {
-    var path = require('path');
-    var appJsonPath = path.join(__dirname, '..', 'app.json');
-    delete require.cache[appJsonPath];
-    res.send(require(appJsonPath));
+    try {
+      var path = require('path');
+      var fs = require('fs');
+      var appJsonPath = path.join(__dirname, '..', 'app.json');
+      if (fs.existsSync(appJsonPath)) {
+        delete require.cache[appJsonPath];
+        res.send(require(appJsonPath));
+      } else {
+        res.send({
+          name: "PeerJS Server",
+          description: "A server side element to broker connections between PeerJS clients.",
+          website: "http://peerjs.com/"
+        });
+      }
+    } catch (err) {
+      res.send({
+        name: "PeerJS Server",
+        description: "A server side element to broker connections between PeerJS clients.",
+        website: "http://peerjs.com/",
+        status: "running"
+      });
+    }
   });
 
   // Retrieve guaranteed random ID.
