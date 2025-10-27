@@ -1,5 +1,9 @@
 FROM node:18-alpine
 WORKDIR /app
+
+# Cache bust: 2025-01-27
+ARG CACHEBUST=1
+
 COPY package.json ./
 COPY app.json ./
 RUN npm install --production
