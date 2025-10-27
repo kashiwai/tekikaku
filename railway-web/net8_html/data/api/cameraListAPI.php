@@ -161,7 +161,7 @@ function GetNoCamera($DB) {
 	} else {
 		$api->set("machine_no", $row["machine_no"] );
 		$api->set("category", $row["category"] );
-		// Send license CD for Railway deployment
+		// Send license CD value for authentication
 		if ( !empty($license_cd) ) {
 			$api->set("cd", $license_cd );
 		}
