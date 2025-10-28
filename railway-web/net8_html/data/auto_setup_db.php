@@ -21,7 +21,7 @@ try {
     // Step 1: テーブルの存在確認
     echo "<h2>Step 1: Check existing tables</h2>";
 
-    $required_tables = ['mst_cameralist', 'mst_camera', 'dat_machine', 'mst_model'];
+    $required_tables = ['mst_cameralist', 'mst_camera', 'dat_machine', 'mst_model', 'lnk_machine'];
     $missing_tables = [];
 
     echo "<table border='1' cellpadding='5' style='border-collapse:collapse;'>";
@@ -211,6 +211,29 @@ try {
                         (1, 1, 1, 'peer1', 0, NOW(), 1, NOW())");
 
             echo "<p style='color:green;'>✓ dat_machine created</p>";
+        }
+
+        // lnk_machine
+        if (in_array('lnk_machine', $missing_tables)) {
+            echo "<h3>Creating lnk_machine</h3>";
+            $DB->query("DROP TABLE IF EXISTS lnk_machine");
+            $DB->query("CREATE TABLE `lnk_machine` (
+              `machine_no` tinyint(3) unsigned NOT NULL,
+              `assign_flg` tinyint(4) NOT NULL DEFAULT '0',
+              `member_no` int(10) unsigned DEFAULT NULL,
+              `onetime_id` varchar(50) DEFAULT NULL,
+              `exit_flg` tinyint(4) DEFAULT '0',
+              `start_dt` datetime DEFAULT NULL,
+              `end_dt` datetime DEFAULT NULL,
+              PRIMARY KEY (`machine_no`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+
+            $DB->query("INSERT INTO lnk_machine
+                        (machine_no, assign_flg, member_no, onetime_id, exit_flg)
+                        VALUES
+                        (1, 9, 0, '', 0)");
+
+            echo "<p style='color:green;'>✓ lnk_machine created</p>";
         }
 
         echo "<h2>Step 3: Verification</h2>";

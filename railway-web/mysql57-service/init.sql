@@ -130,3 +130,20 @@ INSERT INTO dat_machine
 VALUES
 (1, 1, 1, 'peer1', 0, NOW(), 1, NOW())
 ON DUPLICATE KEY UPDATE signaling_id = signaling_id;
+
+-- Create lnk_machine table
+CREATE TABLE IF NOT EXISTS `lnk_machine` (
+  `machine_no` tinyint(3) unsigned NOT NULL,
+  `assign_flg` tinyint(4) NOT NULL DEFAULT '0',
+  `member_no` int(10) unsigned DEFAULT NULL,
+  `onetime_id` varchar(50) DEFAULT NULL,
+  `exit_flg` tinyint(4) DEFAULT '0',
+  `start_dt` datetime DEFAULT NULL,
+  `end_dt` datetime DEFAULT NULL,
+  PRIMARY KEY (`machine_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Insert lnk_machine data
+INSERT INTO lnk_machine (machine_no, assign_flg, member_no, onetime_id, exit_flg)
+VALUES (1, 9, 0, '', 0)
+ON DUPLICATE KEY UPDATE machine_no = machine_no;
