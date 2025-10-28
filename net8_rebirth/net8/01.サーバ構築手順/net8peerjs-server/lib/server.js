@@ -5,6 +5,8 @@ var url = require("url");
 var cors = require("cors");
 
 //-----2019-02-08 add start-- sqlite3 init
+// Sqlite3 and bunyan temporarily disabled - not currently used, causing module loading errors
+/*
 var sqlite = require('sqlite3').verbose();
 var sqlite3dsn = '/app/db/authdb.db';
 var bunyan = require('bunyan');
@@ -19,6 +21,14 @@ var pslog = bunyan.createLogger({
     }
   ]
 });
+*/
+
+// Use console.log instead of bunyan
+var pslog = {
+  info: function(msg) { console.log('[INFO]', msg); },
+  error: function(msg) { console.error('[ERROR]', msg); },
+  warn: function(msg) { console.warn('[WARN]', msg); }
+};
 //-----2019-02-08 add end--
 
 var app = (exports = module.exports = {});
