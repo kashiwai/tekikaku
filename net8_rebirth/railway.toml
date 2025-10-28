@@ -1,12 +1,7 @@
-# PeerJS Signaling Server Configuration
-
-# Service-specific configuration using service ID
-[services.cd86cf5f-9de1-4409-b0ee-9cae2ddf04da]
-
-[services.cd86cf5f-9de1-4409-b0ee-9cae2ddf04da.build]
+[build]
 builder = "dockerfile"
-dockerfilePath = "net8/Dockerfile.signaling"
+dockerfilePath = "railway-signaling/Dockerfile"
 
-[services.cd86cf5f-9de1-4409-b0ee-9cae2ddf04da.deploy]
+[deploy]
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
