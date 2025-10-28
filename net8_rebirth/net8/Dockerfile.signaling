@@ -15,6 +15,7 @@ RUN npm ci --production
 COPY 01.サーバ構築手順/net8peerjs-server/bin ./bin
 COPY 01.サーバ構築手順/net8peerjs-server/lib ./lib
 COPY 01.サーバ構築手順/net8peerjs-server/db ./db
+COPY 01.サーバ構築手順/net8peerjs-server/app.json ./app.json
 
 # ログディレクトリ作成
 RUN mkdir -p /var/log/peerjs && chmod 777 /var/log/peerjs
