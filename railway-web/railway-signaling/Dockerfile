@@ -1,8 +1,8 @@
 FROM node:18-alpine
 WORKDIR /app
 
-# Cache bust: 2025-01-27
-ARG CACHEBUST=1
+# Cache bust: 2025-10-28
+ARG CACHEBUST=2
 
 COPY package.json ./
 COPY app.json ./
