@@ -1,3 +1,4 @@
+# PeerJS Signaling Server Configuration
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile.signaling"
