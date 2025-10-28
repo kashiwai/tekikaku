@@ -1,7 +1,7 @@
 FROM node:14-alpine
 
-# Cache buster - force rebuild: 2025-10-28-v3
-ARG CACHEBUST=20251028v3
+# Cache buster - force rebuild: 2025-10-28-v4
+ARG CACHEBUST=20251028v4
 
 # sqlite3のビルドに必要なパッケージをインストール
 RUN apk add --no-cache python3 make g++ sqlite-dev
@@ -9,16 +9,16 @@ RUN apk add --no-cache python3 make g++ sqlite-dev
 WORKDIR /app
 
 # package.jsonとpackage-lock.jsonをコピー
-COPY 01.サーバ構築手順/net8peerjs-server/package*.json ./
+COPY net8/01.サーバ構築手順/net8peerjs-server/package*.json ./
 
 # 依存関係のインストール
 RUN npm ci --production
 
 # アプリケーションファイルを全てコピー（確実にapp.jsonも含める）
-COPY 01.サーバ構築手順/net8peerjs-server/ ./
+COPY net8/01.サーバ構築手順/net8peerjs-server/ ./
 
 # 確実に最新のlibディレクトリ（server.js含む）を上書きコピー
-COPY 01.サーバ構築手順/net8peerjs-server/lib/ ./lib/
+COPY net8/01.サーバ構築手順/net8peerjs-server/lib/ ./lib/
 
 # 不要なファイルを削除（オプション）
 RUN rm -f package-lock.json
