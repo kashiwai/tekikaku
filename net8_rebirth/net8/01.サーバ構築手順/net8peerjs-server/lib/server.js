@@ -228,7 +228,12 @@ app._initializeHTTP = function() {
   this.use(cors());
 
   this.get("/", function(req, res, next) {
-    res.send(require("../app.json"));
+    // app.jsonをrequireする代わりに、直接レスポンスを返す
+    res.send({
+      "name": "PeerJS Server",
+      "description": "A server side element to broker connections between PeerJS clients.",
+      "website": "http://peerjs.com/"
+    });
   });
 
   // Retrieve guaranteed random ID.

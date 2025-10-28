@@ -11,17 +11,17 @@ COPY 01.サーバ構築手順/net8peerjs-server/package*.json ./
 # 依存関係のインストール
 RUN npm ci --production
 
-# アプリケーションファイルをコピー
-COPY 01.サーバ構築手順/net8peerjs-server/bin ./bin
-COPY 01.サーバ構築手順/net8peerjs-server/lib ./lib
-COPY 01.サーバ構築手順/net8peerjs-server/db ./db
-COPY 01.サーバ構築手順/net8peerjs-server/app.json ./app.json
+# アプリケーションファイルを全てコピー（確実にapp.jsonも含める）
+COPY 01.サーバ構築手順/net8peerjs-server/ ./
+
+# 不要なファイルを削除（オプション）
+RUN rm -f package-lock.json
 
 # ログディレクトリ作成
 RUN mkdir -p /var/log/peerjs && chmod 777 /var/log/peerjs
 
-# Railwayの環境変数PORTを使用（デフォルト59000）
-ENV PORT=${PORT:-59000}
+# Railwayの環境変数PORTを使用（Railwayのデフォルトは8080）
+ENV PORT=${PORT:-8080}
 ENV PEERJS_KEY=peerjs
 
 EXPOSE ${PORT}
