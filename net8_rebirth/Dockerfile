@@ -1,45 +1,53 @@
-FROM node:14-alpine
+FROM php:7.2-apache
 
-# Cache buster - force rebuild: 2025-10-29-v1
-ARG CACHEBUST=20251029v1
+# Debian Busterのリポジトリをアーカイブに変更（EOLのため）
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
+    && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+    && sed -i '/stretch-updates/d' /etc/apt/sources.list
 
-# sqlite3のビルドに必要なパッケージをインストール
-RUN apk add --no-cache python3 make g++ sqlite-dev
+# 必要なパッケージのインストール
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libxml2-dev \
+    libonig-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# PHP拡張機能のインストール
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) \
+    mysqli \
+    pdo \
+    pdo_mysql \
+    mbstring \
+    xml \
+    gd \
+    zip
 
-# package.jsonとpackage-lock.jsonをコピー
-COPY net8/01.サーバ構築手順/net8peerjs-server/package*.json ./
+# Apacheモジュール有効化
+RUN a2enmod rewrite ssl headers
 
-# 依存関係のインストール
-RUN npm ci --production
+# カスタムPHP設定
+COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-# アプリケーションファイルを全てコピー（確実にapp.jsonも含める）
-COPY net8/01.サーバ構築手順/net8peerjs-server/ ./
+# Apacheカスタム設定
+COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# app.jsonを明示的にコピー（確実に配置）
-COPY net8/01.サーバ構築手順/net8peerjs-server/app.json ./app.json
+# アプリケーションファイルをコピー
+COPY net8/02.ソースファイル/net8_html /var/www/html
 
-# 確実に最新のlibディレクトリ（server.js含む）を上書きコピー
-COPY net8/01.サーバ構築手順/net8peerjs-server/lib/ ./lib/
+# 権限設定
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# デバッグ: app.jsonとserver.jsの221行目を確認
-RUN echo "=== Checking app.json exists ===" && \
-    ls -la ./app.json && \
-    echo "=== Checking server.js line 221 ===" && \
-    sed -n '215,240p' ./lib/server.js
+# ポート公開（Railwayは環境変数PORTを使用）
+EXPOSE ${PORT:-80}
 
-# 不要なファイルを削除（オプション）
-RUN rm -f package-lock.json
-
-# ログディレクトリ作成
-RUN mkdir -p /var/log/peerjs && chmod 777 /var/log/peerjs
-
-# Railwayの環境変数PORTを使用（Railwayのデフォルトは8080）
-ENV PORT=${PORT:-8080}
-ENV PEERJS_KEY=peerjs
-
-EXPOSE ${PORT}
-
-# PeerJSサーバー起動
-CMD node bin/peerjs -p ${PORT} -k ${PEERJS_KEY}
+# Apache起動
+CMD ["apache2-foreground"]
