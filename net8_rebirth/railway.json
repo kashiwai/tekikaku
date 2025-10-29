@@ -2,11 +2,17 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "DOCKERFILE",
-    "dockerfilePath": "net8/Dockerfile.signaling"
+    "dockerfilePath": "net8/Dockerfile.signaling",
+    "watchPatterns": [
+      "net8/Dockerfile.signaling",
+      "net8/01.サーバ構築手順/net8peerjs-server/**"
+    ]
   },
   "deploy": {
     "numReplicas": 1,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 10,
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 300
   }
 }

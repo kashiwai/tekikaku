@@ -1,7 +1,0 @@
-[build]
-builder = "dockerfile"
-dockerfilePath = "railway-signaling/Dockerfile"
-
-[deploy]
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10
