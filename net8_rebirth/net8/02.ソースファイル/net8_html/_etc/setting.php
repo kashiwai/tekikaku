@@ -1,10 +1,43 @@
 <?php
 /**
- * NET8 Database Connection Settings (Docker Environment)
+ * NET8 Database Connection Settings
  *
- * このファイルはDocker環境用のデータベース接続設定です
- * 本番環境では.envファイルから環境変数を読み込んでください
+ * このファイルはデータベース接続設定です
+ * - Railway環境: 環境変数から自動的に読み込み
+ * - ローカル環境: .env.railway ファイルから読み込み
  */
+
+// ==========================================
+// .env ファイル読み込み（ローカル環境のみ）
+// ==========================================
+if (!getenv('RAILWAY_ENVIRONMENT')) {
+    // Railway以外の環境では .env.railway を読み込む
+    $env_file = __DIR__ . '/../../../.env.railway';
+
+    if (file_exists($env_file)) {
+        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            // コメント行をスキップ
+            if (strpos(trim($line), '#') === 0) {
+                continue;
+            }
+
+            // KEY=VALUE 形式をパース
+            if (strpos($line, '=') !== false) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+
+                // 環境変数が未設定の場合のみ設定
+                if (!getenv($key)) {
+                    putenv("$key=$value");
+                    $_ENV[$key] = $value;
+                    $_SERVER[$key] = $value;
+                }
+            }
+        }
+    }
+}
 
 // データベース接続設定
 define('DB_HOST', getenv('DB_HOST') ?: 'db');
