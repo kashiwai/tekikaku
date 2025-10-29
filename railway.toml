@@ -1,6 +1,6 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "net8/Dockerfile.web"
+dockerfilePath = "net8_rebirth/net8/Dockerfile.web"
 
 [deploy]
 startCommand = "apache2-foreground"
