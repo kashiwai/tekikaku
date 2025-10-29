@@ -40,10 +40,11 @@ if (!getenv('RAILWAY_ENVIRONMENT')) {
 }
 
 // データベース接続設定
-define('DB_HOST', getenv('DB_HOST') ?: 'db');
-define('DB_NAME', getenv('DB_NAME') ?: 'net8_dev');
-define('DB_USER', getenv('DB_USER') ?: 'net8user');
-define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'net8pass');
+// $_SERVER, $_ENV, getenv() の順で環境変数を取得（より確実）
+define('DB_HOST', $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: 'db');
+define('DB_NAME', $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'net8_dev');
+define('DB_USER', $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'net8user');
+define('DB_PASSWORD', $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: 'net8pass');
 define('DB_CHARSET', 'utf8mb4');
 
 // データベースDSN（Data Source Name）
@@ -61,10 +62,10 @@ define('DB_OPTIONS', [
 ]);
 
 // シグナリングサーバ設定
-define('SIGNALING_HOST', getenv('SIGNALING_HOST') ?: 'localhost');
-define('SIGNALING_PORT', getenv('SIGNALING_PORT') ?: '59000');
-define('SIGNALING_KEY', getenv('SIGNALING_KEY') ?: 'peerjs');
-define('SIGNALING_PATH', getenv('SIGNALING_PATH') ?: '/');
+define('SIGNALING_HOST', $_SERVER['SIGNALING_HOST'] ?? $_ENV['SIGNALING_HOST'] ?? getenv('SIGNALING_HOST') ?: 'localhost');
+define('SIGNALING_PORT', $_SERVER['SIGNALING_PORT'] ?? $_ENV['SIGNALING_PORT'] ?? getenv('SIGNALING_PORT') ?: '59000');
+define('SIGNALING_KEY', $_SERVER['SIGNALING_KEY'] ?? $_ENV['SIGNALING_KEY'] ?? getenv('SIGNALING_KEY') ?: 'peerjs');
+define('SIGNALING_PATH', $_SERVER['SIGNALING_PATH'] ?? $_ENV['SIGNALING_PATH'] ?? getenv('SIGNALING_PATH') ?: '/');
 
 // STUN/TURNサーバ設定（将来の実装用）
 define('STUN_SERVER', getenv('STUN_SERVER') ?: 'stun:stun.l.google.com:19302');
