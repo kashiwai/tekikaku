@@ -1,0 +1,7 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "net8/Dockerfile.web"
+
+[deploy]
+startCommand = "apache2-foreground"
+restartPolicyType = "always"
