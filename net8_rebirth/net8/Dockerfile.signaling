@@ -9,19 +9,19 @@ RUN apk add --no-cache python3 make g++ sqlite-dev
 WORKDIR /app
 
 # package.jsonとpackage-lock.jsonをコピー
-COPY net8/01.サーバ構築手順/net8peerjs-server/package*.json ./
+COPY 01.サーバ構築手順/net8peerjs-server/package*.json ./
 
 # 依存関係のインストール
 RUN npm ci --production
 
 # アプリケーションファイルを全てコピー（確実にapp.jsonも含める）
-COPY net8/01.サーバ構築手順/net8peerjs-server/ ./
+COPY 01.サーバ構築手順/net8peerjs-server/ ./
 
 # app.jsonを明示的にコピー（確実に配置）
-COPY net8/01.サーバ構築手順/net8peerjs-server/app.json ./app.json
+COPY 01.サーバ構築手順/net8peerjs-server/app.json ./app.json
 
 # 確実に最新のlibディレクトリ（server.js含む）を上書きコピー
-COPY net8/01.サーバ構築手順/net8peerjs-server/lib/ ./lib/
+COPY 01.サーバ構築手順/net8peerjs-server/lib/ ./lib/
 
 # デバッグ: app.jsonとserver.jsの221行目を確認
 RUN echo "=== Checking app.json exists ===" && \
