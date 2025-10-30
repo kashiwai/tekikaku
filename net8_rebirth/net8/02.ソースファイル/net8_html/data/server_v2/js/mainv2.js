@@ -8,12 +8,12 @@
 
 'use strict';
 
-var videoID = "default";;
+var videoID = undefined; // undefined = use default camera
 var audioID = $.cookie('audioid');
 var videoMode = layoutOption['video_mode'];
 var videoSize = '';
-if( $.cookie('videoid') ) videoID = $.cookie('videoid');
-if( $.cookie('audioid') ) audioID = $.cookie('audioid');
+if( $.cookie('videoid') && $.cookie('videoid') !== 'default' ) videoID = $.cookie('videoid');
+if( $.cookie('audioid') && $.cookie('audioid') !== 'default' ) audioID = $.cookie('audioid');
 
 //除外コーデック指定
 // VP8:全て可能 VP9:chrome系 H264:全て可能
@@ -172,6 +172,13 @@ if ( videoMode ){
 	}
 }
 
+// Remove undefined deviceId constraints to avoid SyntaxError
+if (constraints.video && constraints.video.deviceId === undefined) {
+    delete constraints.video.deviceId;
+}
+if (constraints.audio && constraints.audio.deviceId === undefined) {
+    delete constraints.audio.deviceId;
+}
 
 window.constraints = constraints;
 videoSize = '['+videoMode+'] '+constraints['video']['width']['ideal']+'x'+constraints['video']['height']['ideal']+
