@@ -192,24 +192,29 @@ function DispTop($template) {
 	}
 
 	//メッセージ情報からbonusなどのリセット情報を取得
-	$sql = (new SqlString($template->DB))
-		->select()
-			->field("message_time,reset_bonus")
-			->from("dat_client_message")
-			->where()
-				->and( "message_time >= ",  $mesStartDT, FD_DATE )
-				->and( "message_time <= ",  $mesEndDT, FD_DATE )
-				->groupStart()
-					->or( "machines = '*'" )
-					->or( "machines like ",   "%".$row["machine_no"]."%", FD_STR )
-				->groupEnd()
-			->orderby("message_time desc")
-		->createSQL("\n");
-	$rs = $template->DB->query($sql);
-	
-	$resetBonus = "off";
-	while ($rbrow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
-		if ( $rbrow["reset_bonus"] == "1" ) $resetBonus = "on";
+	$resetBonus = "off"; // Default value
+	try {
+		$sql = (new SqlString($template->DB))
+			->select()
+				->field("message_time,reset_bonus")
+				->from("dat_client_message")
+				->where()
+					->and( "message_time >= ",  $mesStartDT, FD_DATE )
+					->and( "message_time <= ",  $mesEndDT, FD_DATE )
+					->groupStart()
+						->or( "machines = '*'" )
+						->or( "machines like ",   "%".$row["machine_no"]."%", FD_STR )
+					->groupEnd()
+				->orderby("message_time desc")
+			->createSQL("\n");
+		$rs = $template->DB->query($sql);
+
+		while ($rbrow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+			if ( $rbrow["reset_bonus"] == "1" ) $resetBonus = "on";
+		}
+	} catch (Exception $e) {
+		// dat_client_message table not found or query error - use default value
+		error_log("dat_client_message query failed: " . $e->getMessage());
 	}
 
 	//webRTCのauth設定
