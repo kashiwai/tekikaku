@@ -312,11 +312,14 @@ $GLOBALS["GiftAddSetValUnitList"] = array(
 
 // RTC Signaling Servers（WebRTC用）
 // フォーマット: "host:port"
-// ngrok使用時はHTTPSポート443を使用
+// 環境変数からシグナリングサーバー設定を動的に取得（Railway対応）
+$signaling_host = $_SERVER['SIGNALING_HOST'] ?? $_ENV['SIGNALING_HOST'] ?? getenv('SIGNALING_HOST') ?: 'mgg-signaling-production-c1bd.up.railway.app';
+$signaling_port = $_SERVER['SIGNALING_PORT'] ?? $_ENV['SIGNALING_PORT'] ?? getenv('SIGNALING_PORT') ?: '443';
+
 $GLOBALS["RTC_Signaling_Servers"] = array(
-    "default" => "aimoderation.ngrok-free.app:443",  // デフォルトシグナリングサーバー
-    "1" => "aimoderation.ngrok-free.app:443",         // シグナリングサーバーID=1
-    "2" => "aimoderation.ngrok-free.app:443"          // シグナリングサーバーID=2（予備）
+    "default" => $signaling_host . ':' . $signaling_port,  // 環境変数から動的取得
+    "1" => $signaling_host . ':' . $signaling_port,         // シグナリングサーバーID=1
+    "2" => $signaling_host . ':' . $signaling_port          // シグナリングサーバーID=2（予備）
 );
 
 // WebRTC関連定数
