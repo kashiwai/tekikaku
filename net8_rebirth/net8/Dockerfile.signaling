@@ -1,7 +1,7 @@
 FROM node:14-alpine
 
-# Cache buster - force rebuild: 2025-10-29-v1
-ARG CACHEBUST=20251029v1
+# Cache buster - force rebuild: 2025-10-31-v1
+ARG CACHEBUST=20251031v1
 
 # sqlite3のビルドに必要なパッケージをインストール
 RUN apk add --no-cache python3 make g++ sqlite-dev
