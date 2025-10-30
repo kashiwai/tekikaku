@@ -9,6 +9,12 @@ require_once('./_etc/setting.php');
 
 header('Content-Type: text/html; charset=utf-8');
 
+// Clear OPcache first
+if (function_exists('opcache_reset')) {
+    opcache_reset();
+    echo "<p style='color: green;'>✅ OPcache cleared</p>";
+}
+
 try {
     $pdo = new PDO(
         "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4",
