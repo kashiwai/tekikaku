@@ -15,6 +15,11 @@ echo "DB_HOST: " . DB_HOST . "\n";
 echo "DB_NAME: " . DB_NAME . "\n";
 echo "DB_USER: " . DB_USER . "\n";
 echo "DB_PASSWORD: " . (DB_PASSWORD ? '[SET]' : '[NOT SET]') . "\n";
+echo "\n";
+echo "Raw Environment Variables:\n";
+echo "MYSQL_HOST: " . (getenv('MYSQL_HOST') ?: '[NOT SET]') . "\n";
+echo "MYSQLHOST: " . (getenv('MYSQLHOST') ?: '[NOT SET]') . "\n";
+echo "RAILWAY_PRIVATE_DOMAIN: " . (getenv('RAILWAY_PRIVATE_DOMAIN') ?: '[NOT SET]') . "\n";
 echo "</pre>";
 
 echo "<h2>Connection Test:</h2>";
