@@ -192,7 +192,9 @@ function DispTop($template) {
 	}
 
 	//メッセージ情報からbonusなどのリセット情報を取得
+	// TEMPORARY: Disabled dat_client_message query until table is properly configured
 	$resetBonus = "off"; // Default value
+	/*
 	try {
 		$sql = (new SqlString($template->DB))
 			->select()
@@ -216,6 +218,7 @@ function DispTop($template) {
 		// dat_client_message table not found or query error - use default value
 		error_log("dat_client_message query failed: " . $e->getMessage());
 	}
+	*/
 
 	//webRTCのauth設定
 	$webRTC = new WebRTCAPI();
