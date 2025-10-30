@@ -2,7 +2,7 @@
 /**
  * Railway MySQL Category Update Script
  *
- * Updates category to 2 (slot) for model_no=1
+ * Updates category to 2 (slot) for model_no=1 AND creates missing tables
  */
 
 require_once('./_etc/setting.php');
@@ -17,7 +17,7 @@ if (function_exists('opcache_reset')) {
 
 try {
     $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
         DB_USER,
         DB_PASSWORD,
         [
@@ -26,9 +26,32 @@ try {
         ]
     );
 
-    echo "<h1>Railway MySQL Category Update</h1>";
+    echo "<h1>Railway MySQL Category Update + Table Creation</h1>";
     echo "<p>DB_HOST: " . DB_HOST . "</p>";
     echo "<p>DB_NAME: " . DB_NAME . "</p>";
+    echo "<hr>";
+
+    // Create dat_client_message table if it doesn't exist
+    echo "<h2>Creating dat_client_message table...</h2>";
+    $create_table_sql = "
+    CREATE TABLE IF NOT EXISTS `dat_client_message` (
+      `message_no` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `message_time` datetime NOT NULL,
+      `message_text` varchar(512) NOT NULL,
+      `machines` varchar(512) NOT NULL DEFAULT '*',
+      `stop_time` datetime DEFAULT NULL,
+      `reset_bonus` tinyint(4) NOT NULL DEFAULT '0',
+      `add_no` int(10) unsigned DEFAULT NULL,
+      `add_dt` datetime DEFAULT NULL,
+      `del_no` int(10) unsigned DEFAULT NULL,
+      `del_dt` datetime DEFAULT NULL,
+      PRIMARY KEY (`message_no`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ";
+
+    $pdo->exec($create_table_sql);
+    echo "<p style='color: green;'>✅ dat_client_message table created/verified!</p>";
+
     echo "<hr>";
 
     // Before update
