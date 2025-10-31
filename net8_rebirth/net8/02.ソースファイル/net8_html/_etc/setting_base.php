@@ -7,10 +7,10 @@
 
 // サイト基本情報
 define('SITE_NAME', getenv('SITE_NAME') ?: 'NET8 System');
-define('SITE_URL', getenv('SITE_URL') ?: 'http://localhost:8080/');
+define('SITE_URL', getenv('SITE_URL') ?: 'https://mgg-webservice-production.up.railway.app/');
 define('ADMIN_EMAIL', getenv('ADMIN_EMAIL') ?: 'admin@example.com');
-define('DOMAIN', getenv('DOMAIN') ?: 'localhost');
-define('URL_SSL_SITE', getenv('URL_SSL_SITE') ?: 'http://localhost:8080/'); // 開発環境ではHTTPを使用
+define('DOMAIN', getenv('DOMAIN') ?: 'mgg-webservice-production.up.railway.app');
+define('URL_SSL_SITE', getenv('URL_SSL_SITE') ?: 'https://mgg-webservice-production.up.railway.app/'); // Railway本番環境
 
 // 営業時間設定
 define('GLOBAL_OPEN_TIME', getenv('GLOBAL_OPEN_TIME') ?: '10:00');
@@ -83,13 +83,13 @@ define('DIR_LIB', __DIR__ . '/../_lib/');
 define('DIR_HTML_SCRIPT', '/systemjs/');
 
 // サイト表示設定
-define('URL_SITE', getenv('URL_SITE') ?: 'http://localhost:8080/');
+define('URL_SITE', getenv('URL_SITE') ?: 'https://mgg-webservice-production.up.railway.app/');
 define('SITE_TITLE', getenv('SITE_TITLE') ?: '777ONLINE');
 define('COPYRIGHT', getenv('COPYRIGHT') ?: 'Copyright (C) 777ONLINE All Rights Reserved.');
 define('DEFAULT_LANG', 'ja');
 define('CLIENT_CODE', '001'); // クライアントコード
 define('DOMAIN_DEVELOPMENT', 'localhost');
-define('DOMAIN_PRODUCTION', getenv('DOMAIN_PRODUCTION') ?: 'example.com');
+define('DOMAIN_PRODUCTION', getenv('DOMAIN_PRODUCTION') ?: 'mgg-webservice-production.up.railway.app');
 
 // 会員登録設定
 define('NICKNAME_LIMIT', 20); // ニックネーム文字数制限
