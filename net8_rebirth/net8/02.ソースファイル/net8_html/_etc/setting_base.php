@@ -355,3 +355,50 @@ $GLOBALS["Frow_Fixed_Array"] = array(
 
 // その他の設定
 define('AUTH_MEMBER_MOBILE', false); // 携帯番号認証を使用しない（開発環境）
+
+// 画像アップロード設定（管理画面用）
+define('UPFILE_IMG_EXT', 'jpg / jpeg / png / gif'); // アップロード可能な画像拡張子
+define('UPFILE_IMG_MAX', 10); // アップロード最大ファイルサイズ（MB）
+define('PUSHORDER_IMG_MAX', 500); // プッシュオーダー画像の最大ファイルサイズ（KB）
+
+// 追加機能設定
+define('TRACK_BONUS_BREAKDOWN', true); // ボーナス内訳記録機能
+define('PUSH_ORDER_COUNT', 10); // プッシュオーダー数
+
+// 機種設定リスト
+$GLOBALS["ModelSettingList"] = array(1, 2, 3, 4, 5, 6); // 設定1～6
+
+// レイアウト非表示リスト
+$GLOBALS["layout_hideList"] = array("1", "2", "3");
+
+// ボード別追加設定
+$GLOBALS["AddSettingByBoard"] = array(
+    "1" => false,  // タイプA: 追加設定なし
+    "2" => true    // タイプB: 追加設定あり
+);
+
+// 特殊追加設定
+$GLOBALS["AddSettingBySpecial"] = array(
+    "settinglist" => array(2)  // タイプBで設定リスト使用
+);
+
+// ボードバージョンデータ
+$GLOBALS["boardVersionData"] = array(
+    "1" => array(
+        "video_portrait" => 0,
+        "video_mode" => 4,
+        "drum" => 0,
+        "version" => 1
+    ),
+    "2" => array(
+        "video_portrait" => 0,
+        "video_mode" => 4,
+        "drum" => 0,
+        "version" => 2
+    )
+);
+
+// 画像保存ディレクトリ
+if (!defined('DIR_IMG_MODEL')) {
+    define('DIR_IMG_MODEL', '/var/www/html/data/img/model/');
+}

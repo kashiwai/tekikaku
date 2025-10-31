@@ -1161,15 +1161,15 @@ function checkInput($template) {
 				->required("A1409")
 			//リスト画像
 			->item($_chk_img1)
-				->required("A1410")
+				// ->required("A1410")  // 一時的に任意に変更
 			//詳細画像
 			->item($_chk_img2)
-				->required("A1412")
+				// ->required("A1412")  // 一時的に任意に変更
 			//リール画像
 			->item($_chk_img3)
 				// 2020/12/12 [UPD Start] パチも使用に変更、リールでもなくなったのだが
 				//->case( $_POST["CATEGORY"] == 2 )
-					->required("A1414")
+					// ->required("A1414")  // 一時的に任意に変更
 				// 2020/12/12 [UPD End] パチも使用に変更、リールでもなくなったのだが
 			//賞球設定データ
 			// 2020/12/12 [UPD Start] パチ対応
