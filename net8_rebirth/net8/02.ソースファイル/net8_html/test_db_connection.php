@@ -82,6 +82,110 @@ try {
     echo "✅ テスト完了！すべて正常です\n";
     echo "==========================================\n";
 
+    // 🔐 管理者ユーザー作成
+    echo "\n\n==========================================\n";
+    echo "🔐 管理者ユーザー作成\n";
+    echo "==========================================\n\n";
+
+    try {
+        // 既存の管理者を確認
+        $stmt = $pdo->query("SELECT admin_no, admin_id, admin_name FROM mst_admin WHERE del_flg = 0");
+        $existing_admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($existing_admins) > 0) {
+            echo "📋 既存の管理者ユーザー:\n";
+            foreach ($existing_admins as $admin) {
+                echo "  - ID: {$admin['admin_id']} / 名前: {$admin['admin_name']}\n";
+            }
+            echo "\n";
+        } else {
+            echo "ℹ️  既存の管理者ユーザーは存在しません。新規作成します。\n\n";
+        }
+
+        // 新しい管理者ユーザーを作成
+        $admin_id = 'admin';
+        $admin_password = 'admin123'; // 初期パスワード
+        $admin_name = 'システム管理者';
+        $admin_auth = 9; // 最高権限
+
+        // パスワードをMD5でハッシュ化（既存のシステムに合わせる）
+        $password_hash = md5($admin_password);
+
+        // 既に同じIDが存在するかチェック
+        $stmt = $pdo->prepare("SELECT admin_no FROM mst_admin WHERE admin_id = :admin_id");
+        $stmt->execute(['admin_id' => $admin_id]);
+        $exists = $stmt->fetch();
+
+        if ($exists) {
+            echo "ℹ️  管理者ID \"$admin_id\" は既に存在します。パスワードを更新します。\n\n";
+
+            // パスワードを更新
+            $stmt = $pdo->prepare("
+                UPDATE mst_admin
+                SET admin_pass = :password,
+                    admin_name = :name,
+                    admin_auth = :auth,
+                    upd_dt = NOW()
+                WHERE admin_id = :admin_id
+            ");
+
+            $result = $stmt->execute([
+                'password' => $password_hash,
+                'name' => $admin_name,
+                'auth' => $admin_auth,
+                'admin_id' => $admin_id
+            ]);
+
+            if ($result) {
+                echo "✅ 管理者ユーザーを更新しました\n\n";
+            }
+
+        } else {
+            // 新規作成
+            $stmt = $pdo->prepare("
+                INSERT INTO mst_admin (
+                    admin_id,
+                    admin_pass,
+                    admin_name,
+                    admin_auth,
+                    del_flg,
+                    add_no,
+                    add_dt
+                ) VALUES (
+                    :admin_id,
+                    :password,
+                    :name,
+                    :auth,
+                    0,
+                    1,
+                    NOW()
+                )
+            ");
+
+            $result = $stmt->execute([
+                'admin_id' => $admin_id,
+                'password' => $password_hash,
+                'name' => $admin_name,
+                'auth' => $admin_auth
+            ]);
+
+            if ($result) {
+                echo "✅ 管理者ユーザーを作成しました\n\n";
+            }
+        }
+
+        // ログイン情報を表示
+        echo "🔑 ログイン情報:\n";
+        echo "  URL: https://mgg-webservice-production.up.railway.app/xxxadmin/login.php\n";
+        echo "  ユーザーID: $admin_id\n";
+        echo "  パスワード: $admin_password\n";
+        echo "  権限レベル: $admin_auth (最高権限)\n\n";
+        echo "⚠️  重要: ログイン後、必ずパスワードを変更してください！\n\n";
+
+    } catch (PDOException $e) {
+        echo "❌ 管理者作成エラー: " . $e->getMessage() . "\n\n";
+    }
+
 } catch (PDOException $e) {
     echo "  ❌ 接続失敗\n\n";
     echo "エラー詳細:\n";
