@@ -42,9 +42,13 @@ COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available
 # アプリケーションファイルをコピー
 COPY net8/02.ソースファイル/net8_html /var/www/html
 
+# Basic認証用パスワードファイルをコピー
+COPY net8/02.ソースファイル/net8_html/.htpasswd-admin /var/www/html/.htpasswd-admin
+
 # 権限設定
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+    && chmod -R 755 /var/www/html \
+    && chmod 644 /var/www/html/.htpasswd-admin
 
 # ポート公開（Railwayは環境変数PORTを使用）
 EXPOSE ${PORT:-80}
