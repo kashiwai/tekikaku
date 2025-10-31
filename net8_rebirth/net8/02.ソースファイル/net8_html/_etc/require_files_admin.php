@@ -39,7 +39,7 @@ if (!defined('TYPE_MOBILE')) define('TYPE_MOBILE', 2);                    // モ
 
 // 管理画面URL設定
 if (!defined('URL_ADMIN')) {
-    define('URL_ADMIN', defined('SITE_URL') ? SITE_URL . 'xxxadmin/' : 'http://localhost:8080/xxxadmin/');
+    define('URL_ADMIN', defined('SITE_URL') ? SITE_URL . 'xxxadmin/' : 'https://mgg-webservice-production.up.railway.app/xxxadmin/');
 }
 
 // 管理画面セッション設定
