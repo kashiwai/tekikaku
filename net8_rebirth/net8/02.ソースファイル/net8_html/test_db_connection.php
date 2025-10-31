@@ -116,84 +116,35 @@ try {
                 echo "ℹ️  既存の管理者ユーザーは存在しません。新規作成します。\n\n";
             }
 
-            // 新しい管理者ユーザーを作成
-            $admin_id = 'admin';
-            $admin_password = 'admin123'; // 初期パスワード
-            $admin_name = 'システム管理者';
-            $admin_auth = 9; // 最高権限
+            // 既存管理者のパスワードをリセット
+            $reset_password = 'admin123';
+            $password_hash = md5($reset_password);
 
-            // パスワードをMD5でハッシュ化（既存のシステムに合わせる）
-            $password_hash = md5($admin_password);
+            echo "🔄 既存管理者のパスワードをリセット:\n\n";
 
-            // 既に同じIDが存在するかチェック
-            $stmt = $pdo->prepare("SELECT admin_no FROM mst_admin WHERE admin_id = :admin_id");
-            $stmt->execute(['admin_id' => $admin_id]);
-            $exists = $stmt->fetch();
+            // sradmin のパスワードをリセット
+            $stmt = $pdo->prepare("UPDATE mst_admin SET admin_pass = :password WHERE admin_id = 'sradmin'");
+            $result1 = $stmt->execute(['password' => $password_hash]);
+            if ($result1) {
+                echo "  ✅ sradmin のパスワードをリセットしました\n";
+            }
 
-            if ($exists) {
-                echo "ℹ️  管理者ID \"$admin_id\" は既に存在します。パスワードを更新します。\n\n";
-
-                // パスワードを更新
-                $stmt = $pdo->prepare("
-                    UPDATE mst_admin
-                    SET admin_pass = :password,
-                        admin_name = :name,
-                        admin_auth = :auth,
-                        upd_dt = NOW()
-                    WHERE admin_id = :admin_id
-                ");
-
-                $result = $stmt->execute([
-                    'password' => $password_hash,
-                    'name' => $admin_name,
-                    'auth' => $admin_auth,
-                    'admin_id' => $admin_id
-                ]);
-
-                if ($result) {
-                    echo "✅ 管理者ユーザーを更新しました\n\n";
-                }
-
-            } else {
-                // 新規作成
-                $stmt = $pdo->prepare("
-                    INSERT INTO mst_admin (
-                        admin_id,
-                        admin_pass,
-                        admin_name,
-                        admin_auth,
-                        del_flg,
-                        add_no,
-                        add_dt
-                    ) VALUES (
-                        :admin_id,
-                        :password,
-                        :name,
-                        :auth,
-                        0,
-                        1,
-                        NOW()
-                    )
-                ");
-
-                $result = $stmt->execute([
-                    'admin_id' => $admin_id,
-                    'password' => $password_hash,
-                    'name' => $admin_name,
-                    'auth' => $admin_auth
-                ]);
-
-                if ($result) {
-                    echo "✅ 管理者ユーザーを作成しました\n\n";
-                }
+            // spadmin のパスワードをリセット
+            $stmt = $pdo->prepare("UPDATE mst_admin SET admin_pass = :password WHERE admin_id = 'spadmin'");
+            $result2 = $stmt->execute(['password' => $password_hash]);
+            if ($result2) {
+                echo "  ✅ spadmin のパスワードをリセットしました\n\n";
             }
 
             // ログイン情報を表示
             echo "🔑 ログイン情報:\n";
-            echo "  URL: https://mgg-webservice-production.up.railway.app/xxxadmin/login.php\n";
-            echo "  ユーザーID: $admin_id\n";
-            echo "  パスワード: $admin_password\n";
-            echo "  権限レベル: $admin_auth (最高権限)\n\n";
+            echo "  URL: https://mgg-webservice-production.up.railway.app/xxxadmin/login.php\n\n";
+            echo "  アカウント1:\n";
+            echo "    ユーザーID: sradmin\n";
+            echo "    パスワード: $reset_password\n\n";
+            echo "  アカウント2:\n";
+            echo "    ユーザーID: spadmin\n";
+            echo "    パスワード: $reset_password\n\n";
             echo "⚠️  重要: ログイン後、必ずパスワードを変更してください！\n\n";
         }
 
