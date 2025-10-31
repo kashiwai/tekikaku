@@ -32,3 +32,4 @@ node_modules/
 
 # Claude workspace
 .claude/
+ADMIN_CREDENTIALS.txt
