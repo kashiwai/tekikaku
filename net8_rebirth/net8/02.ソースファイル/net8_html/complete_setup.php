@@ -141,6 +141,95 @@ try {
     }
 
     // ========================================
+    // STEP 3.5: タイプマスターデータ登録
+    // ========================================
+    echo "<h2>🎯 STEP 3.5: タイプマスターデータ登録</h2>";
+
+    $check_type = $pdo->query("SELECT COUNT(*) FROM mst_type WHERE del_flg = 0")->fetchColumn();
+
+    if ($check_type == 0) {
+        // パチンコタイプ (category=1)
+        $pachi_types = [
+            ['確変', 'KAKUHEN', 1],
+            ['ST', 'ST', 2],
+            ['右打ち', 'MIGIUCHI', 3],
+            ['一種二種混合', 'MIX', 4],
+        ];
+
+        // スロットタイプ (category=2)
+        $slot_types = [
+            ['AT', 'AT', 1],
+            ['ART', 'ART', 2],
+            ['RT', 'RT', 3],
+            ['Aタイプ', 'A-TYPE', 4],
+            ['その他', 'OTHER', 5],
+        ];
+
+        $stmt = $pdo->prepare("
+            INSERT INTO mst_type (category, type_name, type_roman, sort_no, del_flg)
+            VALUES (:category, :name, :roman, :sort, 0)
+        ");
+
+        foreach ($pachi_types as $type) {
+            $stmt->execute([
+                'category' => 1,
+                'name' => $type[0],
+                'roman' => $type[1],
+                'sort' => $type[2]
+            ]);
+        }
+
+        foreach ($slot_types as $type) {
+            $stmt->execute([
+                'category' => 2,
+                'name' => $type[0],
+                'roman' => $type[1],
+                'sort' => $type[2]
+            ]);
+        }
+
+        echo "<p>✅ タイプデータ登録完了（パチンコ: " . count($pachi_types) . "件、スロット: " . count($slot_types) . "件）</p>";
+    } else {
+        echo "<p>✅ タイプデータ既存（{$check_type}件）</p>";
+    }
+
+    // ========================================
+    // STEP 3.6: 号機マスターデータ登録
+    // ========================================
+    echo "<h2>🎰 STEP 3.6: 号機マスターデータ登録</h2>";
+
+    $check_unit = $pdo->query("SELECT COUNT(*) FROM mst_unit WHERE del_flg = 0")->fetchColumn();
+
+    if ($check_unit == 0) {
+        $units = [
+            ['旧基準機', 'OLD', 1],
+            ['現行機', 'CURRENT', 2],
+            ['3号機', '3rd', 3],
+            ['4号機', '4th', 4],
+            ['5号機', '5th', 5],
+            ['6号機', '6th', 6],
+            ['スマスロ', 'SMART', 7],
+        ];
+
+        $stmt = $pdo->prepare("
+            INSERT INTO mst_unit (unit_name, unit_roman, sort_no, del_flg)
+            VALUES (:name, :roman, :sort, 0)
+        ");
+
+        foreach ($units as $unit) {
+            $stmt->execute([
+                'name' => $unit[0],
+                'roman' => $unit[1],
+                'sort' => $unit[2]
+            ]);
+        }
+
+        echo "<p>✅ 号機データ登録完了（" . count($units) . "件）</p>";
+    } else {
+        echo "<p>✅ 号機データ既存（{$check_unit}件）</p>";
+    }
+
+    // ========================================
     // STEP 4: 北斗の拳機種データ登録
     // ========================================
     echo "<h2>🎰 STEP 4: 北斗の拳機種データ登録</h2>";
