@@ -117,6 +117,49 @@ try {
     }
 
     // ========================================
+    // STEP 2.5: licensesテーブル作成（slotserver.exe用）
+    // ========================================
+    echo "<h2>🔐 STEP 2.5: licensesテーブル作成（slotserver.exe用）</h2>";
+
+    // licensesテーブルの存在確認
+    $table_exists = $pdo->query("SHOW TABLES LIKE 'licenses'")->rowCount() > 0;
+
+    if (!$table_exists) {
+        // テーブル作成
+        $pdo->exec("
+            CREATE TABLE licenses (
+                license_id INT PRIMARY KEY AUTO_INCREMENT,
+                license_cd VARCHAR(255) NOT NULL,
+                domain VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        echo "<p>✅ licensesテーブルを作成しました</p>";
+    } else {
+        echo "<p>✅ licensesテーブル既存</p>";
+
+        // license_cdカラムの存在確認
+        $columns = $pdo->query("SHOW COLUMNS FROM licenses")->fetchAll(PDO::FETCH_COLUMN);
+        $has_license_cd = in_array('license_cd', $columns);
+
+        if (!$has_license_cd) {
+            $pdo->exec("ALTER TABLE licenses ADD COLUMN license_cd VARCHAR(255) NOT NULL");
+            echo "<p>✅ license_cdカラムを追加しました</p>";
+        }
+    }
+
+    // ライセンス情報を登録（slotserver.iniと同じ値）
+    $license_cd = '6cce6f56edba0d5fc2b57e1f7d5e666f47b789fba27ae0a6fcef15c9cf49527c';
+    $domain = 'mgg-webservice-production.up.railway.app';
+
+    $pdo->exec("
+        INSERT INTO licenses (license_cd, domain) VALUES ('$license_cd', '$domain')
+        ON DUPLICATE KEY UPDATE domain='$domain', updated_at=NOW()
+    ");
+    echo "<p>✅ ライセンス情報を登録しました（license_cd: " . substr($license_cd, 0, 20) . "...）</p>";
+
+    // ========================================
     // STEP 3: メーカーデータ登録
     // ========================================
     echo "<h2>🏭 STEP 3: メーカーデータ登録</h2>";

@@ -71,7 +71,36 @@ try {
             VALUES ('admin', '$admin_pass', '管理者', 9, 0, 1, NOW())
         ");
 
-        $results[count($results)-1] = ['step' => 1, 'title' => 'STEP 1: 基本セットアップ', 'status' => 'success', 'message' => '機種・メーカー・管理者登録完了'];
+        // licensesテーブル作成（slotserver.exe用）
+        $table_exists = $pdo->query("SHOW TABLES LIKE 'licenses'")->rowCount() > 0;
+
+        if (!$table_exists) {
+            $pdo->exec("
+                CREATE TABLE licenses (
+                    license_id INT PRIMARY KEY AUTO_INCREMENT,
+                    license_cd VARCHAR(255) NOT NULL,
+                    domain VARCHAR(255),
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+            ");
+        } else {
+            // license_cdカラムの存在確認
+            $columns = $pdo->query("SHOW COLUMNS FROM licenses")->fetchAll(PDO::FETCH_COLUMN);
+            if (!in_array('license_cd', $columns)) {
+                $pdo->exec("ALTER TABLE licenses ADD COLUMN license_cd VARCHAR(255) NOT NULL");
+            }
+        }
+
+        // ライセンス情報登録
+        $license_cd = '6cce6f56edba0d5fc2b57e1f7d5e666f47b789fba27ae0a6fcef15c9cf49527c';
+        $domain = 'mgg-webservice-production.up.railway.app';
+        $pdo->exec("
+            INSERT INTO licenses (license_cd, domain) VALUES ('$license_cd', '$domain')
+            ON DUPLICATE KEY UPDATE domain='$domain', updated_at=NOW()
+        ");
+
+        $results[count($results)-1] = ['step' => 1, 'title' => 'STEP 1: 基本セットアップ', 'status' => 'success', 'message' => '機種・メーカー・管理者・ライセンス登録完了'];
         $success_count++;
     } catch (Exception $e) {
         $results[count($results)-1] = ['step' => 1, 'title' => 'STEP 1: 基本セットアップ', 'status' => 'error', 'message' => $e->getMessage()];
