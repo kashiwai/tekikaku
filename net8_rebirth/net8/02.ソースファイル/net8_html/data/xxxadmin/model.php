@@ -648,9 +648,10 @@ function RegistData($template) {
 					case UPLOAD_ERR_OK: // OK
 						break;
 					case UPLOAD_ERR_NO_FILE:   // ファイル未選択
-						if (mb_strlen($_POST["MODEL_NO"]) == 0) {
-							throw new RuntimeException($template->message("A1410"));
-						}
+						// 画像なしでも登録可能にするため一時的にコメントアウト
+						// if (mb_strlen($_POST["MODEL_NO"]) == 0) {
+						// 	throw new RuntimeException($template->message("A1410"));
+						// }
 						break;
 					case UPLOAD_ERR_INI_SIZE:  // php.ini定義の最大サイズ超過
 					// case UPLOAD_ERR_FORM_SIZE: // フォーム定義の最大サイズ超過(容量違いの画像が複数あるのでformには設定していない)
@@ -702,9 +703,10 @@ function RegistData($template) {
 					case UPLOAD_ERR_OK: // OK
 						break;
 					case UPLOAD_ERR_NO_FILE:   // ファイル未選択
-						if (mb_strlen($_POST["MODEL_NO"]) == 0) {
-							throw new RuntimeException($template->message("A1412"));
-						}
+						// 画像なしでも登録可能にするため一時的にコメントアウト
+						// if (mb_strlen($_POST["MODEL_NO"]) == 0) {
+						// 	throw new RuntimeException($template->message("A1412"));
+						// }
 						break;
 					case UPLOAD_ERR_INI_SIZE:  // php.ini定義の最大サイズ超過
 					// case UPLOAD_ERR_FORM_SIZE: // フォーム定義の最大サイズ超過(容量違いの画像が複数あるのでformには設定していない)
@@ -759,9 +761,10 @@ function RegistData($template) {
 					case UPLOAD_ERR_OK: // OK
 						break;
 					case UPLOAD_ERR_NO_FILE:   // ファイル未選択
-						if (mb_strlen($_POST["MODEL_NO"]) == 0) {
-							throw new RuntimeException($template->message("A1414"));
-						}
+						// 画像なしでも登録可能にするため一時的にコメントアウト
+						// if (mb_strlen($_POST["MODEL_NO"]) == 0) {
+						// 	throw new RuntimeException($template->message("A1414"));
+						// }
 						break;
 					case UPLOAD_ERR_INI_SIZE:  // php.ini定義の最大サイズ超過
 					// case UPLOAD_ERR_FORM_SIZE: // フォーム定義の最大サイズ超過(容量違いの画像が複数あるのでformには設定していない)
