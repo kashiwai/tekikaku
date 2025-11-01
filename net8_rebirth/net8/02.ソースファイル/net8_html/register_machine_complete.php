@@ -79,10 +79,11 @@ try {
         $exists = $check->fetch();
 
         if ($exists) {
-            // 既存データを更新（machine_statusを1に変更）
+            // 既存データを更新（machine_statusを1に変更、machine_cornerも設定）
             $update_stmt = $pdo->prepare("
                 UPDATE dat_machine SET
                     machine_status = 1,
+                    machine_corner = '1',
                     upd_no = 1,
                     upd_dt = NOW()
                 WHERE machine_no = :machine_no
@@ -90,7 +91,7 @@ try {
             $update_stmt->execute(['machine_no' => $exists['machine_no']]);
 
             $machine_no = $exists['machine_no'];
-            echo "<p>⚠️ {$machine['machine_cd']} は既に登録済み → machine_statusを1（稼働中）に更新（台No: {$machine_no}）</p>";
+            echo "<p>⚠️ {$machine['machine_cd']} は既に登録済み → machine_statusを1（稼働中）、machine_cornerを1に更新（台No: {$machine_no}）</p>";
             $updated_count++;
         } else {
             // 新規登録
@@ -102,6 +103,7 @@ try {
                     camera_no,
                     signaling_id,
                     convert_no,
+                    machine_corner,
                     release_date,
                     end_date,
                     machine_status,
@@ -115,6 +117,7 @@ try {
                     :camera_no,
                     :signaling_id,
                     :convert_no,
+                    '1',
                     :release_date,
                     '2099-12-31',
                     1,
