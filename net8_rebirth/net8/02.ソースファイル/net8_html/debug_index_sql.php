@@ -52,7 +52,7 @@ try {
             ma.maker_name,
             mt.type_name,
             mu.unit_name,
-            mcp.convert_point
+            mcp.point
         FROM dat_machine dm
         INNER JOIN dat_machinePlay dmp ON dmp.machine_no = dm.machine_no
         INNER JOIN lnk_machine lm ON lm.machine_no = dm.machine_no
