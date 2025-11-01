@@ -127,10 +127,10 @@ try {
         // デフォルトメーカーを登録
         $stmt = $pdo->prepare("
             INSERT INTO mst_maker (
-                maker_cd, maker_name, maker_roman, disp_flg,
+                maker_name, maker_roman, disp_flg,
                 del_flg, add_no, add_dt
             ) VALUES (
-                'SAMMY', 'サミー', 'SAMMY', 1,
+                'サミー', 'SAMMY', 1,
                 0, 1, NOW()
             )
         ");
