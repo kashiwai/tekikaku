@@ -20,7 +20,7 @@ try {
     echo "<p>✅ データベース接続成功</p>";
 
     // 管理者アカウント一覧
-    $sql = "SELECT admin_no, admin_id, admin_name, admin_auth, del_flg FROM mst_admin ORDER BY admin_no";
+    $sql = "SELECT admin_no, admin_id, admin_name, auth_flg, del_flg FROM mst_admin ORDER BY admin_no";
     $stmt = $pdo->query($sql);
     $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -35,7 +35,7 @@ try {
         foreach ($admins as $admin) {
             $status = ($admin['del_flg'] == 0) ? "✅ 有効" : "❌ 削除済み";
             $auth_label = '';
-            switch ($admin['admin_auth']) {
+            switch ($admin['auth_flg']) {
                 case 0: $auth_label = '一般'; break;
                 case 1: $auth_label = '管理者'; break;
                 case 9: $auth_label = 'システム管理者'; break;
