@@ -37,20 +37,20 @@ try {
 
         // mst_maker登録
         $pdo->exec("
-            INSERT IGNORE INTO mst_maker (maker_no, maker_cd, maker_name, del_flg, add_no, add_dt)
-            VALUES (1, 'SANKYO', 'SANKYO', 0, 1, NOW())
+            INSERT IGNORE INTO mst_maker (maker_no, maker_name, maker_roman, pachi_flg, slot_flg, disp_flg, del_flg)
+            VALUES (1, 'SANKYO', 'SANKYO', 0, 1, 0, 0)
         ");
 
         // mst_type登録
         $pdo->exec("
-            INSERT IGNORE INTO mst_type (type_no, type_cd, type_name, del_flg, add_no, add_dt)
-            VALUES (2, 'SLOT', 'スロット', 0, 1, NOW())
+            INSERT IGNORE INTO mst_type (type_no, category, type_name, type_roman, sort_no, del_flg)
+            VALUES (2, 2, 'スロット', 'SLOT', 2, 0)
         ");
 
         // mst_unit登録
         $pdo->exec("
-            INSERT IGNORE INTO mst_unit (unit_no, unit_cd, unit_name, del_flg, add_no, add_dt)
-            VALUES (4, '4GO', '4号機', 0, 1, NOW())
+            INSERT IGNORE INTO mst_unit (unit_no, unit_name, unit_roman, sort_no, del_flg)
+            VALUES (4, '4号機', '4GO', 4, 0)
         ");
 
         // mst_model登録
