@@ -88,7 +88,7 @@ function GetNoCamera($DB) {
 
 	$sql = (new SqlString($DB))
 		->select()
-			->field("mac_address,ip_address,license_cd")
+			->field("mac_address,ip_address")
 		->from("mst_cameralist")
 		->where()
 			->and( "mac_address =", $_GET["MAC"], FD_STR)
@@ -102,9 +102,6 @@ function GetNoCamera($DB) {
 		$api->outputJson();
 		return;
 	}
-
-	// Store license_cd for later use
-	$license_cd = isset($row["license_cd"]) ? $row["license_cd"] : "";
 	if ( mb_strlen($row["ip_address"]) == 0 ){
 		//初回のみIPアドレスを更新する
 		if ( !preg_match("/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/", $_GET["IP"]) ){
