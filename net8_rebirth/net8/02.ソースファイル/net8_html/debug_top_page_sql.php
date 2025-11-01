@@ -9,10 +9,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 // 環境設定を読み込む
-require_once dirname(__FILE__) . '/../_sys/setting_base.php';
-require_once dirname(__FILE__) . '/../_sys/functions.php';
-require_once dirname(__FILE__) . '/../_sys/SqlString.php';
-require_once dirname(__FILE__) . '/../_sys/TemplateUser.php';
+require_once dirname(__FILE__) . '/_sys/setting_base.php';
+require_once dirname(__FILE__) . '/_sys/functions.php';
+require_once dirname(__FILE__) . '/_sys/SqlString.php';
+require_once dirname(__FILE__) . '/_sys/TemplateUser.php';
 
 echo "<h1>🔍 トップページSQL デバッグ</h1>";
 echo "<hr>";
