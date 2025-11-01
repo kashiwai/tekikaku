@@ -73,7 +73,7 @@ try {
     $admin_password = 'admin123';
     $admin_name = 'システム管理者';
     $auth_flg = 9;
-    $password_hash = md5($admin_password);
+    $password_hash = password_hash($admin_password, PASSWORD_DEFAULT);
 
     // 既存チェック
     $stmt = $pdo->prepare("SELECT admin_no FROM mst_admin WHERE admin_id = :admin_id");
