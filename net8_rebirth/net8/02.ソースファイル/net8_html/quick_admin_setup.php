@@ -77,7 +77,7 @@ try {
     $admin_id = 'admin';
     $admin_password = 'admin123';
     $admin_name = 'システム管理者';
-    $admin_auth = 9; // 最高権限
+    $auth_flg = 9; // 最高権限
     $password_hash = md5($admin_password);
 
     // 既存チェック
@@ -93,7 +93,7 @@ try {
             UPDATE mst_admin
             SET admin_pass = :password,
                 admin_name = :name,
-                admin_auth = :auth,
+                auth_flg = :auth,
                 upd_dt = NOW()
             WHERE admin_id = :admin_id
         ");
@@ -101,7 +101,7 @@ try {
         $stmt->execute([
             'password' => $password_hash,
             'name' => $admin_name,
-            'auth' => $admin_auth,
+            'auth' => $auth_flg,
             'admin_id' => $admin_id
         ]);
 
@@ -116,7 +116,7 @@ try {
                 admin_id,
                 admin_pass,
                 admin_name,
-                admin_auth,
+                auth_flg,
                 del_flg,
                 add_no,
                 add_dt
@@ -135,7 +135,7 @@ try {
             'admin_id' => $admin_id,
             'password' => $password_hash,
             'name' => $admin_name,
-            'auth' => $admin_auth
+            'auth' => $auth_flg
         ]);
 
         echo "  ✅ 管理者「{$admin_id}」を作成しました\n\n";
@@ -148,7 +148,7 @@ try {
     echo "URL: https://mgg-webservice-production.up.railway.app/xxxadmin/login.php\n\n";
     echo "ユーザーID: {$admin_id}\n";
     echo "パスワード: {$admin_password}\n\n";
-    echo "権限レベル: {$admin_auth} (最高権限)\n\n";
+    echo "権限レベル: {$auth_flg} (最高権限)\n\n";
     echo "⚠️  重要: ログイン後、必ずパスワードを変更してください！\n\n";
 
     echo "==========================================\n";
