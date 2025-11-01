@@ -151,7 +151,6 @@ try {
                     bb_count,
                     rb_count,
                     hit_data,
-                    add_no,
                     add_dt
                 ) VALUES (
                     :machine_no,
@@ -160,7 +159,6 @@ try {
                     0,
                     0,
                     '',
-                    1,
                     NOW()
                 )
             ");
@@ -177,13 +175,11 @@ try {
                 INSERT INTO lnk_machine (
                     machine_no,
                     member_no,
-                    assign_flg,
-                    upd_dt
+                    assign_flg
                 ) VALUES (
                     :machine_no,
                     NULL,
-                    0,
-                    NOW()
+                    0
                 )
             ");
             $lnk_stmt->execute(['machine_no' => $machine_no]);
