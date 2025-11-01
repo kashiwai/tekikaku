@@ -67,8 +67,8 @@ try {
         // mst_admin登録（パスワードハッシュ化）
         $admin_pass = password_hash('admin123', PASSWORD_DEFAULT);
         $pdo->exec("
-            INSERT IGNORE INTO mst_admin (admin_id, admin_password, admin_name, del_flg, add_no, add_dt)
-            VALUES ('admin', '$admin_pass', '管理者', 0, 1, NOW())
+            INSERT IGNORE INTO mst_admin (admin_id, admin_pass, admin_name, auth_flg, del_flg, add_no, add_dt)
+            VALUES ('admin', '$admin_pass', '管理者', 9, 0, 1, NOW())
         ");
 
         $results[count($results)-1] = ['step' => 1, 'title' => 'STEP 1: 基本セットアップ', 'status' => 'success', 'message' => '機種・メーカー・管理者登録完了'];
