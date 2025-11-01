@@ -45,7 +45,8 @@ try {
     if (empty($machines)) {
         echo "<p>❌ dat_machineにデータがありません</p>";
     } else {
-        echo "<p>✅ dat_machineに{$count = count($machines)}台登録されています</p>";
+        $count = count($machines);
+        echo "<p>✅ dat_machineに{$count}台登録されています</p>";
         echo "<table border='1' cellpadding='5' cellspacing='0'>";
         echo "<tr><th>台No</th><th>機種No</th><th>台CD</th><th>corner</th><th>status</th><th>del_flg</th><th>公開日</th></tr>";
         foreach ($machines as $m) {
@@ -71,7 +72,8 @@ try {
         WHERE del_flg = 0
     ")->fetchAll(PDO::FETCH_ASSOC);
 
-    echo "<p>✅ mst_modelに{$count = count($models)}機種登録されています</p>";
+    $count = count($models);
+    echo "<p>✅ mst_modelに{$count}機種登録されています</p>";
     echo "<table border='1' cellpadding='5' cellspacing='0'>";
     echo "<tr><th>機種No</th><th>機種CD</th><th>機種名</th><th>画像</th></tr>";
     foreach ($models as $m) {
@@ -97,7 +99,8 @@ try {
         echo "<p>❌ mst_cornerにデータがありません</p>";
         echo "<p>⚠️ これが原因でトップページに台が表示されない可能性があります</p>";
     } else {
-        echo "<p>✅ mst_cornerに{$count = count($corners)}コーナー登録されています</p>";
+        $count = count($corners);
+        echo "<p>✅ mst_cornerに{$count}コーナー登録されています</p>";
         echo "<table border='1' cellpadding='5' cellspacing='0'>";
         echo "<tr><th>コーナーNo</th><th>コーナー名</th><th>ローマ字</th></tr>";
         foreach ($corners as $c) {
@@ -133,7 +136,8 @@ try {
         echo "<p>❌ トップページで表示される台が0台です</p>";
         echo "<p>原因: machine_status=1 かつ del_flg=0 の条件に該当する台がありません</p>";
     } else {
-        echo "<p>✅ トップページで表示される台: {$count = count($top_machines)}台</p>";
+        $count = count($top_machines);
+        echo "<p>✅ トップページで表示される台: {$count}台</p>";
         echo "<table border='1' cellpadding='5' cellspacing='0'>";
         echo "<tr><th>台No</th><th>台CD</th><th>corner</th><th>status</th><th>機種名</th><th>画像</th></tr>";
         foreach ($top_machines as $m) {
