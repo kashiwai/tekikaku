@@ -27,7 +27,7 @@ try {
     echo "<hr>";
 
     // 既存の会員数を確認
-    $existing_count = $pdo->query("SELECT COUNT(*) FROM mst_member WHERE del_flg = 0")->fetchColumn();
+    $existing_count = $pdo->query("SELECT COUNT(*) FROM mst_member WHERE state = 0")->fetchColumn();
     echo "<h2>📊 現在の会員数: {$existing_count}人</h2>";
 
     // サンプル会員データ（パスワードは "admin123" のbcryptハッシュ）
@@ -41,9 +41,9 @@ try {
     echo "<ul>";
 
     $stmt = $pdo->prepare("
-        INSERT INTO mst_member (nickname, mail, pass, point, draw_point, loss_count, mail_magazine, del_flg, add_no, add_dt)
-        VALUES (:nickname, :mail, :pass, :point, 0, 0, 0, 0, 1, NOW())
-        ON DUPLICATE KEY UPDATE point = VALUES(point), upd_no = 1, upd_dt = NOW()
+        INSERT INTO mst_member (nickname, mail, pass, point, draw_point, loss_count, mail_magazine, state, regist_dt)
+        VALUES (:nickname, :mail, :pass, :point, 0, 0, 0, 0, NOW())
+        ON DUPLICATE KEY UPDATE point = VALUES(point), login_dt = NOW()
     ");
 
     $inserted = 0;
@@ -69,7 +69,7 @@ try {
     echo "</ul>";
 
     // 最終的な会員数
-    $final_count = $pdo->query("SELECT COUNT(*) FROM mst_member WHERE del_flg = 0")->fetchColumn();
+    $final_count = $pdo->query("SELECT COUNT(*) FROM mst_member WHERE state = 0")->fetchColumn();
 
     echo "<hr>";
     echo "<h2>🎉 完了</h2>";
@@ -85,7 +85,7 @@ try {
     $members = $pdo->query("
         SELECT member_no, nickname, mail, point
         FROM mst_member
-        WHERE del_flg = 0
+        WHERE state = 0
         ORDER BY member_no
     ")->fetchAll(PDO::FETCH_ASSOC);
 
