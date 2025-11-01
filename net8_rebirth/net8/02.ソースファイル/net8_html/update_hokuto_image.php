@@ -27,7 +27,7 @@ try {
     echo "<hr>";
 
     // 北斗の拳の機種情報を取得
-    $model = $pdo->query("SELECT model_no, model_cd, model_name, model_img_path FROM mst_model WHERE model_cd = 'HOKUTO4GO' AND del_flg = 0")->fetch();
+    $model = $pdo->query("SELECT model_no, model_cd, model_name, image_list FROM mst_model WHERE model_cd = 'HOKUTO4GO' AND del_flg = 0")->fetch();
 
     if (!$model) {
         die("<p>❌ 北斗の拳の機種データが見つかりません。</p>");
@@ -40,7 +40,7 @@ try {
     echo "<td>{$model['model_no']}</td>";
     echo "<td>{$model['model_cd']}</td>";
     echo "<td>{$model['model_name']}</td>";
-    echo "<td>" . ($model['model_img_path'] ?: '<span style="color:red;">未設定</span>') . "</td>";
+    echo "<td>" . ($model['image_list'] ?: '<span style="color:red;">未設定</span>') . "</td>";
     echo "</tr>";
     echo "</table>";
     echo "<hr>";
@@ -50,19 +50,19 @@ try {
 
     $stmt = $pdo->prepare("
         UPDATE mst_model SET
-            model_img_path = :model_img_path,
+            image_list = :image_list,
             upd_no = 1,
             upd_dt = NOW()
         WHERE model_cd = 'HOKUTO4GO' AND del_flg = 0
     ");
 
-    $stmt->execute(['model_img_path' => $image_path]);
+    $stmt->execute(['image_list' => $image_path]);
 
     echo "<h2>✅ 画像パス更新完了</h2>";
     echo "<p><b>設定した画像パス:</b> {$image_path}</p>";
 
     // 更新後の情報を取得
-    $updated = $pdo->query("SELECT model_no, model_cd, model_name, model_img_path FROM mst_model WHERE model_cd = 'HOKUTO4GO' AND del_flg = 0")->fetch();
+    $updated = $pdo->query("SELECT model_no, model_cd, model_name, image_list FROM mst_model WHERE model_cd = 'HOKUTO4GO' AND del_flg = 0")->fetch();
 
     echo "<h2>📋 更新後の機種情報</h2>";
     echo "<table border='1' cellpadding='5' cellspacing='0'>";
@@ -71,7 +71,7 @@ try {
     echo "<td>{$updated['model_no']}</td>";
     echo "<td>{$updated['model_cd']}</td>";
     echo "<td>{$updated['model_name']}</td>";
-    echo "<td style='color:green;'><b>{$updated['model_img_path']}</b></td>";
+    echo "<td style='color:green;'><b>{$updated['image_list']}</b></td>";
     echo "</tr>";
     echo "</table>";
 

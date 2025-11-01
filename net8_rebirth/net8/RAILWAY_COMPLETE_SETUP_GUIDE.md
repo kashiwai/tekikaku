@@ -93,7 +93,7 @@ https://mgg-webservice-production.up.railway.app/update_hokuto_image.php
 
 **実行内容:**
 - mst_modelテーブルの北斗の拳レコードを更新
-  - model_img_path = 'img/model/hokuto4go.jpg'
+  - image_list = 'img/model/hokuto4go.jpg'（リスト用画像パス）
 
 **期待される表示:**
 - ✅ 画像パス更新完了
@@ -191,7 +191,7 @@ https://mgg-webservice-production.up.railway.app/
 | 4 | dat_machine | 3件 | HOKUTO001-003, machine_corner='1' |
 | 4 | dat_machinePlay | 3件 | プレイデータ初期化 |
 | 4 | lnk_machine | 3件 | 接続状況 |
-| 5 | mst_model | 1件（更新） | model_img_path設定 |
+| 5 | mst_model | 1件（更新） | image_list設定 |
 
 ---
 
