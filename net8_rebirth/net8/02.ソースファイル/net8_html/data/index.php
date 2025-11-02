@@ -24,7 +24,7 @@
  */
 
 // インクルード
-require_once('../_etc/require_files.php');			// requireファイル
+require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
 // 項目定義
 define("PRE_HTML", basename(get_self(), ".php"));	// テンプレートHTMLプレフィックス
 
