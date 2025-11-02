@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "railway-web/Dockerfile"
+dockerfilePath = "net8_rebirth/Dockerfile"
 
 [deploy]
 runtime = "V2"
