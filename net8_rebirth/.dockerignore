@@ -1,0 +1,104 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Large files - Windows client setup files (not needed for web deployment)
+*.zip
+*.exe
+*.msi
+camera_localpcsetup/
+server_localpc/
+windows_files/
+
+# Docker
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Documentation (not needed in container)
+*.md
+!net8/02.ソースファイル/**/*.md
+docs/
+.claude/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.railway
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+.tmp/
+temp/
+*.tmp
+*.bak
+*.cache
+
+# Backup files
+*.sql.gz
+*.dump.gz
+backup/
+backups/
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+
+# Build artifacts (except what's needed)
+dist/
+build/
+out/
+
+# Cache
+.cache/
+*.cache
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Local development files
+.local/
+local/
+
+# Sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets/
+
+# Railway specific
+.railway/
+
+# SQL dump files (use Railway database)
+*.sql
+!net8/03.DBdump/*.sql
+
+# Scripts not needed in container
+*.sh
+*.bat
+*.command
+!net8/docker/**/*.sh
