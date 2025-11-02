@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+dockerfilePath = "railway-web/Dockerfile"
 
 [deploy]
 runtime = "V2"
