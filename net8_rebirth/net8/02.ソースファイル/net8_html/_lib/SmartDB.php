@@ -85,8 +85,8 @@ class SmartDB {
 			}
 			$pdo_dsn = "{$argv[1]}:host={$argv[4]};dbname={$argv[5]};charset=utf8;";
 			try {
-				// PDOインスタンスを生成
-				$this->_db = new PDO($pdo_dsn, $argv[2], $argv[3],
+				// PDOインスタンスを生成 (URLデコードして渡す)
+				$this->_db = new PDO($pdo_dsn, urldecode($argv[2]), urldecode($argv[3]),
 					array( 
 					            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, 
 					            PDO::ATTR_EMULATE_PREPARES => false, 
