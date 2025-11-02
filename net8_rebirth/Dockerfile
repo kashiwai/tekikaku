@@ -42,9 +42,15 @@ COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available
 # アプリケーションファイルをコピー
 COPY net8/02.ソースファイル/net8_html /var/www/html
 
+# 画像アップロード用ディレクトリ作成
+RUN mkdir -p /var/www/html/data/img/model \
+    && mkdir -p /var/www/html/data/uploads
+
 # 権限設定
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/data/img/model \
+    && chmod -R 777 /var/www/html/data/uploads
 
 # ポート公開（Railwayは環境変数PORTを使用）
 EXPOSE ${PORT:-80}
