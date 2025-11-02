@@ -1,7 +1,0 @@
-[build]
-builder = "dockerfile"
-dockerfilePath = "Dockerfile.web"
-
-[deploy]
-startCommand = "apache2-foreground"
-restartPolicyType = "always"
