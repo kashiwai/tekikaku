@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "net8_rebirth/net8/Dockerfile.web"
+dockerfilePath = "net8/Dockerfile.web"
 
 [deploy]
 runtime = "V2"
