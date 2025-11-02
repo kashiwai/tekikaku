@@ -23,7 +23,8 @@ try {
     echo "<hr>";
     echo "<h2>STEP 2: require_files.php 読み込みテスト</h2>";
 
-    $require_file = __DIR__ . '/data/_etc/require_files.php';
+    // 正しいパス: /var/www/html/_etc/require_files.php
+    $require_file = __DIR__ . '/_etc/require_files.php';
     if (file_exists($require_file)) {
         echo "<p>✅ require_files.php が存在します</p>";
         echo "<p>パス: $require_file</p>";
