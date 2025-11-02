@@ -82,7 +82,9 @@ class TemplateUser extends SmartTemplate {
 		}
 
 		// 多言語設定 2020-01-08 T.Murakami
-		if ( array_key_exists($_COOKIE["LANG"], $GLOBALS["langList"]) ){
+		if ( isset($_COOKIE["LANG"]) && isset($GLOBALS["langList"]) && array_key_exists($_COOKIE["LANG"], $GLOBALS["langList"]) ){
+			setcookie("LANG", FOLDER_LANG, 0, "/");
+		} else {
 			setcookie("LANG", FOLDER_LANG, 0, "/");
 		}
 
