@@ -50,8 +50,8 @@ define('DB_CHARSET', 'utf8mb4');
 // データベースDSN（Data Source Name）
 // PDO形式（get_db_connection関数用）
 define('DB_DSN_PDO', 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET);
-// MDB2形式（SmartDBクラス用）
-define('DB_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
+// MDB2形式（SmartDBクラス用）- パスワードの特殊文字をURLエンコード
+define('DB_DSN', 'mysql://' . urlencode(DB_USER) . ':' . urlencode(DB_PASSWORD) . '@' . DB_HOST . '/' . DB_NAME);
 
 // データベース接続オプション
 define('DB_OPTIONS', [
