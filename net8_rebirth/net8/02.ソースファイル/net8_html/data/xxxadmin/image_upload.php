@@ -11,10 +11,10 @@ ini_set('display_errors', '1');
 session_start();
 
 // DB接続
-$db_host = $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: 'db';
+$db_host = $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '136.116.70.86';
 $db_name = $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'net8_dev';
-$db_user = $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'net8user';
-$db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: 'net8pass';
+$db_user = $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'net8tech001';
+$db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: 'CaD?7&Bi+_:`QKb*';
 
 $message = '';
 $messageType = '';
@@ -144,7 +144,7 @@ try {
         .model-item h3 { font-size: 16px; margin-bottom: 10px; color: #333; }
         .model-item .model-cd { font-size: 12px; color: #666; margin-bottom: 10px; }
         .model-item .image-preview { width: 100%; height: 150px; background: #fff; border: 1px solid #ddd; border-radius: 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; }
-        .model-item .image-preview img { max-width: 100%; max-height: 100%; object-fit: cover; }
+        .model-item .image-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .model-item .no-image { color: #999; font-size: 12px; }
         .model-item .image-path { font-size: 11px; color: #28a745; word-break: break-all; }
     </style>
