@@ -76,3 +76,7 @@ define('TURN_CREDENTIAL', getenv('TURN_CREDENTIAL') ?: '');
 // エラーログ設定
 define('ERROR_LOG_PATH', '/var/www/html/_sys/log/error.log');
 define('ACCESS_LOG_PATH', '/var/www/html/_sys/log/access.log');
+
+// WebRTC設定ファイルの読み込み
+require_once(__DIR__ . '/webRTC_setting.php');
+

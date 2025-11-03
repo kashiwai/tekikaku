@@ -405,3 +405,7 @@ $GLOBALS["boardVersionData"] = array(
 if (!defined('DIR_IMG_MODEL')) {
     define('DIR_IMG_MODEL', '/var/www/html/data/img/model/');
 }
+
+// WebRTC設定ファイルの読み込み
+require_once(DIR_BASE . '_etc/webRTC_setting.php');
+

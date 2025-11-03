@@ -73,8 +73,19 @@ class WebRTCAPI {
 		foreach( $this->_stun["servers"] as $stun ){
 			$servers[] = "{ urls: 'stun:{$stun}'}";
 		}
+
+		// TURN サーバー設定
 		foreach( $this->_turn["servers"] as $turn ){
-			if ( $this->getTurnIDPASS( $serverflg ) ){
+			// グローバル変数から固定認証情報を取得（OpenRelay用）
+			$username = isset($GLOBALS["RTC_Turn_Username"]) ? $GLOBALS["RTC_Turn_Username"] : "";
+			$credential = isset($GLOBALS["RTC_Turn_Credential"]) ? $GLOBALS["RTC_Turn_Credential"] : "";
+
+			// 固定認証情報がある場合はそれを使用
+			if (!empty($username) && !empty($credential)) {
+				$servers[] = "{ urls: 'turn:{$turn}','username':'{$username}','credential':'{$credential}'}";
+			}
+			// 従来のAPI経由の認証情報取得もサポート
+			elseif ( $this->getTurnIDPASS( $serverflg ) ){
 				$servers[] = "{ urls: 'turn:{$turn}','username':'{$this->_turnUserID}','credential':'{$this->_turnUserPASS}'}";
 			}
 		}

@@ -39,11 +39,21 @@ if (!isset($GLOBALS["RTC_Stun_Servers"])) {
 }
 
 // TURN サーバー設定（WebRTCAPI用）
+// NATトラバーサルのため、無料TURNサーバー（OpenRelay）を使用
 if (!isset($GLOBALS["RTC_Turn_Servers"])) {
     $GLOBALS["RTC_Turn_Servers"] = array(
-        // TURNサーバーが必要な場合はここに追加
-        // "turn.example.com:3478"
+        "openrelay.metered.ca:80",      // OpenRelay TURN (UDP/TCP)
+        "openrelay.metered.ca:443",     // OpenRelay TURN (TLS)
+        "openrelay.metered.ca:443?transport=tcp"  // OpenRelay TURN (TCP強制)
     );
+}
+
+// TURN認証情報（OpenRelay公開認証）
+if (!isset($GLOBALS["RTC_Turn_Username"])) {
+    $GLOBALS["RTC_Turn_Username"] = "openrelayproject";
+}
+if (!isset($GLOBALS["RTC_Turn_Credential"])) {
+    $GLOBALS["RTC_Turn_Credential"] = "openrelayproject";
 }
 
 // TURN API URL設定（WebRTCAPI用）
