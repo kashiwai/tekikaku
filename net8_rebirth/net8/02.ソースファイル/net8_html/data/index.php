@@ -1,7 +1,7 @@
 <?php
 /*
  * index.php
- * 
+ *
  * (C)SmartRams Co.,Ltd. 2019 All Rights Reserved．
  *
  * 本技術情報には当社の機密情報が含まれておりますので、当社の
@@ -11,17 +11,21 @@
  * に提供する場合には、同法に基づく許可を要することがあります。
  *                                          有限会社 スマート・ラムズ
  *-------------------------------------------------------------------
- * 
+ *
  * TOP画面表示
- * 
+ *
  * TOP画面の表示を行う
- * 
+ *
  * @package
  * @author   片岡 充
  * @version  1.0
  * @since    2019/02/07 初版作成 初版作成 片岡 充
  * @since    2019/09/06 表示形態諸々の大幅改修 鶴野
  */
+
+// エラー表示を一時的に有効化（デバッグ用）
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // インクルード
 require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
