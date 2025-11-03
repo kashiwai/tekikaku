@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC接続テスト</title>
+    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        #video-container {
+            margin: 20px 0;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            border: 2px solid #333;
+            background: #000;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebRTC接続テスト</h1>
+
+    <div id="status-container"></div>
+
+    <div>
+        <h2>接続設定</h2>
+        <label>シグナリングサーバー:
+            <input type="text" id="signaling-host" value="mgg-signaling-production-c1bd.up.railway.app" style="width: 400px;">
+        </label><br><br>
+
+        <label>接続先Peer ID（Windows側）:
+            <input type="text" id="remote-peer-id" value="" style="width: 400px;" placeholder="camera_10000023_1762137896 など">
+        </label><br><br>
+
+        <button onclick="connectToSignaling()">シグナリングサーバーに接続</button>
+        <button onclick="connectToPeer()">Peerに接続</button>
+    </div>
+
+    <div id="video-container">
+        <h2>映像表示</h2>
+        <video id="remote-video" autoplay playsinline controls></video>
+    </div>
+
+    <div id="log-container">
+        <h2>ログ</h2>
+        <pre id="log"></pre>
+    </div>
+
+    <script>
+        let peer = null;
+        let conn = null;
+        let myPeerId = null;
+
+        function addStatus(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            document.getElementById('status-container').appendChild(div);
+            log(message);
+        }
+
+        function log(message) {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function connectToSignaling() {
+            const signalingHost = document.getElementById('signaling-host').value;
+
+            if (peer) {
+                peer.destroy();
+            }
+
+            addStatus('シグナリングサーバーに接続中...', 'info');
+
+            peer = new Peer({
+                host: signalingHost,
+                port: 443,
+                path: '/',
+                key: 'peerjs',
+                secure: true,
+                debug: 3,
+                config: {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun1.l.google.com:19302' }
+                    ]
+                }
+            });
+
+            peer.on('open', function(id) {
+                myPeerId = id;
+                addStatus(`✅ シグナリングサーバー接続成功！ Your Peer ID: ${id}`, 'success');
+            });
+
+            peer.on('error', function(err) {
+                addStatus(`❌ エラー: ${err.type} - ${err.message}`, 'error');
+                console.error('PeerJS Error:', err);
+            });
+
+            peer.on('connection', function(connection) {
+                addStatus(`📞 着信: ${connection.peer}`, 'info');
+                setupConnection(connection);
+            });
+
+            peer.on('call', function(call) {
+                addStatus(`📹 映像着信: ${call.peer}`, 'info');
+                log(`🔍 Call オブジェクト: ${JSON.stringify({peer: call.peer, type: call.type})}`);
+
+                // 着信を受け入れる（こちらは映像を送らない）
+                call.answer();
+                log(`✅ call.answer() 実行完了`);
+
+                call.on('stream', function(remoteStream) {
+                    addStatus('✅ 映像ストリーム受信開始', 'success');
+                    log(`📹 Stream情報: id=${remoteStream.id}, active=${remoteStream.active}`);
+                    log(`📹 Video tracks: ${remoteStream.getVideoTracks().length}, Audio tracks: ${remoteStream.getAudioTracks().length}`);
+
+                    const video = document.getElementById('remote-video');
+                    video.srcObject = remoteStream;
+
+                    video.onloadedmetadata = function() {
+                        log(`✅ Video metadata loaded: ${video.videoWidth}x${video.videoHeight}`);
+                    };
+
+                    video.play().then(() => {
+                        log('✅ Video playback started');
+                    }).catch(err => {
+                        log(`❌ Video play error: ${err.message}`);
+                    });
+                });
+
+                call.on('error', function(err) {
+                    addStatus(`❌ 映像通話エラー: ${err}`, 'error');
+                    log(`❌ Call error詳細: ${JSON.stringify(err)}`);
+                });
+
+                call.on('close', function() {
+                    log('📞 Call closed');
+                });
+            });
+        }
+
+        function connectToPeer() {
+            if (!peer || !myPeerId) {
+                addStatus('❌ 先にシグナリングサーバーに接続してください', 'error');
+                return;
+            }
+
+            const remotePeerId = document.getElementById('remote-peer-id').value;
+            if (!remotePeerId) {
+                addStatus('❌ 接続先のPeer IDを入力してください', 'error');
+                return;
+            }
+
+            addStatus(`📡 Peer ${remotePeerId} に接続中...`, 'info');
+            log(`🔍 接続試行詳細: myPeerId=${myPeerId}, remotePeerId=${remotePeerId}`);
+
+            // テスト用のmetadata: "member_no:oneTimeAuthID" 形式
+            // TODO: 実際の環境では正しい認証情報を使用する
+            const testMetadata = "1:test_onetime_auth_id";
+
+            // MetadataConnectionオプションで詳細設定
+            conn = peer.connect(remotePeerId, {
+                reliable: true,
+                serialization: 'json',
+                metadata: testMetadata
+            });
+            log(`📤 送信metadata: ${testMetadata}`);
+
+            setupConnection(conn);
+
+            // Windows側からcallが来るのを待つ
+            // peer.call()は使わない（Windows側から発信される）
+            addStatus('ℹ️ Windows側からの映像callを待っています...', 'info');
+
+            // タイムアウト監視（30秒）
+            setTimeout(() => {
+                if (!conn || conn.open !== true) {
+                    addStatus('⚠️ 30秒経過：接続が確立されていません。Windows側のPeer IDを確認してください。', 'error');
+                }
+            }, 30000);
+        }
+
+        function setupConnection(connection) {
+            conn = connection;
+
+            conn.on('open', function() {
+                addStatus(`✅ データ接続確立: ${conn.peer}`, 'success');
+                conn.send({ type: 'hello', message: 'Browser connected' });
+            });
+
+            conn.on('data', function(data) {
+                log(`📥 受信データ: ${JSON.stringify(data)}`);
+            });
+
+            conn.on('close', function() {
+                addStatus('❌ 接続が切断されました', 'error');
+            });
+
+            conn.on('error', function(err) {
+                addStatus(`❌ 接続エラー: ${err}`, 'error');
+            });
+        }
+
+        // ページ読み込み時の情報表示
+        window.onload = function() {
+            addStatus('WebRTC接続テストページ', 'info');
+            addStatus('手順: 1. シグナリングサーバーに接続 → 2. Windows側のPeer IDを入力 → 3. Peerに接続', 'info');
+        };
+    </script>
+</body>
+</html>
