@@ -64,7 +64,12 @@
 
     <div id="video-container">
         <h2>映像表示</h2>
-        <video id="remote-video" autoplay playsinline controls></video>
+        <video id="remote-video" autoplay playsinline muted controls></video>
+        <div style="margin-top: 10px;">
+            <button id="unmute-btn" onclick="toggleAudio()" style="padding: 10px 20px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                🔊 音声ON
+            </button>
+        </div>
     </div>
 
     <div id="log-container">
@@ -135,11 +140,27 @@
                 addStatus(`📹 映像着信: ${call.peer}`, 'info');
                 log(`🔍 Call オブジェクト: ${JSON.stringify({peer: call.peer, type: call.type})}`);
 
-                // 着信を受け入れる（こちらは映像を送らない）
-                call.answer();
-                log(`✅ call.answer() 実行完了`);
+                // 着信を受け入れる（ダミーストリームを作成して送る）
+                try {
+                    // 空のMediaStreamを作成してanswerに渡す
+                    const dummyStream = new MediaStream();
+                    call.answer(dummyStream);
+                    log(`✅ call.answer() with dummy stream 実行完了`);
+                } catch (e) {
+                    // フォールバック：引数なしでanswer
+                    call.answer();
+                    log(`✅ call.answer() without stream 実行完了`);
+                }
+
+                let streamSet = false; // 重複設定防止フラグ
 
                 call.on('stream', function(remoteStream) {
+                    if (streamSet) {
+                        log('⚠️ Stream already set, skipping duplicate');
+                        return;
+                    }
+                    streamSet = true;
+
                     addStatus('✅ 映像ストリーム受信開始', 'success');
                     log(`📹 Stream情報: id=${remoteStream.id}, active=${remoteStream.active}`);
                     log(`📹 Video tracks: ${remoteStream.getVideoTracks().length}, Audio tracks: ${remoteStream.getAudioTracks().length}`);
@@ -147,15 +168,41 @@
                     const video = document.getElementById('remote-video');
                     video.srcObject = remoteStream;
 
+                    // metadataイベントとタイムアウトの両方で対応
+                    let played = false;
+
                     video.onloadedmetadata = function() {
-                        log(`✅ Video metadata loaded: ${video.videoWidth}x${video.videoHeight}`);
+                        if (!played) {
+                            played = true;
+                            log(`✅ Video metadata loaded: ${video.videoWidth}x${video.videoHeight}`);
+                            video.play().then(() => {
+                                log('✅ Video playback started (metadata)');
+                            }).catch(err => {
+                                log(`❌ Video play error: ${err.message}`);
+                            });
+                        }
                     };
 
-                    video.play().then(() => {
-                        log('✅ Video playback started');
-                    }).catch(err => {
-                        log(`❌ Video play error: ${err.message}`);
-                    });
+                    // タイムアウトでも強制的に再生試行（autoplay属性もあるので念のため）
+                    setTimeout(() => {
+                        log(`🔍 Video状態: paused=${video.paused}, readyState=${video.readyState}, networkState=${video.networkState}`);
+                        log(`🔍 Video dimensions: ${video.videoWidth}x${video.videoHeight}, srcObject=${!!video.srcObject}`);
+
+                        if (!played && video.paused) {
+                            played = true;
+                            log(`⏰ Forcing play after timeout`);
+                            video.play().then(() => {
+                                log('✅ Video playback started (timeout)');
+                            }).catch(err => {
+                                log(`❌ Video play error (timeout): ${err.message}`);
+                            });
+                        } else if (!played && !video.paused) {
+                            played = true;
+                            log(`ℹ️ Video is already playing (autoplay worked)`);
+                        } else if (played && video.paused) {
+                            log(`⚠️ Video was played but now paused`);
+                        }
+                    }, 500);
                 });
 
                 call.on('error', function(err) {
@@ -229,6 +276,26 @@
             conn.on('error', function(err) {
                 addStatus(`❌ 接続エラー: ${err}`, 'error');
             });
+        }
+
+        // 音声ON/OFF切り替え
+        function toggleAudio() {
+            const video = document.getElementById('remote-video');
+            const btn = document.getElementById('unmute-btn');
+
+            if (video.muted) {
+                video.muted = false;
+                btn.textContent = '🔇 音声OFF';
+                btn.style.backgroundColor = '#dc3545';
+                log('✅ 音声ON');
+                addStatus('音声を有効にしました', 'success');
+            } else {
+                video.muted = true;
+                btn.textContent = '🔊 音声ON';
+                btn.style.backgroundColor = '#28a745';
+                log('🔇 音声OFF');
+                addStatus('音声をミュートにしました', 'info');
+            }
         }
 
         // ページ読み込み時の情報表示

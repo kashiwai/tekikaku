@@ -72,7 +72,7 @@ class SmartSession {
 			session_name($this->m_sid);  // セッション名を設定
 		}
 
-		if (!$this->isSessionExist()) session_start();		// セッション開始
+		if (!$this->isSessionExist() && session_status() !== PHP_SESSION_ACTIVE) session_start();		// セッション開始
 
 		// セッションが存在する場合
 		if ($this->isSessionExist() && !$isNew) {

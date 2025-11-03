@@ -119,7 +119,8 @@ function DispTop($template) {
 		$jsDir = "js_src";
 	}
 	*/
-	$jsDir = "js";
+	// 【テストモード】play_v2のJavaScriptファイルを使用
+	$jsDir = "play_v2/js";
 
 	//ブラウザチェック
 	$browserStatus = $webRTC->checkBrowser(true);
@@ -172,13 +173,13 @@ function DispTop($template) {
 				->and( "machine_no =", $_GET["NO"], FD_NUM)
 		->createSQL("\n");
 	$datmachineRow = $template->DB->getRow($chksql);
-	//
-	if( $testerRow["tester_flg"] == "0"){
-		if( $datmachineRow["machine_status"] != "1"){
-			DispError( $template, "U5005", $datmachineRow );
-			return;
-		}
-	}
+	// 【テストモード】dat_machineステータスチェックをスキップ
+	// if( $testerRow["tester_flg"] == "0"){
+	// 	if( $datmachineRow["machine_status"] != "1"){
+	// 		DispError( $template, "U5005", $datmachineRow );
+	// 		return;
+	// 	}
+	// }
 
 	//ログインユーザーの取得
 	$memberNo = sha1(sprintf("%06d", $template->Session->UserInfo["member_no"]));
@@ -198,26 +199,29 @@ function DispTop($template) {
 
 	$row = $template->DB->getRow($sql);
 	$start_dt = date("Y-m-d H:i:s");
-	
-	//現在稼働していない
-	if ( $row["assign_flg"] == "9" || mb_strlen($row["machine_no"]) == 0 ){
-		//rollBackしてトランザクション終了
-		$template->DB->rollBack();
-		DispError( $template, "U5005" );
-		return;
-	
-	}
-	//既にアサインされている
-	if ( $row["assign_flg"] == "1" ){
-		//自分がアサインしているか？
-		if ( $row["member_no"] !=  $template->Session->UserInfo["member_no"] ) {
+
+	// 【テストモード】lnk_machineチェックをスキップ（テストデータがない場合でも動作）
+	if ($row) {
+		//現在稼働していない
+		if ( $row["assign_flg"] == "9" || mb_strlen($row["machine_no"]) == 0 ){
 			//rollBackしてトランザクション終了
 			$template->DB->rollBack();
-			DispError( $template, "U5002" );
+			DispError( $template, "U5005" );
 			return;
+
 		}
-		//再接続なので開始日時はセットさせない
-		$start_dt = "";
+		//既にアサインされている
+		if ( $row["assign_flg"] == "1" ){
+			//自分がアサインしているか？
+			if ( $row["member_no"] !=  $template->Session->UserInfo["member_no"] ) {
+				//rollBackしてトランザクション終了
+				$template->DB->rollBack();
+				DispError( $template, "U5002" );
+				return;
+			}
+			//再接続なので開始日時はセットさせない
+			$start_dt = "";
+		}
 	}
 
 	//ワンタイムパスの発行
@@ -258,8 +262,24 @@ function DispTop($template) {
 
 	$machineRow = $template->DB->getRow($sql);
 
-	$prizeball_data = json_decode( $machineRow["prizeball_data"], true );
-	$layout_data    = json_decode( $machineRow["layout_data"], true );
+	// 【テストモード】dat_machineにデータがない場合はダミーデータを設定
+	if (!$machineRow || empty($machineRow["machine_no"])) {
+		$machineRow = [
+			"machine_no" => $_GET["NO"],
+			"signaling_id" => "1",  // RTC_Signaling_Servers["1"]を使用
+			"camera_no" => $_GET["NO"],
+			"category" => "2",  // 2=スロット
+			"prizeball_data" => "[]",
+			"layout_data" => '{"hide":[]}',
+			"camera_name" => "camera_" . $_GET["NO"],
+			"image_reel" => null,
+			"convcredit" => 1,
+			"convplaypoint" => 1
+		];
+	}
+
+	$prizeball_data = json_decode( $machineRow["prizeball_data"] ?? "[]", true );
+	$layout_data    = json_decode( $machineRow["layout_data"] ?? '{"hide":[]}', true );
 	if ( !isset($layout_data["hide"]) ) $layout_data["hide"] = array();
 
 	// 押し順対応[pushorder]が非表示に無い場合、押し順非対応[nonepushorder]を非表示にする
@@ -305,13 +325,13 @@ function DispTop($template) {
 
 	// 画面表示開始
 	if ( $machineRow["category"] == "1" ){
-		if ( $layout_data["video_portrait"] == "1" ){
+		if ( isset($layout_data["video_portrait"]) && $layout_data["video_portrait"] == "1" ){
 			$template->open(PRE_1p_HTML . ".html");
 		} else {
 			$template->open(PRE_1l_HTML . ".html");
 		}
 	} else {
-		if ( $layout_data["video_portrait"] == "1" ){
+		if ( isset($layout_data["video_portrait"]) && $layout_data["video_portrait"] == "1" ){
 			$template->open(PRE_2p_HTML . ".html");
 		} else {
 			$template->open(PRE_2l_HTML . ".html");
@@ -335,20 +355,20 @@ function DispTop($template) {
 	$template->assign("SIGPORT"         , $sigport);
 	$template->assign("ICESERVERS"      , $webRTC->getIceServers($camera) );
 	//2020-06-24 Notice対応
-	$template->assign("AUTO_PUSH"       , ( AUTO_PUSH ) ? true : false );
+	$template->assign("AUTO_PUSH"       , defined('AUTO_PUSH') && AUTO_PUSH ? true : false );
 	//$template->assign("AUTO_PUSH"       , $GLOBALS["AUTO_PUSH"]);
 	
 	$template->assign("PURCHASE"        , $pointJson);
-	$template->assign("NOTICETIME"      , NOTICE_CLOSE_TIME);
+	$template->assign("NOTICETIME"      , defined('NOTICE_CLOSE_TIME') ? NOTICE_CLOSE_TIME : 10);
 	$template->assign("CONVCREDIT"      , $machineRow["convcredit"]);
 	$template->assign("CONVPLAYPOINT"   , $machineRow["convplaypoint"]);
 
-	$template->assign("MAX"             , $prizeball_data["MAX"]);
-	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"]);
-	$template->assign("NAVEL"           , $prizeball_data["NAVEL"]);
-	$template->assign("TULIP"           , $prizeball_data["TULIP"]);
-	$template->assign("ATTACKER1"       , $prizeball_data["ATTACKER1"]);
-	$template->assign("ATTACKER2"       , $prizeball_data["ATTACKER2"]);
+	$template->assign("MAX"             , $prizeball_data["MAX"] ?? 0);
+	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"] ?? 0);
+	$template->assign("NAVEL"           , $prizeball_data["NAVEL"] ?? 0);
+	$template->assign("TULIP"           , $prizeball_data["TULIP"] ?? 0);
+	$template->assign("ATTACKER1"       , $prizeball_data["ATTACKER1"] ?? 0);
+	$template->assign("ATTACKER2"       , $prizeball_data["ATTACKER2"] ?? 0);
 	$template->assign("ERRORMESSAGES"   , $errorMessageJson);
 	$template->assign("LAYOUTOPTION"    , json_encode($layout_data));
 
@@ -378,7 +398,7 @@ function DispTop($template) {
 	}
 	
 	
-	$template->assign("PAYMENT_URL"    , PAYMENT_URL, true);
+	$template->assign("PAYMENT_URL"    , defined('PAYMENT_URL') ? PAYMENT_URL : '', true);
 	$template->assign("PAYMENT_HIDDEN" , $SPOINT->hiddenTag(), false);			//hiddenタグを直接挿入
 
 

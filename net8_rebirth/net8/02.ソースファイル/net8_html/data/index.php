@@ -177,7 +177,8 @@ function DispTop($template) {
 	$template->open(PRE_HTML . ".html");
 	$template->assignCommon();
 	// ページング
-	$template->assign("PAGING"        , HtmlPagingTag( (($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?"), $_GET["P"], $allpage) );
+	$queryString = $_SERVER['QUERY_STRING'] ?? "";
+	$template->assign("PAGING"        , HtmlPagingTag( (($queryString!="")? "?".$queryString."&":"?"), $_GET["P"], $allpage) );
 	
 	// コーナー
 	$target_corner = "";

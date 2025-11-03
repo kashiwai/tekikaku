@@ -15,7 +15,9 @@ $sys_dir = __DIR__ . '/../_sys/';
 
 // 決済関連ライブラリ（存在する場合のみ読み込み）
 $payment_libs = [
-    // 決済APIクラス（将来実装）
+    // 決済APIクラス
+    $sys_dir . 'payment/gash/SettlementPoint.php',
+    // $sys_dir . 'payment/lavy/SettlementPoint.php', // lavyの方は使わない場合はコメントアウト
     // $sys_dir . 'PaymentAPI.php',
     // $sys_dir . 'CreditAPI.php',
     // $sys_dir . 'PointAPI.php',

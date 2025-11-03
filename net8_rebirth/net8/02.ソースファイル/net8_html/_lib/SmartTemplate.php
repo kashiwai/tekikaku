@@ -191,9 +191,11 @@ class SmartTemplate {
 		// カレント階層が最上位階層の場合は置換対象は[出力用ソース]、ループ階層の場合は[ループ作業用ソース]
 		$target = ($this->m_index < 1) ? "stack" : "buffer";
 		// 指定キーワードの置換
-		$p_value = str_replace("\0", "", $p_value);	// 変換内容に「\0」が入っているとHTMLがおかしくなることを回避
+		$p_value = str_replace("\0", "", $p_value ?? "");	// 変換内容に「\0」が入っているとHTMLがおかしくなることを回避
+		// $this->m_current[$this->m_index][$target]がnullの場合に備えて、空文字にフォールバック
+		$currentTarget = $this->m_current[$this->m_index][$target] ?? "";
 		$this->m_current[$this->m_index][$target]
-			 = str_replace(TAG_ASSIGN_START . $p_key . TAG_ASSIGN_END, $p_value, $this->m_current[$this->m_index][$target]);
+			 = str_replace(TAG_ASSIGN_START . $p_key . TAG_ASSIGN_END, $p_value, $currentTarget);
 	}
 
 	/**

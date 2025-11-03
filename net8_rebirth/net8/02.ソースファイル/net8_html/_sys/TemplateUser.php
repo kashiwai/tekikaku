@@ -137,8 +137,8 @@ class TemplateUser extends SmartTemplate {
 			// 20200423 - ポイント関係の更新の為にセッションを再取得処理を追加 by m.kataoka
 			if( !empty( $this->Session->UserInfo)){
 				//2020-06-24 Notice対応
-				$wmail = (array_key_exists("mail",$this->Session->UserInfo)) ? $this->Session->UserInfo["mail"] : "";
-				$wpass = (array_key_exists("pass",$this->Session->UserInfo)) ? $this->Session->UserInfo["pass"] : "";
+				$wmail = $this->Session->UserInfo["mail"] ?? "";
+				$wpass = $this->Session->UserInfo["pass"] ?? "";
 				$row = $this->DB->checkUserReturnPoint($wmail, $wpass);
 //				$row = $this->DB->checkUserReturnPoint($this->Session->UserInfo["mail"], $this->Session->UserInfo["pass"]);
 				if( !empty($row) ){
@@ -203,11 +203,13 @@ class TemplateUser extends SmartTemplate {
 		$this->assign("SYS_VERDATE", $sysDate, false);
 
 		// 共通情報
-		$this->assign("CSS_MTIME", filemtime(DIR_BASE . "data/css/styles_v" . CLIENT_CODE . ".css"));	// styles.cssの更新日時
+		$cssPath = DIR_BASE . "data/css/styles_v" . CLIENT_CODE . ".css";
+		$this->assign("CSS_MTIME", file_exists($cssPath) ? filemtime($cssPath) : time());	// styles.cssの更新日時
 		$this->assign("SELF"     , $this->Self);									// 自スクリプト名
 		$this->assign("SSL_SELF" , URL_SSL_SITE . $this->Self);						// 自スクリプト名(SSL付与)
-		$this->assign("ACTION"   , $this->Self . ((mb_strlen($_SERVER["QUERY_STRING"]) > 0) 
-												? "?" . htmlspecialchars($_SERVER["QUERY_STRING"]) : ""));		// 自URL
+		$queryString = $_SERVER["QUERY_STRING"] ?? "";
+		$this->assign("ACTION"   , $this->Self . ((mb_strlen($queryString) > 0)
+												? "?" . htmlspecialchars($queryString) : ""));		// 自URL
 		if( isset($this->Session->UserInfo)){
 			$this->assign("LOGIN_USER"  , $this->Session->UserInfo["nickname"], true);
 			$this->assign("USER_PT"     , number_format( $this->Session->UserInfo["point"]), true);
@@ -234,15 +236,17 @@ class TemplateUser extends SmartTemplate {
 		
 		// ナビゲーション表示制御（Coin交換）
 		$nv_all_hide = true;
-		foreach( $GLOBALS["navigationViewListCoinTrade"] as $key => $val ){
+		$navListCoinTrade = $GLOBALS["navigationViewListCoinTrade"] ?? [];
+		foreach( $navListCoinTrade as $key => $val ){
 			$this->if_enable("NAVIGATION_".trim( $key), $val);
 			if( $val ) $nv_all_hide = false;
 		}
 		$this->if_enable("COIN_TRADE" , !$nv_all_hide);
-		
+
 		// ナビゲーション表示制御（マイページ）
 		$nv_all_hide = true;
-		foreach( $GLOBALS["navigationViewListMyPage"] as $key => $val ){
+		$navListMyPage = $GLOBALS["navigationViewListMyPage"] ?? [];
+		foreach( $navListMyPage as $key => $val ){
 			$this->if_enable("NAVIGATION_".trim( $key), $val);
 			if( $val ) $nv_all_hide = false;
 		}
@@ -322,7 +326,9 @@ class TemplateUser extends SmartTemplate {
 		
 		// 言語対応 2020-01-08 T.Murakami
 		$lnghtml = "";
-		foreach( $GLOBALS["langList"][FOLDER_LANG]["names"] as $lng ){
+		// 【修正】langListが配列でない場合はスキップ
+		if (isset($GLOBALS["langList"][FOLDER_LANG]["names"]) && is_array($GLOBALS["langList"][FOLDER_LANG]["names"])) {
+			foreach( $GLOBALS["langList"][FOLDER_LANG]["names"] as $lng ){
 			if ( strpos($_SERVER['REQUEST_URI'], "?") ){
 				if ( strpos($_SERVER['REQUEST_URI'], "LANG=") ){
 					$u = preg_replace("/LANG=[a-z]+/", "LANG={$lng["lang"]}", $_SERVER['REQUEST_URI']);
@@ -334,10 +340,13 @@ class TemplateUser extends SmartTemplate {
 				$lnghtml .= "<a class=\"dropdown-item\" href=\"{$_SERVER['REQUEST_URI']}?LANG={$lng["lang"]}\">{$lng["name"]}</a>";
 			}
 		}
+		} // end if langList check
 		$this->assign("LANGLIST"  , $lnghtml);
 		
 		// Navigation 言語表示制御
-		$this->if_enable( "DISP_LANGLIST", count( $GLOBALS["langList"][FOLDER_LANG]["names"]) > 1);
+		$langCount = isset($GLOBALS["langList"][FOLDER_LANG]["names"]) && is_array($GLOBALS["langList"][FOLDER_LANG]["names"])
+		             ? count($GLOBALS["langList"][FOLDER_LANG]["names"]) : 0;
+		$this->if_enable( "DISP_LANGLIST", $langCount > 1);
 		
 		// Footer表示制御
 		foreach( $GLOBALS["footerviews"] as $k => $flg ){
@@ -449,7 +458,7 @@ class TemplateUser extends SmartTemplate {
 			}
 			
 			// 画像
-			$this->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);		// 機材画像表示用パス
+			$this->assign("DIR_IMG_MODEL_DIR", defined('DIR_IMG_MODEL_DIR') ? DIR_IMG_MODEL_DIR : (defined('DIR_IMG_MODEL') ? DIR_IMG_MODEL : ''), true);		// 機材画像表示用パス
 			$this->assign("IMAGE_LIST"       , $row["image_list"], true);
 			$this->assign("IMAGE_DETAIL"     , $row["image_detail"], true);
 			// 単位
