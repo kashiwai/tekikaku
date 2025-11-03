@@ -296,15 +296,18 @@ function ProcLogin($template) {
 
 	// コミット(トランザクション終了)
 	$template->DB->autoCommit(true);
-	
+
 	if ( $_POST["NO"] != ""){
 		header("Location: " . URL_SSL_SITE . "play_v2/?NO=". $_POST["NO"]);
+		exit();
 	} else {
 		if( $_POST["TRANS"] != ""){
 			header("Location: " . $_POST["TRANS"]);
+			exit();
 		}else{
 			// トップ画面表示
 			header("Location: " . URL_SSL_SITE . "");
+			exit();
 		}
 	}
  2020/12/25 [DEL Start] ログイン処理に引越 */
@@ -636,15 +639,18 @@ function ExecLogin($template, $memberNo) {
 
 	// コミット(トランザクション終了)
 	$template->DB->autoCommit(true);
-	
+
 	if ( $_POST["NO"] != ""){
 		header("Location: " . URL_SSL_SITE . "play_v2/?NO=". $_POST["NO"]);
+		exit();
 	} else {
 		if( $_POST["TRANS"] != ""){
 			header("Location: " . $_POST["TRANS"]);
+			exit();
 		}else{
 			// トップ画面表示
 			header("Location: " . URL_SSL_SITE . "");
+			exit();
 		}
 	}
 
