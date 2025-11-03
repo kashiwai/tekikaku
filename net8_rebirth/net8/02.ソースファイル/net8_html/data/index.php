@@ -32,8 +32,26 @@ require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
 // 項目定義
 define("PRE_HTML", basename(get_self(), ".php"));	// テンプレートHTMLプレフィックス
 
-// メイン処理
-main();
+// デバッグ: main()をtry-catchで囲む
+try {
+    main();
+} catch (Exception $e) {
+    echo "<h1>Exception発生</h1>";
+    echo "<pre style='background: #ffcccc; padding: 20px;'>";
+    echo "Message: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+    echo "Trace:\n" . $e->getTraceAsString();
+    echo "</pre>";
+    exit;
+} catch (Error $e) {
+    echo "<h1>Error発生</h1>";
+    echo "<pre style='background: #ffcccc; padding: 20px;'>";
+    echo "Message: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+    echo "Trace:\n" . $e->getTraceAsString();
+    echo "</pre>";
+    exit;
+}
 
 /**
  * メイン処理
