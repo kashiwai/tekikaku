@@ -11,10 +11,10 @@
  */
 
 // インクルード
-require_once('../../_etc/require_files_payment.php');	// 決済用requireファイル
+require_once('../_etc/require_files_payment.php');	// 決済用requireファイル
 
-require_once('../../_sys/WebRTCAPI.php');				// requireファイル
-require_once('../../_etc/webRTC_setting.php');			// webRTCセッティングファイル
+require_once('../_sys/WebRTCAPI.php');				// requireファイル
+require_once('../_etc/webRTC_setting.php');			// webRTCセッティングファイル
 
 // 項目定義
 define("PRE_1p_HTML",  "play/index_pachi");				// テンプレートHTMLプレフィックス（パチンコ縦画面）
