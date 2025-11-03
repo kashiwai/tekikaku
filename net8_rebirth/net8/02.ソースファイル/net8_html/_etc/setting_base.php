@@ -353,6 +353,9 @@ $GLOBALS["Frow_Fixed_Array"] = array(
     "new" => "新台"
 );
 
+// フロー表示設定
+define('FLOW_COL_MAX', 4); // フロー表示の列数（1行あたりの最大表示数）
+
 // その他の設定
 define('AUTH_MEMBER_MOBILE', false); // 携帯番号認証を使用しない（開発環境）
 
