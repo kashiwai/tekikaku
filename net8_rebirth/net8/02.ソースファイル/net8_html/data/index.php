@@ -81,28 +81,21 @@ function DispTop($template) {
 	$testerFlg = false;
 	if( $template->checkSessionUser(true, false)){
 		try {
-			// セッション情報のキー存在確認
-			$member_no = isset($template->Session->UserInfo["member_no"]) ? $template->Session->UserInfo["member_no"] : null;
-			$mail = isset($template->Session->UserInfo["mail"]) ? $template->Session->UserInfo["mail"] : null;
-			$pass = isset($template->Session->UserInfo["pass"]) ? $template->Session->UserInfo["pass"] : null;
+			// セッション情報の安全な取得
+			if (isset($template->Session->UserInfo["member_no"]) &&
+			    isset($template->Session->UserInfo["mail"])) {
 
-			if ($member_no && $mail) {
 				$sql = (new SqlString())
 					->setAutoConvert( [$template->DB,"conv_sql"] )
 					->select()
 						->field("men.tester_flg")
 						->from("mst_member men")
 						->where()
-							->and(false, "men.member_no = ", $member_no, FD_NUM)
-							->and(false, "men.mail = ",      $mail, FD_STR)
-							->and(false, "men.state = ", "1", FD_NUM);
+							->and(false, "men.member_no = ", $template->Session->UserInfo["member_no"], FD_NUM)
+							->and(false, "men.mail = ",      $template->Session->UserInfo["mail"], FD_STR)
+							->and(false, "men.state = ", "1", FD_NUM)
+						->createSQL();
 
-				// passがある場合のみ条件に追加
-				if ($pass) {
-					$sql->and(false, "men.pass = ", $pass, FD_STR);
-				}
-
-				$sql = $sql->createSQL();
 				$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
 				if ($row && isset($row["tester_flg"])) {
 					$testerFlg = ($row["tester_flg"] == "1");
@@ -110,8 +103,8 @@ function DispTop($template) {
 				$_login_flg  = true;
 			}
 		} catch (Exception $e) {
-			// エラーが出ても処理を続行
-			$_login_flg  = true; // ログイン状態は維持
+			// エラーが出ても処理を続行（ログイン状態は維持）
+			$_login_flg  = true;
 			$testerFlg = false;
 		}
 	}
