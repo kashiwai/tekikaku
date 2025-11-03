@@ -1,50 +1,40 @@
 <?php
-/**
- * Simple Test Page
- * Tests basic PHP and database connectivity
- */
-
-// Display all errors for debugging
-ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
-echo "<h1>NET8 Simple Test</h1>";
-echo "<pre>";
-
-// Test 1: PHP Version
-echo "✅ PHP Version: " . phpversion() . "\n";
-
-// Test 2: Session
-session_start();
-echo "✅ Session started: " . session_id() . "\n";
-
-// Test 3: Database connection
+ini_set('display_errors', 1);
+echo "<h1>ステップバイステップテスト</h1>\n";
 try {
-    $db = new PDO('mysql:host=db;dbname=net8_dev', 'net8user', 'net8pass');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "✅ Database connected\n";
-
-    // Test query
-    $stmt = $db->query("SELECT COUNT(*) as cnt FROM mst_member");
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo "✅ Member count: " . $result['cnt'] . "\n";
-
-    $stmt = $db->query("SELECT COUNT(*) as cnt FROM dat_machine WHERE machine_status = 1");
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo "✅ Active machines: " . $result['cnt'] . "\n";
-
-} catch (PDOException $e) {
-    echo "❌ Database error: " . $e->getMessage() . "\n";
+    echo "<h2>Step 1: require_files.php</h2>\n";
+    require_once(__DIR__ . '/../_etc/require_files.php');
+    echo "✅ OK<br>\n";
+    echo "<h2>Step 2: TemplateUser</h2>\n";
+    $template = new TemplateUser(false);
+    echo "✅ OK<br>\n";
+    echo "<h2>Step 3: GetRefTimeTodayExt()</h2>\n";
+    $refToDay = GetRefTimeTodayExt();
+    echo "✅ OK: " . $refToDay . "<br>\n";
+    echo "<h2>Step 4: SearchMachineBase()</h2>\n";
+    $sqls = new SqlString($template->DB);
+    $template->SearchMachineBase($sqls, false);
+    echo "✅ OK<br>\n";
+    echo "<h2>Step 5: SQL作成</h2>\n";
+    $sqls->orderby('dm.release_date desc');
+    $count_sql = $sqls->resetField()->field("count(*)")->createSQL();
+    echo "✅ SQL: <pre>" . htmlspecialchars($count_sql) . "</pre>\n";
+    echo "<h2>Step 6: SQL実行</h2>\n";
+    $allrows = $template->DB->getOne($count_sql);
+    echo "✅ OK: 件数 = " . $allrows . "<br>\n";
+    echo "<h2>✅ 全ステップ成功！</h2>\n";
+} catch (Exception $e) {
+    echo "<h2>❌ Exception</h2><pre style='background:#ffcccc;padding:20px'>";
+    echo "Message: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+    echo "Trace:\n" . $e->getTraceAsString();
+    echo "</pre>";
+} catch (Error $e) {
+    echo "<h2>❌ Error</h2><pre style='background:#ffcccc;padding:20px'>";
+    echo "Message: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+    echo "Trace:\n" . $e->getTraceAsString();
+    echo "</pre>";
 }
-
-// Test 4: File paths
-echo "\n📂 Paths:\n";
-echo "  Current dir: " . __DIR__ . "\n";
-echo "  Document root: " . $_SERVER['DOCUMENT_ROOT'] . "\n";
-echo "  Script name: " . $_SERVER['SCRIPT_NAME'] . "\n";
-
-echo "\n✅ All basic tests passed!\n";
-echo "</pre>";
-
-echo '<p><a href="/">← Back to Home</a></p>';
 ?>
