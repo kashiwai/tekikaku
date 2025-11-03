@@ -51,6 +51,24 @@
 	<!--#include file="inc_script.html"-->
 	<!-- Page script -->
 <!--#include file="{%PAGESCRIPT%}login.html"-->
-	
+
+	<script>
+	// フォームバリデーション関数
+	function check() {
+		var mail = document.getElementById('mail').value;
+		var pass = document.getElementById('password').value;
+
+		if (mail == '') {
+			alert('メールアドレスを入力してください');
+			return false;
+		}
+		if (pass == '') {
+			alert('パスワードを入力してください');
+			return false;
+		}
+		return true;
+	}
+	</script>
+
 	</body>
 </html>

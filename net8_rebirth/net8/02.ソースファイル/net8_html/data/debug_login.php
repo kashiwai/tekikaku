@@ -1,19 +1,21 @@
 <?php
 /**
- * ログイン後のエラーデバッグ
+ * ログイン後のエラーデバッグ（認証なし）
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-echo "<h1>ログイン後デバッグ</h1>\n";
+echo "<h1>ログイン後デバッグ（認証スキップ）</h1>\n";
 
 try {
     require_once(__DIR__ . '/../_etc/require_files.php');
 
+    // 認証なしでTemplateUserを作成
     $template = new TemplateUser(false);
 
     echo "<h2>Step 1: セッション確認</h2>\n";
-    $isLogin = $template->checkSessionUser(true, false);
+    // 認証チェックをスキップ（falseに変更）
+    $isLogin = $template->checkSessionUser(false, false);
     echo "ログイン状態: " . ($isLogin ? "✅ ログイン中" : "❌ 未ログイン") . "<br>\n";
 
     if ($isLogin && isset($template->Session->UserInfo)) {
