@@ -407,5 +407,5 @@ if (!defined('DIR_IMG_MODEL')) {
 }
 
 // WebRTC設定ファイルの読み込み
-require_once(DIR_BASE . '_etc/webRTC_setting.php');
+require_once(__DIR__ . '/webRTC_setting.php');
 
