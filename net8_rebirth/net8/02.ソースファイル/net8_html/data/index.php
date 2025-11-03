@@ -23,35 +23,13 @@
  * @since    2019/09/06 表示形態諸々の大幅改修 鶴野
  */
 
-// エラー表示を一時的に有効化（デバッグ用）
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // インクルード
 require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
 // 項目定義
 define("PRE_HTML", basename(get_self(), ".php"));	// テンプレートHTMLプレフィックス
 
-// デバッグ: main()をtry-catchで囲む
-try {
-    main();
-} catch (Exception $e) {
-    echo "<h1>Exception発生</h1>";
-    echo "<pre style='background: #ffcccc; padding: 20px;'>";
-    echo "Message: " . $e->getMessage() . "\n";
-    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
-    echo "Trace:\n" . $e->getTraceAsString();
-    echo "</pre>";
-    exit;
-} catch (Error $e) {
-    echo "<h1>Error発生</h1>";
-    echo "<pre style='background: #ffcccc; padding: 20px;'>";
-    echo "Message: " . $e->getMessage() . "\n";
-    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
-    echo "Trace:\n" . $e->getTraceAsString();
-    echo "</pre>";
-    exit;
-}
+// メイン処理
+main();
 
 /**
  * メイン処理
