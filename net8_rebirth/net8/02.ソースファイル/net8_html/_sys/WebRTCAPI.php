@@ -217,18 +217,40 @@ class WebRTCAPI {
 		$ch = curl_init();
 		curl_setopt_array($ch, [
 			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_FAILONERROR => true,
+			CURLOPT_FAILONERROR => false,  // Changed to false to get response body on error
+			CURLOPT_TIMEOUT => 10,
+			CURLOPT_CONNECTTIMEOUT => 5,
 		]);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		$response =  curl_exec($ch);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		$response = curl_exec($ch);
 		$errno = curl_errno($ch);
+		$error_msg = curl_error($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
+
 		if ( CURLE_OK !== $errno ){
-			$response = "{ \"status\": \"ng\", \"error\": \"_geturl error\"}";
+			error_log("WebRTCAPI _geturl error - URL: {$url}, errno: {$errno}, error: {$error_msg}, http_code: {$http_code}");
+			$response = json_encode([
+				"status" => "ng",
+				"error" => "_geturl error",
+				"curl_errno" => $errno,
+				"curl_error" => $error_msg,
+				"http_code" => $http_code,
+				"url" => $url
+			]);
 		}
-		return( json_decode($response, true) );
+
+		// レスポンスがJSON形式でない場合（Peer IDなど）
+		$decoded = json_decode($response, true);
+		if (json_last_error() === JSON_ERROR_NONE) {
+			return $decoded;
+		} else {
+			// JSONでない場合は、成功とみなしてステータスをokにする
+			return ["status" => "ok", "data" => $response];
+		}
 	}
 
 }
