@@ -53,7 +53,7 @@ if (!isset($GLOBALS["RTC_Turn_APIURL"])) {
 
 // Signaling API URL設定（WebRTCAPI用）
 if (!isset($GLOBALS["RTC_Signaling_APIURL"])) {
-    $GLOBALS["RTC_Signaling_APIURL"] = ""; // シグナリングAPI（未使用の場合は空）
+    $GLOBALS["RTC_Signaling_APIURL"] = "https://%s/peerjs/id"; // シグナリングAPI
 }
 
 // ICE Servers設定（従来のフォーマット・互換性のため残す）
