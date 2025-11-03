@@ -398,27 +398,24 @@ function DispTop($template) {
  * @return	なし
  */
 function DispError( $template, $errno, $row=array() ) {
-	// 画面表示開始
-	$template->open(ERR_HTML . ".html");
-	$template->assignCommon();
-	
-	//2020-06-24 Notice対応
-	$row["machine_no"]  = (array_key_exists("machine_no", $row)) ? $row["machine_no"] : "";
-	$row["model_name"]  = (array_key_exists("model_name", $row)) ? $row["model_name"] : "";
-	$row["model_roman"] = (array_key_exists("model_roman", $row)) ? $row["model_roman"] : "";
+	// 【テストモード】エラー情報を直接表示
+	echo "<h1>エラーが発生しました（テストモード）</h1>";
+	echo "<h2>エラーコード: " . htmlspecialchars($errno) . "</h2>";
 
 	$message = $template->message( $errno );
-	if ( count($row) > 0 ){
-		if ( FOLDER_LANG == DEFAULT_LANG ){
-			$message = sprintf( $message, $row["machine_no"], $row["model_name"], $row["machine_no"], $row["model_name"] );
-		} else {
-			$message = sprintf( $message, $row["machine_no"], $row["model_roman"], $row["machine_no"], $row["model_roman"] );
-		}
-	}
-	
-	$template->assign("ERRMSG"    , $message );
+	echo "<h3>エラーメッセージ:</h3>";
+	echo "<p>" . htmlspecialchars($message) . "</p>";
 
-	$template->flush();
+	if ( count($row) > 0 ){
+		echo "<h3>追加情報:</h3>";
+		echo "<pre>";
+		print_r($row);
+		echo "</pre>";
+	}
+
+	echo "<hr>";
+	echo "<a href='/data/'>TOPページに戻る</a>";
+	exit;
 }
 
 /**
