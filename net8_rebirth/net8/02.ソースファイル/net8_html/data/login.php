@@ -237,19 +237,22 @@ function ProcLogin($template) {
 				->createSQL();
 		$logrow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
 
-		//期間限定チェック
-		$s = (int)date('Ymd', strtotime( $logrow["special_start_dt"]));
-		$e = (int)date('Ymd', strtotime( $logrow["special_end_dt"]));
-		if( $s <= $toDay && $toDay <= $e){
-			$addPoint = $logrow["special_point"];
-			$limit    = ($logrow["special_limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["special_limit_days"]." day"));
-		}else{
-			$addPoint = $logrow["point"];
-			$limit    = ($logrow["limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["limit_days"]." day"));
+		// ログインボーナス設定が存在する場合のみ処理
+		if (!empty($logrow) && isset($logrow["point"])) {
+			//期間限定チェック
+			$s = (int)date('Ymd', strtotime( $logrow["special_start_dt"]));
+			$e = (int)date('Ymd', strtotime( $logrow["special_end_dt"]));
+			if( $s <= $toDay && $toDay <= $e){
+				$addPoint = $logrow["special_point"];
+				$limit    = ($logrow["special_limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["special_limit_days"]." day"));
+			}else{
+				$addPoint = $logrow["point"];
+				$limit    = ($logrow["limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["limit_days"]." day"));
+			}
+			$PPOINT = new PlayPoint($template->DB);
+			$PPOINT->addPoint( $row["member_no"], "02", $addPoint, "", $limit, $template->getArrayValue( $GLOBALS["grantPointStatusList"], "02"), $row["member_no"] );
+			$row["point"] += $addPoint;
 		}
-		$PPOINT = new PlayPoint($template->DB);
-		$PPOINT->addPoint( $row["member_no"], "02", $addPoint, "", $limit, $template->getArrayValue( $GLOBALS["grantPointStatusList"], "02"), $row["member_no"] );
-		$row["point"] += $addPoint;
 
 		$addLoginDays = 1;	// 連続ログイン日数加算
 	}
@@ -295,7 +298,7 @@ function ProcLogin($template) {
 	$template->DB->autoCommit(true);
 	
 	if ( $_POST["NO"] != ""){
-		header("Location: " . URL_SSL_SITE . "play/?NO=". $_POST["NO"]);
+		header("Location: " . URL_SSL_SITE . "play_v2/?NO=". $_POST["NO"]);
 	} else {
 		if( $_POST["TRANS"] != ""){
 			header("Location: " . $_POST["TRANS"]);
@@ -574,19 +577,22 @@ function ExecLogin($template, $memberNo) {
 				->createSQL();
 		$logrow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
 
-		//期間限定チェック
-		$s = (int)date('Ymd', strtotime( $logrow["special_start_dt"]));
-		$e = (int)date('Ymd', strtotime( $logrow["special_end_dt"]));
-		if( $s <= $toDay && $toDay <= $e){
-			$addPoint = $logrow["special_point"];
-			$limit    = ($logrow["special_limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["special_limit_days"]." day"));
-		}else{
-			$addPoint = $logrow["point"];
-			$limit    = ($logrow["limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["limit_days"]." day"));
+		// ログインボーナス設定が存在する場合のみ処理
+		if (!empty($logrow) && isset($logrow["point"])) {
+			//期間限定チェック
+			$s = (int)date('Ymd', strtotime( $logrow["special_start_dt"]));
+			$e = (int)date('Ymd', strtotime( $logrow["special_end_dt"]));
+			if( $s <= $toDay && $toDay <= $e){
+				$addPoint = $logrow["special_point"];
+				$limit    = ($logrow["special_limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["special_limit_days"]." day"));
+			}else{
+				$addPoint = $logrow["point"];
+				$limit    = ($logrow["limit_days"]==0)? "":date('Y-m-d H:i', strtotime( "+".$logrow["limit_days"]." day"));
+			}
+			$PPOINT = new PlayPoint($template->DB);
+			$PPOINT->addPoint( $row["member_no"], "02", $addPoint, "", $limit, $template->getArrayValue( $GLOBALS["grantPointStatusList"], "02"), $row["member_no"] );
+			$row["point"] += $addPoint;
 		}
-		$PPOINT = new PlayPoint($template->DB);
-		$PPOINT->addPoint( $row["member_no"], "02", $addPoint, "", $limit, $template->getArrayValue( $GLOBALS["grantPointStatusList"], "02"), $row["member_no"] );
-		$row["point"] += $addPoint;
 
 		$addLoginDays = 1;	// 連続ログイン日数加算
 	}
@@ -632,7 +638,7 @@ function ExecLogin($template, $memberNo) {
 	$template->DB->autoCommit(true);
 	
 	if ( $_POST["NO"] != ""){
-		header("Location: " . URL_SSL_SITE . "play/?NO=". $_POST["NO"]);
+		header("Location: " . URL_SSL_SITE . "play_v2/?NO=". $_POST["NO"]);
 	} else {
 		if( $_POST["TRANS"] != ""){
 			header("Location: " . $_POST["TRANS"]);
