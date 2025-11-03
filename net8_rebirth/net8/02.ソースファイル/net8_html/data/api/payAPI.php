@@ -34,7 +34,7 @@
 // インクルード
 require_once('../../_etc/require_files.php');			// requireファイル
 require_once('../../_sys/APItool.php');					// APItool
-//require_once('../../_sys/PlayPoint.php');				// PlayPoint Class
+require_once('../../_sys/PlayPoint.php');				// PlayPoint Class
 require_once('../../_sys/ContactBox.php');				// ContactBox Class
 require_once('./Logger.php');								// Logger Class
 
