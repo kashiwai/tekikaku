@@ -10,7 +10,7 @@ define('SITE_NAME', getenv('SITE_NAME') ?: 'NET8 System');
 define('SITE_URL', getenv('SITE_URL') ?: 'https://mgg-webservice-production.up.railway.app/');
 define('ADMIN_EMAIL', getenv('ADMIN_EMAIL') ?: 'admin@example.com');
 define('DOMAIN', getenv('DOMAIN') ?: 'mgg-webservice-production.up.railway.app');
-define('URL_SSL_SITE', getenv('URL_SSL_SITE') ?: 'https://mgg-webservice-production.up.railway.app/'); // Railway本番環境
+define('URL_SSL_SITE', getenv('URL_SSL_SITE') ?: 'https://mgg-webservice-production.up.railway.app/data/'); // Railway本番環境
 
 // 営業時間設定
 define('GLOBAL_OPEN_TIME', getenv('GLOBAL_OPEN_TIME') ?: '10:00');
