@@ -536,9 +536,11 @@ class TemplateUser extends SmartTemplate {
 				$file = "";
 			}
 			// テンプレート記述文字エンコードがPHP処理エンコードと違う場合は文字エンコードを変換
-			if ($this->_enc != ini_get("mbstring.internal_encoding")) {
+			// PHP 8.1+ 対応: mb_internal_encoding()を使用
+			$internal_encoding = mb_internal_encoding() ?: 'UTF-8';
+			if ($this->_enc && $this->_enc != $internal_encoding) {
 				// 記述エンコード→PHP処理エンコード
-				$file = mb_convert_encoding($file, ini_get("mbstring.internal_encoding"), $this->_enc);
+				$file = mb_convert_encoding($file, $internal_encoding, $this->_enc);
 			}
 			$str = preg_replace("/(<!--#include file=\"".preg_quote($match[2], "/")."\"-->)/", $file ,$str);
 		}
