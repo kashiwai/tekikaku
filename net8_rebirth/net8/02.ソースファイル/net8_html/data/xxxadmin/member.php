@@ -1058,7 +1058,7 @@ function checkInput($template) {
 						->minLength("A0505", MEMBER_PASS_MIN)	//文字長の最低値
 						->maxLength("A0506", 20)				//文字長の最高値
 						->alnum("A0517")						//英数字
-						->if("A0518", (!preg_match("/" . MEMBER_PASS_PATTERN . "/", $_POST["PASS"])))		// 入力制約（パターンに一致しない場合エラー）
+						->if("A0518", (preg_match("/" . MEMBER_PASS_PATTERN . "/", $_POST["PASS"])))		// 入力制約（パターンに一致する場合OK）
 				// 生年月日
 				->item($_POST["BIRTH"])
 					->any()
