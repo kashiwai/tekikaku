@@ -190,7 +190,9 @@ $GLOBALS["BlackMemberStatus"] = array(
 
 // テスター会員
 $GLOBALS["TesterMember"] = array(
-    "1" => "テスター"
+    "0" => "本会員（通常会員）",
+    "1" => "テスト会員",
+    "2" => "テスター"
 );
 
 // カテゴリリスト（パチンコ/スロット）
