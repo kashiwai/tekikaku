@@ -174,7 +174,7 @@ function ProcLogin($template) {
 					->and("mail = ", $_POST["MAIL"], FD_STR)
 					->and("state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	if (empty($row["member_no"])) {
 		DispLogin($template, $template->message("U0103"));
 		return;
@@ -235,7 +235,7 @@ function ProcLogin($template) {
 					->where()
 						->and("proc_cd = ", "02", FD_STR)
 				->createSQL();
-		$logrow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$logrow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 		// ログインボーナス設定が存在する場合のみ処理
 		if (!empty($logrow) && isset($logrow["point"])) {
@@ -334,7 +334,7 @@ function ProcSendPin($template) {
 					->and("member_no = ", $_POST["MNO"], FD_STR)
 					->and("state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	if (empty($row["member_no"])) {
 		DispLogin($template, $template->message("U0103"));
 		return;
@@ -423,7 +423,7 @@ function DispPin($template, $memberNo, $message = "") {
 				->where()
 					->and("member_no = ", $memberNo, FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$hidTel = "";
 	$internationalCd = "+";
 	if (!empty($row["member_no"])) {
@@ -497,7 +497,7 @@ function SendPin($template, $memberNo, $mobile, $internationalCd) {
 				->and("identify_kbn = ", $identifyKbn, FD_NUM)
 				->and("limit_dt >= "   , $nowDT->format("Y-m-d H:i"), FD_DATE)
 		->createSql();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 	if (!empty($row["member_no"])) {		// 有効期限内データ存在
 		$pinCode = $row["pin"];
@@ -563,7 +563,7 @@ function ExecLogin($template, $memberNo) {
 				->where()
 					->and("member_no = ", $memberNo, FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 	$addLoginDays = 0;		// 連続ログイン日数加算用
 	$last = ((mb_strlen($row["login_dt"]) > 0) ? (int)GetRefTimeToday($row["login_dt"], "Ymd") : 0);	// 最終ログインの営業日
@@ -578,7 +578,7 @@ function ExecLogin($template, $memberNo) {
 					->where()
 						->and("proc_cd = ", "02", FD_STR)
 				->createSQL();
-		$logrow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$logrow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 		// ログインボーナス設定が存在する場合のみ処理
 		if (!empty($logrow) && isset($logrow["point"])) {
@@ -690,7 +690,7 @@ function checkPin($template) {
 				->resetField()
 				->field("pin, limit_dt")
 				->createSql("\n");
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		if ($row["pin"] != $_POST["PIN"]) {		// PIN不一致
 			$errMessage[] = $template->message("U0107");
 		} else {
