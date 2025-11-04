@@ -268,7 +268,7 @@ class TemplateUser extends SmartTemplate {
 					->orderby("gift_limit asc, total_gift_point asc")
 					->createSQL("\n");
 				$rs = $this->DB->query($sql);
-				while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+				while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 					if ($row["gift_limit"] <= 0) $minPoint = $row["total_gift_point"];
 					if ($row["gift_limit"] > 0) break;
 				}
@@ -282,7 +282,7 @@ class TemplateUser extends SmartTemplate {
 						->where()
 							->and("member_no = ", $this->Session->UserInfo["member_no"], FD_NUM)
 						->createSQL("\n");
-					$memRow = $this->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+					$memRow = $this->DB->getRow($sql, PDO::FETCH_ASSOC);
 					// 可能判定
 					if (!empty($memRow["member_no"])) {
 						if ((GIFT_AGENT && $memRow["agent_flg"] == 1) ||	// ギフトエージェントのエージェント 若しくは 
@@ -315,7 +315,7 @@ class TemplateUser extends SmartTemplate {
 					->where()
 						->and("member_no = ", $this->Session->UserInfo["member_no"], FD_NUM)
 					->createSQL("\n");
-				$memRow = $this->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+				$memRow = $this->DB->getRow($sql, PDO::FETCH_ASSOC);
 				if (!empty($memRow["member_no"])) {
 					$totalPoint = $memRow["total_gift_point"];
 				}
@@ -423,7 +423,7 @@ class TemplateUser extends SmartTemplate {
 	public function AssignMachineList($rs, $isOpen, $isLogin, $isTester) {
 		// 台リスト
 		$this->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// 実機基本データ
 			$this->assign("NO"               , $row["machine_no"], true);
 			$this->assign("MACHINE_CD"       , $row["machine_cd"], true);

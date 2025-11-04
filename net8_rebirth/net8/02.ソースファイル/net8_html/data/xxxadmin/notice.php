@@ -170,7 +170,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("NOTICE_NO"        , $row["notice_no"], true);
 		$template->assign("NOTICE_NAME"      , $row["notice_name"], true);
 		$template->assign("DISP_LINK_TYPE"   , $template->getArrayValue($GLOBALS["noticeLinkTypeList"], $row["link_type"]), true);
@@ -227,7 +227,7 @@ function DispDetail($template, $message = "") {
 				->and("dn.notice_no = ", $_GET["NO"], FD_NUM)
 				->and("dn.del_flg != " , "1", FD_NUM)	// 2020/04/28 [ADD]
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/28 [ADD Start]
 		if (empty($row["notice_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
 			$template->dispProcError($template->message("A0003"), false);
@@ -253,7 +253,7 @@ function DispDetail($template, $message = "") {
 		$row["sub_title"] = array();
 		$row["list_title"] = array();		//--- 2023/11/01 Add by S.Okamoto 一覧タイトル追加
 		$row["contents"] = array();
-		while ($v = $lrow->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($v = $lrow->fetch(PDO::FETCH_ASSOC)) {
 			$row["top_image"][$v["lang"]] = $v["top_image"];
 			$row["title"][$v["lang"]]     = $v["title"];
 			$row["sub_title"][$v["lang"]] = $v["sub_title"];
@@ -390,7 +390,7 @@ function RegistData($template) {
 				->and( "top_image IS NOT NULL")
 			->createSQL("\n");
 		$rs = $template->DB->query($sql);
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			$delimage = DIR_IMG_NOTICE . $row["top_image"];
 			if (mb_strlen($row["top_image"]) > 0 && file_exists($delimage)) {
 				chmod($delimage, 0755);

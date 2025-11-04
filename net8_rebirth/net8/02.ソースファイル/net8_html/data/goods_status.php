@@ -80,7 +80,7 @@ function DispList($template, $message = "") {
 				->and( false, "mg.goods_no = ", $_GET["NO"], FD_NUM)
 				->and( false, "mg.del_flg <> ", "1", FD_NUM)
 		->createSQL();
-	$itemrow = $template->DB->getRow($itemsql, MDB2_FETCHMODE_ASSOC);
+	$itemrow = $template->DB->getRow($itemsql, PDO::FETCH_ASSOC);
 	
 	if (empty($itemrow["goods_no"])) {		// 商品データ不存在
 		$template->dispProcError($template->message("U0003"));
@@ -144,7 +144,7 @@ function DispList($template, $message = "") {
 	// リスト
 	if( $itemrow["mcnt"] > 0){
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// データ
 			$template->assign("SEQ_NO"         , $row["seq"], true);
 			$template->assign("NAME"           , $row["nickname"], true);

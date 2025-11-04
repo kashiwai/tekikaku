@@ -93,7 +93,7 @@ function main() {
 		->createSql("\n");
 	$rs = $db->query($sql);
 	// 設定毎に処理する
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// ゲーム数取得
 		$sql = (new SqlString($db))
 			->select()
@@ -110,7 +110,7 @@ function main() {
 			->groupby("his.member_no")
 		->createSql("\n");
 		$rsGame = $db->query($sql);
-		while ($rowGame = $rsGame->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($rowGame = $rsGame->fetch(PDO::FETCH_ASSOC)) {
 			// 加算ポイント算出
 			$addPoint = $row["add_point"] * ceil($rowGame["game_count"] / GIFT_GAME_THRESHOLD);
 			// ポイント加算
@@ -131,7 +131,7 @@ function main() {
 				->and("del_flg = "    , 0, FD_NUM)
 			->orderby("base_val desc")
 		->createSql("\n");
-	$addSet = $db->getAll($sql, MDB2_FETCHMODE_ASSOC);
+	$addSet = $db->getAll($sql, PDO::FETCH_ASSOC);
 
 	// 購入履歴取得
 	$sql = (new SqlString($db))
@@ -151,7 +151,7 @@ function main() {
 	->createSql("\n");
 	$rs = $db->query($sql);
 	// 会員毎に処理する
-	while ($memRow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($memRow = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// 金額設定
 		$amount = $memRow["price_count"];
 		// 設定全件 若しくは 金額がなくなるまで処理する
@@ -178,7 +178,7 @@ function main() {
 				->and("del_flg = "    , 0, FD_NUM)
 			->orderby("base_val desc")
 		->createSql("\n");
-	$addSet = $db->getAll($sql, MDB2_FETCHMODE_ASSOC);
+	$addSet = $db->getAll($sql, PDO::FETCH_ASSOC);
 
 	// ギフト履歴取得
 	$sql = (new SqlString($db))
@@ -197,7 +197,7 @@ function main() {
 	->createSql("\n");
 	$rs = $db->query($sql);
 	// 会員毎に処理する
-	while ($memRow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($memRow = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// ポイント設定
 		$point = $memRow["point_count"];
 		// 設定全件 若しくは ポイントがなくなるまで処理する

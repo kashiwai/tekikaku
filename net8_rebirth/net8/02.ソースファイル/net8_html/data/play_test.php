@@ -48,7 +48,7 @@ function setupTestSession($template) {
 	        FROM mst_member
 	        WHERE mail = 'test@example.com' AND state = '1'";
 
-	$userRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$userRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 	if (empty($userRow["member_no"])) {
 		throw new Exception("テストユーザー (test@example.com) が見つかりません。データベースを確認してください。");

@@ -186,7 +186,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("MEMBER_NO_PAD"        , $template->formatMemberNo($row["member_no"]), true);
 		$template->assign("MEMBER_NO"            , $row["member_no"], true);
 		$template->assign("NICKNAME"             , $row["nickname"], true);
@@ -284,7 +284,7 @@ function ProcOutput($template) {
 	$sql = $sqls->createSql("\n");
 
 	$outRs = $template->DB->query($sql);
-	while ($row = $outRs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $outRs->fetch(PDO::FETCH_ASSOC)) {
 		// 特殊項目のみ編集
 		$row["gift_dt"] = format_datetime($row["gift_dt"], false, true);
 		$row["member_no"] = "[" . $template->formatMemberNo($row["member_no"]) . "] " . $row["nickname"];

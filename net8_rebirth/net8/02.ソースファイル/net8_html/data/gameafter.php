@@ -73,7 +73,7 @@ function UpdateMemberData($template) {
 				->where()
 					->and("member_no = ", $member_no, FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	
 	$template->Session->UserInfo = $row;
 

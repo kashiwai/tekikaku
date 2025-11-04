@@ -138,7 +138,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		
 		$template->assign("MAKER_NO_PAD"    , $template->formatNoBasic($row["maker_no"]), true);
 		$template->assign("MAKER_NO"        , $row["maker_no"], true);
@@ -194,7 +194,7 @@ function DispDetail($template, $message = "") {
 					->and( "del_flg != ", "1", FD_NUM)		// 2020/04/23 [ADD]
 			->createSql();
 		
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/24 [ADD Start]データ不存在は通常あり得ないのでシステムエラー
 		if (empty($row["maker_no"])) {
 			$template->dispProcError($template->message("A0003"), false);

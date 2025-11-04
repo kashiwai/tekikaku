@@ -89,7 +89,7 @@ class NetDB extends SmartDB {
 			 . " where mail = " . $this->conv_sql($mail, FD_STR)
 			 . " and pass = "   . $this->conv_sql($pass, FD_STR)
 			 . " and state = "  . $this->conv_sql("1", FD_NUM) . "\n";
-		$row = $this->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $this->getRow($sql, PDO::FETCH_ASSOC);
 
 		if( !empty($row) ){
 			if (mb_strlen($row["pass"]) > 0 && $row["pass"] == $pass) {
@@ -214,7 +214,7 @@ class NetDB extends SmartDB {
 		$rs = $this->query($sql);
 
 		$ret = array();
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			$ret[$row["machine_no"]] = "[" . sprintf('%0' . FORMAT_NO_DIGIT . 'd', $row["machine_no"]) . "] " . $row["model_name"];
 		}
 		unset($rs);
@@ -244,7 +244,7 @@ class NetDB extends SmartDB {
 
 		$ret = array();
 		$retWith = array();
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			$ret[$row['maker_no']] = $row['maker_name'];
 			$retWith[$row['maker_no']]["value"] = $row['maker_name'];
 			$retWith[$row['maker_no']]["class"] = "";
@@ -285,7 +285,7 @@ class NetDB extends SmartDB {
 
 		$ret = array();
 		$retWith = array();
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			$ret[$row['type_no']] = $row['type_name'];
 			$retWith[$row['type_no']]["value"] = $row['type_name'];
 			$retWith[$row['type_no']]["class"] = "";
@@ -318,7 +318,7 @@ class NetDB extends SmartDB {
 		$rs = $this->query($sql);
 
 		$ret = array();
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			$ret[$row['unit_no']] = $row['unit_name'];
 		}
 		unset($rs);
@@ -358,7 +358,7 @@ class NetDB extends SmartDB {
 						->and("setting_key = ", $key, FD_STR)
 						->and("del_flg = "  , "0", FD_NUM)
 				->createSQL("\n");
-		$row = $this->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $this->getRow($sql, PDO::FETCH_ASSOC);
 		if (is_null($row) || empty($row)) return "";
 		switch ($row['setting_format']) {
 			case '2':

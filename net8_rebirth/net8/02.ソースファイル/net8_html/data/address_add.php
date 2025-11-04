@@ -419,7 +419,7 @@ function DispInput($template, $message = "") {
 						->and( false, "da.seq = ",       $_GET["NO"], FD_NUM)
 						->and( false, "da.del_flg <> ",  "1", FD_NUM)
 				->createSql();
-			$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+			$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 
 			if (empty($row["seq"])) {
 				$template->dispProcError($template->message("U0003"));

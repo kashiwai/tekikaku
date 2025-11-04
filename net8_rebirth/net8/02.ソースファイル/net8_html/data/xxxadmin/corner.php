@@ -138,7 +138,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		
 		$template->assign("CORNER_NO_PAD"    , $template->formatNoBasic($row["corner_no"]), true);
 		$template->assign("CORNER_NO"        , $row["corner_no"], true);
@@ -195,7 +195,7 @@ function DispDetail($template, $message = "") {
 					->and( "corner_no = ",   $_GET["NO"], FD_NUM )
 			->createSql();
 		
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;
@@ -275,7 +275,7 @@ function RegistData($template) {
 				->where()
 					->and( "corner_no = ",   $_GET["NO"], FD_NUM )
 			->createSql();
-		$cornerMachines = $template->DB->getAll( $sql, MDB2_FETCHMODE_ASSOC);
+		$cornerMachines = $template->DB->getAll( $sql, PDO::FETCH_ASSOC);
 
 		// 実機データ更新
 		foreach ($cornerMachines as $idx => $value) {

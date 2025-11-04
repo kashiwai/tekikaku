@@ -121,7 +121,7 @@ function DispList($template) {
 		$template->assign("ALLP", (string)$allpage, true);		// 総ページ数
 		// 台リスト
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			/* プレイデータ */
 			$template->assign("MACHINE_NO"         , $row["machine_no"], true);
 			$template->assign("MODEL_NAME"         , (FOLDER_LANG==DEFAULT_LANG)? $row["model_name"]:$row["model_roman"], true);

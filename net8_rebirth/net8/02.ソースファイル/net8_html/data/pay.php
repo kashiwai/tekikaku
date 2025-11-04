@@ -112,7 +112,7 @@ function DispList($template) {
 		$template->assign("ALLP", (string)$allpage, true);		// 総ページ数
 		// リスト
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			$template->assign("PURCHASE_TYPE_LABEL" , $GLOBALS["viewPurchaseType"][ $row['purchase_type']], true);
 			$template->assign("RESULT_STATUS_LABEL" , $GLOBALS["purchaseResultStatus"][ $row['result_status']], true);
 			$template->assign("RESULT_MESSAGE"      , $row["result_message"], true);

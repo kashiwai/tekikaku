@@ -98,7 +98,7 @@ function DispList($template) {
 	// 結合
 	$sql = $notice_sql . " UNION ALL " . $corner_sql
 		 . " order by upd_dt desc";
-	$notice_row = $template->DB->getAll($sql, MDB2_FETCHMODE_ASSOC);
+	$notice_row = $template->DB->getAll($sql, PDO::FETCH_ASSOC);
 
 	// 画面表示開始
 	$template->open(PRE_HTML . ".html");

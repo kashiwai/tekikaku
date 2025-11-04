@@ -100,7 +100,7 @@ function DispDetail($template, $message="") {
 				->and( false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 				->and( false, "men.state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$_point = $row["draw_point"];
 	$giftPoint = (int)$row["gift_point"];	// ギフト送信可能ポイント
 	if (!GIFT_AGENT) $giftPoint = (int)$_point;		// エージェント対応以外は所持抽選ポイント
@@ -153,7 +153,7 @@ function DispDetail($template, $message="") {
 
 	if ($existLimit || $dspLimit) {		// 上限設定存在 若しくは 表示タグ有
 		if ($dspLimit) $template->loop_start("GIFT_LIMIT");
-		while ($rowLimit = $rsLimit->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($rowLimit = $rsLimit->fetch(PDO::FETCH_ASSOC)) {
 			$isLimitSet = true;
 			$template->assign("SET_TOTAL_GIFT_POINT", number_formatEx($rowLimit["total_gift_point"]), true);
 			$template->assign("SET_GIFT_LIMIT"      , number_formatEx($rowLimit["gift_limit"]), true);
@@ -204,7 +204,7 @@ function DispConf($template, $message="") {
 			->where()
 				->and( false, "mm.member_no = ", $template->Session->UserInfo["member_no"], FD_NUM)
 			->createSQL();
-			$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+			$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 			if (mb_strlen($row["member_no"]) > 0) {
 				$_POST["INTERNATIONAL_CD"] = $row["international_cd"];
 				$_POST["TEL"] = $row["mobile"];
@@ -273,7 +273,7 @@ function ProcSend($template) {
 				->and( "pin = ",       $_POST["PIN"], FD_NUM)
 			->limit(1)
 		->createSql();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	if( empty($row)){	// 不存在
 		$message = $template->message("U1924");
 	} else {
@@ -368,7 +368,7 @@ function ProcSend($template) {
 					->and("mail = ",      $template->Session->UserInfo["mail"], FD_STR)
 					->and("state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$template->Session->UserInfo["draw_point"] = $row["draw_point"];
 	// コミット(トランザクション終了)
 	$template->DB->autoCommit(true);
@@ -417,7 +417,7 @@ function checkPoint($template) {
 				->and( false, "men.state = ", "1", FD_NUM)
 			->limit(1)
 		->createSQL();
-	$_ret = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$_ret = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	return $_ret;
 }
 
@@ -441,7 +441,7 @@ function checkMemberFromCode($template, $code) {
 				->and( "mm.state = ", "1", FD_NUM)
 			->limit(1)
 			->createSql();
-	$_ret = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$_ret = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	return $_ret;
 }
 
@@ -592,7 +592,7 @@ function _checks($template) {
 			->orderby("total_gift_point asc")
 			->createSQL();
 		$rsLimit = $template->DB->query($sql);
-		while ($rowLimit = $rsLimit->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($rowLimit = $rsLimit->fetch(PDO::FETCH_ASSOC)) {
 			if ((int)$rowLimit["total_gift_point"] >= (int)$row["total_gift_point"]) {
 				$dayLimit = (int)$rowLimit["gift_limit"];
 				break;

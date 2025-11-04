@@ -95,7 +95,7 @@ function DispList($template, $message = "") {
 				->where()
 					->and( false, "model_no = "        , $_GET["S_MODEL_NO"], FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$_GET["S_MODEL_CD"]   = $row["model_cd"];
 		$_GET["S_MODEL_NAME"] = $row["model_name"];
 	}
@@ -215,7 +215,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		
 		$template->assign("MACHINE_NO_PAD"      , $template->formatNoBasic($row["machine_no"]), true);	// 2020/04/24 [UPD]
 		$template->assign("MACHINE_NO"          , $row["machine_no"], true);
@@ -299,7 +299,7 @@ function DispDetail($template, $message = "") {
 					->and( "dm.machine_no = ", $_GET["NO"], FD_NUM )
 					->and( "dm.del_flg <> "  , "1", FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/24 [ADD Start]
 		if (empty($row["machine_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
 			$template->dispProcError($template->message("A0003"), false);
@@ -317,7 +317,7 @@ function DispDetail($template, $message = "") {
 				->where()
 					->and( "machine_no = ", $_GET["NO"], FD_NUM )
 			->createSql();
-		$rowPlay = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$rowPlay = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		if (empty($rowPlay["machine_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
 			$template->dispProcError($template->message("A0003"), false);
 			return;
@@ -402,7 +402,7 @@ function DispDetail($template, $message = "") {
 		->createSql("\n");
 	$rsModel = $template->DB->query($sql);
 	$template->loop_start("SETTING_LIST");
-	while ($setting = $rsModel->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($setting = $rsModel->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("MODEL"       , $setting["model_no"], true);
 		$template->assign("SETTING_LIST", $setting["setting_list"], true);
 		$template->loop_next();
@@ -537,7 +537,7 @@ function RegistData($template) {
 				->where()
 					->and("dm.machine_no =" , $_POST["NO"], FD_NUM)
 			->createSQL("\n");
-			$nowRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+			$nowRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 			$updSetting = ((mb_strlen($_POST["SETTING"]) <= 0) ? "0" : $_POST["SETTING"]);
 			if ($nowRow["upd_setting"] != $updSetting) {
 				if ($nowRow["real_setting"] != $updSetting) {
@@ -716,7 +716,7 @@ function getCameraList( $template, $self=""){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[] = array('camera_no' => $row['camera_no'], 'machine_no' => $row['machine_no']);
 	}
 	unset($rs);
@@ -758,7 +758,7 @@ function getOwnerList( $template){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row['owner_no']] = $row['owner_nickname'];
 	}
 	unset($rs);
@@ -781,7 +781,7 @@ function getCornerList( $template){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row["corner_no"]] = $row["corner_name"];
 	}
 	unset($rs);
@@ -803,7 +803,7 @@ function getModelList( $template, $addclass = false){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		if( $addclass){
 			$arr[ $row["model_no"]] = array( "value" => $row["model_name"], "class" => "category".$row["category"] ." maker".$row["maker_no"]);
 		}else{
@@ -829,7 +829,7 @@ function getConvertList( $template){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row["convert_no"]] = $row["convert_name"];
 	}
 	unset($rs);

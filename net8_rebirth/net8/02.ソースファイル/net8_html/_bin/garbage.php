@@ -288,7 +288,7 @@ function main() {
 		$sql = str_replace("%%OTHER%%"  , $delInfo["other"], $sql);
 		$sql = str_replace("%%IMGCOLS%%", $imgCols, $sql);
 		$rs = $db->query($sql);
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			foreach(explode(",", $row["img"]) as $fileName) {
 				if (mb_strlen($fileName) <= 0) continue;
 				foreach ($delInfo["image_path"] as $path) {

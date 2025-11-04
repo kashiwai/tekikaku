@@ -256,55 +256,55 @@ function DispTop($template) {
 	// 会員登録件数
 	$sql = "select "
 		.     implode(",", $mem_join_count_sql);
-	$joinCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$joinCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 会員退会件数
 	$sql = "select "
 		.     implode(",", $mem_leave_count_sql);
-	$leaveCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$leaveCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 売上件数
 	$sql = "select "
 		.     implode(",", $his_purchase_count_sql);
-	$purchaseCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$purchaseCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 売上金額
 	$sql = "select "
 		.     implode(",", $his_purchase_amount_sql);
-	$amountCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$amountCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// ゲーム数
 	$sql = "select "
 		.     implode(",", $his_play_count_sql);
-	$playCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$playCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 差枚数
 	$sql = "select "
 		.     implode(",", $his_play_credit_sql);
-	$creditCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$creditCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 2021/01 [ADD Start] エージェントギフト
 	if (ADMTOP_GIFT_AGENT) {
 		// エージェント送信件数
 		$sql = "select "
 			.     implode(",", $agentGiftSendCount_sql);
-		$agentGiftSendCount = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$agentGiftSendCount = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// エージェント送信ポイント
 		$sql = "select "
 			.     implode(",", $agentGiftSendPoint_sql);
-		$agentGiftSendPoint = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$agentGiftSendPoint = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// エージェント受取件数
 		$sql = "select "
 			.     implode(",", $agentGiftRecvCount_sql);
-		$agentGiftRecvCount = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$agentGiftRecvCount = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// エージェント受取ポイント
 		$sql = "select "
 			.     implode(",", $agentGiftRecvPoint_sql);
-		$agentGiftRecvPoint = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$agentGiftRecvPoint = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	}
 	// 2021/01 [ADD End] エージェントギフト
 	// 抽選
 	$sql = "select "
 		.     implode(",", $goods_blocks_sql);
-	$goodsCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$goodsCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 発送
 	$sql = "select "
 		.     implode(",", $win_blocks_sql);
-	$winCounts = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$winCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 
 	
 	// 画面表示開始

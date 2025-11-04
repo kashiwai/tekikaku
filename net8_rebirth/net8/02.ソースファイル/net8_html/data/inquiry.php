@@ -96,7 +96,7 @@ function DispInput($template, $message = "") {
 					->and(false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 					->and(false, "men.state = ", "1", FD_NUM)
 				->createSQL();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$_login_flg  = true;
 		
 		if( mb_strlen($_POST["MAIL"]) == 0){
@@ -193,7 +193,7 @@ function ProcData($template) {
 					->and(false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 					->and(false, "men.state = ", "1", FD_NUM)
 				->createSQL();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$_login_flg  = true;
 	}
 	

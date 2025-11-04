@@ -463,7 +463,7 @@ class PlayPoint {
 					->and( "pl.valid_point > ",  "0",          FD_NUM)
 				->orderby("pl.member_no, pl.limit_dt")
 			->createSQL("\n");
-		$targetRows = $this->_DB->getAll($sql, MDB2_FETCHMODE_ASSOC);
+		$targetRows = $this->_DB->getAll($sql, PDO::FETCH_ASSOC);
 
 		//noremoveモードならここで検索結果のみ返す
 		if ( $noremove == true ) return( $targetRows );
@@ -706,7 +706,7 @@ class PlayPoint {
 						->and("pass = ", $this->Session->UserInfo["pass"], FD_STR)
 						->and("state = ", "1", FD_NUM)
 				->createSQL();
-		$row = $this->_DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $this->_DB->getRow($sql, PDO::FETCH_ASSOC);
 		$this->Session->UserInfo["point"] = $row["point"];
 	}
 

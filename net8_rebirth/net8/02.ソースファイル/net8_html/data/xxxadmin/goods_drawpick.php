@@ -89,7 +89,7 @@ function DispList($template) {
 				->and(false, "mg.goods_no = ", $_GET["NO"], FD_NUM )
 				->and(false, "mg.del_flg = " , 0, FD_NUM )
 		->createSql();
-	$gdrow = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$gdrow = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	if ($gdrow == null) {
 		$template->dispProcError($template->message("A0003"), false);
 		return;
@@ -123,7 +123,7 @@ function DispList($template) {
 
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->if_enable("IS_BLACK"    , $row["black_flg"] == 1);
 		$template->if_enable("IS_TESTER"   , $row["black_flg"] == 0 && $row["tester_flg"] == 1);
 		$template->if_enable("IS_RETIRED"  , $row["black_flg"] == 0 && $row["tester_flg"] == 0 && $row["state"] == 9);
@@ -181,7 +181,7 @@ function RegistData($template) {
 		$rs = $template->DB->query($sql);
 		if ($rs->rowCount() > 0) {
 			$point = new PlayPoint($template->DB, false);
-			while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+			while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 				// 処理コード「12：抽選応募(中止による返還)」でポイントを返却する
 				$point->addDrawPoint($row["member_no"], "12", $row["draw_point"], $row["key_no"]);
 			}
@@ -307,7 +307,7 @@ function RegistData($template) {
 					->and( "lng.goods_no = ", $_POST["NO"], FD_NUM)
 				->createSql("\n");
 			$rs = $template->DB->query($sql);
-			while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+			while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 				$goodsName[$row["lang"]] = $row["goods_name"];
 			}
 			unset($rs);
@@ -329,7 +329,7 @@ function RegistData($template) {
 			
 			$insstr = array();
 			$ins_contact = array();
-			while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+			while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 				$insstr[] = "("
 						. $template->DB->conv_sql( $row["goods_no"], FD_NUM)
 					.",". $template->DB->conv_sql( $row["member_no"], FD_NUM)

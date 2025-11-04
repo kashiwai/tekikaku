@@ -168,7 +168,7 @@ function getMemberInfo($template){
 					->and("member_no = ", $template->Session->UserInfo["member_no"], FD_NUM)
 					->and("state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	if ( !array_key_exists("member_no", $row) ) {
 		return false;
 	} else {

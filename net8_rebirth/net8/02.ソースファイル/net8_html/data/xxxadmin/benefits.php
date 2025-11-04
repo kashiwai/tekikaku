@@ -171,7 +171,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 
 		$template->assign("BENEFITS_NO_PAD", $template->formatNoBasic($row["benefits_no"]), true);
 		$template->assign("BENEFITS_NO"    , $row["benefits_no"], true);
@@ -215,7 +215,7 @@ function DispDetail($template, $message = "") {
 				->and("hed.benefits_no = ", $_GET["NO"], FD_NUM)
 				->and("hed.del_flg = "    , 0, FD_NUM )
 			->createSql("\n");
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;
@@ -420,7 +420,7 @@ function DispUseList($template) {
 			->and("hed.benefits_no = ", $_GET["NO"], FD_NUM)
 			->and("hed.del_flg = "    , 0, FD_NUM )
 		->createSql("\n");
-	$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	if ($row == null) {
 		$template->dispProcError($template->message("A0003"), false);
 		return;
@@ -454,7 +454,7 @@ function DispUseList($template) {
 
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("BENEFITS_CD"  , $row["benefits_cd"], true);
 		$template->assign("MEMBER_NO_PAD", $template->formatMemberNo($row["member_no"]), true);
 		$template->assign("NICKNAME"     , $row["nickname"], true);
@@ -584,7 +584,7 @@ function ProcOutput($template) {
 		->createSql("\n");
 
 	$outRs = $template->DB->query($sql);
-	while ($row = $outRs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $outRs->fetch(PDO::FETCH_ASSOC)) {
 		// 出力領域に設定
 		$row = str_replace('"', '""', $row);
 		array_push($outData, '"' . implode('","', $row) . '"');

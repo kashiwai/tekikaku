@@ -15,7 +15,7 @@ echo "<h1>ログインデバッグテスト</h1>\n";
 // 1. ユーザー情報取得
 echo "<h2>1. ユーザー情報取得</h2>\n";
 $sql = "SELECT member_no, nickname, mail, pass, state FROM mst_member WHERE mail = '" . $testEmail . "'";
-$row = $GLOBALS["DB"]->getRow($sql, MDB2_FETCHMODE_ASSOC);
+$row = $GLOBALS["DB"]->getRow($sql, PDO::FETCH_ASSOC);
 
 if (empty($row)) {
     echo "❌ ユーザーが見つかりません<br>\n";
@@ -62,7 +62,7 @@ if (mb_strlen($errMessage) == 0) {
 // 4. mst_grantPoint確認
 echo "<h2>4. mst_grantPointテーブル確認</h2>\n";
 $sql = "SELECT * FROM mst_grantPoint WHERE proc_cd = '02'";
-$gpRow = $GLOBALS["DB"]->getRow($sql, MDB2_FETCHMODE_ASSOC);
+$gpRow = $GLOBALS["DB"]->getRow($sql, PDO::FETCH_ASSOC);
 
 if (empty($gpRow)) {
     echo "❌ mst_grantPoint (proc_cd='02') が見つかりません<br>\n";

@@ -74,7 +74,7 @@ function main() {
 			->createSql();
 	$rs = $db->query( $sql);
 	
-	while ($couponRow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($couponRow = $rs->fetch(PDO::FETCH_ASSOC)) {
 		//対象者
 		$rows = $db->getMemberRows( array_change_key_case( $couponRow, CASE_UPPER), false);		// 2020/05/02 [UPD]
 		//クーポン更新

@@ -94,7 +94,7 @@ function DispList($template) {
 			->createSQL();
 	
 	// カウント取得
-	$allrows = $template->DB->getRow($count_sql, MDB2_FETCHMODE_ASSOC);
+	$allrows = $template->DB->getRow($count_sql, PDO::FETCH_ASSOC);
 	$numrows = (int)$allrows["hcnt"];
 	$mypoint = $allrows["point"];
 	$allrows = $numrows;
@@ -129,7 +129,7 @@ function DispList($template) {
 		// 個別
 		$template->loop_start("LIST");
 		if( $allrows > 0){
-			while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+			while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 				$padd = 0;
 				$psum = 0;
 				if( $row["type"] == "1"){

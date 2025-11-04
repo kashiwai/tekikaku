@@ -134,7 +134,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("CONVERT_NO_PAD"     , $template->formatNoBasic( $row["convert_no"]), true);
 		$template->assign("CONVERT_NO"         , $row["convert_no"], true);
 		$template->assign("CONVERT_NAME"       , $row["convert_name"], true);
@@ -181,7 +181,7 @@ function DispDetail($template, $message = "") {
 					->and( "mcp.convert_no = ",   $_GET["NO"], FD_NUM )
 					->and( "mcp.del_flg = "   ,   0, FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;

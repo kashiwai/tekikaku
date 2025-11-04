@@ -74,7 +74,7 @@ function DispProfile($template) {
 			->and(false, "mm.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 			->and(false, "mm.state = ", "1", FD_NUM)
 		->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	
 	$_prof_edit = ( mb_strlen($row["last_name"])>0 || mb_strlen($row["first_name"])>0 )? true:false;
 	$birth = "";

@@ -130,7 +130,7 @@ function DispInput($template, $message = "") {
 				->and(false, "mm.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 				->and(false, "mm.state = ", "1", FD_NUM)
 			->createSQL();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		
 		if( mb_strlen($row["birthday"]) > 0){
 			$birth = new DateTime( $row["birthday"]);

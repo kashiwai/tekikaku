@@ -148,7 +148,7 @@ function DispList($template, $message = "") {
 	$template->assign("ODR"     , $_GET["ODR"]);				// ソート順
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$isPlay = ($row["proc_cd"] == "11" && mb_strlen($row["key_no"]) > 0);
 		$baseProcDt = GetRefTimeToday($row["proc_dt"], "Y/m/d");
 
@@ -223,7 +223,7 @@ function ProcOutput($template) {
 			->orderby($_GET["ODR"] )
 		->createSql("\n");
 	$outRs = $template->DB->query($sql);
-	while ($row = $outRs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $outRs->fetch(PDO::FETCH_ASSOC)) {
 		// 特殊項目のみ編集
 		$row["proc_dt"] = format_datetime($row["proc_dt"], false, true);
 		$row["member_no"] = $template->formatMemberNo($row["member_no"]);

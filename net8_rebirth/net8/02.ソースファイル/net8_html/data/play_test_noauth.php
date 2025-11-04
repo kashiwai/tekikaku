@@ -67,7 +67,7 @@ function DispTop($template) {
 		$sql = "SELECT member_no, nickname, mail, last_name, first_name, state, point, login_dt, draw_point
 		        FROM mst_member
 		        WHERE mail = 'test@example.com' AND state = '1'";
-		$userRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$userRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 		if (empty($userRow["member_no"])) {
 			echo "<h1>テストモードエラー</h1>";

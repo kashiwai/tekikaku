@@ -78,7 +78,7 @@ function DispPage($template) {
 				->and(false, "dnl.lang = ", FOLDER_LANG, FD_STR)
 				->and(false, "dnl.contents is not ", "", FD_STR)
 		->createSql("\n");
-	$notice = $template->DB->getAll($notice_sql, MDB2_FETCHMODE_ASSOC);
+	$notice = $template->DB->getAll($notice_sql, PDO::FETCH_ASSOC);
 	
 	if(count($notice)<=0){
 		header("Location: " . URL_SITE);

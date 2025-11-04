@@ -95,7 +95,7 @@ function DispBuyScreen($template, $message = "") {
 				->and( false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 				->and( false, "men.state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$_point = $row["point"];
 	$_drawpoint = $row["draw_point"];
 	
@@ -107,7 +107,7 @@ function DispBuyScreen($template, $message = "") {
 			->where()
 				->and( false, "mpp.del_flg <> ", "1", FD_NUM)
 		->createSQL();
-	$row = $template->DB->getAll($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getAll($sql, PDO::FETCH_ASSOC);
 	
 	// 画面表示開始
 	// 2020-04-28 決済会社別のフォルダ指定を追加
@@ -174,7 +174,7 @@ function DispConf($template, $message = "") {
 				->and( false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 				->and( false, "men.state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$_point = $row["point"];
 	$_drawpoint = $row["draw_point"];
 	
@@ -188,7 +188,7 @@ function DispConf($template, $message = "") {
 				->and( false, "mpp.amount =" , $_POST["buyprice"], FD_NUM)
 				->and( false, "mpp.del_flg <> ", "1", FD_NUM)
 		->createSQL();
-	$mpp = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$mpp = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	
 	if( $_POST["buytype"] != 11){
 		//決済情報のリクエスト情報作成
@@ -309,7 +309,7 @@ function ProcData($template) {
 						->where()
 							->and("member_no = ", $member_no, FD_NUM)
 					->createSQL();
-			$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+			$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 			$template->Session->UserInfo = $row;
 		}
 	}

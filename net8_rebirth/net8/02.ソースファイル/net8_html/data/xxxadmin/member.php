@@ -198,7 +198,7 @@ function DispList($template) {
 	
 	// 明細処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		if( $row["join_dt"] != ""){
 			$template->if_enable("JOIN_DT_FLG", "1");
 			$template->if_enable("TEMP_DT_FLG", "");
@@ -292,7 +292,7 @@ function DispDetail($template, $message = "") {
 			$_sql = $sqls->createSql("\n");
 
 			
-			$row = $template->DB->getRow($_sql, MDB2_FETCHMODE_ASSOC);
+			$row = $template->DB->getRow($_sql, PDO::FETCH_ASSOC);
 			// 2020/04/24 [ADD Start]データ不存在は通常あり得ないのでシステムエラー
 			if (empty($row["member_no"])) {
 				$template->dispProcError($template->message("A0003"), false);
@@ -490,7 +490,7 @@ function RegistData($template) {
 						->where()
 							->and( "member_no =", $_POST["NO"], FD_NUM)
 					->createSQL();
-			$mem = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+			$mem = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 			$joindate = "";
 			$invCode = "";
@@ -732,7 +732,7 @@ function ProcOutput($template) {
 	// 2020/12/25 [UPD End] IP追加
 	$outRs = $template->DB->query($sql);
 
-	while ($row = $outRs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $outRs->fetch(PDO::FETCH_ASSOC)) {
 		// 特殊項目のみ編集
 		$row["member_no"] = $template->formatMemberNo($row["member_no"]);
 		$row["sex"] = (array_key_exists($row["sex"], $GLOBALS["SexList"]))
@@ -841,7 +841,7 @@ function DispDetail2($template, $message = "") {
 				->where()
 					->and( "mm.member_no = ",   $_GET["NO"], FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/24 [ADD Start]データ不存在は通常あり得ないのでシステムエラー
 		if (empty($row["member_no"])) {
 			$template->dispProcError($template->message("A0003"), false);

@@ -71,7 +71,7 @@ try {
 
     echo "<p>SQL: <pre>" . htmlspecialchars($notice_sql) . "</pre></p>";
 
-    $notice_row = $template->DB->getAll($notice_sql, MDB2_FETCHMODE_ASSOC);
+    $notice_row = $template->DB->getAll($notice_sql, PDO::FETCH_ASSOC);
     echo "<p>✅ お知らせ件数: " . count($notice_row) . "件</p>";
 
 } catch (Exception $e) {

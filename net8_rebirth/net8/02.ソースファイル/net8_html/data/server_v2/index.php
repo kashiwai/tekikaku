@@ -211,7 +211,7 @@ function DispTop($template) {
 			->createSQL("\n");
 		$rs = $template->DB->query($sql);
 
-		while ($rbrow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($rbrow = $rs->fetch(PDO::FETCH_ASSOC)) {
 			if ( $rbrow["reset_bonus"] == "1" ) $resetBonus = "on";
 		}
 	} catch (Exception $e) {

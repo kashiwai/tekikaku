@@ -94,7 +94,7 @@ function registDB($template) {
 			->limit(1)
 			->orderby( "add_dt desc" )
 		->createSql();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	
 	if( !empty( $row)){
 		// 既存あり

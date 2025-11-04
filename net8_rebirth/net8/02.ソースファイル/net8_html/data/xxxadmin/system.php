@@ -120,7 +120,7 @@ function DispList($template, $message = "") {
 
 	// 明細処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// 行出力
 		$template->assign("SETTING_NO"   , $row["setting_no"], true);
 		$template->assign("SETTING_TYPE" , $template->getArrayValue($GLOBALS["systemSettingType"], $row["setting_type"]), true);
@@ -166,7 +166,7 @@ function DispDetail($template, $message = "") {
 					->and("setting_no = ",  $_GET["NO"], FD_NUM)
 			->createSql();
 
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 		if (empty($row["setting_no"])) {
 			$template->dispProcError($template->message("A0003"), false);

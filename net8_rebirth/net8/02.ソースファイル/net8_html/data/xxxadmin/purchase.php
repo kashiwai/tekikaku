@@ -135,7 +135,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("TYPE_LABEL"         , $template->getArrayValue($GLOBALS["viewPurchaseType"], $row["purchase_type"]), true);
 		$template->assign("PURCHASE_TYPE"      , $row["purchase_type"], true);
 		$template->assign("AMOUNT"             , $row["amount"], true);
@@ -183,7 +183,7 @@ function DispDetail($template, $message = "") {
 					->and( "mpp.amount = "       ,  $_GET["AM"], FD_NUM )
 					->and( "mpp.del_flg = "      ,  0, FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;

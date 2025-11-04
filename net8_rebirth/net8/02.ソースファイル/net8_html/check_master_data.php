@@ -20,7 +20,7 @@ try {
     $sql = "SELECT owner_no, owner_nickname, del_flg FROM mst_owner WHERE del_flg != 1 ORDER BY owner_no";
     $rs = $DB->query($sql);
     $count = 0;
-    while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
         echo "ID: {$row['owner_no']}, Name: {$row['owner_nickname']}\n";
         $count++;
     }
@@ -36,7 +36,7 @@ try {
     $sql = "SELECT camera_no, del_flg FROM mst_camera WHERE del_flg != 1 ORDER BY camera_no LIMIT 10";
     $rs = $DB->query($sql);
     $count = 0;
-    while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
         echo "Camera No: {$row['camera_no']}\n";
         $count++;
     }
@@ -52,7 +52,7 @@ try {
     $sql = "SELECT convert_no, convert_name, del_flg FROM mst_convertPoint WHERE del_flg != 1 ORDER BY convert_no";
     $rs = $DB->query($sql);
     $count = 0;
-    while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
         echo "ID: {$row['convert_no']}, Name: {$row['convert_name']}\n";
         $count++;
     }

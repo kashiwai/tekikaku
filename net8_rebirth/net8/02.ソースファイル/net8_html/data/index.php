@@ -96,7 +96,7 @@ function DispTop($template) {
 							->and(false, "men.state = ", "1", FD_NUM)
 						->createSQL();
 
-				$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+				$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 				if ($row && isset($row["tester_flg"])) {
 					$testerFlg = ($row["tester_flg"] == "1");
 				}
@@ -126,7 +126,7 @@ function DispTop($template) {
 				->and(false, "dnl.lang = ", FOLDER_LANG, FD_STR)
 			->orderby( 'dn.disp_order asc' )
 		->createSql("\n");
-	$notice_row = $template->DB->getAll($notice_sql, MDB2_FETCHMODE_ASSOC);
+	$notice_row = $template->DB->getAll($notice_sql, PDO::FETCH_ASSOC);
 
 	// コーナー取得
 	$corner_sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
@@ -136,7 +136,7 @@ function DispTop($template) {
 			->where()
 				->and(false, "mc.del_flg = ", "0", FD_NUM)
 		->createSql();
-	$corner_row = $template->DB->getAll($corner_sql, MDB2_FETCHMODE_ASSOC);
+	$corner_row = $template->DB->getAll($corner_sql, PDO::FETCH_ASSOC);
 
 	// CNは固定以外はコーナーのidになるはずなのでチェック(合致しない場合は空にする)
 	if (mb_strlen($_GET["CN"]) > 0) {

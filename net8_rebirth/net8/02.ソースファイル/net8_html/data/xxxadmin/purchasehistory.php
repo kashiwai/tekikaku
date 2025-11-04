@@ -184,7 +184,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->if_enable("IS_BLACK"   , $row["black_flg"] == 1);
 		$template->if_enable("IS_TESTER"  , $row["black_flg"] == 0 && $row["tester_flg"] == 1);
 		$template->if_enable("IS_RETIRED" , $row["black_flg"] == 0 && $row["tester_flg"] == 0 && $row["state"] == 9);
@@ -271,7 +271,7 @@ function ProcOutput($template) {
 	$sql = $sqls->createSql("\n");
 
 	$outRs = $template->DB->query($sql);
-	while ($row = $outRs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $outRs->fetch(PDO::FETCH_ASSOC)) {
 		// 特殊項目のみ編集
 		$row["recept_dt"] = format_datetime($row["recept_dt"], false, true);
 		$row["purchase_dt"] = format_datetime($row["purchase_dt"], false, true);

@@ -105,7 +105,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("PROC_LABEL"               , $template->getArrayValue( $GLOBALS["grantPointStatusList"], $row["proc_cd"]), true);
 		$template->assign("PROC_CD"                  , $row["proc_cd"], true);
 		$template->assign("POINT"                    , number_formatEx($row["point"]), true);
@@ -163,7 +163,7 @@ function DispDetail($template, $message = "") {
 				->where()
 					->and(false, "proc_cd =", $_GET["NO"], FD_STR)
 			->createSql();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;

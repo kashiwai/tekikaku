@@ -156,7 +156,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("COUPON_NO_PAD"     , $template->formatNoBasic($row["coupon_no"]), true);		// 2020/04/30 [UPD]
 		$template->assign("COUPON_NO"         , $row["coupon_no"], true);
 		$template->assign("TITLE"             , $row["title"], true);
@@ -210,7 +210,7 @@ function DispDetail($template, $message = "") {
 						->and( "dc.coupon_no = ", $_GET["NO"], FD_NUM)
 						->and( "dc.del_flg != ", "1", FD_NUM)
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/30 [ADD Start]
 		if (empty($row["coupon_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
 			$template->dispProcError($template->message("A0003"), false);
@@ -264,7 +264,7 @@ function DispDetail($template, $message = "") {
 					->where()
 						->and( "dcl.coupon_no = ", $_GET["NO"], FD_NUM)
 			->createSql();
-		$langrow = $template->DB->getAll( $sql, MDB2_FETCHMODE_ASSOC);
+		$langrow = $template->DB->getAll( $sql, PDO::FETCH_ASSOC);
 		foreach( $langrow as $v){
 			$_POST["TITLE"][$v["lang"]]    = $v["title"];
 			$_POST["CONTENTS"][$v["lang"]] = $v["contents"];

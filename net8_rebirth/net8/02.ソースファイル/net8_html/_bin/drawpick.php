@@ -86,7 +86,7 @@ function main() {
 		->createSql("\n");
 	$rs = $db->query( $sql);
 
-	while ($goodsRow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($goodsRow = $rs->fetch(PDO::FETCH_ASSOC)) {
 
 		$draw_count = (mb_strlen($goodsRow["draw_count"]) > 0) ? (int)$goodsRow["draw_count"] : 0;
 
@@ -111,7 +111,7 @@ function main() {
 			$rsDraw = $db->query($sql);
 			if ($rsDraw->rowCount() > 0) {
 				$point = new PlayPoint($db, false);
-				while ($rowDraw = $rsDraw->fetch(MDB2_FETCHMODE_ASSOC)) {
+				while ($rowDraw = $rsDraw->fetch(PDO::FETCH_ASSOC)) {
 					// 処理コード「12：抽選応募(中止による返還)」でポイントを返却する
 					$point->addDrawPoint($rowDraw["member_no"], "12", $rowDraw["draw_point"], $rowDraw["key_no"]);
 				}
@@ -256,7 +256,7 @@ function main() {
 						->and( "lng.goods_no = ", $goodsRow["goods_no"], FD_NUM)
 					->createSql("\n");
 				$rsGozName = $db->query($sql);
-				while ($row = $rsGozName->fetch(MDB2_FETCHMODE_ASSOC)) {
+				while ($row = $rsGozName->fetch(PDO::FETCH_ASSOC)) {
 					$goodsName[$row["lang"]] = $row["goods_name"];
 				}
 				unset($rsGozName);
@@ -279,7 +279,7 @@ function main() {
 
 				$insstr = array();
 				$ins_contact = array();
-				while ($row = $rsWin->fetch(MDB2_FETCHMODE_ASSOC)) {
+				while ($row = $rsWin->fetch(PDO::FETCH_ASSOC)) {
 					$insstr[] = "("
 							. $db->conv_sql( $goodsRow["goods_no"], FD_NUM)
 						.",". $db->conv_sql( $row["member_no"], FD_NUM)

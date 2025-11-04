@@ -147,7 +147,7 @@ function DispList($template, $message = "") {
 
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("ADDSET_NO"       , $row["addset_no"], true);
 		$template->assign("ADDSET_NO_PAD"   , $template->formatNoBasic($row["addset_no"]), true);
 		$template->assign("ADDSET_TYPE_NAME", $template->getArrayValue($GLOBALS["GiftAddSetTypeList"], $row["addset_type"]), true);
@@ -190,7 +190,7 @@ function DispDetail($template, $message = "") {
 					->and("addset_no = ",  $_GET["NO"], FD_NUM )
 					->and("del_flg = "  ,  0, FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;

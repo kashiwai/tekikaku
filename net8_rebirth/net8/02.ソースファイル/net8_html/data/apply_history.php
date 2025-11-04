@@ -123,7 +123,7 @@ function DispList($template, $message = "") {
 		$template->assign("PAGING" , HtmlPagingTag( (($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?"), $_GET["P"], $allpage) );
 		
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// データ
 			$template->assign("SEQ"          , $row["seq"], true);
 			$template->assign("NO"           , $row["goods_no"], true);

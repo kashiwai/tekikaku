@@ -26,7 +26,7 @@ echo "=== ステップ1: ユーザー情報取得 ===\n";
 $sql = "SELECT member_no, nickname, mail, last_name, first_name, state, point, login_dt, draw_point
         FROM mst_member
         WHERE mail = 'test@example.com' AND state = '1'";
-$userRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+$userRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 if (empty($userRow["member_no"])) {
     echo "❌ test@example.com のユーザーが見つかりません\n";
@@ -43,7 +43,7 @@ $sql = "SELECT dm.machine_no, dm.machine_status, dm.signaling_id, dm.camera_no,
         LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
         LEFT JOIN mst_camera mc ON dm.camera_no = mc.camera_no
         WHERE dm.machine_no = " . $_GET["NO"];
-$machineRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+$machineRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 if (empty($machineRow)) {
     echo "❌ 台番号 " . $_GET["NO"] . " のデータが見つかりません\n";
@@ -68,7 +68,7 @@ echo "\n=== ステップ3: lnk_machine の状態確認 ===\n";
 $sql = "SELECT machine_no, assign_flg, member_no, onetime_id
         FROM lnk_machine
         WHERE machine_no = " . $_GET["NO"];
-$lnkRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+$lnkRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 if (empty($lnkRow)) {
     echo "❌ lnk_machine にデータがありません\n";

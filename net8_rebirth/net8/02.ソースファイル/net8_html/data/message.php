@@ -130,7 +130,7 @@ function DispList($template) {
 	
 	if( $allrows > 0){
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// プレイ履歴リンク
 			$isPlayList = ($row["contact_type"] == "03");		// 自動精算
 			// プレイポイント履歴リンク

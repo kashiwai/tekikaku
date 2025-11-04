@@ -187,7 +187,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 
 		//pick
 		$today = date("Y/m/d H:i:00");
@@ -277,7 +277,7 @@ function DispDetail($template, $message = "") {
 					->and( "mg.goods_no = ", $_GET["NO"], FD_NUM )
 					->and( "mg.del_flg = " , 0, FD_NUM )
 			->createSql("\n");
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if ($row == null) {
 			$template->dispProcError($template->message("A0003"), false);
 			return;
@@ -299,7 +299,7 @@ function DispDetail($template, $message = "") {
 					->where()
 						->and( "lng.goods_no = ", $_GET["NO"], FD_NUM)
 			->createSql();
-		$lang = $template->DB->getAll( $sql, MDB2_FETCHMODE_ASSOC);
+		$lang = $template->DB->getAll( $sql, PDO::FETCH_ASSOC);
 		foreach( $lang as $v){
 			$langrow["goods_name"][$v["lang"]]  = $v["goods_name"];
 			$langrow["goods_info"][$v["lang"]]  = $v["goods_info"];

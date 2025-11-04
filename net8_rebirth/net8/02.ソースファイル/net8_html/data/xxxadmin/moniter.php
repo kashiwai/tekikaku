@@ -88,7 +88,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->assign("MACHINE_NO", $row["machine_no"], true);
 		$template->assign("MODEL_NAME", $row["model_name"], true);
 		// 緊急メッセージリスト処理個別用

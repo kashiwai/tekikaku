@@ -256,7 +256,7 @@ function DispMailConf($template) {
 				->and( "regist_id = ", $_GET["RID"], FD_STR)
 			->orderby( "member_no desc" )
 		->createSql();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		
 		if( !empty( $row)){
 			
@@ -434,7 +434,7 @@ function MemberRegist($template, $registId, $internalCd = "", $mobile = "") {
 			->and("state = "           , 0, FD_NUM)
 		->orderby("member_no desc")
 	->createSql("\n");
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	if (mb_strlen($row["member_no"]) <= 0) {
 		ProcComp($template, $template->message("U0432"));
 		return;
@@ -522,7 +522,7 @@ function MemberRegist($template, $registId, $internalCd = "", $mobile = "") {
 						->and("member_no = ", $ino, FD_NUM)
 						->and("state = ", 1, FD_NUM)
 				->createSQL();
-		$inv = $template->DB->getOne($sql, MDB2_FETCHMODE_ASSOC);
+		$inv = $template->DB->getOne($sql, PDO::FETCH_ASSOC);
 	}
 	
 	// 会員登録ボーナス
@@ -538,7 +538,7 @@ function MemberRegist($template, $registId, $internalCd = "", $mobile = "") {
 	$rs = $template->DB->query($sql);
 	$PPOINT = new PlayPoint($template->DB, false);
 	$key_no = "";
-	while ($invrow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($invrow = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$key_no = "";
 		$_update = true;
 		//期間限定チェック
@@ -606,7 +606,7 @@ function MemberRegist($template, $registId, $internalCd = "", $mobile = "") {
 				->and("hed.end_dt > "     , "current_timestamp", FD_FUNCTION)
 				->and("dtl.member_no ", "IS NULL", FD_FUNCTION)
 			->createSql("\n");
-		$bRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$bRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$addPoint = -1;
 		if (!empty($bRow["benefits_no"]) && $bRow["benefits_cd"] == $row["benefits_cd"]) {
 			// 特典ポイント潰し込み
@@ -916,7 +916,7 @@ function checkAuth($template) {
 				->resetField()
 				->field("ds.pin, ds.limit_dt")
 				->createSql("\n");
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		if ($row["pin"] != $_POST["PIN"]) {		// PIN不一致
 			$errMessage[] = $template->message("U0443");
 		} else {

@@ -109,7 +109,7 @@ function DispList($template, $message = "") {
 				->groupby("purchase_type")
 				->orderby("purchase_type asc")
 			->createSql("\n");
-		$row = $template->DB->getAll( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getAll( $sql, PDO::FETCH_ASSOC);
 		foreach ($row as $v) {
 			$data[date("Y-m-d", $calDate)][$v["purchase_type"]]["count"] = $v["amount_count"];		// [日付][種別][count]
 			$data[date("Y-m-d", $calDate)][$v["purchase_type"]]["amount"] = $v["amount"];			// [日付][種別][amount]

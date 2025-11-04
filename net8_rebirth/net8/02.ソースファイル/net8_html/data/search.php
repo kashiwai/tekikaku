@@ -110,7 +110,7 @@ function DispList($template) {
 					->and(false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 					->and(false, "men.state = ", "1", FD_NUM)
 				->createSQL();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$testerFlg = ($row["tester_flg"] == "1");
 		$_login_flg  = true;
 	}
@@ -129,7 +129,7 @@ function DispList($template) {
 			->createSQL();
 	$makerList = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$makerList[ $row['maker_no']] = (FOLDER_LANG==DEFAULT_LANG)? $row['maker_name'] : $row['maker_roman'];
 	}
 	
@@ -146,7 +146,7 @@ function DispList($template) {
 			->createSQL();
 	$geneList = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$geneList[ $row['unit_no']] = (FOLDER_LANG==DEFAULT_LANG)? $row['unit_name'] : $row["unit_roman"];
 	}
 	

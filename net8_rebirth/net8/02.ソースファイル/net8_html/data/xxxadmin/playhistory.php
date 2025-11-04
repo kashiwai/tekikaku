@@ -152,7 +152,7 @@ function DispList($template, $message = "") {
 	}
 	$sql = $sqls->createSql("\n");
 	// 2023/03 [UPD End]
-	$row = $template->DB->getAll( $sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getAll( $sql, PDO::FETCH_ASSOC);
 
 	// 画面表示開始
 	$template->open(PRE_HTML . ".html");
@@ -228,7 +228,7 @@ function getOwnerList( $template){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row['owner_no']] = $row['owner_nickname'];
 	}
 	unset($rs);
@@ -251,7 +251,7 @@ function getCornerList( $template){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row["corner_no"]] = $row["corner_name"];
 	}
 	unset($rs);

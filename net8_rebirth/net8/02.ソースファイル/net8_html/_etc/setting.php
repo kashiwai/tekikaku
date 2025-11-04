@@ -40,18 +40,20 @@ if (!getenv('RAILWAY_ENVIRONMENT')) {
 }
 
 // データベース接続設定
-// $_SERVER, $_ENV, getenv() の順で環境変数を取得（より確実）
-define('DB_HOST', $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '136.116.70.86');
-define('DB_NAME', $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'net8_dev');
-define('DB_USER', $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'net8tech001');
-define('DB_PASSWORD', $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: 'CaD?7&Bi+_:`QKb*');
+// ⚠️ 重要: すべてのDB接続をGCP Cloud SQL (Railway MySQL) に統一
+// Railway環境変数は使用せず、GCP DBに強制接続
+define('DB_HOST', '136.116.70.86');                // GCP Cloud SQL IP（固定）
+define('DB_PORT', '3306');                         // MySQLポート（固定）
+define('DB_NAME', 'net8_dev');                     // データベース名（固定）
+define('DB_USER', 'net8tech001');                  // DBユーザー（固定）
+define('DB_PASSWORD', 'CaD?7&Bi+_:`QKb*');        // DBパスワード（固定）
 define('DB_CHARSET', 'utf8mb4');
 
 // データベースDSN（Data Source Name）
 // PDO形式（get_db_connection関数用）
-define('DB_DSN_PDO', 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET);
+define('DB_DSN_PDO', 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET);
 // MDB2形式（SmartDBクラス用）- パスワードの特殊文字をURLエンコード
-define('DB_DSN', 'mysql://' . urlencode(DB_USER) . ':' . urlencode(DB_PASSWORD) . '@' . DB_HOST . '/' . DB_NAME);
+define('DB_DSN', 'mysql://' . urlencode(DB_USER) . ':' . urlencode(DB_PASSWORD) . '@' . DB_HOST . ':' . DB_PORT . '/' . DB_NAME);
 
 // データベース接続オプション
 define('DB_OPTIONS', [

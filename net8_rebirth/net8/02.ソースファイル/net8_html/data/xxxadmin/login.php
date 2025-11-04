@@ -121,7 +121,7 @@ function ProcLogin($template) {
 					->and("admin_id = ", $_POST["ID"], FD_STR)
 					->and("del_flg = ", "0", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 	$errMessage = (new SmartAutoCheck($template))
 					// データ未存在

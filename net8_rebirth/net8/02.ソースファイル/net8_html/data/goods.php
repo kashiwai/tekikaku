@@ -121,7 +121,7 @@ function DispList($template, $message = "") {
 				->and( false, "men.pass = ",      $template->Session->UserInfo["pass"], FD_STR)
 				->and( false, "men.state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$_point = $row["draw_point"];
 	
 	$now = date("Y/m/d H:i:s");
@@ -213,7 +213,7 @@ function DispList($template, $message = "") {
 		$template->assign("PAGING" , HtmlPagingTag( (($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?"), $_GET["P"], $allpage));
 		
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// データ
 			$template->assign("NO"                  , $row["goods_no"], true);
 			$template->assign("GOODS_CD"            , $row["goods_cd"], true);
@@ -320,7 +320,7 @@ function ProcData($template) {
 				->and( false, "men.pass = "      , $template->Session->UserInfo["pass"], FD_STR)
 				->and( false, "men.state = "     , "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	
 	$_chk = false;
 	if( $row["draw_point"] < $row["goods_draw_point"]) $_chk = true;
@@ -430,7 +430,7 @@ function ProcData($template) {
 					->and("mail = ",      $template->Session->UserInfo["mail"], FD_STR)
 					->and("state = ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 	$template->Session->UserInfo["draw_point"] = $row["draw_point"];
 	// コミット(トランザクション終了)
 	$template->DB->autoCommit(true);

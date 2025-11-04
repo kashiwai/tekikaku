@@ -95,7 +95,7 @@ function SendMagazine($db, $message = "") {
 
 	// トランザクション開始
 	$db->autoCommit(false);
-	while ($magazineRow = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($magazineRow = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// 送信対象会員取得
 		$rows = $db->getMemberRows( array_change_key_case( $magazineRow, CASE_UPPER), true);
 		if( count( $rows) > 0){
@@ -241,7 +241,7 @@ function SendMagazine($db, $message = "") {
 		}
 	}
 	
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// Send Magazine NO
 		// 送信終了フラグがtrueの場合は送信終了
 		if ($sendFinish) break;
@@ -311,7 +311,7 @@ function mod_proc(&$db, &$mailSend, $data, $sendLimit, &$sendFinish, &$sendCount
 	$ins_contact = array();		// 連絡Box登録用会員No
 	
 	// 全対象会員分Loop
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		
 		// 配信終了フラグがtrueの場合は送信終了
 		if ($sendFinish) break;

@@ -168,7 +168,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->if_enable("IS_BLACK"   , $row["black_flg"] == 1);
 		$template->if_enable("IS_TESTER"  , $row["black_flg"] == 0 && $row["tester_flg"] == 1);
 		$template->if_enable("IS_RETIRED" , $row["black_flg"] == 0 && $row["tester_flg"] == 0 && $row["member_state"] == 9);
@@ -233,7 +233,7 @@ function DispDetail($template, $message = "") {
 					->and( "da.member_no = ",   $_GET["NO"], FD_NUM )
 					->and( "da.del_flg <> 1 ")
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		if (empty($row["member_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
 			$template->dispProcError($template->message("A0003"), false);
 			return;

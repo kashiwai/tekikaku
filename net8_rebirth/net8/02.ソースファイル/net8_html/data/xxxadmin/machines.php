@@ -99,7 +99,7 @@ function DispList($template, $message = "") {
 				->where()
 					->and( false, "model_no = "        , $_GET["S_MODEL_NO"], FD_NUM )
 			->createSql();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$_GET["S_MODEL_CD"]   = $row["model_cd"];
 		$_GET["S_MODEL_NAME"] = $row["model_name"];
 	}
@@ -207,7 +207,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		
 		$template->assign("MACHINE_NO_PAD"      , str_pad( $row["machine_no"], 7, 0, STR_PAD_LEFT), true);
 		$template->assign("MACHINE_NO"          , $row["machine_no"], true);
@@ -273,7 +273,7 @@ function DispSetting($template, $message = "") {
 		->createSql();
 	$rs = $template->DB->query( $sql );
 	$machiNameList = array();
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$machiNameList[] = "台番号:{$row["machine_no"]} - {$row["model_name"]}";
 	}
 
@@ -433,7 +433,7 @@ function getCameraList( $template, $self=""){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[] = array('camera_no' => $row['camera_no'], 'machine_no' => $row['machine_no']);
 	}
 	$ret = array();
@@ -474,7 +474,7 @@ function getOwnerList( $template){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row['owner_no']] = $row['owner_nickname'];
 	}
 	return $arr;
@@ -498,7 +498,7 @@ function getMakerList( $template){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row['maker_no']] = $row['maker_name'];
 	}
 	return $arr;
@@ -521,7 +521,7 @@ function getTypeList( $template){
 			->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row['type_no']] = $row['type_name'];
 	}
 	return $arr;
@@ -544,7 +544,7 @@ function getUnitList( $template){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row['unit_no']] = $row['unit_name'];
 	}
 	return $arr;
@@ -564,7 +564,7 @@ function getCornerList( $template){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$arr[ $row["corner_no"]] = $row["corner_name"];
 	}
 	return $arr;
@@ -584,7 +584,7 @@ function getModelList( $template, $addclass = false){
 		->createSQL();
 	$arr = array();
 	$rs = $template->DB->query($sql);
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		if( $addclass){
 			$arr[ $row["model_no"]] = array( "value" => $row["model_name"], "class" => "category".$row["category"] ." maker".$row["maker_no"] );
 		}else{

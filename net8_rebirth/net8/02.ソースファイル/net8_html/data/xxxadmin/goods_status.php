@@ -174,7 +174,7 @@ function DispList($template, $message = "") {
 	$template->assign("ODR"     , $_GET["ODR"]);				// ソート順
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$template->if_enable("IS_BLACK"   , $row["black_flg"] == 1);
 		$template->if_enable("IS_TESTER"  , $row["black_flg"] == 0 && $row["tester_flg"] == 1);
 		$template->if_enable("IS_RETIRED" , $row["black_flg"] == 0 && $row["tester_flg"] == 0 && $row["state"] == 9);

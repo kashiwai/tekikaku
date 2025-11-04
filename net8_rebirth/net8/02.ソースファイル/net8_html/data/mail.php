@@ -250,7 +250,7 @@ function DispChange($template, $message = "") {
 					->and( "mm.state = ", "1", FD_NUM)
 					->and( "mm.black_flg = ", "0", FD_NUM)
 			->createSql();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		
 		if (!empty($row["member_no"])) {
 			// 有効期限チェック
@@ -341,7 +341,7 @@ function DispChangeRegist($template, $message = "") {
 					->and( "mm.state = ", "1", FD_NUM)
 					->and( "mm.black_flg = ", "0", FD_NUM)
 			->createSql();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		
 		if (!empty($row["member_no"])) {
 			// 有効期限チェック

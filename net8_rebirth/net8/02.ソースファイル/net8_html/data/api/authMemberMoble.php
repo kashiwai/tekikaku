@@ -110,7 +110,7 @@ function registDB($template) {
 				->and("identify_kbn = ", $identifyKbn, FD_NUM)
 				->and("limit_dt >= "   , $nowDT->format("Y-m-d H:i"), FD_DATE)
 		->createSql();
-	$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
 	if (!empty($row["member_no"])) {		// 有効期限内データ存在
 		$pinCode = $row["pin"];

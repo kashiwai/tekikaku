@@ -54,7 +54,7 @@ try {
                 echo "<h3>実行SQL</h3>\n";
                 echo "<pre>" . htmlspecialchars($sql) . "</pre>\n";
 
-                $row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+                $row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
                 echo "<h3>取得結果</h3>\n";
                 echo "<pre>";

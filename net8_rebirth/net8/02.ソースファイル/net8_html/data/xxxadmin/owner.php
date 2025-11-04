@@ -146,7 +146,7 @@ function DispList($template, $message = "") {
 	
 	// リスト処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		
 		$template->assign("OWNER_NO_PAD"       , $template->formatNoBasic($row["owner_no"]), true);		// 2020/04/22 [UPD]
 		$template->assign("OWNER_NO"           , $row["owner_no"], true);
@@ -206,7 +206,7 @@ function DispDetail($template, $message = "") {
 					->and( "ow.owner_no = ",   $_GET["NO"], FD_NUM )
 					->and( "ow.del_flg != ", "1", FD_NUM)	// 2020/04/22 [ADD]
 			->createSql();
-		$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/22 [ADD Start] 再表示時に消える項目
 		if (empty($row["owner_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
 			$template->dispProcError($template->message("A0003"), false);
@@ -404,7 +404,7 @@ function DispSales($template, $message = "") {
 				->and( "ow.owner_no = ",   $_GET["NO"], FD_NUM )
 				->and( "ow.del_flg != ", "1", FD_NUM)	// 2020/04/22 [ADD]
 		->createSql();
-	$owner = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$owner = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// 2020/04/22 [ADD Start] 再表示時に消える項目
 	if (mb_strlen($owner["owner_no"]) <= 0) {		// データ不存在は通常あり得ないのでシステムエラー
 		$template->dispProcError($template->message("A0003"), false);
@@ -457,7 +457,7 @@ function DispSales($template, $message = "") {
 			->groupby("dm.machine_no")
 			->orderby("mm.model_no, dm.machine_no")
 			->createSql("\n");
-		$row = $template->DB->getAll( $sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getAll( $sql, PDO::FETCH_ASSOC);
 	}
 	// 2020/04/22 [UPD End] プレイ履歴の存在する実機では無く現在 若しくは プレイ履歴が存在するデータの取得にする
 	$total_play_count = array_sum( array_column( $row, 'machine_play_count'));
@@ -554,7 +554,7 @@ function DispCSV($template, $message = "") {
 				->orderby("play_dt, mm.model_no, dm.machine_no")
 			->createSql("\n");
 		$outRs = $template->DB->query($sql);
-		while ($row = $outRs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $outRs->fetch(PDO::FETCH_ASSOC)) {
 			$outBuff[] = $row;
 		}
 		unset($outRs);

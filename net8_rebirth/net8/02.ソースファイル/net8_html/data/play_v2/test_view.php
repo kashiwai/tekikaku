@@ -27,7 +27,7 @@ JOIN mst_model mm ON dm.model_no = mm.model_no
 WHERE dm.machine_no = {$machine_no}";
 
 $result = $template->DB->query($sql);
-$row = $result->fetchRow(MDB2_FETCHMODE_ASSOC);
+$row = $result->fetchRow(PDO::FETCH_ASSOC);
 
 if (!$row) {
     die("Machine not found: NO={$machine_no}");

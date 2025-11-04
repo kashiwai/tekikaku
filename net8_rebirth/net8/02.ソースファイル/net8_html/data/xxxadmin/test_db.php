@@ -19,7 +19,7 @@ echo "<p>有効件数: " . $count . "</p>";
 
 echo "<h2>3. メーカーデータ (先頭5件)</h2>";
 $sql = "SELECT maker_no, maker_name, del_flg FROM mst_maker LIMIT 5";
-$rows = $db->getAll($sql, MDB2_FETCHMODE_ASSOC);
+$rows = $db->getAll($sql, PDO::FETCH_ASSOC);
 echo "<table border='1'>";
 echo "<tr><th>maker_no</th><th>maker_name</th><th>del_flg</th></tr>";
 foreach ($rows as $row) {
@@ -38,7 +38,7 @@ echo "<p>会員数: " . $count . "</p>";
 
 echo "<h2>5. 管理者データ</h2>";
 $sql = "SELECT admin_no, admin_name, admin_id FROM mst_admin";
-$rows = $db->getAll($sql, MDB2_FETCHMODE_ASSOC);
+$rows = $db->getAll($sql, PDO::FETCH_ASSOC);
 echo "<table border='1'>";
 echo "<tr><th>admin_no</th><th>admin_name</th><th>admin_id</th></tr>";
 foreach ($rows as $row) {

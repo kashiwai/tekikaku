@@ -140,7 +140,7 @@ function DispInput($template, $message = "") {
 				->and("mm.member_no = ", $template->Session->UserInfo["member_no"], FD_NUM)
 				->and("mm.state = ", "1", FD_NUM)
 			->createSQL();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$_POST["RMOBILE"] = $row["international_cd"] . $row["mobile"];
 		$_POST["INTERNATIONAL_CD"] = $row["international_cd"];
 	}
@@ -242,7 +242,7 @@ function checkInput($template) {
 				->resetField()
 				->field("pin, limit_dt")
 				->createSql("\n");
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		if ($row["pin"] != $_POST["PIN"]) {		// PIN不一致
 			$errMessage[] = $template->message("U0443");
 		} else {

@@ -130,7 +130,7 @@ function DispList($template, $message = "") {
 		$template->assign("PAGING" , HtmlPagingTag( (($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?"), $_GET["P"], $allpage) );
 		
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// データ
 			$template->assign("SEQ"          , $row["seq"], true);
 			$template->assign("NO"           , $row["goods_no"], true);
@@ -226,7 +226,7 @@ function DispConf($template) {
 		$template->assign("PAGING" , HtmlPagingTag( (($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?"), $_GET["P"], $allpage) );
 		
 		$template->loop_start("LIST");
-		while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 			// データ
 			$template->assign("ADDRESS_SEQ"   , $row["seq"], true);
 			$template->assign("LASTNAME"      , $row["syll"], true);
@@ -271,7 +271,7 @@ function ProcData($template) {
 				->and( false, "da.seq = ", $_GET["ASEQ"], FD_NUM)
 				->and( false, "da.del_flg <> ", "1", FD_NUM)
 			->createSQL();
-	$row = $template->DB->getRow( $sql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 	// セット
 	$sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
 		->update( "dat_win" )

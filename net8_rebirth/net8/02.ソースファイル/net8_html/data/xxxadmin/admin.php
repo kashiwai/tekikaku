@@ -145,7 +145,7 @@ function DispList($template, $message = "") {
 
 	// 明細処理
 	$template->loop_start("LIST");
-	while ($row = $rs->fetch(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		// 行出力
 		$template->assign("SELFROW"       , ( !$_detail && $row["admin_no"] == $template->Session->AdminInfo["admin_no"] )? "class=\"selfrow\"":"");
 		$template->assign("ADMIN_NO"      , $row["admin_no"], true);
@@ -225,7 +225,7 @@ function DispDetail($template, $message = "") {
 				->createSql();
 		}
 		
-		$row = $template->DB->getRow($_sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($_sql, PDO::FETCH_ASSOC);
 		// 2020/04/24 [ADD Start]データ不存在は通常あり得ないのでシステムエラー
 		if (empty($row["admin_no"])) {
 			$template->dispProcError($template->message("A0003"), false);
@@ -434,7 +434,7 @@ function RegistData($template) {
 						->and("admin_no = ", $_GET["NO"], FD_NUM)
 						->and("del_flg = ", "0", FD_NUM)
 				->createSQL();
-		$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+		$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 		$template->Session->AdminInfo = $row;
 		// 2020/04/20 [UPD Start] 一般管理の画面にそもそもで管理権限は無い
 	}
@@ -500,7 +500,7 @@ function checkAuth( $template, $adminNo, $targetNo) {
 				->and( "admin_name = ", $template->Session->AdminInfo["admin_name"], FD_STR )
 				->and( "admin_pass = ", $template->Session->AdminInfo["admin_pass"], FD_STR )
 		->createSql();
-	$row = $template->DB->getRow($ssql, MDB2_FETCHMODE_ASSOC);
+	$row = $template->DB->getRow($ssql, PDO::FETCH_ASSOC);
 	
 	if( !$row){
 		$errMessage = $template->message("A0004");
@@ -604,7 +604,7 @@ function checkInput($template) {
 						->and("del_flg != ", "1", FD_NUM)
 						->and(true, "admin_no != ", $_GET["NO"], FD_NUM)
 				->createSql("\n");
-				$cntRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+				$cntRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 				if ($cntRow["adm_cnt"] == $cntRow["deny_cnt"]) $errMessage[] = $template->message("A0313");
 			}
 		}
@@ -625,7 +625,7 @@ function checkInput($template) {
 					->and("my.del_flg != ",  "1", FD_NUM)
 				->groupby( "my.auth_flg")
 				->createSql();
-			$row = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+			$row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 			if (mb_strlen($row["auth_flg"]) <= 0 || ($row["auth_flg"] == "2" && (int)$row["auth_cnt"] <= 1)) $errMessage[] = $template->message("A0310");
 			// システム管理者による削除時は管理にアカウント設定が残るかチェック ※元から無い場合も引っ掛ります
 			if (count($errMessage) <= 0 && $template->Session->AdminInfo["auth_flg"] == 9) {
@@ -639,7 +639,7 @@ function checkInput($template) {
 						->and("del_flg != ", "1", FD_NUM)
 						->and("admin_no != ", $_GET["NO"], FD_NUM)
 				->createSql("\n");
-				$cntRow = $template->DB->getRow($sql, MDB2_FETCHMODE_ASSOC);
+				$cntRow = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 				if ($cntRow["adm_cnt"] == $cntRow["deny_cnt"]) $errMessage[] = $template->message("A0313");
 			}
 		}
