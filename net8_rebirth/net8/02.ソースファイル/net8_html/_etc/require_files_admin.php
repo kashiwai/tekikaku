@@ -6,9 +6,10 @@
  * 管理画面の全PHPファイルから読み込まれる基本設定とライブラリ
  */
 
-// エラー報告設定
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-ini_set('display_errors', defined('DEBUG_MODE') && DEBUG_MODE ? '1' : '0');
+// エラー報告設定（一時的に全エラー表示を有効化）
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('log_errors', '1');
 
 // セッション設定（最初に実行）
 // NOTE: SmartSessionクラスがセッション管理を行うため、ここではsession_start()を呼ばない

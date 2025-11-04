@@ -46,7 +46,8 @@ define('UPLOAD_PATH', '/var/www/html/data/uploads/');
 define('ITEMS_PER_PAGE', 20);
 
 // デバッグモード（本番環境では必ずfalseに設定）
-define('DEBUG_MODE', getenv('DEBUG_MODE') === 'true' ? true : false);
+// 一時的にエラー詳細表示を有効化（登録エラー調査のため）
+define('DEBUG_MODE', true);
 
 // エラー表示設定
 if (DEBUG_MODE) {
