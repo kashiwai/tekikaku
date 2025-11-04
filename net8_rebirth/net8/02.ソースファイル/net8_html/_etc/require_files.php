@@ -53,6 +53,9 @@ $required_libs = [
     // TemplateUser（SmartTemplateに依存）
     $sys_dir . 'TemplateUser.php',
 
+    // ポイント管理
+    $sys_dir . 'PlayPoint.php',
+
     // その他のライブラリ（TemplateUserに依存する可能性あり）
     $lib_dir . 'SmartAutoCheck.php',
     $lib_dir . 'SmartChecker.php',
