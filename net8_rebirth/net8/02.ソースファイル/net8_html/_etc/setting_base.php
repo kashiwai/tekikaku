@@ -407,6 +407,32 @@ if (!defined('DIR_IMG_MODEL')) {
     define('DIR_IMG_MODEL', '/var/www/html/data/img/model/');
 }
 
+// 番号フォーマット設定
+define('FORMAT_NO_DIGIT', 5);        // 一般的な番号の桁数（00001形式）
+define('MEMBER_NO_DIGIT', 8);        // 会員番号の桁数（00000001形式）
+
+// 会員ステータスバッジ
+define('MEMBER_STATE_BLACK', 'BLACK');      // ブラックリスト
+define('MEMBER_STATE_RETIRED', 'RETIRED');  // 退会
+define('MEMBER_STATE_TESTER', 'TESTER');    // テスター
+define('MEMBER_STATE_AGENT', 'AGENT');      // エージェント
+
+// ギフトエージェント機能設定
+define('GIFT_AGENT', false);                 // エージェント機能有効化（未使用の場合はfalse）
+define('GIFT_AGENT_DISPNAME', 'エージェント'); // エージェント表示名
+define('ADMTOP_GIFT_AGENT', false);          // 管理画面トップでエージェント表示
+
+// エージェント会員設定
+$GLOBALS["AgentMember"] = array(
+    "0" => "通常会員",
+    "1" => "エージェント"
+);
+
+// 管理画面メニュー構造（空配列で初期化、必要に応じて設定）
+if (!isset($GLOBALS["AdminAllMenu"])) {
+    $GLOBALS["AdminAllMenu"] = array();
+}
+
 // WebRTC設定ファイルの読み込み
 require_once(__DIR__ . '/webRTC_setting.php');
 
