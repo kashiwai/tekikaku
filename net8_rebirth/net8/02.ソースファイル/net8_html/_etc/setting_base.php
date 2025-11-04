@@ -321,6 +321,15 @@ $GLOBALS["GiftAddSetValUnitList"] = array(
     "2" => "%"
 );
 
+// ポイント調整タイプ（加算/減算）
+$GLOBALS["pointSumType"] = array(
+    "1" => "加算",
+    "2" => "減算"
+);
+
+// API更新者番号（PlayPoint用）
+define('API_PLAYPOINT_UPD_NO', 9999); // システム/API更新者番号
+
 // RTC Signaling Servers（WebRTC用）
 // フォーマット: "host:port"
 // 環境変数からシグナリングサーバー設定を動的に取得（Railway対応）
