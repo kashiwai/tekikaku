@@ -52,7 +52,7 @@ define("DBG_FILE", "error_log.txt");	// ログファイル名 ※
 // ----- 2019/01/29 Toshiyuki Murakami
 // MDB2廃止に伴ってdefineを再定義
 define("MDB2_FETCHMODE_DEFAULT", PDO::FETCH_BOTH );
-define("PDO::FETCH_ASSOC", PDO::FETCH_ASSOC );
+// define("PDO::FETCH_ASSOC", PDO::FETCH_ASSOC ); // ← 誤った定義のためコメントアウト（PDO::FETCH_ASSOCは既にPHPで定義済み）
 
 class SmartDB {
 
