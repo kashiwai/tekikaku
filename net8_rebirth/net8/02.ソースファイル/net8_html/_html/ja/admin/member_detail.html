@@ -287,17 +287,9 @@
 	<!--/if:{AUTH_MEMBER_MOBILE}-->
 	<!--if:{NEW}-->
 		if (!chk_indis("{%A0504%}", frm["PASS"].value)) return false;
-		if (frm["PASS"].value.length > 0) {
-			if (!chk_alnum("{%A0517%}", frm["PASS"].value)) return false;
-			if (frm["PASS"].value.length < {%MEMBER_PASS_MIN%}) {
-				chkAlert("{%A0505%}");
-				return false;
-			}
-			if (frm["PASS"].value.length > 20) {
-				chkAlert("{%A0506%}");
-				return false;
-			}
-			if (!chk_pattern("{%A0518%}", frm["PASS"].value, "{%MEMBER_PASS_PATTERN%}", false)) return false;		//制約
+		if (frm["PASS"].value.length > 20) {
+			chkAlert("{%A0506%}");
+			return false;
 		}
 	<!--/if:{NEW}-->
 	
