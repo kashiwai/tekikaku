@@ -85,6 +85,9 @@ $required_libs = [
     // TemplateAdmin（管理画面用）
     $sys_dir . 'TemplateAdmin.php',
 
+    // ポイント管理
+    $sys_dir . 'PlayPoint.php',
+
     // その他のライブラリ
     $lib_dir . 'SmartAutoCheck.php',
     $lib_dir . 'SmartChecker.php',
