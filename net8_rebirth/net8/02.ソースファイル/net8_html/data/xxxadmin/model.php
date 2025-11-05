@@ -507,9 +507,10 @@ function RegistData($template) {
 
 	// POSTリクエストでない場合は編集画面へリダイレクト
 	if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-		// GETでアクセスされた場合は編集画面を表示
-		DispDetail($template);
-		return;
+		// GETでアクセスされた場合はM=detailにリダイレクト
+		$no = isset($_GET['NO']) ? $_GET['NO'] : '';
+		header("Location: " . URL_ADMIN . "model.php?M=detail&NO=" . urlencode($no));
+		exit;
 	}
 
 	// データ取得
@@ -1095,36 +1096,42 @@ function checkInput($template) {
 		$_chk_img1 = ($_FILES['IMAGE_LIST_NEW']['tmp_name'] != "") ? $_FILES['IMAGE_LIST_NEW']['tmp_name'] : $_POST["IMAGE_LIST"];
 		$_chk_img2 = ($_FILES['IMAGE_DETAIL_NEW']['tmp_name'] != "") ? $_FILES['IMAGE_DETAIL_NEW']['tmp_name'] : $_POST["IMAGE_DETAIL"];
 		$_chk_img3 = ($_FILES['IMAGE_REEL_NEW']['tmp_name'] != "") ? $_FILES['IMAGE_REEL_NEW']['tmp_name'] : $_POST["IMAGE_REEL"];
-		
-		// 機種名重複
-		$sqlNameDupli = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(*)" )
-			->from( "mst_model" )
-			->where()
-				->and( "model_name = ", $_POST["MODEL_NAME"], FD_STR)
-				->and( "del_flg = ", "0", FD_NUM);
-		// 更新時のみmodel_no除外条件を追加
-		if (mb_strlen($_POST["MODEL_NO"]) > 0) {
-			$sqlNameDupli->and( "model_no <> ", $_POST["MODEL_NO"], FD_NUM);
-		}
-		$sqlNameDupli = $sqlNameDupli->createSql();
 
-		// 機種名(ローマ字)重複
-		$sqlRomanDupli = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(*)" )
-			->from( "mst_model" )
-			->where()
-				->and( "model_roman = ", $_POST["MODEL_ROMAN"], FD_STR)
-				->and( "del_flg = ", "0", FD_NUM);
-		// 更新時のみmodel_no除外条件を追加
-		if (mb_strlen($_POST["MODEL_NO"]) > 0) {
-			$sqlRomanDupli->and( "model_no <> ", $_POST["MODEL_NO"], FD_NUM);
+		// 機種名重複チェックSQL（機種名が入力されている場合のみ）
+		$sqlNameDupli = null;
+		if (mb_strlen($_POST["MODEL_NAME"]) > 0) {
+			$sqlNameDupli = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(*)" )
+				->from( "mst_model" )
+				->where()
+					->and( "model_name = ", $_POST["MODEL_NAME"], FD_STR)
+					->and( "del_flg = ", "0", FD_NUM);
+			// 更新時のみmodel_no除外条件を追加
+			if (mb_strlen($_POST["MODEL_NO"]) > 0) {
+				$sqlNameDupli->and( "model_no <> ", $_POST["MODEL_NO"], FD_NUM);
+			}
+			$sqlNameDupli = $sqlNameDupli->createSql();
 		}
-		$sqlRomanDupli = $sqlRomanDupli->createSql();
+
+		// 機種名(ローマ字)重複チェックSQL（ローマ字名が入力されている場合のみ）
+		$sqlRomanDupli = null;
+		if (mb_strlen($_POST["MODEL_ROMAN"]) > 0) {
+			$sqlRomanDupli = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(*)" )
+				->from( "mst_model" )
+				->where()
+					->and( "model_roman = ", $_POST["MODEL_ROMAN"], FD_STR)
+					->and( "del_flg = ", "0", FD_NUM);
+			// 更新時のみmodel_no除外条件を追加
+			if (mb_strlen($_POST["MODEL_NO"]) > 0) {
+				$sqlRomanDupli->and( "model_no <> ", $_POST["MODEL_NO"], FD_NUM);
+			}
+			$sqlRomanDupli = $sqlRomanDupli->createSql();
+		}
 
 		// 実機数
 		$extM = 0;
@@ -1156,12 +1163,14 @@ function checkInput($template) {
 			->item($_POST["MODEL_NAME"])
 				->required("A1402")
 				->maxLength("A1403", 50)
-				->countSQL("A1451", $sqlNameDupli)
+				->case($sqlNameDupli !== null)
+					->countSQL("A1451", $sqlNameDupli)
 			//機種名（英語）
 			->item($_POST["MODEL_ROMAN"])
 				->required("A1404")
 				->maxLength("A1405", 200)
-				->countSQL("A1456", $sqlRomanDupli)
+				->case($sqlRomanDupli !== null)
+					->countSQL("A1456", $sqlRomanDupli)
 			//タイプ
 			->item($_POST["TYPE_NO"])
 				->required("A1406")
