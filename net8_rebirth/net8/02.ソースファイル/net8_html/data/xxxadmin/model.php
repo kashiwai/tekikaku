@@ -504,7 +504,14 @@ function DispDetail($template, $message = "") {
  * @return	なし
  */
 function RegistData($template) {
-	
+
+	// POSTリクエストでない場合は編集画面へリダイレクト
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+		// GETでアクセスされた場合は編集画面を表示
+		DispDetail($template);
+		return;
+	}
+
 	// データ取得
 	getData($_GET , array("ACT", "NO"));
 	getData($_POST , array("OLD_CATEGORY", "CATEGORY", "MODEL_NO", "MODEL_NAME", "MODEL_ROMAN", "TYPE_NO", "UNIT_NO", "MAKER_NO"
@@ -516,7 +523,7 @@ function RegistData($template) {
 	// レイアウトデータ取得
 	$layoutkeys = array_keys($GLOBALS["LayoutNameList"]);
 	getData($_POST , $layoutkeys);
-	
+
 	// 入力チェック
 	$message = checkInput($template);
 	if (mb_strlen($message) > 0) {
