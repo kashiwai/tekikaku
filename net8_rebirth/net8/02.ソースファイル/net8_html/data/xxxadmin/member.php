@@ -944,65 +944,80 @@ function checkInput($template) {
 	if ($_GET["ACT"] != "del") {
 
 		//-- 検索SQL生成
-		// メアド重複
-		$sqlMailDupli = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(member_no)" )
-			->from( "mst_member" )
-			->where()
-				->and( "mail = ", $_POST["MAIL"], FD_STR)
-				->and( "state = ", "1", FD_NUM)
-				->and( true, "member_no <> ", $_POST["NO"], FD_NUM)
-		->createSql();
-		// ブラックメアド
-		$sqlMailBlack = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(member_no)" )
-			->from( "mst_member" )
-			->where()
-				->and( "mail = ", $_POST["MAIL"], FD_STR)
-				->and( "black_flg = ", "1", FD_NUM)
-				->and( true, "member_no <> ", $_POST["NO"], FD_NUM)
-		->createSql();
+		// メアド重複チェックSQL（メールアドレスが入力されている場合のみ）
+		$sqlMailDupli = null;
+		if (mb_strlen($_POST["MAIL"]) > 0) {
+			$sqlMailDupli = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(member_no)" )
+				->from( "mst_member" )
+				->where()
+					->and( "mail = ", $_POST["MAIL"], FD_STR)
+					->and( "state = ", "1", FD_NUM)
+					->and( true, "member_no <> ", $_POST["NO"], FD_NUM)
+			->createSql();
+		}
+		// ブラックメアドチェックSQL（メールアドレスが入力されている場合のみ）
+		$sqlMailBlack = null;
+		if (mb_strlen($_POST["MAIL"]) > 0) {
+			$sqlMailBlack = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(member_no)" )
+				->from( "mst_member" )
+				->where()
+					->and( "mail = ", $_POST["MAIL"], FD_STR)
+					->and( "black_flg = ", "1", FD_NUM)
+					->and( true, "member_no <> ", $_POST["NO"], FD_NUM)
+			->createSql();
+		}
 
-		// ニックネーム重複
-		$sqlNicknameDupli = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(*)" )
-			->from( "mst_member" )
-			->where()
-				->and( "nickname = ", $_POST["NICKNAME"], FD_STR)
-				->and( "state != ", "9", FD_NUM)
-				->and( true, "member_no <> ", $_POST["NO"], FD_NUM)
-		->createSql();
+		// ニックネーム重複チェックSQL（ニックネームが入力されている場合のみ）
+		$sqlNicknameDupli = null;
+		if (mb_strlen($_POST["NICKNAME"]) > 0) {
+			$sqlNicknameDupli = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(*)" )
+				->from( "mst_member" )
+				->where()
+					->and( "nickname = ", $_POST["NICKNAME"], FD_STR)
+					->and( "state != ", "9", FD_NUM)
+					->and( true, "member_no <> ", $_POST["NO"], FD_NUM)
+			->createSql();
+		}
 
-		// 国際番号 + 携帯番号重複
-		$sqlMobileDupli = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(member_no)" )
-			->from( "mst_member" )
-			->where()
-				->and( "mobile = ", (int)$_POST["MOBILE"], FD_STR)
-				->and(SQL_CUT, "international_cd = ", $_POST["INTERNATIONAL_CD"], FD_STR)
-				->and( "state = ", "1", FD_NUM)
-				->and(SQL_CUT, "member_no <> ", $_POST["NO"], FD_NUM)
-		->createSql();
-		// ブラック国際番号 + 携帯番号
-		$sqlMobileBlack = (new SqlString())
-			->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(member_no)" )
-			->from( "mst_member" )
-			->where()
-				->and( "mobile = ", (int)$_POST["MOBILE"], FD_STR)
-				->and(SQL_CUT, "international_cd = ", $_POST["INTERNATIONAL_CD"], FD_STR)
-				->and( "black_flg = ", "1", FD_NUM)
-				->and(SQL_CUT, "member_no <> ", $_POST["NO"], FD_NUM)
-		->createSql();
+		// 国際番号 + 携帯番号重複チェックSQL（携帯番号が入力されている場合のみ）
+		$sqlMobileDupli = null;
+		if (mb_strlen($_POST["MOBILE"]) > 0) {
+			$sqlMobileDupli = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(member_no)" )
+				->from( "mst_member" )
+				->where()
+					->and( "mobile = ", (int)$_POST["MOBILE"], FD_STR)
+					->and(SQL_CUT, "international_cd = ", $_POST["INTERNATIONAL_CD"], FD_STR)
+					->and( "state = ", "1", FD_NUM)
+					->and(SQL_CUT, "member_no <> ", $_POST["NO"], FD_NUM)
+			->createSql();
+		}
+		// ブラック国際番号 + 携帯番号チェックSQL（携帯番号が入力されている場合のみ）
+		$sqlMobileBlack = null;
+		if (mb_strlen($_POST["MOBILE"]) > 0) {
+			$sqlMobileBlack = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(member_no)" )
+				->from( "mst_member" )
+				->where()
+					->and( "mobile = ", (int)$_POST["MOBILE"], FD_STR)
+					->and(SQL_CUT, "international_cd = ", $_POST["INTERNATIONAL_CD"], FD_STR)
+					->and( "black_flg = ", "1", FD_NUM)
+					->and(SQL_CUT, "member_no <> ", $_POST["NO"], FD_NUM)
+			->createSql();
+		}
 
 		// caseが使えないのでチェックする値を加工する
 		if (GIFT_AGENT) {
@@ -1026,13 +1041,16 @@ function checkInput($template) {
 				//ニックネーム
 				->item($_POST["NICKNAME"])
 					->required("A0501")
-					->countSQL("A0532", $sqlNicknameDupli)	// ニックネーム重複
+					->case($sqlNicknameDupli !== null)
+						->countSQL("A0532", $sqlNicknameDupli)	// ニックネーム重複
 				//メールアドレス
 				->item($_POST["MAIL"])
 					->required("A0502")
 					->mail("A0503")
-					->countSQL("A0531", $sqlMailDupli)	// メアド重複
-					->countSQL("A0533", $sqlMailBlack)	// ブラックメアド
+					->case($sqlMailDupli !== null)
+						->countSQL("A0531", $sqlMailDupli)	// メアド重複
+					->case($sqlMailBlack !== null)
+						->countSQL("A0533", $sqlMailBlack)	// ブラックメアド
 				//国際番号
 				->item($_POST["INTERNATIONAL_CD"])
 					->case(AUTH_MEMBER_MOBILE)	// 会員携帯番号認証時
@@ -1044,8 +1062,10 @@ function checkInput($template) {
 						->number("A0538")			// 半角数字
 						->maxLength("A0539", 15)	// 文字長の最高値
 						->if("A0543", (mb_strlen($_POST["INTERNATIONAL_CD"]) + mb_strlen((int)$_POST["MOBILE"])) <= 16)	// 16文字以内
-						->countSQL("A0540", $sqlMobileDupli)	// 携帯番号重複
-						->countSQL("A0541", $sqlMobileBlack)	// ブラック携帯番号
+						->case($sqlMobileDupli !== null)
+							->countSQL("A0540", $sqlMobileDupli)	// 携帯番号重複
+						->case($sqlMobileBlack !== null)
+							->countSQL("A0541", $sqlMobileBlack)	// ブラック携帯番号
 				// 2020/12/25 [ADD Start] 携帯番号認証日
 				->item($_POST["MOBILE_CHECKED_DT"])
 					->any()

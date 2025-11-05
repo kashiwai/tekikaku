@@ -597,17 +597,20 @@ function checkInput($template) {
 	$errMessage = array();
 	
 	//-- 検索SQL生成
-	// ニックネーム重複
-	$sqlNkNameDupli = (new SqlString())
-		->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-		->field( "count(*)" )
-		->from( "mst_owner" )
-		->where()
-			->and( "owner_nickname = ", $_POST["OWNER_NICKNAME"], FD_STR)
-			->and( "del_flg != ", "1", FD_NUM)
-			->and( true, "owner_no <> ", $_POST["OWNER_NO"], FD_NUM)
-	->createSql();
+	// ニックネーム重複チェックSQL（ニックネームが入力されている場合のみ）
+	$sqlNkNameDupli = null;
+	if (mb_strlen($_POST["OWNER_NICKNAME"]) > 0) {
+		$sqlNkNameDupli = (new SqlString())
+			->setAutoConvert( [$template->DB,"conv_sql"] )
+			->select()
+			->field( "count(*)" )
+			->from( "mst_owner" )
+			->where()
+				->and( "owner_nickname = ", $_POST["OWNER_NICKNAME"], FD_STR)
+				->and( "del_flg != ", "1", FD_NUM)
+				->and( true, "owner_no <> ", $_POST["OWNER_NO"], FD_NUM)
+		->createSql();
+	}
 	// 実機存在
 	$sqlExtMachine = (new SqlString())
 		->setAutoConvert( [$template->DB,"conv_sql"] )
@@ -634,7 +637,8 @@ function checkInput($template) {
 			->item($_POST["OWNER_NICKNAME"])
 				->required("A1505")
 				->maxLength("A1506", 20)					//文字長の最高値
-				->countSQL("A1509", $sqlNkNameDupli)		// 重複
+				->case($sqlNkNameDupli !== null)
+					->countSQL("A1509", $sqlNkNameDupli)		// 重複
 			//メールアドレス
 			->item($_POST["MAIL"])
 				->required("A1507")

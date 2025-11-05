@@ -390,29 +390,35 @@ function checkInput($template) {
 	$errMessage = array();
 
 	// 2020/04/23 [ADD Start]
-	// メーカ名重複
-	$sqlNameDupli = (new SqlString())
-		->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-		->field( "count(*)" )
-		->from( "mst_maker" )
-		->where()
-			->and( "maker_name = ", $_POST["MAKER_NAME"], FD_STR)
-			->and( "del_flg != ", "1", FD_NUM)
-			->and( true, "maker_no <> ", $_POST["MAKER_NO"], FD_NUM)
-	->createSql();
+	// メーカ名重複チェックSQL（メーカー名が入力されている場合のみ）
+	$sqlNameDupli = null;
+	if (mb_strlen($_POST["MAKER_NAME"]) > 0) {
+		$sqlNameDupli = (new SqlString())
+			->setAutoConvert( [$template->DB,"conv_sql"] )
+			->select()
+			->field( "count(*)" )
+			->from( "mst_maker" )
+			->where()
+				->and( "maker_name = ", $_POST["MAKER_NAME"], FD_STR)
+				->and( "del_flg != ", "1", FD_NUM)
+				->and( true, "maker_no <> ", $_POST["MAKER_NO"], FD_NUM)
+		->createSql();
+	}
 
-	// メーカ名(ローマ字)重複
-	$sqlRomanDupli = (new SqlString())
-		->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-		->field( "count(*)" )
-		->from( "mst_maker" )
-		->where()
-			->and( "maker_roman = ", $_POST["MAKER_ROMAN"], FD_STR)
-			->and( "del_flg != ", "1", FD_NUM)
-			->and( true, "maker_no <> ", $_POST["MAKER_NO"], FD_NUM)
-	->createSql();
+	// メーカ名(ローマ字)重複チェックSQL（ローマ字名が入力されている場合のみ）
+	$sqlRomanDupli = null;
+	if (mb_strlen($_POST["MAKER_ROMAN"]) > 0) {
+		$sqlRomanDupli = (new SqlString())
+			->setAutoConvert( [$template->DB,"conv_sql"] )
+			->select()
+			->field( "count(*)" )
+			->from( "mst_maker" )
+			->where()
+				->and( "maker_roman = ", $_POST["MAKER_ROMAN"], FD_STR)
+				->and( "del_flg != ", "1", FD_NUM)
+				->and( true, "maker_no <> ", $_POST["MAKER_NO"], FD_NUM)
+		->createSql();
+	}
 
 	// 2020/05/15 [UPD Start] 実機存在では無く機種存在に変更
 	// 機種存在
@@ -466,12 +472,14 @@ function checkInput($template) {
 			->item($_POST["MAKER_NAME"])
 				->required("A1301")
 				->maxLength("A1302", 20)			// 文字長の最高値
-				->countSQL("A1308", $sqlNameDupli)	// メーカ名重複 2020/04/23 [ADD]
+				->case($sqlNameDupli !== null)
+					->countSQL("A1308", $sqlNameDupli)	// メーカ名重複 2020/04/23 [ADD]
 			//メーカー名（英語）
 			->item($_POST["MAKER_ROMAN"])
 				->required("A1303")
 				->maxLength("A1304", 50)			// 文字長の最高値
-				->countSQL("A1309", $sqlRomanDupli)	// メーカ名(ローマ字)重複 2020/04/23 [ADD]
+				->case($sqlRomanDupli !== null)
+					->countSQL("A1309", $sqlRomanDupli)	// メーカ名(ローマ字)重複 2020/04/23 [ADD]
 			//フラグ
 			->item($_POST["PACH_FLG"])
 				->case($GLOBALS["CategoryUseList"]["PACH"])

@@ -359,17 +359,20 @@ function checkInput($template) {
 	$errMessage = array();
 
 	// 2020/05/15 [ADD Start]
-	// 名称
-	$sqlNameDupli = (new SqlString())
-		->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-		->field("count(*)")
-		->from("mst_convertPoint")
-		->where()
-			->and( "convert_name = ", $_POST["CONVERT_NAME"], FD_STR)
-			->and( "del_flg != ", "1", FD_NUM)
-			->and( true, "convert_no <> ", $_POST["CONVERT_NO"], FD_NUM)
-	->createSql("\n");
+	// 名称重複チェックSQL（名称が入力されている場合のみ）
+	$sqlNameDupli = null;
+	if (mb_strlen($_POST["CONVERT_NAME"]) > 0) {
+		$sqlNameDupli = (new SqlString())
+			->setAutoConvert( [$template->DB,"conv_sql"] )
+			->select()
+			->field("count(*)")
+			->from("mst_convertPoint")
+			->where()
+				->and( "convert_name = ", $_POST["CONVERT_NAME"], FD_STR)
+				->and( "del_flg != ", "1", FD_NUM)
+				->and( true, "convert_no <> ", $_POST["CONVERT_NO"], FD_NUM)
+		->createSql("\n");
+	}
 	// 2020/05/15 [ADD End]
 	
 	if ($_GET["ACT"] != "del") {
@@ -379,7 +382,8 @@ function checkInput($template) {
 			->item($_POST["CONVERT_NAME"])
 				->required("A1601")
 				->maxLength("A1602", 20)				//文字長の最高値
-				->countSQL("A1611" , $sqlNameDupli)		// 2020/05/15 [ADD] 重複
+				->case($sqlNameDupli !== null)
+					->countSQL("A1611" , $sqlNameDupli)		// 2020/05/15 [ADD] 重複
 			//ポイント
 			->item($_POST["POINT"])
 				->required("A1603")
