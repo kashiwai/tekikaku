@@ -25,6 +25,24 @@
 		</picture>
 	</section>
 
+	<!-- Corner Tabs -->
+	<section class="corner-tabs">
+		<div class="tab-container">
+			<!--loop:{FLOW_CORNER}-->
+			<!--if:{FLOW_LINK}-->
+			<a href="./?CN={%CNO%}" class="tab-item{%FLOW_ACTIVE%}">
+				<span>{%CORNER_NAME%}</span>
+			</a>
+			<!--/if:{FLOW_LINK}-->
+			<!--if_not:{FLOW_LINK}-->
+			<span class="tab-item{%FLOW_ACTIVE%}">
+				<span>{%CORNER_NAME%}</span>
+			</span>
+			<!--/if_not:{FLOW_LINK}-->
+			<!--/loop:{FLOW_CORNER}-->
+		</div>
+	</section>
+
 	<!-- Slick Slider -->
 	<section>
 		<div class="slider">
@@ -49,7 +67,7 @@
 		<section class="rec-list">
 			<h4>設置機種</h4>
 			<ul>
-				<!--loop:{RECOMMEND_LIST}-->
+				<!--loop:{LIST}-->
 				<li>
 					<div class="m-type"><span>{%GENERATION%}</span></div>
 					<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
@@ -59,7 +77,7 @@
 					</a>
 					<span class="m-list-title">{%MODEL_NAME%}</span>
 				</li>
-				<!--/loop:{RECOMMEND_LIST}-->
+				<!--/loop:{LIST}-->
 			</ul>
 		</section>
 
@@ -67,9 +85,9 @@
 		<section class="site-info">
 			<h4>お知らせ</h4>
 			<ul class="p-postList -type-simple">
-				<!--loop:{NOTICE_LIST}-->
+				<!--loop:{NOTICE_LIST2}-->
 				<li class="p-postList__item">
-					<a href="{%SITE_SSL_URL%}information.php?NO={%NOTICE_NO%}">
+					<a href="{%LINK_URL%}"{%OTHER_LINK%}>
 						<span class="new-date" aria-label="公開日">{%DISP_DT%}</span>
 						<span class="new-m-type">{%CATEGORY%}</span>
 						<div class="m-list-title">
@@ -77,7 +95,7 @@
 						</div>
 					</a>
 				</li>
-				<!--/loop:{NOTICE_LIST}-->
+				<!--/loop:{NOTICE_LIST2}-->
 			</ul>
 		</section>
 
