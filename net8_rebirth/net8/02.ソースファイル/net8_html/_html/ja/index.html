@@ -4,74 +4,121 @@
 		<!--#include file="inc_head.html"-->
 		<title>{%SITE_TITLE%}</title>
 	</head>
-	
-	<body>
+
+	<body id="index" class="ip-page">
+
+	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
 
-	<!--if:{HAVE_NOTICE}-->
-	<header>
-		<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-			<div class="carousel-inner" role="listbox">
-				<!--loop:{NOTICE_LIST2}-->
-				<!-- <div class="carousel-item{%ACTIVE%}" style="background-image: url('./img/notice/{%TOP_IMAGE%}')"> -->
-				<div class="carousel-item{%ACTIVE%}">
-				<!--if:{NOLINK}--><a href="{%LINK_URL%}"{%OTHER_LINK%}><!--/if:{NOLINK}-->
-					<img src="img/notice/{%TOP_IMAGE%}" class="d-block w-100">
-						<div class="carousel-caption d-none d-md-block">
-							<h3>{%TITLE%}</h3>
-							<p>{%SUB_TITLE%}</p>
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<div class="contents">
+
+	<!-- Top Visual -->
+	<section id="index-visual">
+		<picture>
+			<img src="/content/images/index/top_image.png" sizes="(max-width: 4368px) 100vw, 4368px" decoding="async" alt="竜神8">
+		</picture>
+	</section>
+
+	<!-- Slick Slider -->
+	<section>
+		<div class="slider">
+			<!--loop:{SLIDER_LIST}-->
+			<div class="item">
+				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
+					<span class="image-wrapper">
+						<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}">
+					</span>
+					<span class="m-type">{%GENERATION%}</span>
+					<span class="p-postList__title">{%MODEL_NAME%}</span>
+				</a>
+			</div>
+			<!--/loop:{SLIDER_LIST}-->
+		</div>
+	</section>
+
+	<!-- Content Sections -->
+	<div class="index-contents">
+
+		<!-- 設置機種 -->
+		<section class="rec-list">
+			<h4>設置機種</h4>
+			<ul>
+				<!--loop:{RECOMMEND_LIST}-->
+				<li>
+					<div class="m-type"><span>{%GENERATION%}</span></div>
+					<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
+						<span class="image-wrapper">
+							<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}">
+						</span>
+					</a>
+					<span class="m-list-title">{%MODEL_NAME%}</span>
+				</li>
+				<!--/loop:{RECOMMEND_LIST}-->
+			</ul>
+		</section>
+
+		<!-- お知らせ -->
+		<section class="site-info">
+			<h4>お知らせ</h4>
+			<ul class="p-postList -type-simple">
+				<!--loop:{NOTICE_LIST}-->
+				<li class="p-postList__item">
+					<a href="{%SITE_SSL_URL%}information.php?NO={%NOTICE_NO%}">
+						<span class="new-date" aria-label="公開日">{%DISP_DT%}</span>
+						<span class="new-m-type">{%CATEGORY%}</span>
+						<div class="m-list-title">
+							<p>{%TITLE%}</p>
 						</div>
-				<!--if:{NOLINK}--></a><!--/if:{NOLINK}-->
-				</div>
-				<!--/loop:{NOTICE_LIST2}-->
-			</div>
-			<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="sr-only">Previous</span>
-			</a>
-			<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="sr-only">Next</span>
-			</a>
-		</div>
-	</header>
-	<!--/if:{HAVE_NOTICE}-->
+					</a>
+				</li>
+				<!--/loop:{NOTICE_LIST}-->
+			</ul>
+		</section>
 
-	<div class="flow">
-		<ul class="flow-tab">
-			<li class="flow-item"><a href="{%SITE_SSL_URL%}information.php">お知らせ</a></li>
-			<!--loop:{FLOW_CORNER}-->
-			<li class="flow-item{%FLOW_ACTIVE%}"><!--if:{FLOW_LINK}--><a href="{%SITE_SSL_URL%}?CN={%CNO%}">{%CORNER_NAME%}</a><!--/if:{FLOW_LINK}--></li>
-			<!--/loop:{FLOW_CORNER}-->
-		</ul>
 	</div>
 
-	<!-- Page Content -->
-	<div class="container">
-		
-		<h1 class="h3 text-center my-4">{%TARGET_CORNER%}</h1>
-		<!--#include file="parts_machine_list.html"-->
-
-		<hr class="mb-0">
-		<div class="row mb-4">
-			<div class="col-md-6 mt-2 text-muted">
-				{%P%} / {%ALLP%} (全{%ALLROW%}件)
-			</div>
-			<div class="col-md-6 mt-2">
-				<ul class="pagination pagination-sm float-right mb-0">
-					{%PAGING%}
-				</ul>
-			</div>
-		</div>
 	</div>
-	<!-- /.container -->
+	</div>
 
-	<!--#include file="parts_machine_modal.html"-->
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
 
 	<!--#include file="inc_footer.html"-->
 
 	<!--#include file="inc_script.html"-->
+
+	<script>
+	$(document).ready(function(){
+		// Slick Slider初期化
+		$('.slider').slick({
+			autoplay: true,
+			autoplaySpeed: 3000,
+			dots: true,
+			arrows: true,
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			responsive: [
+				{
+					breakpoint: 600,
+					settings: {
+						slidesToShow: 1,
+						slidesToScroll: 1
+					}
+				}
+			]
+		});
+	});
+	</script>
 
 	</body>
 </html>

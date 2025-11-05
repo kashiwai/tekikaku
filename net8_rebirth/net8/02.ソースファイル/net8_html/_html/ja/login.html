@@ -5,52 +5,66 @@
 		<title>{%SITE_TITLE%} - ログインページ</title>
 	</head>
 
-	<body>
+	<body id="login" class="ip-page">
+
+	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
 
-	<!-- Page Content -->
-	<div class="container">
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
 
-		<h1 class="h3 text-center my-4">ログイン</h1>
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/login_icon.svg" class="page-icon">ログイン</h2>
+	<div class="contents">
 
-		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
-			<input type="hidden" name="M" value="proc">
-			<input type="hidden" name="NO" value="{%NO%}">
-			<input type="hidden" name="TRANS" value="{%TRANS%}">
-			
-			<div class="input-form mb-5">
-				<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
-				<div class="form-group">
-					<label class="col-form-label" for="mail">メールアドレス</label>
-					<input type="text" class="form-control" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}">
-				</div>
-				<div class="form-group">
-					<label class="col-form-label" for="password">パスワード</label>
-					<input type="password" class="form-control" id="password" name="PASS" maxlength="{%MEMBER_PASS_MAX%}">
-				</div>
-				<input type="checkbox" id="cmail" name="CMAIL" value="1" {%CMAIL_CHECKED%}>
-				<label class="col-form-label" for="cmail">メールアドレスを保存する</label>
-				<hr>
-				<div class="text-center">
-					<button type="submit" class="btn btn-block btn-primary"><i class="fas fa-sign-in-alt"></i> ログイン</button>
-					<hr>
-					<a href="{%SITE_SSL_URL%}pass_reset.php" class="btn btn-sm btn-secondary">パスワードを忘れた方はこちら</a>
-					<hr>
-					初めての方はこちら<br />
-					<a href="{%SITE_SSL_URL%}regist.php" class="btn btn-sm btn-secondary mt-2">新規会員登録</a>
-				</div>
-			</div>
-		</form>
+	<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+		<input type="hidden" name="M" value="proc">
+		<input type="hidden" name="NO" value="{%NO%}">
+		<input type="hidden" name="TRANS" value="{%TRANS%}">
+
+		<!--if:{ERRMSG}-->
+		<div class="alert-error" style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 4px; margin-bottom: 20px; color: #c62828;">
+			{%ERRMSG%}
+		</div>
+		<!--/if:{ERRMSG}-->
+
+		<label for="mail">メールアドレス<span class="required">必須</span></label>
+		<input type="email" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}" placeholder="メールアドレスを入力してください。">
+
+		<label for="password">パスワード<span class="required">必須</span></label>
+		<input type="password" id="password" name="PASS" maxlength="{%MEMBER_PASS_MAX%}" placeholder="パスワードを入力してください。">
+
+		<label class="pw-memory">
+			<input type="checkbox" id="cmail" name="CMAIL" value="1" {%CMAIL_CHECKED%}>
+			メールアドレスを保存する
+		</label>
+
+		<button type="submit">ログイン</button>
+	</form>
+
+	<a href="{%SITE_SSL_URL%}pass_reset.php" class="center" style="display: block; text-align: center; margin: 20px 0;">パスワードを忘れた方はこちら</a>
+
+	<div class="sign-up-set">
+		<p>初めての方はこちら→<a href="{%SITE_SSL_URL%}regist.php">新規登録</a></p>
+	</div>
 
 	</div>
-	<!-- /.container -->
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
 
 	<!--#include file="inc_footer.html"-->
 
 	<!--#include file="inc_script.html"-->
 	<!-- Page script -->
-<!--#include file="{%PAGESCRIPT%}login.html"-->
+	<!--#include file="{%PAGESCRIPT%}login.html"-->
 
 	<script>
 	// フォームバリデーション関数
