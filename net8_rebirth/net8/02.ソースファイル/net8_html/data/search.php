@@ -64,14 +64,29 @@ function DispList($template) {
 	// ページ初期値
 	$_GET["P"] = (mb_strlen($_GET["P"]) == 0) ? 1 : $_GET["P"];
 	if ($_GET["P"] <= 0) $_GET["P"] = 1;
-	if( $_GET["VIEW"] == ""){
-		$_GET["VIEW"] = MODEL_LIST_VIEW;
+
+	// VIEW値のバリデーション
+	if( $_GET["VIEW"] == "" || !isset($_GET["VIEW"])){
+		$_GET["VIEW"] = defined('MODEL_LIST_VIEW') ? MODEL_LIST_VIEW : 20;
 	}else{
-		if (array_search( $_GET["VIEW"], $GLOBALS["viewcountList"]) === false) $_GET["VIEW"] = MODEL_LIST_VIEW;
+		if (!isset($GLOBALS["viewcountList"]) || !is_array($GLOBALS["viewcountList"]) || array_search( $_GET["VIEW"], $GLOBALS["viewcountList"]) === false) {
+			$_GET["VIEW"] = defined('MODEL_LIST_VIEW') ? MODEL_LIST_VIEW : 20;
+		}
 	}
+
+	// VIEW値が整数であることを保証
+	$_GET["VIEW"] = (int)$_GET["VIEW"];
+	if ($_GET["VIEW"] <= 0) $_GET["VIEW"] = 20;
 	
 
 	//オーダーを分解
+	// orderTypeList が未定義の場合はデフォルト値を設定
+	if (!isset($GLOBALS["orderTypeList"]) || !is_array($GLOBALS["orderTypeList"])) {
+		$GLOBALS["orderTypeList"] = array(
+			"mm.add_dt" => "登録日順"
+		);
+	}
+
 	$order = array_keys($GLOBALS["orderTypeList"]);
 	if (mb_strlen($_GET["ODR"]) > 0){
 		$order_target = explode(" ", str_replace('+', ' ', $_GET["ODR"] ));
@@ -183,7 +198,12 @@ function DispList($template) {
 	$allrows = $template->DB->getOne($count_sql);
 	$numrows = (int)$allrows;
 	if ($numrows == 0) $numrows = 1;
-	$allpage = ceil($numrows / (int)$_GET["VIEW"]);		// 総ページ数
+
+	// ゼロ除算対策
+	$viewCount = (int)$_GET["VIEW"];
+	if ($viewCount <= 0) $viewCount = 20;
+
+	$allpage = ceil($numrows / $viewCount);		// 総ページ数
 	if ($_GET["P"] > $allpage) $_GET["P"] = $allpage;
 	$cnt_disp = 0;										// 表示件数
 	

@@ -79,6 +79,14 @@ if (file_exists($lib_dir . 'common.php')) {
     require_once($lib_dir . 'common.php');
 }
 
+// グローバル変数定義（search.phpなどで使用）
+$GLOBALS["viewcountList"] = array(10, 20, 30, 50, 100);
+$GLOBALS["orderTypeList"] = array(
+    "mm.add_dt" => "登録日順",
+    "mm.model_name" => "機種名順",
+    "mm.maker_no" => "メーカー順"
+);
+
 // データベース接続関数
 function get_db_connection() {
     try {

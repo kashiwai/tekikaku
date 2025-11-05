@@ -44,6 +44,7 @@ define('UPLOAD_PATH', '/var/www/html/data/uploads/');
 
 // ページネーション設定
 define('ITEMS_PER_PAGE', 20);
+define('MODEL_LIST_VIEW', 20); // 機種一覧の1ページ表示件数
 
 // デバッグモード（本番環境では必ずfalseに設定）
 // 一時的にエラー詳細表示を有効化（登録エラー調査のため）
