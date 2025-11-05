@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET8 Central Dashboard</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .machines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .machine-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .machine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .machine-card.online {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .machine-card.offline {
+            border-left: 4px solid #f44336;
+            opacity: 0.6;
+        }
+
+        .machine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .machine-name {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .status-badge.online {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .status-badge.offline {
+            background: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .machine-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+        }
+
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .quick-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .logs-panel {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 8px;
+            border-left: 3px solid transparent;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+
+        .log-entry.success {
+            border-left-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .log-entry.error {
+            border-left-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .log-entry.info {
+            border-left-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .log-time {
+            color: #FFC107;
+            margin-right: 10px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 NET8 Central Dashboard</h1>
+            <p>40台のWindows PCを一括管理 - AI統合制御</p>
+        </div>
+
+        <div class="control-panel">
+            <h2>🤖 AI制御パネル</h2>
+            <div class="input-group">
+                <label for="machine-select">マシン選択:</label>
+                <select id="machine-select">
+                    <option value="">マシンを選択...</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="instruction">指示内容:</label>
+                <textarea id="instruction" placeholder="例: カメラ配信を再起動してください"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="sendInstruction()" style="width: 100%; padding: 15px; font-size: 1.1em;">
+                📤 指示を送信
+            </button>
+
+            <div class="quick-commands">
+                <button class="btn btn-success" onclick="quickCommand('カメラ配信を再起動してください')">
+                    🎥 カメラ再起動
+                </button>
+                <button class="btn btn-warning" onclick="quickCommand('システムの状態を確認してください')">
+                    📊 状態確認
+                </button>
+                <button class="btn btn-warning" onclick="quickCommand('slotserverを再起動してください')">
+                    🔄 slotserver再起動
+                </button>
+                <button class="btn btn-danger" onclick="quickCommand('60秒後にPCを再起動してください')">
+                    🔌 PC再起動(60秒後)
+                </button>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 20px;">💻 マシン一覧</h2>
+        <div class="machines-grid" id="machines-grid">
+            <!-- マシンカードがここに動的に追加される -->
+        </div>
+
+        <div class="logs-panel">
+            <h2 style="margin-bottom: 20px;">📝 リアルタイムログ</h2>
+            <div id="logs-container">
+                <div class="log-entry info">
+                    <span class="log-time">[起動]</span>
+                    <span>ダッシュボード起動完了...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let machines = new Map();
+
+        // WebSocket接続
+        socket.on('connect', () => {
+            addLog('success', 'WebSocketサーバーに接続しました');
+            loadMachines();
+        });
+
+        socket.on('disconnect', () => {
+            addLog('error', 'WebSocketサーバーから切断されました');
+        });
+
+        // マシン一覧更新
+        socket.on('machines_update', (data) => {
+            data.machines.forEach(machine => {
+                machines.set(machine.machineNo, machine);
+            });
+            updateMachinesDisplay();
+            updateMachineSelect();
+        });
+
+        // エージェント接続通知
+        socket.on('agent_connected', (data) => {
+            const { machineNo, machineName } = data;
+            machines.set(machineNo, {
+                machineNo,
+                machineName,
+                status: 'online',
+                connectedAt: data.timestamp
+            });
+            updateMachinesDisplay();
+            updateMachineSelect();
+            addLog('success', `MACHINE-${machineNo} が接続しました`);
+        });
+
+        // エージェント切断通知
+        socket.on('agent_disconnected', (data) => {
+            const { machineNo } = data;
+            const machine = machines.get(machineNo);
+            if (machine) {
+                machine.status = 'offline';
+                updateMachinesDisplay();
+                addLog('error', `MACHINE-${machineNo} が切断されました`);
+            }
+        });
+
+        // 実行結果受信
+        socket.on('execution_result', (data) => {
+            const { machineNo, success, output, error } = data;
+            if (success) {
+                addLog('success', `MACHINE-${machineNo}: 実行成功 - ${output || '完了'}`);
+            } else {
+                addLog('error', `MACHINE-${machineNo}: 実行失敗 - ${error}`);
+            }
+        });
+
+        // マシン一覧をサーバーから取得
+        async function loadMachines() {
+            try {
+                const response = await fetch('/api/machines');
+                const data = await response.json();
+                data.machines.forEach(machine => {
+                    machines.set(machine.machineNo, machine);
+                });
+                updateMachinesDisplay();
+                updateMachineSelect();
+            } catch (error) {
+                console.error('Failed to load machines:', error);
+            }
+        }
+
+        // マシン一覧表示更新
+        function updateMachinesDisplay() {
+            const grid = document.getElementById('machines-grid');
+            grid.innerHTML = '';
+
+            if (machines.size === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.7;">マシンが接続されていません</p>';
+                return;
+            }
+
+            machines.forEach((machine, machineNo) => {
+                const card = document.createElement('div');
+                card.className = `machine-card ${machine.status}`;
+                card.innerHTML = `
+                    <div class="machine-header">
+                        <div class="machine-name">MACHINE-${machineNo}</div>
+                        <div class="status-badge ${machine.status}">
+                            ${machine.status === 'online' ? '🟢 接続中' : '🔴 オフライン'}
+                        </div>
+                    </div>
+                    <div style="opacity: 0.8; margin-bottom: 15px;">
+                        ${machine.machineName || `MACHINE-${machineNo}`}
+                    </div>
+                    <div class="machine-actions">
+                        <button class="btn btn-success" onclick="quickCommandToMachine(${machineNo}, 'カメラ配信を再起動してください')" ${machine.status !== 'online' ? 'disabled' : ''}>
+                            🎥 カメラ再起動
+                        </button>
+                        <button class="btn btn-warning" onclick="quickCommandToMachine(${machineNo}, 'システムの状態を確認してください')" ${machine.status !== 'online' ? 'disabled' : ''}>
+                            📊 状態確認
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // マシン選択プルダウン更新
+        function updateMachineSelect() {
+            const select = document.getElementById('machine-select');
+            const currentValue = select.value;
+
+            select.innerHTML = '<option value="">マシンを選択...</option>';
+
+            machines.forEach((machine, machineNo) => {
+                const option = document.createElement('option');
+                option.value = machineNo;
+                option.textContent = `MACHINE-${machineNo} (${machine.status === 'online' ? '接続中' : 'オフライン'})`;
+                option.disabled = machine.status !== 'online';
+                select.appendChild(option);
+            });
+
+            if (currentValue) {
+                select.value = currentValue;
+            }
+        }
+
+        // 指示送信
+        async function sendInstruction() {
+            const machineNo = document.getElementById('machine-select').value;
+            const instruction = document.getElementById('instruction').value;
+
+            if (!machineNo) {
+                alert('マシンを選択してください');
+                return;
+            }
+
+            if (!instruction.trim()) {
+                alert('指示内容を入力してください');
+                return;
+            }
+
+            try {
+                addLog('info', `MACHINE-${machineNo}に指示送信中: ${instruction}`);
+
+                const response = await fetch('/api/send-instruction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ machineNo, instruction })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    addLog('success', `MACHINE-${machineNo}: 指示送信完了`);
+                    document.getElementById('instruction').value = '';
+                } else {
+                    addLog('error', `送信失敗: ${result.error}`);
+                }
+            } catch (error) {
+                addLog('error', `エラー: ${error.message}`);
+            }
+        }
+
+        // クイックコマンド（選択中のマシン）
+        function quickCommand(instruction) {
+            document.getElementById('instruction').value = instruction;
+        }
+
+        // クイックコマンド（特定マシン）
+        async function quickCommandToMachine(machineNo, instruction) {
+            document.getElementById('machine-select').value = machineNo;
+            document.getElementById('instruction').value = instruction;
+            await sendInstruction();
+        }
+
+        // ログ追加
+        function addLog(type, message) {
+            const container = document.getElementById('logs-container');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+
+            const now = new Date();
+            const time = now.toLocaleTimeString('ja-JP');
+
+            entry.innerHTML = `
+                <span class="log-time">[${time}]</span>
+                <span>${message}</span>
+            `;
+
+            container.insertBefore(entry, container.firstChild);
+
+            // ログ数制限（最新100件）
+            while (container.children.length > 100) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        // 初期ロード
+        loadMachines();
+    </script>
+</body>
+</html>

@@ -1,7 +1,17 @@
 # Railway完全セットアップガイド（DB初期化版）
 
+## 🚀 最新版：ワンクリックセットアップ対応！
+
+**おすすめ方法:**
+```
+https://mgg-webservice-production.up.railway.app/xxxadmin/auto_setup.php
+```
+↑ このURL1つで全STEP自動実行！（STEP 1-6を一括処理）
+
+---
+
 ## 概要
-Railwayデプロイ後、DBが完全にリセットされるため、毎回この手順を**必ず順番通りに**実行してください。
+Railwayデプロイ後、DBが完全にリセットされるため、以下のいずれかの方法でセットアップしてください。
 
 ---
 

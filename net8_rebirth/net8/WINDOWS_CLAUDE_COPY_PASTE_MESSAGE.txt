@@ -1,0 +1,308 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+以下のテキストをWindows側Claude Codeにコピー＆ペーストしてください
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NET8カメラクライアントシステムのセットアップをお願いします。
+
+## 📦 受け取ったファイル
+- WorksetClientSetup_ngrok.zip (92MB)
+
+## 🎯 あなたのミッション
+以下の手順に従って、Windows PC側のセットアップを完全自動で実行してください。
+各ステップの実行結果を報告してください。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ0: 事前確認
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+まず、以下の確認を実行してください：
+
+### 1. 管理者権限の確認
+```powershell
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+$isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if ($isAdmin) {
+    Write-Host "✅ 管理者権限で実行中" -ForegroundColor Green
+} else {
+    Write-Host "❌ 管理者権限がありません" -ForegroundColor Red
+    Write-Host "PowerShellを右クリック → 管理者として実行してください" -ForegroundColor Yellow
+    exit
+}
+```
+
+期待される結果: `✅ 管理者権限で実行中`
+
+### 2. インターネット接続の確認
+```powershell
+Test-Connection -ComputerName 8.8.8.8 -Count 2
+Write-Host "✅ インターネット接続OK" -ForegroundColor Green
+```
+
+### 3. Mac側サーバーの確認
+```powershell
+Invoke-WebRequest -Uri "https://aicrypto.ngrok.dev" -Method Head
+Write-Host "✅ Mac側サーバー接続OK" -ForegroundColor Green
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ1: zipファイルの展開
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```powershell
+# zipファイルの存在確認
+if (Test-Path ".\WorksetClientSetup_ngrok.zip") {
+    Write-Host "✅ zipファイルを発見" -ForegroundColor Green
+} else {
+    Write-Host "❌ zipファイルが見つかりません" -ForegroundColor Red
+    exit
+}
+
+# 展開
+Expand-Archive -Path ".\WorksetClientSetup_ngrok.zip" -DestinationPath "." -Force
+Write-Host "✅ 展開完了" -ForegroundColor Green
+
+# セットアップディレクトリに移動
+cd .\camera_localpcsetup\WorksetClientSetup_ngrok
+Write-Host "現在のディレクトリ: $(Get-Location)" -ForegroundColor Cyan
+
+# ファイル数確認（30個以上あるはず）
+$fileCount = (Get-ChildItem).Count
+Write-Host "ファイル数: $fileCount 個" -ForegroundColor Cyan
+```
+
+期待される結果: `ファイル数: 31 個` 以上
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ2: 初期セットアップ実行
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+以下のバッチファイルを実行してください：
+```powershell
+.\1_Office_AutoRun.bat
+```
+
+### 対話式入力が求められます：
+1. `Enter Camera Terminal Number:` → `1` を入力
+2. `Enter Host Number:` → `1` を入力
+
+### 実行される内容：
+- [1/8] Windows Update無効化
+- [2/8] タイムゾーン設定（Tokyo）
+- [3/8] 電源管理（スリープ無効）
+- [4/8] PC名変更（CAMERA-001-0001）
+- [5/8] 固定IP設定スキップ ← ngrok環境のため
+- [6/8] ネットワークPrivate設定
+- [7/8] リモートデスクトップ有効化
+- [8/8] Chrome自動インストール
+
+### 完了後：
+```powershell
+# 再起動
+shutdown /r /t 60 /c "ステップ2完了。PC名変更適用のため再起動します"
+```
+
+⏸️ **ここでPCを再起動してください**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ3: アプリケーションインストール（再起動後）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+再起動後、PowerShellを管理者として再度開き、セットアップディレクトリに移動してから実行：
+
+```powershell
+cd .\camera_localpcsetup\WorksetClientSetup_ngrok
+.\2_Site_AutoRun.bat
+```
+
+### 対話式入力が求められます：
+1. `Enter Host Number:` → `1` を入力
+
+### インストール後の確認：
+```powershell
+# C:\serverset の確認
+Test-Path "C:\serverset"
+Test-Path "C:\serverset\slotserver.exe"
+Test-Path "C:\serverset\camera.bat"
+
+# 全てTrueになるはず
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ4: 自動化設定
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```powershell
+.\3_Last_AutoRun.bat
+```
+
+### 対話式入力が求められます：
+1. ユーザー名: `pcuser` を入力
+2. パスワード: `pcpass` を入力
+3. シャットダウン時刻: `09:00:00` を入力
+
+### タスクスケジューラ確認：
+```powershell
+Get-ScheduledTask -TaskPath "\Net8\"
+# AutoRun と AutoShutdown が Ready になっているはず
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ5: ngrok設定ファイル作成
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```powershell
+# slotserver_ngrok.ini を作成
+$iniContent = @"
+[License]
+id = IjhVdlJOSlJFNzhGMFc2eDRHbmFSMFN6UjhUTVJuRHdmSm9IT1wvRFwvSWZ6QT0gdjBxZlo3XC83cDZpTXoxSHNqN25QRkE9PSI=
+cd = 6cce6f56edba0d5fc2b57e1f7d5e666f47b789fba27ae0a6fcef15c9cf49527c
+domain = aicrypto.ngrok.dev
+
+[PatchServer]
+filesurl =
+url =
+
+[API]
+url = https://aicrypto.ngrok.dev/api/cameraListAPI.php?M=getno&MAC=
+
+[Chrome]
+url = https://aicrypto.ngrok.dev/server_v2/
+
+[Monitor]
+url = wss://aicrypto.ngrok.dev/ws
+
+[Credit]
+playmin = 3
+"@
+
+$iniContent | Out-File -FilePath "C:\serverset\slotserver_ngrok.ini" -Encoding ASCII -Force
+Write-Host "✅ slotserver_ngrok.ini を作成しました" -ForegroundColor Green
+```
+
+### 確認：
+```powershell
+Get-Content "C:\serverset\slotserver_ngrok.ini"
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ6: 接続テスト
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### API疎通テスト：
+```powershell
+$apiUrl = "https://aicrypto.ngrok.dev/api/cameraListAPI.php?M=getno&MAC=00:00:00:00:00:01&ID=IjhVdlJOSlJFNzhGMFc2eDRHbmFSMFN6UjhUTVJuRHdmSm9IT1wvRFwvSWZ6QT0gdjBxZlo3XC83cDZpTXoxSHNqN25QRkE9PSI="
+$response = Invoke-WebRequest -Uri $apiUrl
+$content = $response.Content | ConvertFrom-Json
+Write-Host "✅ API接続成功: machine_no=$($content.machine_no), category=$($content.category)" -ForegroundColor Green
+```
+
+### PeerJS疎通テスト：
+```powershell
+$peerUrl = "https://aimoderation.ngrok-free.app/peerjs/id"
+$response = Invoke-WebRequest -Uri $peerUrl
+Write-Host "✅ PeerJS接続成功: $($response.Content)" -ForegroundColor Green
+```
+
+### カメラページアクセステスト：
+```powershell
+Start-Process "https://aicrypto.ngrok.dev/server_v2/?MAC=00:00:00:00:00:01"
+Write-Host "✅ ブラウザでカメラページを開きました" -ForegroundColor Green
+```
+
+ブラウザで以下を確認：
+- ページが表示される
+- カメラアクセス許可ダイアログが出る
+- F12でコンソールにエラーがない
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ7: 最終再起動
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+全てのテストが成功したら：
+
+```powershell
+Write-Host "全てのセットアップが完了しました！" -ForegroundColor Green
+Write-Host "再起動後、以下が自動実行されます：" -ForegroundColor Cyan
+Write-Host "  1. 自動ログイン（pcuser）" -ForegroundColor White
+Write-Host "  2. 3分待機" -ForegroundColor White
+Write-Host "  3. camera.bat 自動実行" -ForegroundColor White
+Write-Host "  4. slotserver.exe 起動" -ForegroundColor White
+Write-Host "  5. Chrome自動起動" -ForegroundColor White
+Write-Host "  6. カメラ配信開始" -ForegroundColor White
+
+shutdown /r /t 60 /c "セットアップ完了。自動起動テストのため再起動します"
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ8: 再起動後の動作確認（約3分後）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+再起動から約3分後に確認：
+
+```powershell
+# プロセス確認
+Get-Process | Where-Object { $_.Name -like "*slot*" -or $_.Name -like "*chrome*" }
+# slotserver.exe と chrome.exe が実行中になっているはず
+```
+
+### 目視確認：
+- slotserver.exeのコンソールが開いている
+- 「API接続成功」または「API connection successful」と表示
+- Chromeが自動的に開いている
+- カメラのプレビュー映像が表示されている
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ステップ9: Mac側への完了報告
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+以下の情報を報告してください：
+
+```
+✅ Windows PC側セットアップ完了
+
+【確認事項】
+- C:\serverset インストール: ✅
+- 自動ログイン設定: ✅
+- camera.bat自動起動: ✅
+- slotserver.exe実行: ✅
+- Chrome自動起動: ✅
+- カメラ配信開始: ✅
+
+【視聴確認依頼】
+以下のURLで映像が表示されるか確認をお願いします：
+https://aicrypto.ngrok.dev/play_v2/?NO=1
+
+【PC情報】
+- PC名: (実行結果)
+- IPアドレス: (実行結果)
+```
+
+PC情報取得：
+```powershell
+Write-Host "PC名: $env:COMPUTERNAME"
+$ip = (Get-NetIPAddress | Where-Object { $_.AddressFamily -eq "IPv4" -and $_.PrefixOrigin -eq "Dhcp" }).IPAddress
+Write-Host "IPアドレス: $ip"
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚨 重要な注意事項
+
+### やってはいけないこと：
+- ❌ 固定IP設定を実行しない（インターネット接続が切れます）
+- ❌ 元の `1_Office_AutoRun.bat` を実行しない（修正版を使用）
+- ❌ 管理者権限なしで実行しない
+
+### 必ずやること：
+- ✅ 各ステップの結果を報告する
+- ✅ 再起動は指定箇所で必ず実行する
+- ✅ 接続テストを省略しない
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+それでは、ステップ0から順番に実行を開始してください。
+各ステップの実行結果を報告しながら進めてください。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+以上
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

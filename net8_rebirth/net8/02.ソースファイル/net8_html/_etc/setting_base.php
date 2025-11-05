@@ -350,7 +350,10 @@ $signaling_port = $_SERVER['SIGNALING_PORT'] ?? $_ENV['SIGNALING_PORT'] ?? geten
 $GLOBALS["RTC_Signaling_Servers"] = array(
     "default" => $signaling_host . ':' . $signaling_port,  // 環境変数から動的取得
     "1" => $signaling_host . ':' . $signaling_port,         // シグナリングサーバーID=1
-    "2" => $signaling_host . ':' . $signaling_port          // シグナリングサーバーID=2（予備）
+    "2" => $signaling_host . ':' . $signaling_port,         // シグナリングサーバーID=2（予備）
+    "PEER001" => $signaling_host . ':' . $signaling_port,   // PeerJS ID: PEER001
+    "PEER002" => $signaling_host . ':' . $signaling_port,   // PeerJS ID: PEER002
+    "PEER003" => $signaling_host . ':' . $signaling_port    // PeerJS ID: PEER003
 );
 
 // WebRTC関連定数

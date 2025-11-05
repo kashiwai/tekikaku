@@ -1,0 +1,81 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.*.yml
+
+# Documentation
+*.md
+docs/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.cache
+
+# Node modules (build時に再インストール)
+# **/node_modules/  # 一時的にコメントアウト
+
+# Backup files
+*.sql.gz
+*.dump.gz
+backup/
+backups/
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+
+# Build artifacts
+dist/
+build/
+
+# Cache
+.cache/
+*.cache
+
+# Lock files (docker build内で解決)
+package-lock.json
+yarn.lock
+
+# Local development files
+.local/
+local/
+
+# Sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets/

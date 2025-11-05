@@ -2,94 +2,120 @@
 <html lang="ja">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - プロフィール確認・設定</title>
+		<title>{%SITE_TITLE%} - マイページ</title>
 	</head>
 
-	<body>
+	<body id="my_page" class="ip-page after-login">
+
+	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
 
-	<!-- Page Content -->
-	<div class="container">
-		
-		<h1 class="h3 text-center my-4">プロフィール確認・設定</h1>
-		
-		<hr>
-		
-		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
-			<input type="hidden" name="M" value="regist">
-			
-			<div class="input-form">
-				<div class="form-group row">
-					<label for="invitationCode" class="col-sm-3 col-form-label text-secondary">招待コード</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" name="INV_CODE" id="invitationCode" value="{%INV_CODE%}" placeholder="1234567890" readonly>
-					</div>
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/account_icon.svg" class="page-icon">マイページ</h2>
+	<div class="contents">
+
+	<!-- マイページコンテンツ -->
+	<div class="my-page-wrapper">
+		<div class="user-info">
+			<div class="user-image">
+				<img src="/content/images/user/user_photo.png" alt="ユーザー画像">
+			</div>
+
+			<div class="status">
+				<p class="user-name">
+					<img src="/content/images/icon/id_icon.svg" class="page-icon">
+					<span class="user-neme">{%DISP_NAME%}</span>
+					<a href="#" onclick="navigator.clipboard.writeText('{%DISP_NAME%}'); alert('ユーザー名をコピーしました'); return false;">
+						<img src="/content/images/icon/link_icon.svg" class="page-icon">
+					</a>
+				</p>
+				<p>
+					<img src="/content/images/icon/user_corde_icon.svg" class="page-icon">
+					<span class="user-code">{%INV_CODE%}</span>
+					<a href="#" onclick="navigator.clipboard.writeText('{%INV_CODE%}'); alert('招待コードをコピーしました'); return false;">
+						<img src="/content/images/icon/link_icon.svg" class="page-icon">
+					</a>
+				</p>
+				<img src="/content/images/icon/medal_5_icon.svg" class="page-icon medal" alt="メダル">
+			</div>
+
+			<div class="ryu-coins hold">
+				<div class="hold-ryu">
+					<h4>保有RYU</h4>
+					<p>
+						<img src="/content/images/icon/coin-yen.svg" alt="RYU">
+						<span class="stock">{%HOLD_RYU%}</span>
+					</p>
 				</div>
-				
-				<div class="alert alert-secondary">
-					<small class="text-muted">
-						招待コードとは、お友達を招待するときに使うコードです。
-						招待したお友達があなたの招待コードを入力して会員登録すると、二人に{%CURRENCY_1%}をプレゼントします。
-					</small>
+
+				<div class="hold-coins">
+					<h4>保有コイン</h4>
+					<p>
+						<img src="/content/images/icon/solid_coins.svg" alt="コイン">
+						<span class="stock">{%HOLD_COINS%}</span>
+					</p>
 				</div>
 			</div>
-			<hr>
-			<div class="input-form">
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">氏名</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="name" value="{%DISP_NAME%}" placeholder="未設定" readonly>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">生年月日</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="birthday" value="{%DISP_BIRTHDAY%}" placeholder="未設定" readonly>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">性別</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="sex" value="{%DISP_SEX%}" placeholder="未設定" readonly>
-					</div>
-				</div>
-				
-				<!--if:{PROFILE_EDIT}-->
-				<div class="alert alert-secondary text-center text-muted">
-					<small>プロフィール未設定</small>
-				</div>
-				<!--/if:{PROFILE_EDIT}-->
-				
-			</div>
-			
-			<hr>
-			<div class="input-form">
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">設定6イベントや新台導入情報を受け取る</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="magazine" value="{%DISP_MAGAZINE%}" placeholder="未設定" readonly>
-					</div>
-				</div>
-			</div>
-			
-		</form>
-		<hr>
-		<div class="text-center">
-			<a href="profile_detail.php" class="btn btn-primary">プロフィールを設定する</a>
 		</div>
-		
-		<hr>
-		<div class="text-center mb-5">
-			<a href="leave.php"  class="btn btn-danger">退会手続き</a>
+
+		<div class="my-page-list">
+			<h3>パスワード</h3>
+			<p><a href="{%SITE_SSL_URL%}pass_reset.php">パスワードの変更</a></p>
+
+			<h3>会員情報</h3>
+			<p><a href="{%SITE_SSL_URL%}profile_detail.php">会員情報の設定・変更</a></p>
+			<p><a href="{%SITE_SSL_URL%}kyc.php">本人確認（KYC）</a></p>
+
+			<h3>ギフト機能</h3>
+			<p><a href="{%SITE_SSL_URL%}gift.php">他のユーザーにコインを贈る</a></p>
+
+			<h3>メッセージBOX</h3>
+			<p>
+				<!--if:{NOTICE_COUNT}-->
+				<span class="mess_badge">{%NOTICE_COUNT%}</span>
+				<!--/if:{NOTICE_COUNT}-->
+				<a href="{%SITE_SSL_URL%}notice.php">お知らせ</a>
+			</p>
+			<p>
+				<!--if:{IMPORTANT_COUNT}-->
+				<span class="mess_badge">{%IMPORTANT_COUNT%}</span>
+				<!--/if:{IMPORTANT_COUNT}-->
+				<a href="{%SITE_SSL_URL%}important.php">運営からの重要事項</a>
+			</p>
+
+			<h3>履歴</h3>
+			<p><a href="{%SITE_SSL_URL%}play_history.php">プレイ履歴</a></p>
+			<p><a href="{%SITE_SSL_URL%}coin_history.php">コイン取引記録</a></p>
+			<p><a href="{%SITE_SSL_URL%}ryu_history.php">RYU取引履歴</a></p>
+
+			<h3>その他</h3>
+			<p><a href="{%SITE_SSL_URL%}leave.php">退会</a></p>
+			<p><a href="{%SITE_SSL_URL%}contact.php">お問い合わせ</a></p>
 		</div>
-		
+
+		<button type="button" onclick="history.back()">戻る</button>
+
 	</div>
-	<!-- /.container -->
-	
+	<!-- //マイページコンテンツ -->
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
+
 	<!--#include file="inc_footer.html"-->
-	
+
 	<!--#include file="inc_script.html"-->
-	
+
 	</body>
 </html>

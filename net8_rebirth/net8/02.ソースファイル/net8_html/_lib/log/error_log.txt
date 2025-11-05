@@ -193,3 +193,9 @@ mm.add_dt desc
 limit 0,0
 
 
+2025/11/03 15:15:45
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'camera_ip' in 'field list'
+SELECT camera_no, camera_name, camera_ip, camera_port, stream_url, camera_type 
+        FROM mst_camera 
+        WHERE camera_no = 10000023
+

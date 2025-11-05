@@ -1,0 +1,17 @@
+{
+  "name": "net8-windows-agent",
+  "version": "1.0.0",
+  "description": "NET8 Windows PC Agent",
+  "type": "module",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.6.1",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
