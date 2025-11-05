@@ -29,7 +29,6 @@ try {
             mm.model_name,
             mm.model_roman,
             dm.machine_status,
-            dm.camera_flg,
             dm.release_date,
             dm.add_dt,
             dm.upd_dt
@@ -51,8 +50,7 @@ try {
                 dm.machine_cd,
                 dm.model_no,
                 mm.model_name,
-                dm.machine_status,
-                dm.camera_flg
+                dm.machine_status
             FROM dat_machine dm
             LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
             ORDER BY dm.machine_no
