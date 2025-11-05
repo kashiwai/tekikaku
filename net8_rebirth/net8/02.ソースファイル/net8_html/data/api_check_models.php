@@ -21,7 +21,6 @@ try {
             model_name,
             model_roman,
             maker_no,
-            category_no,
             image_list
         FROM mst_model
     ";
