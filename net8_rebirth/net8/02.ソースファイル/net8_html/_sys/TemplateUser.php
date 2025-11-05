@@ -477,6 +477,54 @@ class TemplateUser extends SmartTemplate {
 			$this->assign("DRAW_POINT"       , number_format( $row["draw_point"]), true);
 			$this->assign("HIS_BONUS"        , $row['his_bonus'], true);		// 前日bonus
 
+			// 総獲得クレジット
+			$this->assign("TOTAL_CREDIT"     , isset($row["total_credit"]) ? number_format($row["total_credit"]) : "0", true);
+
+			// BB/RB確率計算
+			$bbRatio = "0";
+			$rbRatio = "0";
+			if (isset($row['total_count']) && $row['total_count'] > 0) {
+				if (isset($row['bb_count']) && $row['bb_count'] > 0) {
+					$bbRatio = number_format($row['total_count'] / $row['bb_count'], 1);
+				}
+				if (isset($row['rb_count']) && $row['rb_count'] > 0) {
+					$rbRatio = number_format($row['total_count'] / $row['rb_count'], 1);
+				}
+			}
+			$this->assign("BB_RATIO"         , $bbRatio, true);
+			$this->assign("RB_RATIO"         , $rbRatio, true);
+
+			// 本日最大獲得
+			$this->assign("TODAY_MAX_CREDIT" , isset($row["today_max_credit"]) ? number_format($row["today_max_credit"]) : "0", true);
+
+			// 札表示（10000枚単位と1000枚単位）
+			$totalCredit = isset($row["total_credit"]) ? (int)$row["total_credit"] : 0;
+			$plate10000 = floor($totalCredit / 10000);
+			$plate1000 = floor(($totalCredit % 10000) / 1000);
+			$this->if_enable("PLATE_10000", $plate10000 > 0);
+			$this->if_enable("PLATE_1000", $plate1000 > 0);
+			$this->assign("PLATE_10000"      , min($plate10000, 9), true);  // 最大9枚まで
+			$this->assign("PLATE_1000"       , min($plate1000, 9), true);   // 最大9枚まで
+
+			// グラフ表示用（ボーナス履歴）
+			$graphImages = "";
+			$graphCounts = "";
+			if (isset($row['his_bonus']) && !empty($row['his_bonus'])) {
+				$bonusHistory = explode(",", $row['his_bonus']);
+				foreach ($bonusHistory as $bonus) {
+					if ($bonus == "1") {
+						$graphImages .= '<td><img src="/content/images/play-page/graph_bb.svg" class="graph-image"></td>';
+					} elseif ($bonus == "2") {
+						$graphImages .= '<td><img src="/content/images/play-page/graph_rb.svg" class="graph-image"></td>';
+					} else {
+						$graphImages .= '<td><img src="/content/images/play-page/graph_none.svg" class="graph-image"></td>';
+					}
+					$graphCounts .= '<td class="graph-count">-</td>';
+				}
+			}
+			$this->assign("GRAPH_IMAGES"     , $graphImages, true);
+			$this->assign("GRAPH_COUNTS"     , $graphCounts, true);
+
 			// プレイ状況
 			$assignFlg = $row['assign_flg'];	// 実機接続状況
 			if ($isLogin && $assignFlg == 1 && $row["member_no"] == $this->Session->UserInfo["member_no"]) $assignFlg = 0;	// 自身への割当は未割り当て扱い

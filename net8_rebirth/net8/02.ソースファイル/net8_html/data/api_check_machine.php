@@ -67,27 +67,34 @@ try {
         exit;
     }
 
-    // カメラ情報取得
-    $sql_camera = "
-        SELECT
-            camera_id,
-            camera_name,
-            camera_url,
-            status
-        FROM dat_camera
-        WHERE machine_no = :machine_no
-    ";
-    $stmt_camera = $pdo->prepare($sql_camera);
-    $stmt_camera->bindValue(':machine_no', $machine_no, PDO::PARAM_INT);
-    $stmt_camera->execute();
-    $cameras = $stmt_camera->fetchAll(PDO::FETCH_ASSOC);
+    // カメラ情報取得（テーブルが存在する場合のみ）
+    $cameras = [];
+    try {
+        $sql_camera = "
+            SELECT
+                camera_id,
+                camera_name,
+                camera_url,
+                status
+            FROM dat_camera
+            WHERE machine_no = :machine_no
+        ";
+        $stmt_camera = $pdo->prepare($sql_camera);
+        $stmt_camera->bindValue(':machine_no', $machine_no, PDO::PARAM_INT);
+        $stmt_camera->execute();
+        $cameras = $stmt_camera->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // dat_cameraテーブルが存在しない場合はスキップ
+        $cameras = [];
+    }
 
     // 成功レスポンス
     echo json_encode([
         'success' => true,
         'machine' => $machine,
         'cameras' => $cameras,
-        'camera_count' => count($cameras)
+        'camera_count' => count($cameras),
+        'note' => empty($cameras) ? 'Camera table not available or no cameras registered' : null
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
 } catch (Exception $e) {

@@ -445,7 +445,7 @@ $GLOBALS["boardVersionData"] = array(
 
 // 画像保存ディレクトリ
 if (!defined('DIR_IMG_MODEL')) {
-    define('DIR_IMG_MODEL', '/var/www/html/data/img/model/');
+    define('DIR_IMG_MODEL', '/data/img/model/');
 }
 
 // 番号フォーマット設定
