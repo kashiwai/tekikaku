@@ -327,6 +327,17 @@ $GLOBALS["pointSumType"] = array(
     "2" => "減算"
 );
 
+// ポイント付与理由リスト（PlayPoint addPoint用）
+$GLOBALS["grantPointStatusList"] = array(
+    "01" => "会員登録",
+    "02" => "ログインボーナス",
+    "03" => "ポイント購入",
+    "04" => "プレイ",
+    "05" => "景品交換",
+    "06" => "有効期限切れ",
+    "91" => "管理者調整"
+);
+
 // API更新者番号（PlayPoint用）
 define('API_PLAYPOINT_UPD_NO', 9999); // システム/API更新者番号
 
