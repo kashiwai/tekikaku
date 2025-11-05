@@ -5,108 +5,113 @@
 		<title>{%SITE_TITLE%} - 台を探す</title>
 	</head>
 
-	<body>
+	<body id="search-page">
+
+	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
 
-	<!-- Page Content -->
-	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">台を探す</h1>
-		<hr>
-		<div class="input-form">
-			<form action="{%SITE_SSL_URL%}{%SELF%}" method="GET" class="form-horizontal" name="MAINFORM" id="MAINFORM">
-				<input type="hidden" name="ODR" value="{%ODR%}">
-				<input type="hidden" name="VIEW" value="{%VIEW%}">
+	<!--main//-->
+	<div id="content">
+	<main id="main_content">
 
-				<div class="form-group row">
-					<label for="searchName" class="col-sm-3 col-form-label col-form-label-sm">機種名</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control form-control-sm" id="searchName" placeholder="機種名を入力してください" name="NAME" value="{%NAME%}" maxlength="50">
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="searchMaker" class="col-sm-3 col-form-label col-form-label-sm">メーカー</label>
-					<div class="col-sm-3">
-						<select class="custom-select custom-select-sm" id="searchMaker" name="MAKER">
-							{%SEL_MAKER%}
-						</select>
-					</div>
-					<label for="searchGeneration" class="col-sm-2 col-form-label col-form-label-sm">世代</label>
-					<div class="col-sm-4">
-						<select class="custom-select custom-select-sm" id="searchGeneration" name="GENERATION">
-							{%SEL_GENERATION%}
-						</select>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label col-form-label-sm">台状況</label>
-					<div class="col-sm-5">
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="searchFree" value="1" name="FREE" {%CHK_FREE%}>
-							<label class="custom-control-label" for="searchFree"><small>空き台のみ</small></label>
-						</div>
-					</div>
-					<div class="col-sm-4 text-right">
-						<button class="btn btn-sm btn-outline-secondary" type="button" id="clearFormBtn">クリア</button>
-						<button class="btn btn-sm btn-outline-info" type="submit"><i class="fas fa-search"></i> 検索</button>
-					</div>
-				</div>
+	<div class="content-wrapper">
+	<div class="contents">
 
-			</form>
-		</div>
-		<hr>
-		<div class="row justify-content-end mb-4">
-			<div class="col-7 col-md-5 col-lg-3">
-				<div class="input-group input-group-sm mb-3">
-					<select class="custom-select" id="ORDERTYPE" name="ORDERTYPE">
-						{%SEL_ODR%}
+	<!--コンテンツ//-->
+	<div class="m-list">
+
+	<h3 class="machine-page-title">台を探す</h3>
+
+	<!-- 検索フォーム -->
+	<div class="search-form-wrapper" style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="GET" class="search-form" name="MAINFORM" id="MAINFORM">
+			<input type="hidden" name="ODR" value="{%ODR%}">
+			<input type="hidden" name="VIEW" value="{%VIEW%}">
+
+			<div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+				<div class="form-group" style="flex: 1; min-width: 200px;">
+					<label for="searchName" style="display: block; margin-bottom: 5px; font-weight: bold;">機種名</label>
+					<input type="text" class="form-control" id="searchName" placeholder="機種名を入力" name="NAME" value="{%NAME%}" maxlength="50" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+				</div>
+				<div class="form-group" style="flex: 0.5; min-width: 150px;">
+					<label for="searchMaker" style="display: block; margin-bottom: 5px; font-weight: bold;">メーカー</label>
+					<select class="form-control" id="searchMaker" name="MAKER" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+						{%SEL_MAKER%}
 					</select>
-					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="ascBtn"><i class="fas fa-sort-alpha-down"></i> 昇順</button>
-					</div>
-					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="descBtn"><i class="fas fa-sort-alpha-up"></i> 降順</button>
-					</div>
 				</div>
-			</div>
-			<div class="col-5 col-md-3 col-lg-3">
-				<div class="input-group input-group-sm mb-3">
-					<select class="custom-select" id="VIEW" name="VIEW">
-						{%SEL_VIEW%}
+				<div class="form-group" style="flex: 0.5; min-width: 150px;">
+					<label for="searchGeneration" style="display: block; margin-bottom: 5px; font-weight: bold;">世代</label>
+					<select class="form-control" id="searchGeneration" name="GENERATION" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+						{%SEL_GENERATION%}
 					</select>
-					<div class="input-group-append">
-						<label class="input-group-text" for="inputGroupSelect02">件</label>
-					</div>
-					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="viewBtn">表示</button>
-					</div>
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6">
-				<ul class="pagination pagination-sm mb-0">
-					{%PAGING%}
-				</ul>
-			</div>
-			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} (全{%ALLROW%}件)
-			</div>
-		</div>
-		<hr class="mt-2">
-		<!--#include file="parts_machine_list.html"-->
 
-		<hr class="mb-0">
-		<div class="row mt-2 mb-4">
-			<div class="col-md-6">
-				<ul class="pagination pagination-sm mb-2">
-					{%PAGING%}
-				</ul>
+			<div class="form-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="searchFree" value="1" name="FREE" {%CHK_FREE%} style="margin-right: 5px;">
+					<label class="form-check-label" for="searchFree">空き台のみ</label>
+				</div>
+				<div class="form-buttons" style="display: flex; gap: 10px;">
+					<button class="btn btn-secondary" type="button" id="clearFormBtn" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">クリア</button>
+					<button class="btn btn-primary" type="submit" style="padding: 10px 20px; background: #0376C9; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-search"></i> 検索</button>
+				</div>
 			</div>
+
+		</form>
+	</div>
+	<!-- /検索フォーム -->
+
+	<!-- ソート・表示件数 -->
+	<div class="search-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+		<div class="pagination-info" style="color: #666;">
+			{%P%} / {%ALLP%} ページ (全{%ALLROW%}件)
 		</div>
+		<div class="controls-group" style="display: flex; gap: 10px; align-items: center;">
+			<select class="form-control" id="ORDERTYPE" name="ORDERTYPE" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+				{%SEL_ODR%}
+			</select>
+			<button class="btn btn-sm" type="button" id="ascBtn" style="padding: 8px 12px; background: #0376C9; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-sort-alpha-down"></i> 昇順</button>
+			<button class="btn btn-sm" type="button" id="descBtn" style="padding: 8px 12px; background: #0376C9; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-sort-alpha-up"></i> 降順</button>
+			<select class="form-control" id="VIEW" name="VIEW" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+				{%SEL_VIEW%}
+			</select>
+			<span>件</span>
+			<button class="btn btn-sm" type="button" id="viewBtn" style="padding: 8px 12px; background: #0376C9; color: white; border: none; border-radius: 4px; cursor: pointer;">表示</button>
+		</div>
+	</div>
+	<!-- /ソート・表示件数 -->
+
+	<!-- ページネーション（上部） -->
+	<div class="pagination-wrapper" style="margin-bottom: 20px;">
+		<ul class="pagination" style="display: flex; list-style: none; padding: 0; gap: 5px;">
+			{%PAGING%}
+		</ul>
+	</div>
+
+	<!-- 機種一覧 -->
+	<!--#include file="parts_machine_list.html"-->
+
+	<!-- ページネーション（下部） -->
+	<div class="pagination-wrapper" style="margin-top: 20px; margin-bottom: 40px;">
+		<ul class="pagination" style="display: flex; list-style: none; padding: 0; gap: 5px;">
+			{%PAGING%}
+		</ul>
+	</div>
 
 	</div>
-	<!-- /.container -->
+	<!--//コンテンツ-->
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!--//main-->
+
+	</div>
+	<!-- /wrapper -->
 
 	<!--#include file="parts_machine_modal.html"-->
 
@@ -114,7 +119,7 @@
 
 	<!--#include file="inc_script.html"-->
 	<!-- Page script -->
-<!--#include file="{%PAGESCRIPT%}search.html"-->
-	
+	<!--#include file="{%PAGESCRIPT%}search.html"-->
+
 	</body>
 </html>
