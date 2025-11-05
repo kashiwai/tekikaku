@@ -667,22 +667,20 @@ function RegistData($template) {
 				
 				// MIMEタイプチェック(拡張子)
 				$chkMime = array_column($GLOBALS["ImgExtension"], 'mine', 'ext');
-				if (!$ext = array_search(mime_content_type($_FILES['IMAGE_LIST_NEW']['tmp_name']), $chkMime, true)) {
+				$mimeType = mime_content_type($_FILES['IMAGE_LIST_NEW']['tmp_name']);
+				if (!$ext = array_search($mimeType, $chkMime, true)) {
 					throw new RuntimeException($template->message("A1443"));
 				}
-				
-				// 保存
-				$upfile["list"] = sha1(mt_rand() . time());
-				if (move_uploaded_file($_FILES['IMAGE_LIST_NEW']['tmp_name'], sprintf(DIR_IMG_MODEL . '%s.%s', $upfile["list"], $ext))) {
-					$upfile["list"] = $upfile["list"] . "." . $ext;
-					if (mb_strlen($_POST["IMAGE_LIST"]) > 0) {
-						if (file_exists(DIR_IMG_MODEL . $_POST["IMAGE_LIST"])) {
-							chmod(DIR_IMG_MODEL . $_POST["IMAGE_LIST"], 0755);
-							unlink(DIR_IMG_MODEL . $_POST["IMAGE_LIST"]);
-						}
-					}
-				} else {
+
+				// BLOB保存用にファイル内容を読み込む（Railway対応）
+				$upfile["list"] = sha1(mt_rand() . time()) . "." . $ext;
+				$upfile["list_data"] = file_get_contents($_FILES['IMAGE_LIST_NEW']['tmp_name']);
+				$upfile["list_mime"] = $mimeType;
+
+				if ($upfile["list_data"] === false) {
 					$upfile["list"] = "";
+					$upfile["list_data"] = null;
+					$upfile["list_mime"] = null;
 					throw new RuntimeException($template->message("A1411"));
 				}
 
@@ -722,22 +720,20 @@ function RegistData($template) {
 				
 				// MIMEタイプチェック(拡張子)
 				$chkMime = array_column($GLOBALS["ImgExtension"], 'mine', 'ext');
-				if (!$ext = array_search(mime_content_type($_FILES['IMAGE_DETAIL_NEW']['tmp_name']), $chkMime, true)) {
+				$mimeType = mime_content_type($_FILES['IMAGE_DETAIL_NEW']['tmp_name']);
+				if (!$ext = array_search($mimeType, $chkMime, true)) {
 					throw new RuntimeException($template->message("A1445"));
 				}
-				
-				// 保存
-				$upfile["detail"] = sha1(mt_rand() . time());
-				if (move_uploaded_file($_FILES['IMAGE_DETAIL_NEW']['tmp_name'], sprintf(DIR_IMG_MODEL . '%s.%s', $upfile["detail"], $ext))) {
-					$upfile["detail"] = $upfile["detail"] . "." . $ext;
-					if (mb_strlen($_POST["IMAGE_DETAIL"]) > 0) {
-						if (file_exists(DIR_IMG_MODEL . $_POST["IMAGE_DETAIL"])) {
-							chmod(DIR_IMG_MODEL . $_POST["IMAGE_DETAIL"], 0755);
-							unlink(DIR_IMG_MODEL . $_POST["IMAGE_DETAIL"]);
-						}
-					}
-				} else {
+
+				// BLOB保存用にファイル内容を読み込む（Railway対応）
+				$upfile["detail"] = sha1(mt_rand() . time()) . "." . $ext;
+				$upfile["detail_data"] = file_get_contents($_FILES['IMAGE_DETAIL_NEW']['tmp_name']);
+				$upfile["detail_mime"] = $mimeType;
+
+				if ($upfile["detail_data"] === false) {
 					$upfile["detail"] = "";
+					$upfile["detail_data"] = null;
+					$upfile["detail_mime"] = null;
 					throw new RuntimeException($template->message("A1413"));
 				}
 
@@ -780,22 +776,20 @@ function RegistData($template) {
 				
 				// MIMEタイプチェック(拡張子)
 				$chkMime = array_column($GLOBALS["ImgExtension"], 'mine', 'ext');
-				if (!$ext = array_search(mime_content_type($_FILES['IMAGE_REEL_NEW']['tmp_name']), $chkMime, true)) {
+				$mimeType = mime_content_type($_FILES['IMAGE_REEL_NEW']['tmp_name']);
+				if (!$ext = array_search($mimeType, $chkMime, true)) {
 					throw new RuntimeException($template->message("A1447"));
 				}
-				
-				// 保存
-				$upfile["reel"] = sha1(mt_rand() . time());
-				if (move_uploaded_file($_FILES['IMAGE_REEL_NEW']['tmp_name'], sprintf(DIR_IMG_MODEL . '%s.%s', $upfile["reel"], $ext))) {
-					$upfile["reel"] = $upfile["reel"] . "." . $ext;
-					if (mb_strlen($_POST["IMAGE_REEL"]) > 0) {
-						if (file_exists(DIR_IMG_MODEL . $_POST["IMAGE_REEL"])) {
-							chmod(DIR_IMG_MODEL . $_POST["IMAGE_REEL"], 0755);
-							unlink(DIR_IMG_MODEL . $_POST["IMAGE_REEL"]);
-						}
-					}
-				} else {
+
+				// BLOB保存用にファイル内容を読み込む（Railway対応）
+				$upfile["reel"] = sha1(mt_rand() . time()) . "." . $ext;
+				$upfile["reel_data"] = file_get_contents($_FILES['IMAGE_REEL_NEW']['tmp_name']);
+				$upfile["reel_mime"] = $mimeType;
+
+				if ($upfile["reel_data"] === false) {
 					$upfile["reel"] = "";
+					$upfile["reel_data"] = null;
+					$upfile["reel_mime"] = null;
 					throw new RuntimeException($template->message("A1415"));
 				}
 
@@ -937,8 +931,14 @@ function RegistData($template) {
 						->value( "setting_list"    , $settingList, FD_STR)
 						->value( "maker_no"        , $_POST["MAKER_NO"], FD_NUM)
 						->value(true, "image_list"   , (isset($upfile["list"])) ? $upfile["list"] : "", FD_STR)
+						->value(true, "image_list_data" , (isset($upfile["list_data"])) ? $upfile["list_data"] : null, FD_STR)
+						->value(true, "image_list_mime" , (isset($upfile["list_mime"])) ? $upfile["list_mime"] : null, FD_STR)
 						->value(true, "image_detail" , (isset($upfile["detail"])) ? $upfile["detail"] : "", FD_STR)
+						->value(true, "image_detail_data" , (isset($upfile["detail_data"])) ? $upfile["detail_data"] : null, FD_STR)
+						->value(true, "image_detail_mime" , (isset($upfile["detail_mime"])) ? $upfile["detail_mime"] : null, FD_STR)
 						->value(true, "image_reel"   , (isset($upfile["reel"])) ? $upfile["reel"] : "", FD_STR)
+						->value(true, "image_reel_data" , (isset($upfile["reel_data"])) ? $upfile["reel_data"] : null, FD_STR)
+						->value(true, "image_reel_mime" , (isset($upfile["reel_mime"])) ? $upfile["reel_mime"] : null, FD_STR)
 						->value( "prizeball_data"  , $_POST["PRIZEBALL_DATA"], FD_STR)
 						// 2020/12/12 [UPD Start]
 						//->value( "layout_data"     , json_encode( $_layout_base), FD_STR)
@@ -968,8 +968,14 @@ function RegistData($template) {
 						->value( "setting_list"    , $settingList, FD_STR)
 						->value( "maker_no"        , $_POST["MAKER_NO"], FD_NUM)
 						->value(true, "image_list"   , (isset($upfile["list"])) ? $upfile["list"] : "", FD_STR)
+						->value(true, "image_list_data" , (isset($upfile["list_data"])) ? $upfile["list_data"] : null, FD_STR)
+						->value(true, "image_list_mime" , (isset($upfile["list_mime"])) ? $upfile["list_mime"] : null, FD_STR)
 						->value(true, "image_detail" , (isset($upfile["detail"])) ? $upfile["detail"] : "", FD_STR)
+						->value(true, "image_detail_data" , (isset($upfile["detail_data"])) ? $upfile["detail_data"] : null, FD_STR)
+						->value(true, "image_detail_mime" , (isset($upfile["detail_mime"])) ? $upfile["detail_mime"] : null, FD_STR)
 						->value(true, "image_reel"   , (isset($upfile["reel"])) ? $upfile["reel"] : "", FD_STR)
+						->value(true, "image_reel_data" , (isset($upfile["reel_data"])) ? $upfile["reel_data"] : null, FD_STR)
+						->value(true, "image_reel_mime" , (isset($upfile["reel_mime"])) ? $upfile["reel_mime"] : null, FD_STR)
 						->value( "prizeball_data"  , $_POST["PRIZEBALL_DATA"], FD_STR)
 						// 2020/12/12 [UPD Start]
 						//->value( "layout_data"     , json_encode( $_layout_base), FD_STR)
