@@ -1097,9 +1097,12 @@ function checkInput($template) {
 			->from( "mst_model" )
 			->where()
 				->and( "model_name = ", $_POST["MODEL_NAME"], FD_STR)
-				->and( "del_flg = ", "0", FD_NUM)
-				->and( true, "model_no <> ", $_POST["MODEL_NO"], FD_NUM)
-		->createSql();
+				->and( "del_flg = ", "0", FD_NUM);
+		// 更新時のみmodel_no除外条件を追加
+		if (mb_strlen($_POST["MODEL_NO"]) > 0) {
+			$sqlNameDupli->and( "model_no <> ", $_POST["MODEL_NO"], FD_NUM);
+		}
+		$sqlNameDupli = $sqlNameDupli->createSql();
 
 		// 機種名(ローマ字)重複
 		$sqlRomanDupli = (new SqlString())
@@ -1109,9 +1112,12 @@ function checkInput($template) {
 			->from( "mst_model" )
 			->where()
 				->and( "model_roman = ", $_POST["MODEL_ROMAN"], FD_STR)
-				->and( "del_flg = ", "0", FD_NUM)
-				->and( true, "model_no <> ", $_POST["MODEL_NO"], FD_NUM)
-		->createSql();
+				->and( "del_flg = ", "0", FD_NUM);
+		// 更新時のみmodel_no除外条件を追加
+		if (mb_strlen($_POST["MODEL_NO"]) > 0) {
+			$sqlRomanDupli->and( "model_no <> ", $_POST["MODEL_NO"], FD_NUM);
+		}
+		$sqlRomanDupli = $sqlRomanDupli->createSql();
 
 		// 実機数
 		$extM = 0;
