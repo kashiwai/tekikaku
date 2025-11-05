@@ -45,10 +45,18 @@ COPY 02.ソースファイル/net8_html /var/www/html
 # Basic認証用パスワードファイルをコピー
 COPY 02.ソースファイル/net8_html/.htpasswd-admin /var/www/html/.htpasswd-admin
 
+# アップロードディレクトリ作成
+RUN mkdir -p /var/www/html/data/uploads \
+    && mkdir -p /var/www/html/data/img/model \
+    && mkdir -p /var/www/html/data/img/machine \
+    && mkdir -p /var/www/html/data/img/member
+
 # 権限設定
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && chmod 644 /var/www/html/.htpasswd-admin
+    && chmod 644 /var/www/html/.htpasswd-admin \
+    && chmod -R 777 /var/www/html/data/uploads \
+    && chmod -R 777 /var/www/html/data/img
 
 # ポート公開（Railwayは環境変数PORTを使用）
 EXPOSE ${PORT:-80}

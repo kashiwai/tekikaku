@@ -11,10 +11,12 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 ini_set('display_errors', defined('DEBUG_MODE') && DEBUG_MODE ? '1' : '0');
 
 // セッション設定（最初に実行）
-if (session_status() === PHP_SESSION_NONE) {
-    session_name(defined('SESSION_NAME') ? SESSION_NAME : 'NET8_SESSION');
-    @session_start(); // @でエラー抑制
-}
+// NOTE: SmartSessionクラスがセッション管理を行うため、ここではsession_start()を呼ばない
+// 2つのセッション管理システムの競合を防ぐためコメントアウト
+// if (session_status() === PHP_SESSION_NONE) {
+//     session_name(defined('SESSION_NAME') ? SESSION_NAME : 'NET8_SESSION');
+//     @session_start(); // @でエラー抑制
+// }
 
 // 設定ファイル読み込み
 require_once(__DIR__ . '/setting.php');          // データベース接続設定
