@@ -1,7 +1,7 @@
 <?php
 /*
  * index.php
- * 
+ *
  * (C)SmartRams Co.,Ltd. 2019 All Rights Reserved．
  *
  * 本技術情報には当社の機密情報が含まれておりますので、当社の
@@ -11,15 +11,16 @@
  * に提供する場合には、同法に基づく許可を要することがあります。
  *                                          有限会社 スマート・ラムズ
  *-------------------------------------------------------------------
- * 
- * 管理画面TOP表示
- * 
+ *
+ * 管理画面TOP表示（モダンデザイン）
+ *
  * 管理画面TOPの表示を行う
- * 
+ *
  * @package
  * @author   片岡 充
- * @version  1.0
+ * @version  2.0 (Modern UI)
  * @since    2019/06/21 初版作成 片岡 充
+ * @updated  2025/11/05 モダンデザイン適用
  */
 
 // インクルード
@@ -35,7 +36,7 @@ main();
  * @access	public
  * @param	なし
  * @return	なし
- * @info	
+ * @info
  */
 function main() {
 
@@ -47,7 +48,9 @@ function main() {
 		DispTop($template);
 
 	} catch (Exception $e) {
-		$template->dispProcError($e->getMessage());
+		echo '<h1>エラーが発生しました</h1>';
+		echo '<p>' . htmlspecialchars($e->getMessage()) . '</p>';
+		exit;
 	}
 }
 
@@ -58,7 +61,7 @@ function main() {
  * @return	なし
  */
 function DispTop($template) {
-	
+
 	// 各項目の期間定義
 	// 日付設定
 	$now = date("Y/m/d H:i:s");
@@ -81,7 +84,7 @@ function DispTop($template) {
 		//先月
 		,array( "name"=>"_l", "s"=>$last_month, "e"=>$this_month)
 	);
-	
+
 	$mem_join_count_sql  = array();
 	$mem_leave_count_sql = array();
 	$his_purchase_count_sql  = array();
@@ -90,12 +93,6 @@ function DispTop($template) {
 	$his_play_credit_sql = array();
 	$goods_blocks_sql = array();
 	$win_blocks_sql = array();
-	// 2021/01 [ADD Start] エージェントギフト
-	$agentGiftSendCount_sql = array();
-	$agentGiftSendPoint_sql = array();
-	$agentGiftRecvCount_sql = array();
-	$agentGiftRecvPoint_sql = array();
-	// 2021/01 [ADD End] エージェントギフト
 
 	//
 	foreach( $memberRegistDate as $check_date){
@@ -158,50 +155,8 @@ function DispTop($template) {
 				->and( false, "hp.end_dt >= ", $check_date["s"], FD_DATE)
 				->and( false, "hp.end_dt <  ", $check_date["e"], FD_DATE)
 			->createSql().") as credit" . $check_date["name"];
-		// 2021/01 [ADD Start] エージェントギフト
-		// エージェント送信件数
-		$agentGiftSendCount_sql[] = "(".(new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(*)" )
-			->from("his_gift hg")
-			->where()
-				->and( false, "hg.gift_dt >= ", $check_date["s"], FD_DATE)
-				->and( false, "hg.gift_dt <  ", $check_date["e"], FD_DATE)
-				->and( false, "hg.agent_flg = ", 1, FD_DATE)
-			->createSql().") as send_count" . $check_date["name"];
-		// エージェント送信ポイント
-		$agentGiftSendPoint_sql[] = "(".(new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "sum(hg.gift_point)" )
-			->from("his_gift hg")
-			->where()
-				->and( false, "hg.gift_dt >= ", $check_date["s"], FD_DATE)
-				->and( false, "hg.gift_dt <  ", $check_date["e"], FD_DATE)
-				->and( false, "hg.agent_flg = ", 1, FD_DATE)
-			->createSql().") as send_point" . $check_date["name"];
-		// エージェント受取件数
-		$agentGiftRecvCount_sql[] = "(".(new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "count(*)" )
-			->from("his_gift hg")
-			->where()
-				->and( false, "hg.gift_dt >= ", $check_date["s"], FD_DATE)
-				->and( false, "hg.gift_dt <  ", $check_date["e"], FD_DATE)
-				->and( false, "hg.receive_agent_flg = ", 1, FD_DATE)
-			->createSql().") as recv_count" . $check_date["name"];
-		// エージェント受取ポイント
-		$agentGiftRecvPoint_sql[] = "(".(new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-			->field( "sum(hg.receive_point)" )
-			->from("his_gift hg")
-			->where()
-				->and( false, "hg.gift_dt >= ", $check_date["s"], FD_DATE)
-				->and( false, "hg.gift_dt <  ", $check_date["e"], FD_DATE)
-				->and( false, "hg.receive_agent_flg = ", 1, FD_DATE)
-			->createSql().") as recv_point" . $check_date["name"];
-		// 2021/01 [ADD End] エージェントギフト
 	}
-	
+
 	//-- 商品はリアル日時で判定
 	// 応募期間中の商品
 	$goods_blocks_sql[] = "(".(new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
@@ -252,7 +207,7 @@ function DispTop($template) {
 		->where()
 			->and( false, "dw.state in " , ["1", "2"], FD_NUM)
 		->createSQL().") as wait_send";
-	
+
 	// 会員登録件数
 	$sql = "select "
 		.     implode(",", $mem_join_count_sql);
@@ -277,26 +232,6 @@ function DispTop($template) {
 	$sql = "select "
 		.     implode(",", $his_play_credit_sql);
 	$creditCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
-	// 2021/01 [ADD Start] エージェントギフト
-	if (ADMTOP_GIFT_AGENT) {
-		// エージェント送信件数
-		$sql = "select "
-			.     implode(",", $agentGiftSendCount_sql);
-		$agentGiftSendCount = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
-		// エージェント送信ポイント
-		$sql = "select "
-			.     implode(",", $agentGiftSendPoint_sql);
-		$agentGiftSendPoint = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
-		// エージェント受取件数
-		$sql = "select "
-			.     implode(",", $agentGiftRecvCount_sql);
-		$agentGiftRecvCount = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
-		// エージェント受取ポイント
-		$sql = "select "
-			.     implode(",", $agentGiftRecvPoint_sql);
-		$agentGiftRecvPoint = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
-	}
-	// 2021/01 [ADD End] エージェントギフト
 	// 抽選
 	$sql = "select "
 		.     implode(",", $goods_blocks_sql);
@@ -306,78 +241,332 @@ function DispTop($template) {
 		.     implode(",", $win_blocks_sql);
 	$winCounts = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 
-	
-	// 画面表示開始
-	$template->open(PRE_HTML . ".html");
-	$template->assignCommon();
-	//
-	$template->assign("DISP_YESTADAY" , date("m/d", $ydTimestamp) . "(".$GLOBALS["weekList"][ date('w', $ydTimestamp)].")", true);
-	$template->assign("DISP_MONTH"    , date("Y/m", strtotime($this_month)), true);
-	$template->assign("DISP_LASTMONTH", date("Y/m", strtotime($last_month)), true);
-	$template->assign("DISP_REGIST_MEMBER_Y", number_format( $joinCounts["join_y"]), true);
-	$template->assign("DISP_REGIST_MEMBER_M", number_format( $joinCounts["join_m"]), true);
-	$template->assign("DISP_REGIST_MEMBER_L", number_format( $joinCounts["join_l"]), true);
-	$template->assign("DISP_UNSUB_MEMBER_Y" , number_format( $leaveCounts["leave_y"]), true);
-	$template->assign("DISP_UNSUB_MEMBER_M" , number_format( $leaveCounts["leave_m"]), true);
-	$template->assign("DISP_UNSUB_MEMBER_L" , number_format( $leaveCounts["leave_l"]), true);
-	$template->assign("DISP_SALES_COUNT_Y", number_format( $purchaseCounts["amount_count_y"]), true);
-	$template->assign("DISP_SALES_COUNT_M", number_format( $purchaseCounts["amount_count_m"]), true);
-	$template->assign("DISP_SALES_COUNT_L", number_format( $purchaseCounts["amount_count_l"]), true);
-	$template->assign("DISP_SALES_VALUE_Y", number_format( $amountCounts["amount_value_y"]), true);
-	$template->assign("DISP_SALES_VALUE_M", number_format( $amountCounts["amount_value_m"]), true);
-	$template->assign("DISP_SALES_VALUE_L", number_format( $amountCounts["amount_value_l"]), true);
-	$template->assign("DISP_GAME_COUNT_Y", number_format( $playCounts["play_count_y"]), true);
-	$template->assign("DISP_GAME_COUNT_M", number_format( $playCounts["play_count_m"]), true);
-	$template->assign("DISP_GAME_COUNT_L", number_format( $playCounts["play_count_l"]), true);
-	$template->assign("DISP_CREDIT_Y", number_format( $creditCounts["credit_y"]), true);
-	$template->assign("DISP_CREDIT_M", number_format( $creditCounts["credit_m"]), true);
-	$template->assign("DISP_CREDIT_L", number_format( $creditCounts["credit_l"]), true);
-	// 2021/01 [ADD Start] エージェントギフト
-	if (ADMTOP_GIFT_AGENT) {
-		$template->assign("DISP_AGENT_GIFTSEND_COUNT_Y", number_format( $agentGiftSendCount["send_count_y"]), true);
-		$template->assign("DISP_AGENT_GIFTSEND_COUNT_M", number_format( $agentGiftSendCount["send_count_m"]), true);
-		$template->assign("DISP_AGENT_GIFTSEND_COUNT_L", number_format( $agentGiftSendCount["send_count_l"]), true);
-		$template->assign("DISP_AGENT_GIFTSEND_POINT_Y", number_format( $agentGiftSendPoint["send_point_y"]), true);
-		$template->assign("DISP_AGENT_GIFTSEND_POINT_M", number_format( $agentGiftSendPoint["send_point_m"]), true);
-		$template->assign("DISP_AGENT_GIFTSEND_POINT_L", number_format( $agentGiftSendPoint["send_point_l"]), true);
-		$template->assign("DISP_AGENT_GIFTRECV_COUNT_Y", number_format( $agentGiftRecvCount["recv_count_y"]), true);
-		$template->assign("DISP_AGENT_GIFTRECV_COUNT_M", number_format( $agentGiftRecvCount["recv_count_m"]), true);
-		$template->assign("DISP_AGENT_GIFTRECV_COUNT_L", number_format( $agentGiftRecvCount["recv_count_l"]), true);
-		$template->assign("DISP_AGENT_GIFTRECV_POINT_Y", number_format( $agentGiftRecvPoint["recv_point_y"]), true);
-		$template->assign("DISP_AGENT_GIFTRECV_POINT_M", number_format( $agentGiftRecvPoint["recv_point_m"]), true);
-		$template->assign("DISP_AGENT_GIFTRECV_POINT_L", number_format( $agentGiftRecvPoint["recv_point_l"]), true);
-	}
-	$template->assign("GIFT_AGENT_DISPNAME" , GIFT_AGENT_DISPNAME, true);
-	$template->if_enable("GIFT_AGENT"       , GIFT_AGENT);
-	$template->if_enable("ADMTOP_GIFT_AGENT", ADMTOP_GIFT_AGENT);
-	// 2021/01 [ADD End] エージェントギフト
-	// 応募状況
-	$template->assign("DSP_NOW"               , date("Y/m/d H:i", $nowTimestamp), true);
-	$template->assign("DISP_IN_GOODS"         , number_format( $goodsCounts["in_goods"]), true);
-	$template->assign("DISP_WAIT_GOODS"       , number_format( $goodsCounts["wait_goods"]), true);
-	$template->assign("DISP_WAIT_MANUAL_GOODS", number_format( $goodsCounts["wait_manual_goods"]), true);
-	// 配送状況
-	$template->assign("DISP_WAIT_INPUT_ADDRESS", number_format( $winCounts["wait_input"]), true);
-	$template->assign("DISP_WAIT_SEND"         , number_format( $winCounts["wait_send"]), true);
-	
-	// リンク関連
-	$now             = urlencode(date("Y/m/d" , $nowTimestamp));	// 商品なのでリアル日時
-	$yestaday        = urlencode(date("Y/m/d" , $ydTimestamp));
-	$today           = urlencode(date("Y/m/d" , $tdTimestamp));
-	$this_month      = urlencode(date("Y/m/01", $tdTimestamp));
-	$last_month      = urlencode(date("Y/m/01", $lmTimestamp));
-	$last_month_last = urlencode(date("Y/m/t" , $lmTimestamp));
+	// === 追加データ取得（モダンUI用） ===
+	// マシン稼働状況
+	$sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+		->select()
+		->field("count(*)")
+		->from("dat_machine")
+		->where()
+			->and( false, "del_flg = ", "0", FD_NUM)
+		->createSQL();
+	$totalMachines = $template->DB->getOne($sql);
 
-	$template->assign("DT_FROM_Y", $yestaday, true);
-	$template->assign("DT_TO_Y"  , $yestaday, true);
-	$template->assign("DT_FROM_M", $this_month, true);
-	$template->assign("DT_TO_M"  , $today, true);
-	$template->assign("DT_FROM_L", $last_month, true);
-	$template->assign("DT_TO_L"  , $last_month_last, true);
-	$template->assign("DT_NOW"   , $now, true);
-	
-	// 表示
-	$template->flush();
+	$sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+		->select()
+		->field("count(*)")
+		->from("dat_machine")
+		->where()
+			->and( false, "machine_status = ", "0", FD_NUM)
+			->and( false, "del_flg = ", "0", FD_NUM)
+		->createSQL();
+	$activeMachines = $template->DB->getOne($sql);
+
+	// 会員総数
+	$sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+		->select()
+		->field("count(*)")
+		->from("mst_member")
+		->where()
+			->and( false, "state != ", "9", FD_NUM)
+		->createSQL();
+	$totalMembers = $template->DB->getOne($sql);
+
+	// === HTML出力開始（モダンデザイン） ===
+	?>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET8 ダッシュボード</title>
+    <link rel="stylesheet" href="assets/admin_modern.css">
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; display: flex; }
+        .sidebar { width: 260px; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); height: 100vh; position: fixed; left: 0; top: 0; color: white; overflow-y: auto; }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo { font-size: 20px; font-weight: 700; }
+        .sidebar-nav { padding: 16px 0; }
+        .nav-section { margin-bottom: 24px; }
+        .nav-section-title { font-size: 12px; font-weight: 600; color: #94a3b8; padding: 8px 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .nav-icon { font-size: 18px; }
+        .main-content { margin-left: 260px; flex: 1; }
+        .header { background: white; padding: 24px 32px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .header-title { font-size: 28px; font-weight: 700; color: #0f172a; margin: 0; }
+        .header-actions { display: flex; gap: 12px; }
+        .header-btn { padding: 10px 20px; border-radius: 8px; background: #667eea; color: white; text-decoration: none; font-weight: 600; transition: all 0.2s; }
+        .header-btn:hover { background: #5568d3; transform: translateY(-2px); }
+        .content-wrapper { padding: 32px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3); }
+        .stat-card.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .stat-card.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .stat-card.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .stat-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.9; }
+        .stat-value { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+        .stat-label { font-size: 14px; opacity: 0.9; margin-bottom: 4px; }
+        .stat-sublabel { font-size: 12px; opacity: 0.7; }
+        .info-card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .info-card h3 { margin: 0 0 16px 0; font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #64748b; font-size: 14px; }
+        .info-value { color: #0f172a; font-weight: 600; font-size: 16px; }
+        .alert-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .alert-card.warning { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left-color: #ef4444; }
+        .btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.2s; display: inline-block; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-outline { background: white; color: #667eea; border: 1px solid #667eea; }
+        .grid { display: grid; gap: 24px; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @media (max-width: 1200px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .stat-grid, .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <!-- サイドバー -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🎮 NET8 Admin</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">ダッシュボード</div>
+                <a href="index.php" class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span>ホーム</span>
+                </a>
+                <a href="menu.php" class="nav-item">
+                    <span class="nav-icon">🗂️</span>
+                    <span>全メニュー</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">マシン管理</div>
+                <a href="machines.php" class="nav-item">
+                    <span class="nav-icon">🎰</span>
+                    <span>台管理</span>
+                </a>
+                <a href="model.php" class="nav-item">
+                    <span class="nav-icon">📱</span>
+                    <span>機種管理</span>
+                </a>
+                <a href="maker.php" class="nav-item">
+                    <span class="nav-icon">🏢</span>
+                    <span>メーカー</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">会員・ポイント</div>
+                <a href="member.php" class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>会員管理</span>
+                </a>
+                <a href="pointgrant.php" class="nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>ポイント付与</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">システム</div>
+                <a href="system.php" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>設定</span>
+                </a>
+                <a href="logout.php" class="nav-item">
+                    <span class="nav-icon">🚪</span>
+                    <span>ログアウト</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="header-title">ダッシュボード</h1>
+            <div class="header-actions">
+                <a href="menu.php" class="header-btn" style="background: #10b981;">📋 全メニュー</a>
+            </div>
+        </header>
+
+        <!-- コンテンツ -->
+        <div class="content-wrapper">
+            <!-- アラート -->
+            <?php if ($goodsCounts["wait_goods"] > 0): ?>
+            <div class="alert-card warning">
+                <span style="font-size: 24px;">⚠️</span>
+                <div>
+                    <strong>抽選待ちの商品があります</strong>
+                    <div style="font-size: 14px; opacity: 0.8;">抽選対象: <?= number_format($goodsCounts["wait_goods"]) ?>件</div>
+                </div>
+                <a href="goods.php" class="btn btn-danger" style="margin-left: auto;">確認する</a>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($winCounts["wait_send"] > 0): ?>
+            <div class="alert-card">
+                <span style="font-size: 24px;">📦</span>
+                <div>
+                    <strong>発送待ちの商品があります</strong>
+                    <div style="font-size: 14px; opacity: 0.8;">発送対象: <?= number_format($winCounts["wait_send"]) ?>件</div>
+                </div>
+                <a href="shipping.php" class="btn btn-primary" style="margin-left: auto;">配送管理へ</a>
+            </div>
+            <?php endif; ?>
+
+            <!-- 統計カード -->
+            <div class="stat-grid">
+                <div class="stat-card fade-in">
+                    <div class="stat-icon">🎰</div>
+                    <div class="stat-value"><?= number_format($activeMachines) ?> / <?= number_format($totalMachines) ?></div>
+                    <div class="stat-label">稼働中マシン</div>
+                    <div class="stat-sublabel">全<?= number_format($totalMachines) ?>台中</div>
+                </div>
+
+                <div class="stat-card green fade-in" style="animation-delay: 0.1s;">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value"><?= number_format($totalMembers) ?></div>
+                    <div class="stat-label">会員総数</div>
+                    <div class="stat-sublabel">昨日: +<?= number_format($joinCounts["join_y"]) ?>名</div>
+                </div>
+
+                <div class="stat-card orange fade-in" style="animation-delay: 0.2s;">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value">¥<?= number_format($amountCounts["amount_value_y"]) ?></div>
+                    <div class="stat-label">昨日の売上</div>
+                    <div class="stat-sublabel">当月: ¥<?= number_format($amountCounts["amount_value_m"]) ?></div>
+                </div>
+
+                <div class="stat-card red fade-in" style="animation-delay: 0.3s;">
+                    <div class="stat-icon">🎮</div>
+                    <div class="stat-value"><?= number_format($playCounts["play_count_y"]) ?></div>
+                    <div class="stat-label">昨日のゲーム数</div>
+                    <div class="stat-sublabel">当月: <?= number_format($playCounts["play_count_m"]) ?>回</div>
+                </div>
+            </div>
+
+            <!-- 詳細情報 -->
+            <div class="grid grid-2">
+                <!-- 会員情報 -->
+                <div class="info-card fade-in" style="animation-delay: 0.4s;">
+                    <h3>📊 会員登録状況</h3>
+                    <div class="info-row">
+                        <span class="info-label"><?= date("m/d", $ydTimestamp) ?> (<?= $GLOBALS["weekList"][date('w', $ydTimestamp)] ?>)</span>
+                        <span class="info-value">+<?= number_format($joinCounts["join_y"]) ?>名</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">当月 (<?= date("Y/m", strtotime($this_month)) ?>)</span>
+                        <span class="info-value">+<?= number_format($joinCounts["join_m"]) ?>名</span>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <a href="member.php" class="btn btn-outline" style="width: 100%;">会員管理へ</a>
+                    </div>
+                </div>
+
+                <!-- 売上情報 -->
+                <div class="info-card fade-in" style="animation-delay: 0.5s;">
+                    <h3>💰 売上状況</h3>
+                    <div class="info-row">
+                        <span class="info-label"><?= date("m/d", $ydTimestamp) ?> (<?= $GLOBALS["weekList"][date('w', $ydTimestamp)] ?>)</span>
+                        <span class="info-value">¥<?= number_format($amountCounts["amount_value_y"]) ?></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">当月 (<?= date("Y/m", strtotime($this_month)) ?>)</span>
+                        <span class="info-value">¥<?= number_format($amountCounts["amount_value_m"]) ?></span>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <a href="sales.php" class="btn btn-outline" style="width: 100%;">売上管理へ</a>
+                    </div>
+                </div>
+
+                <!-- ゲーム状況 -->
+                <div class="info-card fade-in" style="animation-delay: 0.6s;">
+                    <h3>🎮 プレイ状況</h3>
+                    <div class="info-row">
+                        <span class="info-label"><?= date("m/d", $ydTimestamp) ?> (<?= $GLOBALS["weekList"][date('w', $ydTimestamp)] ?>)</span>
+                        <span class="info-value"><?= number_format($playCounts["play_count_y"]) ?>回</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">当月 (<?= date("Y/m", strtotime($this_month)) ?>)</span>
+                        <span class="info-value"><?= number_format($playCounts["play_count_m"]) ?>回</span>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <a href="playhistory.php" class="btn btn-outline" style="width: 100%;">プレイ履歴へ</a>
+                    </div>
+                </div>
+
+                <!-- 商品・抽選状況 -->
+                <div class="info-card fade-in" style="animation-delay: 0.7s;">
+                    <h3>🎁 商品・抽選状況</h3>
+                    <div class="info-row">
+                        <span class="info-label">応募中の商品</span>
+                        <span class="info-value"><?= number_format($goodsCounts["in_goods"]) ?>件</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">抽選待ち</span>
+                        <span class="info-value" style="color: #ef4444;"><?= number_format($goodsCounts["wait_goods"]) ?>件</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">発送待ち</span>
+                        <span class="info-value" style="color: #f59e0b;"><?= number_format($winCounts["wait_send"]) ?>件</span>
+                    </div>
+                    <div style="margin-top: 16px; display: flex; gap: 8px;">
+                        <a href="goods.php" class="btn btn-outline" style="flex: 1;">商品管理</a>
+                        <a href="shipping.php" class="btn btn-outline" style="flex: 1;">配送管理</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- クイックアクション -->
+            <div class="info-card fade-in" style="animation-delay: 0.8s; margin-top: 24px;">
+                <h3><span>⚡</span> クイックアクション</h3>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px;">
+                    <a href="machines.php" class="btn btn-outline">🎰 マシン管理</a>
+                    <a href="member.php" class="btn btn-outline">👥 会員管理</a>
+                    <a href="pointgrant.php" class="btn btn-outline">💰 ポイント付与</a>
+                    <a href="goods.php" class="btn btn-outline">🎁 商品管理</a>
+                    <a href="playhistory.php" class="btn btn-outline">📊 プレイ履歴</a>
+                    <a href="shipping.php" class="btn btn-outline">📦 配送管理</a>
+                    <a href="sales.php" class="btn btn-outline">💵 売上管理</a>
+                    <a href="menu.php" class="btn btn-outline">🗂️ 全メニュー</a>
+                </div>
+            </div>
+
+            <!-- フッター情報 -->
+            <div style="margin-top: 32px; padding: 16px; text-align: center; color: #64748b; font-size: 14px;">
+                <p>最終更新: <?= date("Y/m/d H:i:s") ?> | NET8 Management System v2.0</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<?php
 }
-
 ?>
