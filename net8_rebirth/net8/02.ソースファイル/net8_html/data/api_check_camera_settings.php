@@ -20,22 +20,27 @@ try {
     $cameraStmt = $pdo->query($cameraSql);
     $cameras = $cameraStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // dat_cameraテーブル確認
-    $datCameraSql = "SELECT * FROM dat_camera WHERE machine_no = 3";
-    $datCameraStmt = $pdo->query($datCameraSql);
-    $datCameras = $datCameraStmt->fetchAll(PDO::FETCH_ASSOC);
+    // 特定のカメラ情報取得（camera_noが設定されている場合）
+    $specificCamera = null;
+    if (!empty($machine['camera_no'])) {
+        $specificCameraSql = "SELECT * FROM mst_camera WHERE camera_no = :camera_no";
+        $specificCameraStmt = $pdo->prepare($specificCameraSql);
+        $specificCameraStmt->execute(['camera_no' => $machine['camera_no']]);
+        $specificCamera = $specificCameraStmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     echo json_encode([
         'success' => true,
         'machine_3' => $machine,
-        'mst_camera' => $cameras,
+        'mst_camera_all' => $cameras,
         'mst_camera_count' => count($cameras),
-        'dat_camera' => $datCameras,
-        'dat_camera_count' => count($datCameras),
+        'machine_3_camera' => $specificCamera,
         'diagnosis' => [
             'camera_no_set' => !empty($machine['camera_no']),
             'camera_exists_in_mst' => !empty($cameras),
-            'camera_registered_in_dat' => !empty($datCameras)
+            'machine_camera_found' => !empty($specificCamera),
+            'signaling_id_set' => !empty($machine['signaling_id']),
+            'issue' => empty($specificCamera) ? 'Camera not found in mst_camera or camera_no not set' : null
         ]
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
