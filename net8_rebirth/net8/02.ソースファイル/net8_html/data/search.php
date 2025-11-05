@@ -233,9 +233,10 @@ function DispList($template) {
 	$template->AssignMachineList($rs, $open, $_login_flg, $testerFlg);
 	
 	// ページング
-	$template->assign("PAGING" , HtmlPagingTag( (($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?"), $_GET["P"], $allpage) );
+	$queryString = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+	$template->assign("PAGING" , HtmlPagingTag( (($queryString!="")? "?".$queryString."&":"?"), $_GET["P"], $allpage) );
 	// ページング用
-	$template->assign("CURL"           , ($_SERVER['QUERY_STRING']!="")? "?".$_SERVER['QUERY_STRING']."&":"?");
+	$template->assign("CURL"           , ($queryString!="")? "?".$queryString."&":"?");
 	// ページ処理
 	$template->assign("ALLROW", (string)$allrows, true);	// 総件数
 	$template->assign("P", (string)$_GET["P"], true);		// 現在ページ番号

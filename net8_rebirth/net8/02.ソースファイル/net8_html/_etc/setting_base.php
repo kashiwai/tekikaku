@@ -46,6 +46,10 @@ define('UPLOAD_PATH', '/var/www/html/data/uploads/');
 define('ITEMS_PER_PAGE', 20);
 define('MODEL_LIST_VIEW', 20); // 機種一覧の1ページ表示件数
 
+// セレクトボックス用定数
+define('SELECT_VALUE_NONE', ''); // セレクトボックスの「選択なし」値
+define('SELECT_VALUE_ALL', '0'); // セレクトボックスの「すべて」値
+
 // デバッグモード（本番環境では必ずfalseに設定）
 // 一時的にエラー詳細表示を有効化（登録エラー調査のため）
 define('DEBUG_MODE', true);
