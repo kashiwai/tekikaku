@@ -175,7 +175,9 @@ function GetNoCamera($DB) {
 //		try {
 			$json = json_decode($row["layout_data"], true);
 			$pjson = json_decode($row["prizeball_data"], true);
-			$api->set("version", "{$json["version"]}" );
+			// versionが空の場合はデフォルト値"1"を設定
+			$version = !empty($json["version"]) ? "{$json["version"]}" : "1";
+			$api->set("version", $version);
 			// 2020-12-01 パチンコの場合のデータ拡張
 			if ( $row["category"] == "1" ){
 				$api->set("max",       $pjson["MAX"] );
