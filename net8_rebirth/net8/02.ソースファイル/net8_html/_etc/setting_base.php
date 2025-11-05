@@ -28,7 +28,7 @@ date_default_timezone_set('Asia/Tokyo');
 // セッション設定
 define('SESSION_LIFETIME', 3600); // 1時間
 define('SESSION_NAME', 'NET8_SESSION');
-define('SESSION_SEC', 'secure_session_key'); // セッションセキュリティキー
+define('SESSION_SEC', 3600); // セッション継続時間（秒） = 1時間
 define('SESSION_SID', 'NETSID'); // セッションID名
 
 // セキュリティ設定
