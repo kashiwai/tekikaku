@@ -357,16 +357,19 @@ function DispDetail($template, $message = "") {
 	}
 
 	// 実機紐づき状態チェック
-	$sql = (new SqlString())
-		->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-		->field( "count(*)" )
-		->from( "dat_machine" )
-		->where()
-			->and( "model_no = ", $row["model_no"], FD_NUM)
-			->and( "del_flg = ", "0", FD_NUM)
-	->createSql();
-	$cntM = (mb_strlen($row["model_no"]) > 0) ? $template->DB->getOne($sql) : 0;
+	$cntM = 0;
+	if (mb_strlen($row["model_no"]) > 0) {
+		$sql = (new SqlString())
+			->setAutoConvert( [$template->DB,"conv_sql"] )
+			->select()
+			->field( "count(*)" )
+			->from( "dat_machine" )
+			->where()
+				->and( "model_no = ", $row["model_no"], FD_NUM)
+				->and( "del_flg = ", "0", FD_NUM)
+		->createSql();
+		$cntM = $template->DB->getOne($sql);
+	}
 	// 実機が紐づいている場合はカテゴリ変更不可
 	$addOpt = ($cntM > 0) ? " disabled" : "";
 
@@ -529,8 +532,12 @@ function RegistData($template) {
 		$mode = "del";
 		
 		// 実機が紐づいている場合は削除不可(入力チェック内で存在チェックしている)
-		
+
 		// 先に画像を削除
+		if (mb_strlen($_GET["NO"]) == 0) {
+			throw new Exception("model_no is required for delete operation");
+		}
+
 		$sql = (new SqlString())->setAutoConvert([$template->DB,"conv_sql"])
 			->select()
 				->field("image_list, image_detail, image_reel, layout_data")
@@ -1075,18 +1082,7 @@ function createPrizeballDataJsonString( $_post) {
  */
 function checkInput($template) {
 	$errMessage = array();
-	
-	// 実機存在
-	$sqlExtMachine = (new SqlString())
-		->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-		->field( "count(*)" )
-		->from( "dat_machine" )
-		->where()
-			->and( "model_no = ", $_GET["NO"], FD_NUM)
-			->and( "del_flg = ", "0", FD_NUM)
-	->createSql();
-	
+
 	if ($_GET["ACT"] != "del") {
 		// イメージチェック用
 		$_chk_img1 = ($_FILES['IMAGE_LIST_NEW']['tmp_name'] != "") ? $_FILES['IMAGE_LIST_NEW']['tmp_name'] : $_POST["IMAGE_LIST"];
@@ -1118,7 +1114,19 @@ function checkInput($template) {
 		->createSql();
 
 		// 実機数
-		$extM = (mb_strlen($_POST["MODEL_NO"]) > 0) ? $template->DB->getOne($sqlExtMachine) : 0;
+		$extM = 0;
+		if (mb_strlen($_POST["MODEL_NO"]) > 0) {
+			$sqlExtMachine = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(*)" )
+				->from( "dat_machine" )
+				->where()
+					->and( "model_no = ", $_POST["MODEL_NO"], FD_NUM)
+					->and( "del_flg = ", "0", FD_NUM)
+			->createSql();
+			$extM = $template->DB->getOne($sqlExtMachine);
+		}
 
 		$errMessage = (new SmartAutoCheck($template))
 			// カテゴリ
@@ -1259,10 +1267,28 @@ function checkInput($template) {
 			}
 		}
 	} else {
-		$errMessage = (new SmartAutoCheck($template))
-			->item($_GET["NO"])
-			->countSQL("A1452", $sqlExtMachine)		// 実機存在
-		->report();
+		// 削除時のチェック
+		$sqlExtMachine = null;
+		if (mb_strlen($_GET["NO"]) > 0) {
+			$sqlExtMachine = (new SqlString())
+				->setAutoConvert( [$template->DB,"conv_sql"] )
+				->select()
+				->field( "count(*)" )
+				->from( "dat_machine" )
+				->where()
+					->and( "model_no = ", $_GET["NO"], FD_NUM)
+					->and( "del_flg = ", "0", FD_NUM)
+			->createSql();
+		}
+
+		if ($sqlExtMachine) {
+			$errMessage = (new SmartAutoCheck($template))
+				->item($_GET["NO"])
+				->countSQL("A1452", $sqlExtMachine)		// 実機存在
+			->report();
+		} else {
+			$errMessage = array();
+		}
 	}
 	
 	$ret = (!empty($errMessage)) ? implode("<br />", $errMessage) : "";
