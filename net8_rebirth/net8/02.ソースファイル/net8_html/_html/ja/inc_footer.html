@@ -1,31 +1,90 @@
 	<!-- Footer -->
-	<footer class="py-5 bg-dark">
-		<div id="page-top"><a href="#"></a></div>
-		<div class="container">
-			<ul class="footer-link">
-				<!--if:{FOOTER_DISP_GUIDE}-->
-				<li><a href="info.php?M=userguide" alt="ご利用ガイド" rel="nofollow">ご利用ガイド</a></li>
-				<!--/if:{FOOTER_DISP_GUIDE}-->
-				<!--if:{FOOTER_DISP_FIRST}-->
-				<li><a href="info.php?M=beginners" alt="はじめての方へ" rel="nofollow">はじめての方へ</a></li>
-				<!--/if:{FOOTER_DISP_FIRST}-->
-				<!--if:{FOOTER_DISP_FAQ}-->
-				<li><a href="info.php?M=faq" alt="FAQ" rel="nofollow">FAQ</a></li>
-				<!--/if:{FOOTER_DISP_FAQ}-->
-				<!--if:{FOOTER_DISP_TERMS}-->
-				<li><a href="info.php?M=terms" alt="利用規約" rel="nofollow">利用規約</a></li>
-				<!--/if:{FOOTER_DISP_TERMS}-->
-				<!--if:{FOOTER_DISP_POLICY}-->
-				<li><a href="info.php?M=policy" alt="プライバシーポリシー" rel="nofollow">プライバシーポリシー</a></li>
-				<!--/if:{FOOTER_DISP_POLICY}-->
-				<!--if:{FOOTER_DISP_ACT}-->
-				<li><a href="info.php?M=act" alt="特定商取引法に基づく表記" rel="nofollow">特定商取引法に基づく表記</a></li>
-				<!--/if:{FOOTER_DISP_ACT}-->
-				<!--if:{FOOTER_DISP_INQ}-->
-				<li><a href="inquiry.php" alt="お問い合わせ" rel="nofollow">お問い合わせ</a></li>
-				<!--/if:{FOOTER_DISP_INQ}-->
-			</ul>
-			<p class="m-0 text-center text-white">{%COPYRIGHT%}</p>
-		</div>
-		<!-- /.container -->
-	</footer>
+	<div class="footer-wrapper">
+
+		<!-- ページのトップへ -->
+		<p class="pagetop">
+			<a href="#wrapper"><img src="/content/images/common/arrow_up.png" alt="ページトップへ"></a>
+		</p>
+
+		<footer id="footer" class="l-footer">
+
+			<!-- SNS Link -->
+			<!--if:{FOOTER_DISP_SNS}-->
+			<a href="{%SNS_TWITTER_URL%}" target="_blank" class="go-x" rel="noopener noreferrer">
+				<img src="/content/images/common/x_logo.svg" class="x-logo" alt="X (Twitter)">
+			</a>
+			<!--/if:{FOOTER_DISP_SNS}-->
+
+			<!-- フッターナビ -->
+			<nav>
+				<ul class="nav navbar-nav navbar-right">
+					<!--if:{FOOTER_DISP_GUIDE}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=userguide" title="ご利用ガイド" rel="nofollow">ご利用ガイド</a></li>
+					<!--/if:{FOOTER_DISP_GUIDE}-->
+					<!--if:{FOOTER_DISP_FIRST}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=beginners" title="はじめての方へ" rel="nofollow">はじめての方へ</a></li>
+					<!--/if:{FOOTER_DISP_FIRST}-->
+					<!--if:{FOOTER_DISP_CONTACT}-->
+						<li><a href="{%SITE_SSL_URL%}inquiry.php" title="お問い合わせ" rel="nofollow">お問い合わせフォーム</a></li>
+					<!--/if:{FOOTER_DISP_CONTACT}-->
+					<!--if:{FOOTER_DISP_RULE}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=rule" title="ハウスルール" rel="nofollow">ハウスルール</a></li>
+					<!--/if:{FOOTER_DISP_RULE}-->
+					<!--if:{FOOTER_DISP_POLICY}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=policy" title="プライバシーポリシー" rel="nofollow">プライバシーポリシー</a></li>
+					<!--/if:{FOOTER_DISP_POLICY}-->
+					<!--if:{FOOTER_DISP_GUIDELINE}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=guideline" title="ガイドライン" rel="nofollow">ガイドライン</a></li>
+					<!--/if:{FOOTER_DISP_GUIDELINE}-->
+					<!--if:{FOOTER_DISP_TERMS}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=terms" title="利用規約" rel="nofollow">利用規約</a></li>
+					<!--/if:{FOOTER_DISP_TERMS}-->
+					<!--if:{FOOTER_DISP_FAQ}-->
+						<li><a href="{%SITE_SSL_URL%}info.php?M=faq" title="FAQ（よくある質問）" rel="nofollow">FAQ（よくある質問）</a></li>
+					<!--/if:{FOOTER_DISP_FAQ}-->
+					<!--if:{FOOTER_DISP_ACT}-->
+						<li class="last"><a href="{%SITE_SSL_URL%}info.php?M=act" title="特定商取引法に基づく表記" rel="nofollow">特定商取引法に基づく表記</a></li>
+					<!--/if:{FOOTER_DISP_ACT}-->
+				</ul>
+			</nav>
+			<!-- //フッターナビ -->
+
+			<p class="copyright"><span lang="en">{%COPYRIGHT%}</span></p>
+		</footer>
+
+	</div>
+	<!-- /Footer -->
+
+	<!-- 後読み用スクリプト -->
+	<script>
+	// ページトップへ戻るボタン
+	$(document).ready(function() {
+		var pagetop = $('.pagetop');
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+				pagetop.fadeIn();
+			} else {
+				pagetop.fadeOut();
+			}
+		});
+		pagetop.click(function () {
+			$('body, html').animate({ scrollTop: 0 }, 500);
+			return false;
+		});
+	});
+
+	// スクロール時のヘッダー表示（固定ヘッダー）
+	(function () {
+		const fh = document.getElementById('fixed-header');
+		if (fh) {
+			window.addEventListener('scroll', () => {
+				if (window.pageYOffset > 100) {
+					fh.classList.add('is-show');
+				} else {
+					fh.classList.remove('is-show');
+				}
+			});
+		}
+	})();
+	</script>
+	<!-- //後読み用スクリプト -->
