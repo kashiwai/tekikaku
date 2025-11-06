@@ -35,33 +35,52 @@ try {
         }
     );
 
-    echo "🔧 Executing SQL statements...\n\n";
+    echo "🔧 Executing SQL statements...\n";
+    echo "Total statements found: " . count($statements) . "\n\n";
 
     // Execute each statement
+    $executed = 0;
     foreach ($statements as $index => $statement) {
-        try {
-            // Skip comments and SELECT statements
-            if (preg_match('/^\s*(--|SELECT)/i', $statement)) {
-                continue;
-            }
+        $statement = trim($statement);
 
-            $pdo->exec($statement);
+        // Skip empty or comment-only statements
+        if (empty($statement) || preg_match('/^\s*--/', $statement)) {
+            echo "  ⊘ Statement " . ($index + 1) . ": Skipped (comment/empty)\n";
+            continue;
+        }
+
+        // Skip SELECT statements
+        if (preg_match('/^\s*SELECT/i', $statement)) {
+            echo "  ⊘ Statement " . ($index + 1) . ": Skipped (SELECT query)\n";
+            continue;
+        }
+
+        try {
+            echo "  → Executing statement " . ($index + 1) . "...\n";
+            $affected = $pdo->exec($statement);
+            $executed++;
 
             // Show what was executed
             $first_line = strtok($statement, "\n");
-            echo "  ✓ Statement " . ($index + 1) . ": " . substr($first_line, 0, 60) . "...\n";
+            echo "  ✓ Statement " . ($index + 1) . ": " . substr($first_line, 0, 80) . "... (affected: $affected)\n";
 
         } catch (PDOException $e) {
+            $error_msg = $e->getMessage();
+
             // Ignore "table already exists" errors
-            if (strpos($e->getMessage(), 'already exists') !== false) {
+            if (strpos($error_msg, 'already exists') !== false) {
                 echo "  ⚠ Statement " . ($index + 1) . ": Table already exists (skipping)\n";
-            } else if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+            } else if (strpos($error_msg, 'Duplicate entry') !== false) {
                 echo "  ⚠ Statement " . ($index + 1) . ": Duplicate entry (skipping)\n";
             } else {
+                echo "  ❌ Statement " . ($index + 1) . " ERROR: " . $error_msg . "\n";
+                echo "  SQL: " . substr($statement, 0, 200) . "...\n";
                 throw $e;
             }
         }
     }
+
+    echo "\nTotal executed: $executed statements\n";
 
     echo "\n✅ Setup completed successfully!\n\n";
 
