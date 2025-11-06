@@ -515,6 +515,10 @@ $GLOBALS["dummyFlgStatus"] = array(
     "1" => "ダミー"
 );
 
+// プレイ画面設定
+define('AUTO_PUSH', false); // 自動プッシュボタン機能（通常はfalse）
+define('PAYMENT_URL', URL_SSL_SITE . 'payment/'); // 決済URL
+
 // WebRTC設定ファイルの読み込み
 require_once(__DIR__ . '/webRTC_setting.php');
 
