@@ -256,13 +256,14 @@ function DispTop($template) {
 		->setAutoConvert( [$template->DB,"conv_sql"] )
 		->select()
 			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.prizeball_data,mm.layout_data,mc.camera_name,mm.image_reel")
+			->field("mm.model_name,mm.model_roman,mm.model_cd")
 			->field("cp.credit as convcredit,cp.point as convplaypoint")
 			->from("dat_machine dm")
 			->join("left", "mst_model mm", "dm.model_no = mm.model_no" )
 			->join("left", "mst_camera mc", "dm.camera_no = mc.camera_no" )
 			->join("left", "mst_convertPoint cp", "dm.convert_no = cp.convert_no" )
 			->where()
-				->and( "machine_no =", $_GET["NO"], FD_NUM)
+				->and( "dm.machine_no =", $_GET["NO"], FD_NUM)
 		->createSQL("\n");
 
 
@@ -335,6 +336,9 @@ function DispTop($template) {
 	
 	$template->assign("CAMERA_ID"       , $camera);
 	$template->assign("MACHINE_NO"      , $machineRow["machine_no"]);
+	$template->assign("MODEL_NAME"      , $machineRow["model_name"]);
+	$template->assign("MODEL_ROMAN"     , $machineRow["model_roman"]);
+	$template->assign("MODEL_CD"        , $machineRow["model_cd"]);
 	$template->assign("PEERJSKEY"       , $GLOBALS["RTC_PEER_APIKEY"]);
 	$template->assign("MEMBERNO"        , $memberNo );
 	$template->assign("AUTHID"          , $oneTimeAuthID);
