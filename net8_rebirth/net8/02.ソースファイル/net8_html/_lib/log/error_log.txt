@@ -199,3 +199,35 @@ SELECT camera_no, camera_name, camera_ip, camera_port, stream_url, camera_type
         FROM mst_camera 
         WHERE camera_no = 10000023
 
+2025/11/06 06:22:11
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'net8_dev.dat_camera' doesn't exist
+SELECT
+        camera_no, machine_no, mac_address, peer_id,
+        camera_flg, add_dt, upd_dt
+    FROM dat_camera
+    WHERE machine_no = 3
+    ORDER BY camera_no
+
+2025/11/06 06:40:45
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'machine_no' in 'field list'
+SELECT
+        machine_no, mac_address, ip_address, peer_id, license_id,
+        add_dt, upd_dt, del_flg
+    FROM mst_cameralist
+    WHERE machine_no = 3
+    ORDER BY machine_no
+
+2025/11/06 06:44:27
+SQLSTATE[HY000]: General error: 1364 Field 'camera_name' doesn't have a default value
+INSERT INTO mst_camera (camera_no, camera_mac, add_no, add_dt, upd_no, upd_dt, del_flg)
+    VALUES (3, 'MACHINE-03-MAC', 1, NOW(), 1, NOW(), 0)
+    ON DUPLICATE KEY UPDATE camera_mac='MACHINE-03-MAC', upd_dt=NOW()
+
+2025/11/06 10:51:46
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'machine_no' in 'field list'
+SELECT mac_address, license_id, ip_address, machine_no FROM mst_cameralist WHERE machine_no = 3 OR mac_address LIKE '%e0-51-d8%' OR mac_address LIKE '%E0-51-D8%'
+
+2025/11/06 12:21:35
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'member_id' in 'field list'
+SELECT member_no, member_id, nickname, state FROM mst_member WHERE member_id='player01'
+

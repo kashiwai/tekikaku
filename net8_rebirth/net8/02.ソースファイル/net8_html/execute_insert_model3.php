@@ -4,10 +4,12 @@
  */
 
 require_once('_etc/setting_base.php');
+require_once('_etc/setting.php');
 require_once('_lib/smartDB.php');
 
 try {
-    $DB = new SmartDB(DB_TYPE, DB_SERVER, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_CHARSET);
+    // DSN形式で接続
+    $DB = new SmartDB(DB_DSN);
     $DB->autoCommit(false);
 
     echo "機種No.3「ミリオンゴッド4号機」を登録します...\n\n";

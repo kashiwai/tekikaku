@@ -1,517 +1,608 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<!--#include file="head.html"-->
-		<title>{%SITE_TITLE%} - クーポン情報詳細</title>
-	</head>
-	
-	<body id="page-top">
-		
-		<!--#include file="navigation_sub.html"-->
-		
-		<div id="wrapper">
-			<!-- Page Contents ================================================== -->
-			<div id="content-wrapper">
-				<form action="{%SELF%}?M=regist" method="POST" class="form-inline" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
-				<input type="hidden" name="NO" value="{%NO%}">
-				<input type="hidden" name="COUPON_STATUS" value="{%COUPON_STATUS%}">
-					<div class="container-fluid">
-						<h3 class="page-header mt-2"><i class="fas fa-fw fa-ticket-alt"></i> クーポン管理</h3>
-						<!--if:{ERRMSG}-->
-						<div class="alert alert-danger">
-							{%ERRMSG%}
-						</div>
-						<!--/if:{ERRMSG}-->
-						
-						<!--if:{COUNT}-->
-						<div class="card-header d-flex justify-content-between">
-							<span class="panel-title">対象件数は、{%COUNT%}件です。</span>
-						</div>
-						
-						<!--/if:{COUNT}-->
-						
-						<table class="table table-input">
-							<tbody>
-								
-								<tr>
-									<td colspan="4">
-										<!--タブ-->
-										<ul class="nav nav-tabs" id="langChange">
-											<!--loop:{LANG_LIST_TAB}-->
-											<li class="{%ACTIVE%}"><a href="#tab{%INDEX%}" data-toggle="tab" aria-expanded="true">{%LANGAGE%}</a></li>
-											<!--/loop:{LANG_LIST_TAB}-->
-										</ul><!-- /.nav-tabs -->
-										
-										<div id="myTabContent" class="tab-content">
-											<!--loop:{LANG_LIST}-->
-											<div class="tab-pane fade {%SHOW_IN%} {%ACTIVE%}" id="tab{%INDEX%}">
-												<table class="table table-responsive table-input">
-													<tbody>
-														<tr>
-															<th style="width:22%;">タイトル<!--if:{IS_DEF_LANG}-->&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span><!--/if:{IS_DEF_LANG}--></th>
-															<td style="width:78%;"><input style="width:100%;" class="form-control" type="text" class="form-control" name='TITLE[{%LANG%}]' value='{%TITLE%}' maxlength="50"></td>
-														</tr>
-														<tr>
-															<th>内容</th>
-															<td colspan="3"><textarea class="form-control" rows="4" id="CONTENTS_{%LANG%}" name='CONTENTS[{%LANG%}]'>{%CONTENTS%}</textarea></td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-											<!--/loop:{LANG_LIST}-->
-										</div>
-										
-									</td>
-								</tr>
-								
-								<tr>
-									<th class="required">付与プレイポイント&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
-									<td colspan="3"><input type="text" class="form-control" name="POINT" value="{%POINT%}" maxlength="8"> {%CURRENCY_1%}</td>
-								</tr>
-								
-								<tr>
-									<th>有効期限（日数）&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
-									<td colspan="3"><input type="text" class="form-control" name="LIMIT_DAYS" value="{%LIMIT_DAYS%}" maxlength="3">日 <span class="text-danger"><i class="fas fa-asterisk"></i> 有効期限無しは「0」指定</span></td>
-								</tr>
-								
-								<tr>
-									<th>付与タイミング</th>
-									<td colspan="3">
-										{%RDO_GRANT_TIMING%}
-									</td>
-								</tr>
-								
-								<tr id="timintg_input">
-									<th>付与予定日時&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="PLAN_DT_DATE" value="{%PLAN_DT_DATE%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-												<td>　</td>
-												<td>
-													<select class="form-control" style="width:50px;" name="PLAN_DT_HR">
-														{%SEL_PLAN_DT_HR%}
-													</select>
-													：
-													<select class="form-control" style="width:50px;" name="PLAN_DT_MIN">
-														{%SEL_PLAN_DT_MIN%}
-													</select>
-													
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<hr>
-						<h5 class="mt-3">クーポン配布条件</h5>
-						<table class="table table-input">
-							<tbody>
-								
-								<tr>
-									<th>会員No</th>
-									<td colspan="3"><input type="text" class="form-control" name="COND_MEMBER_NO" value="{%COND_MEMBER_NO%}" maxlength="8"></td>
-								</tr>
-								<tr>
-									<th>性別</th>
-									<td colspan="3">
-										<select class="custom-select custom-select-sm" name="COND_SEX" style="width:150px;">
-											{%SEL_SEX%}
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<th>誕生月</th>
-									<td colspan="3">
-										<select class="custom-select custom-select-sm" name="COND_BMONTH" style="width:150px;">
-											{%SEL_BMONTH%}
-										</select>
-									</td>
-								</tr>
-								
-								<tr>
-									<th>所持ポイント</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<input type="text" class="form-control" name="COND_POINT_FROM" value="{%COND_POINT_FROM%}" maxlength="9" style="width:120px;"> {%CURRENCY_1%}
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<input type="text" class="form-control" name="COND_POINT_TO" value="{%COND_POINT_TO%}" maxlength="9" style="width:120px;"> {%CURRENCY_1%}
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								
-								<tr>
-									<th>所持抽選ポイント</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<input type="text" class="form-control" name="COND_DRAW_POINT_FROM" value="{%COND_DRAW_POINT_FROM%}" maxlength="9" style="width:120px;"> {%CURRENCY_3%}
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<input type="text" class="form-control" name="COND_DRAW_POINT_TO" value="{%COND_DRAW_POINT_TO%}" maxlength="9" style="width:120px;"> {%CURRENCY_3%}
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								
-								<tr>
-									<th>会員本登録日</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_JOIN_FROM" value="{%COND_JOIN_FROM%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_JOIN_TO" value="{%COND_JOIN_TO%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr>
-									<th>最終ログイン日</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_LOGIN_FROM" value="{%COND_LOGIN_FROM%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_LOGIN_TO" value="{%COND_LOGIN_TO%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr>
-									<th>プレイ回数</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<input type="text" class="form-control" name="COND_PLAY_COUNT_FROM" value="{%COND_PLAY_COUNT_FROM%}" maxlength="5" style="width:120px;">
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<input type="text" class="form-control" name="COND_PLAY_COUNT_TO" value="{%COND_PLAY_COUNT_TO%}" maxlength="5" style="width:120px;">
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr>
-									<th>プレイ期間</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_PLAY_DT_FROM" value="{%COND_PLAY_DT_FROM%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_PLAY_DT_TO" value="{%COND_PLAY_DT_TO%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								
-								<tr>
-									<th>購入方法</th>
-									<td colspan="3">
-										{%RDO_PURCHASE_TYPE%}
-									</td>
-								</tr>
-								<tr>
-									<th>購入回数</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<input type="text" class="form-control" name="COND_PURCHASE_COUNT_FROM" value="{%COND_PURCHASE_COUNT_FROM%}" maxlength="5" style="width:120px;">
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<input type="text" class="form-control" name="COND_PURCHASE_COUNT_TO" value="{%COND_PURCHASE_COUNT_TO%}" maxlength="5" style="width:120px;">
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr>
-									<th>購入金額</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<input type="text" class="form-control" name="COND_PURCHASE_AMOUNT_FROM" value="{%COND_PURCHASE_AMOUNT_FROM%}" maxlength="7" style="width:120px;"> {%AMOUNTTYPE_12%}
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<input type="text" class="form-control" name="COND_PURCHASE_AMOUNT_TO" value="{%COND_PURCHASE_AMOUNT_TO%}" maxlength="7" style="width:120px;"> {%AMOUNTTYPE_12%}
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								<tr>
-									<th>購入期間</th>
-									<td colspan="3">
-										<table class="table-inner">
-											<tr>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_PURCHASE_DT_FROM" value="{%COND_PURCHASE_DT_FROM%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-												<td class="px-2">～</td>
-												<td>
-													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-														<input type="text" class="form-control" data-altinput=true data-input name="COND_PURCHASE_DT_TO" value="{%COND_PURCHASE_DT_TO%}">
-														<div class="input-group-append">
-															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-								
-							</tbody>
-						</table>
-						
-						<hr>
-						<div class="row">
-							<!--if:{NOGRANT}-->
-							<div class="col-6 text-left">
-								<!--if:{EDIT}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{EDIT}-->
-							</div>
-							<div class="col-6 text-right">
-								<a href="javascript:void(0);" class="btn btn-reset" onClick="checkAcountCount();" style="width:200px;">対象件数確認</a>　
-								<input type="submit" class="btn btn-primary" value="登　録">
-							</div>
-							<!--/if:{NOGRANT}-->
-						</div>
-						
-					</div><!-- /.container-fluid -->
-				</form>
-			</div><!-- /#content-wrapper -->
-		</div><!-- /#wrapper -->
-		
-		<!--#include file="inc_script.html"-->
-		<script type="text/javascript">
-		<!--
-			if( $('input[name="GRANT_TIMING"]:checked').val() == 0){
-				$('#timintg_input').hide();
-			}else{
-				$('#timintg_input').show();
-			}
-			
-			$(function(){
-				$('#langChange').find('li').each( function(){
-					$(this).click( function(){
-						$('#langChange').find('li').removeClass('active');
-						$(this).addClass('active');
-					});
-				});
-				//
-				$('#customRadio_GRANT_TIMING_0').click( function(){
-					$('#timintg_input').hide();
-				});
-				$('#customRadio_GRANT_TIMING_1').click( function(){
-					$('#timintg_input').show();
-				});
-				
-			});
-			
-			// アカウント数確認
-			function checkAcountCount(){
-				var frm = window.document.MAINFORM;
-				
-				// 付与条件チェック
-				if (!chkCondition()) return false;
-				
-				// 実行
-				frm.action = frm.action + "&ACT=check";
-				frm.submit()
-			}
-			
-			// 入力チェック
-			function check() {
-				var frm = window.document.MAINFORM;
-				// タイトル
-				if (!chk_indis("{%A2507%}", frm['TITLE[{%DEF_LANG%}]'].value)) return false;
-				// 付与プレイポイント
-				if (!chk_indis("{%A2508%}", frm["POINT"].value)) return false;
-				if (!chk_number("{%A2509%}", frm["POINT"].value)) return false;
-				if (!compare_numeric("{%A2510%}", "0", frm["POINT"].value, true)) return false;
-				// 有効期限
-				if (!chk_indis("{%A2511%}", frm["LIMIT_DAYS"].value)) return false;
-				if (!chk_number("{%A2512%}", frm["LIMIT_DAYS"].value)) return false;
-				// 日時指定
-				if( $('#customRadio_GRANT_TIMING_1').is(':checked') ){
-					if (!chk_indis("{%A2513%}", frm['PLAN_DT_DATE'].value)) return false;
-					if (!chk_date("{%A2514%}" , frm["PLAN_DT_DATE"].value, false)) return false;
-					if (!chk_indis("{%A2515%}", frm['PLAN_DT_HR'].value)) return false;
-					if (!chk_indis("{%A2516%}", frm['PLAN_DT_MIN'].value)) return false;
-					//過去NG
-					var _now  = new Date();
-					var _time = new Date( frm["PLAN_DT_DATE"].value + " " + ( (frm["PLAN_DT_HR"].value!="")? frm["PLAN_DT_HR"].value:"00" ) + ":" + ( (frm["PLAN_DT_MIN"].value!="")? frm["PLAN_DT_MIN"].value:"00" ));
-					if( _now.getTime() > _time.getTime() ){
-						chkAlert("{%A2517%}");
-						return false;
-					}
-				}
-				
-				// 付与条件チェック
-				if (!chkCondition()) return false;
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - Coupon Details</title>
 
-				// 実行
-				swal({
-					title: 'クーポン情報登録',
-					text: "{%A0001%}",
-					type: 'question',
-					showCancelButton: true
-				}).then(function() {
-					// 実行
-					frm.submit();
-				});
-				return false;
-			}
-			
-			// 付与条件部チェック
-			function chkCondition() {
-				var frm = window.document.MAINFORM;
-				// 会員NO
-				if (!chk_number("{%A2601%}", frm["COND_MEMBER_NO"].value, false)) return false;
-				// 所持ポイント
-				if (!chk_number("{%A2602%}", frm["COND_POINT_FROM"].value, false)) return false;
-				if (!chk_number("{%A2603%}", frm["COND_POINT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_POINT_FROM"].value) && chk_indis("", frm["COND_POINT_TO"].value)) {
-					if (!compare_numeric("{%A2604%}", frm["COND_POINT_FROM"].value, frm["COND_POINT_TO"].value, false)) return false;
-				}
-				// 所持抽選ポイント
-				if (!chk_number("{%A2605%}", frm["COND_DRAW_POINT_FROM"].value, false)) return false;
-				if (!chk_number("{%A2606%}", frm["COND_DRAW_POINT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_DRAW_POINT_FROM"].value) && chk_indis("", frm["COND_DRAW_POINT_TO"].value)) {
-					if (!compare_numeric("{%A2607%}", frm["COND_DRAW_POINT_FROM"].value, frm["COND_DRAW_POINT_TO"].value, false)) return false;
-				}
-				// 会員本登録日
-				if (!chk_date("{%A2608%}", frm["COND_JOIN_FROM"].value, false)) return false;
-				if (!chk_date("{%A2609%}", frm["COND_JOIN_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_JOIN_FROM"].value) && chk_indis("", frm["COND_JOIN_TO"].value)) {
-					if (!compare_date("{%A2610%}", frm["COND_JOIN_FROM"].value, frm["COND_JOIN_TO"].value, false)) return false;
-				}
-				// 最終ログイン日
-				if (!chk_date("{%A2611%}", frm["COND_LOGIN_FROM"].value, false)) return false;
-				if (!chk_date("{%A2612%}", frm["COND_LOGIN_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_LOGIN_FROM"].value) && chk_indis("", frm["COND_LOGIN_TO"].value)) {
-					if (!compare_date("{%A2613%}", frm["COND_LOGIN_FROM"].value, frm["COND_LOGIN_TO"].value, false)) return false;
-				}
-				// プレイ回数
-				if (!chk_number("{%A2614%}", frm["COND_PLAY_COUNT_FROM"].value, false)) return false;
-				if (!chk_number("{%A2615%}", frm["COND_PLAY_COUNT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_PLAY_COUNT_FROM"].value) && chk_indis("", frm["COND_PLAY_COUNT_TO"].value)) {
-					if (!compare_numeric("{%A2616%}", frm["COND_PLAY_COUNT_FROM"].value, frm["COND_PLAY_COUNT_TO"].value, false)) return false;
-				}
-				// プレイ期間
-				if (!chk_date("{%A2617%}", frm["COND_PLAY_DT_FROM"].value, false)) return false;
-				if (!chk_date("{%A2618%}", frm["COND_PLAY_DT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_PLAY_DT_FROM"].value) && chk_indis("", frm["COND_PLAY_DT_TO"].value)) {
-					if (!compare_date("{%A2619%}", frm["COND_PLAY_DT_FROM"].value, frm["COND_PLAY_DT_TO"].value, false)) return false;
-				}
-				// 購入回数
-				if (!chk_number("{%A2620%}", frm["COND_PURCHASE_COUNT_FROM"].value, false)) return false;
-				if (!chk_number("{%A2621%}", frm["COND_PURCHASE_COUNT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_PURCHASE_COUNT_FROM"].value) && chk_indis("", frm["COND_PURCHASE_COUNT_TO"].value)) {
-					if (!compare_numeric("{%A2622%}", frm["COND_PURCHASE_COUNT_FROM"].value, frm["COND_PURCHASE_COUNT_TO"].value, false)) return false;
-				}
-				// 購入金額
-				if (!chk_number("{%A2623%}", frm["COND_PURCHASE_AMOUNT_FROM"].value, false)) return false;
-				if (!chk_number("{%A2624%}", frm["COND_PURCHASE_AMOUNT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_PURCHASE_AMOUNT_FROM"].value) && chk_indis("", frm["COND_PURCHASE_AMOUNT_TO"].value)) {
-					if (!compare_numeric("{%A2625%}", frm["COND_PURCHASE_AMOUNT_FROM"].value, frm["COND_PURCHASE_AMOUNT_TO"].value, false)) return false;
-				}
-				// 購入期間
-				if (!chk_date("{%A2626%}", frm["COND_PURCHASE_DT_FROM"].value, false)) return false;
-				if (!chk_date("{%A2627%}", frm["COND_PURCHASE_DT_TO"].value, false)) return false;
-				if (chk_indis("", frm["COND_PURCHASE_DT_FROM"].value) && chk_indis("", frm["COND_PURCHASE_DT_TO"].value)) {
-					if (!compare_date("{%A2628%}", frm["COND_PURCHASE_DT_FROM"].value, frm["COND_PURCHASE_DT_TO"].value, false)) return false;
-				}
-				return true;
-			}
-			
-			// 削除
-			function del() {
-				var frm = window.document.MAINFORM;
-				swal({
-					title: 'クーポン情報削除',
-					text: "{%A0002%}",
-					type: 'warning',
-					showCancelButton: true
-				}).then(function() {
-					// 実行
-					location.href = frm.action + "&ACT=del&NO={%NO%}";
-				});
-				return;
-			}
-		-->
-		</script>
-		
-	</body>
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .main-content { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); display: flex; align-items: center; gap: 10px; }
 
+        /* アラート */
+        .alert { padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; background: rgba(255, 100, 124, 0.1); border-left: 4px solid var(--admin-danger); color: var(--admin-danger); }
+        .info-alert { background: rgba(3, 118, 201, 0.1); border-left-color: var(--admin-primary); color: var(--admin-primary); }
+
+        /* フォームカード */
+        .form-card { background: var(--admin-card); border-radius: 12px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-section-title { font-size: 18px; color: var(--admin-text); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--admin-border); }
+
+        /* タブ */
+        .tab-nav { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 2px solid var(--admin-border); }
+        .tab-nav li { list-style: none; }
+        .tab-nav a { display: block; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.3s; }
+        .tab-nav a:hover { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); }
+        .tab-nav .active a { background: var(--admin-primary); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* テーブル */
+        table.form-table { width: 100%; border-collapse: collapse; }
+        table.form-table th { padding: 15px; text-align: left; font-weight: 600; color: var(--admin-text-muted); background: var(--admin-darker); border-bottom: 1px solid var(--admin-border); width: 22%; }
+        table.form-table td { padding: 15px; border-bottom: 1px solid var(--admin-border); }
+        table.form-table th .required { color: var(--admin-danger); margin-left: 8px; }
+
+        /* ネストテーブル */
+        table.inner-table { width: auto; border: none; }
+        table.inner-table td { padding: 5px 10px; border: none; }
+
+        /* フォーム要素 */
+        .form-control { padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-darker); color: var(--admin-text); font-size: 14px; transition: all 0.3s; width: 100%; }
+        .form-control:focus { outline: none; border-color: var(--admin-primary); box-shadow: 0 0 0 3px rgba(3, 118, 201, 0.1); }
+        textarea.form-control { min-height: 100px; resize: vertical; font-family: inherit; }
+        select.form-control { cursor: pointer; }
+
+        /* インプットグループ */
+        .input-group { display: flex; align-items: center; gap: 10px; }
+        .input-group .form-control { flex: 0 0 auto; }
+
+        /* 日付ピッカー */
+        .flatpickr { display: inline-flex; }
+        .flatpickr .form-control { width: 140px; }
+        .flatpickr button { padding: 10px 15px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-left: none; border-radius: 0 6px 6px 0; color: var(--admin-text-muted); cursor: pointer; transition: all 0.3s; }
+        .flatpickr button:hover { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); }
+
+        /* ラジオボタンエリア */
+        .radio-group { display: flex; flex-wrap: wrap; gap: 15px; }
+
+        /* ボタン */
+        .btn { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(3, 118, 201, 0.3); }
+        .btn-danger { background: var(--admin-danger); color: white; }
+        .btn-danger:hover { background: #e54a5f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 100, 124, 0.3); }
+        .btn-secondary { background: var(--admin-card); color: var(--admin-text); border: 1px solid var(--admin-border); }
+        .btn-secondary:hover { background: var(--admin-darker); }
+
+        /* アクションエリア */
+        .action-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--admin-border); }
+
+        /* 注釈 */
+        .text-muted { color: var(--admin-text-muted); font-size: 13px; }
+        .text-danger { color: var(--admin-danger); }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .main-content { padding: 10px; }
+            .form-card { padding: 15px; }
+            table.form-table th, table.form-table td { display: block; width: 100%; padding: 10px; }
+            table.form-table th { background: transparent; border-bottom: none; }
+            .action-buttons { flex-direction: column; gap: 10px; }
+            .action-buttons > * { width: 100%; text-align: center; justify-content: center; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <!--#include file="head.html"-->
+</head>
+<body id="page-top">
+
+<!--#include file="navigation_sub.html"-->
+
+<div class="main-content">
+    <div class="topbar">
+        <h1><i class="fas fa-ticket-alt"></i> Coupon Management</h1>
+    </div>
+
+    <!--if:{ERRMSG}-->
+    <div class="alert">
+        <i class="fas fa-exclamation-triangle"></i> {%ERRMSG%}
+    </div>
+    <!--/if:{ERRMSG}-->
+
+    <!--if:{COUNT}-->
+    <div class="info-alert">
+        <i class="fas fa-info-circle"></i> Target count: {%COUNT%} records
+    </div>
+    <!--/if:{COUNT}-->
+
+    <form action="{%SELF%}?M=regist" method="POST" class="form-inline" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+    <input type="hidden" name="NO" value="{%NO%}">
+    <input type="hidden" name="COUPON_STATUS" value="{%COUPON_STATUS%}">
+
+    <div class="form-card">
+        <!-- 言語タブ -->
+        <ul class="tab-nav" id="langChange">
+            <!--loop:{LANG_LIST_TAB}-->
+            <li class="{%ACTIVE%}"><a href="#tab{%INDEX%}" data-toggle="tab" aria-expanded="true">{%LANGAGE%}</a></li>
+            <!--/loop:{LANG_LIST_TAB}-->
+        </ul>
+
+        <div id="myTabContent" class="tab-content-wrapper">
+            <!--loop:{LANG_LIST}-->
+            <div class="tab-content {%SHOW_IN%} {%ACTIVE%}" id="tab{%INDEX%}">
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th>Title<!--if:{IS_DEF_LANG}--><span class="required"><i class="fa fa-asterisk"></i></span><!--/if:{IS_DEF_LANG}--></th>
+                            <td><input class="form-control" type="text" name='TITLE[{%LANG%}]' value='{%TITLE%}' maxlength="50"></td>
+                        </tr>
+                        <tr>
+                            <th>Content</th>
+                            <td><textarea class="form-control" rows="4" id="CONTENTS_{%LANG%}" name='CONTENTS[{%LANG%}]'>{%CONTENTS%}</textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--/loop:{LANG_LIST}-->
+        </div>
+
+        <table class="form-table" style="margin-top: 20px;">
+            <tbody>
+                <tr>
+                    <th>Play Points<span class="required"><i class="fa fa-asterisk"></i></span></th>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="POINT" value="{%POINT%}" maxlength="8" style="width: 150px;">
+                            <span>{%CURRENCY_1%}</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Expiration (Days)<span class="required"><i class="fa fa-asterisk"></i></span></th>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="LIMIT_DAYS" value="{%LIMIT_DAYS%}" maxlength="3" style="width: 100px;">
+                            <span>days</span>
+                            <span class="text-danger"><i class="fas fa-asterisk"></i> Set "0" for no expiration</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Grant Timing</th>
+                    <td class="radio-group">
+                        {%RDO_GRANT_TIMING%}
+                    </td>
+                </tr>
+                <tr id="timintg_input">
+                    <th>Scheduled Date<span class="required"><i class="fa fa-asterisk"></i></span></th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="PLAN_DT_DATE" value="{%PLAN_DT_DATE%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="form-control" style="width:60px;" name="PLAN_DT_HR">
+                                        {%SEL_PLAN_DT_HR%}
+                                    </select>
+                                    :
+                                    <select class="form-control" style="width:60px;" name="PLAN_DT_MIN">
+                                        {%SEL_PLAN_DT_MIN%}
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-card">
+        <h3 class="form-section-title">Coupon Distribution Conditions</h3>
+
+        <table class="form-table">
+            <tbody>
+                <tr>
+                    <th>Member No</th>
+                    <td><input type="text" class="form-control" name="COND_MEMBER_NO" value="{%COND_MEMBER_NO%}" maxlength="8" style="width: 200px;"></td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>
+                        <select class="form-control" name="COND_SEX" style="width:200px;">
+                            {%SEL_SEX%}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Birth Month</th>
+                    <td>
+                        <select class="form-control" name="COND_BMONTH" style="width:200px;">
+                            {%SEL_BMONTH%}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Point Balance</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_POINT_FROM" value="{%COND_POINT_FROM%}" maxlength="9" style="width:140px;"> {%CURRENCY_1%}
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_POINT_TO" value="{%COND_POINT_TO%}" maxlength="9" style="width:140px;"> {%CURRENCY_1%}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Draw Points</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_DRAW_POINT_FROM" value="{%COND_DRAW_POINT_FROM%}" maxlength="9" style="width:140px;"> {%CURRENCY_3%}
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_DRAW_POINT_TO" value="{%COND_DRAW_POINT_TO%}" maxlength="9" style="width:140px;"> {%CURRENCY_3%}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Registration Date</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_JOIN_FROM" value="{%COND_JOIN_FROM%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_JOIN_TO" value="{%COND_JOIN_TO%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Last Login Date</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_LOGIN_FROM" value="{%COND_LOGIN_FROM%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_LOGIN_TO" value="{%COND_LOGIN_TO%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Play Count</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_PLAY_COUNT_FROM" value="{%COND_PLAY_COUNT_FROM%}" maxlength="5" style="width:140px;">
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_PLAY_COUNT_TO" value="{%COND_PLAY_COUNT_TO%}" maxlength="5" style="width:140px;">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Play Period</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_PLAY_DT_FROM" value="{%COND_PLAY_DT_FROM%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_PLAY_DT_TO" value="{%COND_PLAY_DT_TO%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Purchase Method</th>
+                    <td class="radio-group">
+                        {%RDO_PURCHASE_TYPE%}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Purchase Count</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_PURCHASE_COUNT_FROM" value="{%COND_PURCHASE_COUNT_FROM%}" maxlength="5" style="width:140px;">
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_PURCHASE_COUNT_TO" value="{%COND_PURCHASE_COUNT_TO%}" maxlength="5" style="width:140px;">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Purchase Amount</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_PURCHASE_AMOUNT_FROM" value="{%COND_PURCHASE_AMOUNT_FROM%}" maxlength="7" style="width:140px;"> {%AMOUNTTYPE_12%}
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <input type="text" class="form-control" name="COND_PURCHASE_AMOUNT_TO" value="{%COND_PURCHASE_AMOUNT_TO%}" maxlength="7" style="width:140px;"> {%AMOUNTTYPE_12%}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Purchase Period</th>
+                    <td>
+                        <table class="inner-table">
+                            <tr>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_PURCHASE_DT_FROM" value="{%COND_PURCHASE_DT_FROM%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>～</td>
+                                <td>
+                                    <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                        <input type="text" class="form-control" data-altinput=true data-input name="COND_PURCHASE_DT_TO" value="{%COND_PURCHASE_DT_TO%}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--if:{NOGRANT}-->
+    <div class="action-buttons">
+        <div>
+            <!--if:{EDIT}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();"><i class="fas fa-trash"></i> Delete</a><!--/if:{EDIT}-->
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="javascript:void(0);" class="btn btn-secondary" onClick="checkAcountCount();"><i class="fas fa-calculator"></i> Check Target Count</a>
+            <input type="submit" class="btn btn-primary" value="Register">
+        </div>
+    </div>
+    <!--/if:{NOGRANT}-->
+
+    </form>
+</div>
+
+<!--#include file="inc_script.html"-->
+
+<script type="text/javascript">
+<!--
+    if( $('input[name="GRANT_TIMING"]:checked').val() == 0){
+        $('#timintg_input').hide();
+    }else{
+        $('#timintg_input').show();
+    }
+
+    $(function(){
+        $('#langChange').find('li').each( function(){
+            $(this).click( function(){
+                $('#langChange').find('li').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+        //
+        $('#customRadio_GRANT_TIMING_0').click( function(){
+            $('#timintg_input').hide();
+        });
+        $('#customRadio_GRANT_TIMING_1').click( function(){
+            $('#timintg_input').show();
+        });
+
+    });
+
+    // アカウント数確認
+    function checkAcountCount(){
+        var frm = window.document.MAINFORM;
+
+        // 付与条件チェック
+        if (!chkCondition()) return false;
+
+        // 実行
+        frm.action = frm.action + "&ACT=check";
+        frm.submit()
+    }
+
+    // 入力チェック
+    function check() {
+        var frm = window.document.MAINFORM;
+        // タイトル
+        if (!chk_indis("{%A2507%}", frm['TITLE[{%DEF_LANG%}]'].value)) return false;
+        // 付与プレイポイント
+        if (!chk_indis("{%A2508%}", frm["POINT"].value)) return false;
+        if (!chk_number("{%A2509%}", frm["POINT"].value)) return false;
+        if (!compare_numeric("{%A2510%}", "0", frm["POINT"].value, true)) return false;
+        // 有効期限
+        if (!chk_indis("{%A2511%}", frm["LIMIT_DAYS"].value)) return false;
+        if (!chk_number("{%A2512%}", frm["LIMIT_DAYS"].value)) return false;
+        // 日時指定
+        if( $('#customRadio_GRANT_TIMING_1').is(':checked') ){
+            if (!chk_indis("{%A2513%}", frm['PLAN_DT_DATE'].value)) return false;
+            if (!chk_date("{%A2514%}" , frm["PLAN_DT_DATE"].value, false)) return false;
+            if (!chk_indis("{%A2515%}", frm['PLAN_DT_HR'].value)) return false;
+            if (!chk_indis("{%A2516%}", frm['PLAN_DT_MIN'].value)) return false;
+            //過去NG
+            var _now  = new Date();
+            var _time = new Date( frm["PLAN_DT_DATE"].value + " " + ( (frm["PLAN_DT_HR"].value!="")? frm["PLAN_DT_HR"].value:"00" ) + ":" + ( (frm["PLAN_DT_MIN"].value!="")? frm["PLAN_DT_MIN"].value:"00" ));
+            if( _now.getTime() > _time.getTime() ){
+                chkAlert("{%A2517%}");
+                return false;
+            }
+        }
+
+        // 付与条件チェック
+        if (!chkCondition()) return false;
+
+        // 実行
+        swal({
+            title: 'クーポン情報登録',
+            text: "{%A0001%}",
+            type: 'question',
+            showCancelButton: true
+        }).then(function() {
+            // 実行
+            frm.submit();
+        });
+        return false;
+    }
+
+    // 付与条件部チェック
+    function chkCondition() {
+        var frm = window.document.MAINFORM;
+        // 会員NO
+        if (!chk_number("{%A2601%}", frm["COND_MEMBER_NO"].value, false)) return false;
+        // 所持ポイント
+        if (!chk_number("{%A2602%}", frm["COND_POINT_FROM"].value, false)) return false;
+        if (!chk_number("{%A2603%}", frm["COND_POINT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_POINT_FROM"].value) && chk_indis("", frm["COND_POINT_TO"].value)) {
+            if (!compare_numeric("{%A2604%}", frm["COND_POINT_FROM"].value, frm["COND_POINT_TO"].value, false)) return false;
+        }
+        // 所持抽選ポイント
+        if (!chk_number("{%A2605%}", frm["COND_DRAW_POINT_FROM"].value, false)) return false;
+        if (!chk_number("{%A2606%}", frm["COND_DRAW_POINT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_DRAW_POINT_FROM"].value) && chk_indis("", frm["COND_DRAW_POINT_TO"].value)) {
+            if (!compare_numeric("{%A2607%}", frm["COND_DRAW_POINT_FROM"].value, frm["COND_DRAW_POINT_TO"].value, false)) return false;
+        }
+        // 会員本登録日
+        if (!chk_date("{%A2608%}", frm["COND_JOIN_FROM"].value, false)) return false;
+        if (!chk_date("{%A2609%}", frm["COND_JOIN_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_JOIN_FROM"].value) && chk_indis("", frm["COND_JOIN_TO"].value)) {
+            if (!compare_date("{%A2610%}", frm["COND_JOIN_FROM"].value, frm["COND_JOIN_TO"].value, false)) return false;
+        }
+        // 最終ログイン日
+        if (!chk_date("{%A2611%}", frm["COND_LOGIN_FROM"].value, false)) return false;
+        if (!chk_date("{%A2612%}", frm["COND_LOGIN_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_LOGIN_FROM"].value) && chk_indis("", frm["COND_LOGIN_TO"].value)) {
+            if (!compare_date("{%A2613%}", frm["COND_LOGIN_FROM"].value, frm["COND_LOGIN_TO"].value, false)) return false;
+        }
+        // プレイ回数
+        if (!chk_number("{%A2614%}", frm["COND_PLAY_COUNT_FROM"].value, false)) return false;
+        if (!chk_number("{%A2615%}", frm["COND_PLAY_COUNT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_PLAY_COUNT_FROM"].value) && chk_indis("", frm["COND_PLAY_COUNT_TO"].value)) {
+            if (!compare_numeric("{%A2616%}", frm["COND_PLAY_COUNT_FROM"].value, frm["COND_PLAY_COUNT_TO"].value, false)) return false;
+        }
+        // プレイ期間
+        if (!chk_date("{%A2617%}", frm["COND_PLAY_DT_FROM"].value, false)) return false;
+        if (!chk_date("{%A2618%}", frm["COND_PLAY_DT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_PLAY_DT_FROM"].value) && chk_indis("", frm["COND_PLAY_DT_TO"].value)) {
+            if (!compare_date("{%A2619%}", frm["COND_PLAY_DT_FROM"].value, frm["COND_PLAY_DT_TO"].value, false)) return false;
+        }
+        // 購入回数
+        if (!chk_number("{%A2620%}", frm["COND_PURCHASE_COUNT_FROM"].value, false)) return false;
+        if (!chk_number("{%A2621%}", frm["COND_PURCHASE_COUNT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_PURCHASE_COUNT_FROM"].value) && chk_indis("", frm["COND_PURCHASE_COUNT_TO"].value)) {
+            if (!compare_numeric("{%A2622%}", frm["COND_PURCHASE_COUNT_FROM"].value, frm["COND_PURCHASE_COUNT_TO"].value, false)) return false;
+        }
+        // 購入金額
+        if (!chk_number("{%A2623%}", frm["COND_PURCHASE_AMOUNT_FROM"].value, false)) return false;
+        if (!chk_number("{%A2624%}", frm["COND_PURCHASE_AMOUNT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_PURCHASE_AMOUNT_FROM"].value) && chk_indis("", frm["COND_PURCHASE_AMOUNT_TO"].value)) {
+            if (!compare_numeric("{%A2625%}", frm["COND_PURCHASE_AMOUNT_FROM"].value, frm["COND_PURCHASE_AMOUNT_TO"].value, false)) return false;
+        }
+        // 購入期間
+        if (!chk_date("{%A2626%}", frm["COND_PURCHASE_DT_FROM"].value, false)) return false;
+        if (!chk_date("{%A2627%}", frm["COND_PURCHASE_DT_TO"].value, false)) return false;
+        if (chk_indis("", frm["COND_PURCHASE_DT_FROM"].value) && chk_indis("", frm["COND_PURCHASE_DT_TO"].value)) {
+            if (!compare_date("{%A2628%}", frm["COND_PURCHASE_DT_FROM"].value, frm["COND_PURCHASE_DT_TO"].value, false)) return false;
+        }
+        return true;
+    }
+
+    // 削除
+    function del() {
+        var frm = window.document.MAINFORM;
+        swal({
+            title: 'クーポン情報削除',
+            text: "{%A0002%}",
+            type: 'warning',
+            showCancelButton: true
+        }).then(function() {
+            // 実行
+            location.href = frm.action + "&ACT=del&NO={%NO%}";
+        });
+        return;
+    }
+-->
+</script>
+
+</body>
 </html>

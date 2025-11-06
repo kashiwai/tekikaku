@@ -1,239 +1,336 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<!--#include file="head.html"-->
-		<title>{%SITE_TITLE%} - 総合実機管理</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - 総合実機管理</title>
 
-		<link href="css/machines.css" rel="stylesheet">
-	</head>
-	
-	<body id="page-top">
-		
-		<!--#include file="navigation.html"-->
-		
-		<div id="wrapper" class="main-win">
-			<!--#include file="sidebar.html"-->
-			
-			<!-- Page Contents ================================================== -->
-			<div id="content-wrapper">
-				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
-				<input type="hidden" name="ODR" value="{%ODR%}">
-				<input type="hidden" name="P" value="{%P%}">
-				<!--
-				<input type="hidden" name="MODEL_NO" value="{%MODEL_NO%}">
-				<input type="hidden" name="OWNER_NO" value="{%OWNER_NO%}">
-				<input type="hidden" name="MAKER_NO" value="{%MAKER_NO%}">
-				-->
-					<div class="container-fluid">
-						<h3 class="page-header"><i class="fas fa-database"></i> 総合実機管理</h3>
-						
-						<div class="card" id="accordion">
-							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
-								<span class="panel-title">検索条件指定</span>
-								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
-							</div>
-							<div id="collapseOne" class="collapse {%S_OPEN%}">
-								<div class="card-body">
-									<div class="row search">
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">公開開始日</div>
-											<div class="d-flex flex-row align-items-center input-period">
-												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
-													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_FROM" value="{%RELEASE_DATE_FROM%}">
-													<div class="input-group-append">
-														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-													</div>
-												</div>
-												<div class="px-2">～</div>
-												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
-													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_TO" value="{%RELEASE_DATE_TO%}">
-													<div class="input-group-append">
-														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">公開終了日</div>
-											<div class="d-flex flex-row align-items-center input-period">
-												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_FROM" value="{%END_DATE_FROM%}">
-													<div class="input-group-append">
-														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-													</div>
-												</div>
-												<div class="px-2">～</div>
-												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:140px;">
-													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_TO" value="{%END_DATE_TO%}">
-													<div class="input-group-append">
-														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">オーナー</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_OWNER_NO" style="width:250px;">
-													{%SEL_OWNER_NO%}
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">カテゴリ</div>
-											<div>
-												{%RDO_CATEGORY%}
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">コーナー</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_CORNER_NO" style="width:250px;">
-													{%SEL_CORNER_NO%}
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">メーカー</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_MAKER_NO" style="width:250px;">
-													{%SEL_MAKER%}
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">機種名</div>
-											<div>
-												<input type="text" class="form-control" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}">
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">機種コード</div>
-											<div>
-												<input type="text" class="form-control" name="S_MODEL_CD" value="{%S_MODEL_CD%}">
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">シグナリング</div>
-											<div>
-												{%RDO_SIGNALING_ID%}
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">ステータス</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_STATUS">
-													{%SEL_STATUS%}
-												</select>
-											</div>
-										</div>
-										<div class="col-12 text-center border-top">
-											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset2();">リセット</a>
-											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
-										</div>
-									</div>
-								</div><!-- /.panel-body -->
-							</div><!-- /#collapseOne -->
-						</div><!-- /#accordion -->
-						
-						
-						<div class="card mt-3">
-							<div class="card-header d-flex justify-content-between">
-								<div class="vertical-center">
-									(全{%ALLROW%}件)
-								</div>
-								<a href="javascript:void(0);" onClick="openSetting('');" class="btn btn-primary">セッティング変更</a>
-							</div>
-							<div class="table-responsive">
-								<ul id="machineList">
-									<li>
-										<input type="checkbox" name="m_1" id="m_1" />
-										<label for="m_1">ファンキージャグラー</label>
-									</li>
-									<li>
-										<input type="checkbox" name="m_2" id="m_2" />
-										<label for="m_2">SLOT魔法少女まどか☆マギカ</label>
-									</li>
-								</ul>
-							</div><!-- /.table-responsive -->
-							<div class="card-footer d-flex justify-content-start">
-								<div class="vertical-center">
-									(全{%ALLROW%}件)
-								</div>
-							</div>
-						</div><!-- /.card -->
-					</div><!-- /.container-fluid -->
-				</form>
-				
-				<!--#include file="footer.html"-->
-				
-			</div><!-- /#content-wrapper -->
-			
-		</div><!-- /#wrapper -->
-		
-		<!--#include file="inc_script.html"-->
-		
-		<script src="js/list.js"></script>
-		<script type="text/javascript">
-			var machineList = [
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .topbar-actions { display: flex; gap: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+        .btn-reset { background: #6c757d; color: white; }
+        .btn-search { background: var(--admin-success); color: white; }
+
+        /* 検索パネル */
+        .search-panel { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .search-panel-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--admin-border); }
+        .search-panel-header h3 { font-size: 16px; color: var(--admin-text); display: flex; align-items: center; gap: 10px; }
+        .search-panel-header i { color: var(--admin-primary); transition: transform 0.3s; }
+        .search-panel.collapsed .search-panel-body { display: none; }
+        .search-panel.collapsed .search-panel-header i { transform: rotate(180deg); }
+        .search-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .search-field { display: flex; flex-direction: column; gap: 5px; }
+        .search-field label { font-size: 13px; color: var(--admin-text-muted); font-weight: 500; }
+        .search-field input, .search-field select { padding: 8px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); outline: none; font-size: 14px; }
+        .search-field input:focus, .search-field select:focus { border-color: var(--admin-primary); }
+        .search-range { display: flex; align-items: center; gap: 10px; }
+        .search-range input { flex: 1; }
+        .search-actions { display: flex; justify-content: center; gap: 10px; padding-top: 15px; border-top: 1px solid var(--admin-border); }
+
+        /* データテーブル */
+        .data-table-wrapper { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .data-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .pagination-info { color: var(--admin-text-muted); font-size: 14px; }
+
+        /* 実機リストスタイル */
+        #machineList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        #machineList li {
+            background: var(--admin-darker);
+            border: 1px solid var(--admin-border);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        #machineList li:hover {
+            background: rgba(3, 118, 201, 0.05);
+            border-color: var(--admin-primary);
+            transform: translateY(-2px);
+        }
+        #machineList input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: var(--admin-primary);
+        }
+        #machineList label {
+            cursor: pointer;
+            color: var(--admin-text);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .search-row { grid-template-columns: 1fr; }
+            #machineList { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="vendor/flatpickr/css/flatpickr.min.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2><i class="fas fa-dragon"></i> RYU8 Admin</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="member.php"><i class="fas fa-users"></i> Member Management</a></li>
+            <li><a href="model.php"><i class="fas fa-gamepad"></i> Model Management</a></li>
+            <li><a href="machines.php" class="active"><i class="fas fa-desktop"></i> Machine Management</a></li>
+            <li><a href="camera.php"><i class="fas fa-video"></i> Camera Management</a></li>
+            <li><a href="camera_settings.php"><i class="fas fa-cog"></i> Camera Assignment</a></li>
+            <li><a href="signaling.php"><i class="fas fa-server"></i> Signaling</a></li>
+            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> Streaming</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-database"></i> 総合実機管理</h1>
+            <div class="topbar-actions">
+                <a href="javascript:void(0);" onclick="openSetting('');" class="btn btn-primary">
+                    <i class="fas fa-cog"></i> セッティング変更
+                </a>
+            </div>
+        </div>
+
+        <form action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+        <input type="hidden" name="ODR" value="{%ODR%}">
+        <input type="hidden" name="P" value="{%P%}">
+
+        <!-- 検索パネル -->
+        <div class="search-panel {%S_OPEN%}">
+            <div class="search-panel-header" onclick="this.parentElement.classList.toggle('collapsed');">
+                <h3><i class="fas fa-search"></i> 検索条件指定</h3>
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <div class="search-panel-body">
+                <div class="search-row">
+                    <div class="search-field">
+                        <label>公開開始日</label>
+                        <div class="search-range">
+                            <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                <input type="text" data-altinput="true" data-input name="RELEASE_DATE_FROM" value="{%RELEASE_DATE_FROM%}">
+                            </div>
+                            <span>～</span>
+                            <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                <input type="text" data-altinput="true" data-input name="RELEASE_DATE_TO" value="{%RELEASE_DATE_TO%}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>公開終了日</label>
+                        <div class="search-range">
+                            <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                <input type="text" data-altinput="true" data-input name="END_DATE_FROM" value="{%END_DATE_FROM%}">
+                            </div>
+                            <span>～</span>
+                            <div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+                                <input type="text" data-altinput="true" data-input name="END_DATE_TO" value="{%END_DATE_TO%}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>オーナー</label>
+                        <select name="S_OWNER_NO">
+                            {%SEL_OWNER_NO%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>カテゴリ</label>
+                        <div>
+                            {%RDO_CATEGORY%}
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>コーナー</label>
+                        <select name="S_CORNER_NO">
+                            {%SEL_CORNER_NO%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>メーカー</label>
+                        <select name="S_MAKER_NO">
+                            {%SEL_MAKER%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>機種名</label>
+                        <input type="text" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}">
+                    </div>
+                    <div class="search-field">
+                        <label>機種コード</label>
+                        <input type="text" name="S_MODEL_CD" value="{%S_MODEL_CD%}">
+                    </div>
+                    <div class="search-field">
+                        <label>シグナリング</label>
+                        <div>
+                            {%RDO_SIGNALING_ID%}
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>ステータス</label>
+                        <select name="S_STATUS">
+                            {%SEL_STATUS%}
+                        </select>
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <a href="javascript:void(0);" class="btn btn-reset" onclick="reset2();">
+                        <i class="fas fa-undo"></i> リセット
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-search" onclick="reSearch();">
+                        <i class="fas fa-search"></i> 検索
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- データテーブル -->
+        <div class="data-table-wrapper">
+            <div class="data-table-header">
+                <div class="pagination-info">
+                    全{%ALLROW%}件
+                </div>
+            </div>
+
+            <ul id="machineList">
+                <li>
+                    <input type="checkbox" name="m_1" id="m_1" />
+                    <label for="m_1">ファンキージャグラー</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="m_2" id="m_2" />
+                    <label for="m_2">SLOT魔法少女まどか☆マギカ</label>
+                </li>
+            </ul>
+
+            <div class="data-table-header" style="margin-top: 20px;">
+                <div class="pagination-info">
+                    全{%ALLROW%}件
+                </div>
+            </div>
+        </div>
+
+        </form>
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+
+<script src="vendor/flatpickr/js/flatpickr.min.js"></script>
+<script src="js/list.js"></script>
+<script type="text/javascript">
+    var machineList = [
 //					<!--loop:{LIST}-->
-					{
-						machine_no: '{%MACHINE_NO%}',
-						model_name: '{%MODEL_NAME%}',
-						camera_no:  '{%CAMERA_NO%}',
-						status:     '{%MACHINE_STATUS%}',
-						image:      '{%IMAGE_LIST%}',
-					},
+        {
+            machine_no: '{%MACHINE_NO%}',
+            model_name: '{%MODEL_NAME%}',
+            camera_no:  '{%CAMERA_NO%}',
+            status:     '{%MACHINE_STATUS%}',
+            image:      '{%IMAGE_LIST%}',
+        },
 //					<!--/loop:{LIST}-->
-			];
-			
-			
-			
-			$(function(){
-				// リセット
-				window.reset2 = function reset2() {
-					$('#MAINFORM')
-						.find("input, select, textarea")
-						.not(":button, :submit, :reset, :hidden, :radio")
-						.val("")
-						.prop("checked", false)
-						.prop("selected", false)
-					;
-					$('#MAINFORM').find(":radio").filter("[value='']").prop("checked", true);
-				}
-			});
-			
-			// 検索実行
-			function reSearch() {
-				var frm = window.document.MAINFORM;
-				// クエリ操作
-				
-				
-				// クリア
-				frm["P"].value = "1";
-				trans();
-			}
-			
-			// 詳細画面Open
-			function openSetting(key) {
-				var nos = [];
-				$('.machine_checkbox:checked').map(function(index, element){
-					nos.push($(element).val());
-				});
-				var keys = nos.join(',');
-				if ( keys ){
-					win_open("{%SELF%}", "M=setting&NO=" + keys, "admin_detail", 820, 900);
-				}
-			}
-			
-			// 初期処理
-			function init() {
-				sortImageActive();
-			}
-			
-			window.onload=init
-		</script>
-		<script src="js/machines.js"></script>
-		
-	</body>
+    ];
+
+    $(function(){
+        // Flatpickr初期化
+        flatpickr('.flatpickr', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'Y-m-d'
+        });
+
+        // リセット
+        window.reset2 = function reset2() {
+            $('#MAINFORM')
+                .find("input, select, textarea")
+                .not(":button, :submit, :reset, :hidden, :radio")
+                .val("")
+                .prop("checked", false)
+                .prop("selected", false)
+            ;
+            $('#MAINFORM').find(":radio").filter("[value='']").prop("checked", true);
+        }
+    });
+
+    // 検索実行
+    function reSearch() {
+        var frm = window.document.MAINFORM;
+        // クエリ操作
+
+        // クリア
+        frm["P"].value = "1";
+        trans();
+    }
+
+    // 詳細画面Open
+    function openSetting(key) {
+        var nos = [];
+        $('.machine_checkbox:checked').map(function(index, element){
+            nos.push($(element).val());
+        });
+        var keys = nos.join(',');
+        if ( keys ){
+            win_open("{%SELF%}", "M=setting&NO=" + keys, "admin_detail", 820, 900);
+        }
+    }
+
+    // フォーム送信
+    function trans() {
+        var frm = window.document.MAINFORM;
+        frm.submit();
+    }
+
+    // 初期処理
+    function init() {
+        sortImageActive();
+    }
+
+    window.onload = init;
+</script>
+<script src="js/machines.js"></script>
+
+</body>
 </html>

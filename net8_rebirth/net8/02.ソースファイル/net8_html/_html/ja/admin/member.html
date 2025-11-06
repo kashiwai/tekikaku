@@ -1,341 +1,444 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<!--#include file="head.html"-->
-		<title>{%SITE_TITLE%} - 会員管理</title>
-	</head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - Member Management</title>
 
-	<body id="page-top">
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .topbar-actions { display: flex; gap: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+        .btn-warning { background: var(--admin-warning); color: white; }
+        .btn-warning:hover { background: #ff8a47; transform: translateY(-2px); }
+        .btn-reset { background: #6c757d; color: white; }
+        .btn-search { background: var(--admin-success); color: white; }
 
-		<!--#include file="navigation.html"-->
+        /* 検索パネル */
+        .search-panel { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .search-panel-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--admin-border); }
+        .search-panel-header h3 { font-size: 16px; color: var(--admin-text); display: flex; align-items: center; gap: 10px; }
+        .search-panel-header i { color: var(--admin-primary); transition: transform 0.3s; }
+        .search-panel.collapsed .search-panel-body { display: none; }
+        .search-panel.collapsed .search-panel-header i { transform: rotate(180deg); }
+        .search-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .search-field { display: flex; flex-direction: column; gap: 5px; }
+        .search-field label { font-size: 13px; color: var(--admin-text-muted); font-weight: 500; }
+        .search-field input, .search-field select { padding: 8px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); outline: none; font-size: 14px; }
+        .search-field input:focus, .search-field select:focus { border-color: var(--admin-primary); }
+        .search-range { display: flex; align-items: center; gap: 10px; }
+        .search-actions { display: flex; justify-content: center; gap: 10px; padding-top: 15px; border-top: 1px solid var(--admin-border); }
 
-		<div id="wrapper" class="main-win">
-			<!--#include file="sidebar.html"-->
+        /* データテーブル */
+        .data-table-wrapper { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .data-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .pagination-info { color: var(--admin-text-muted); font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--admin-darker); }
+        th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: var(--admin-text-muted); white-space: nowrap; border-bottom: 2px solid var(--admin-border); }
+        th.text-center { text-align: center; }
+        td { padding: 12px; border-top: 1px solid var(--admin-border); color: var(--admin-text); font-size: 14px; }
+        td.text-center { text-align: center; }
+        td.text-right { text-align: right; }
+        tbody tr:hover { background: rgba(3, 118, 201, 0.05); }
+        td a { color: var(--admin-primary); text-decoration: none; transition: color 0.3s; }
+        td a:hover { color: var(--admin-info); text-decoration: underline; }
+        .sort-controls { display: flex; flex-direction: column; gap: 2px; margin-left: 5px; display: inline-flex; }
+        .sort-controls a { color: var(--admin-text-muted); font-size: 10px; }
+        .sort-controls a:hover { color: var(--admin-primary); }
 
-			<!-- Page Contents ================================================== -->
-			<div id="content-wrapper">
-				<form class="form-inline" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
-				<input type="hidden" name="M" value="">
-				<input type="hidden" name="ODR" value="{%ODR%}">
-				<input type="hidden" name="P" value="{%P%}">
+        /* バッジ */
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 5px; }
+        .badge-black { background: rgba(255, 100, 124, 0.2); color: var(--admin-danger); }
+        .badge-tester { background: rgba(61, 217, 235, 0.2); color: var(--admin-info); }
+        .badge-agent { background: rgba(255, 162, 107, 0.2); color: var(--admin-warning); }
 
-					<div class="container-fluid">
-						<h3 class="page-header"><i class="fas fa-users"></i> 会員管理</h3>
+        /* ページネーション */
+        .pagination { display: flex; gap: 5px; list-style: none; margin: 0; padding: 0; }
+        .pagination li a { padding: 6px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 4px; color: var(--admin-text); text-decoration: none; transition: all 0.3s; }
+        .pagination li a:hover { background: var(--admin-primary); color: white; }
+        .pagination li.active a { background: var(--admin-primary); color: white; border-color: var(--admin-primary); }
 
-						<div class="card" id="accordion">
-							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
-								<span class="panel-title">検索条件指定</span>
-								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
-							</div>
-							<div id="collapseOne" class="collapse {%S_OPEN%}">
-								<div class="card-body">
-									<div class="row search">
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">会員No</div>
-											<div>
-												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">ニックネーム</div>
-											<div>
-												<input type="text" class="form-control" name="S_NICKNAME" value="{%S_NICKNAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">メールアドレス</div>
-											<div>
-												<input type="text" class="form-control" name="S_MAIL" value="{%S_MAIL%}">&nbsp;<small class="text-muted">（部分一致）</small>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">本登録日時</div>
-											<div class="d-flex flex-row align-items-center input-period">
-												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
-													<input type="text" class="form-control" data-altinput=true data-input name="JOIN_DT_FROM" value="{%JOIN_DT_FROM%}">
-													<div class="input-group-append">
-														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-													</div>
-												</div>
-												<div class="px-2">～</div>
-												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
-													<input type="text" class="form-control" data-altinput=true data-input name="JOIN_DT_TO" value="{%JOIN_DT_TO%}">
-													<div class="input-group-append">
-														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">プレイポイント</div>
-											<div class="d-flex flex-row align-items-center input-period">
-												<div class="input-group">
-													<input type="text" class="form-control" name="S_PLAY_POINT_FROM" value="{%S_PLAY_POINT_FROM%}">
-													<div class="input-group-append">
-														<span class="input-group-text">{%CURRENCY_1%}</span>
-													</div>
-												</div>
-												<div class="px-2">～</div>
-												<div class="input-group">
-													<input type="text" class="form-control" name="S_PLAY_POINT_TO" value="{%S_PLAY_POINT_TO%}">
-													<div class="input-group-append">
-														<span class="input-group-text">{%CURRENCY_1%}</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">抽選ポイント</div>
-											<div class="d-flex flex-row align-items-center input-period">
-												<div class="input-group">
-													<input type="text" class="form-control" name="S_DRAW_POINT_FROM" value="{%S_DRAW_POINT_FROM%}">
-													<div class="input-group-append">
-														<span class="input-group-text">{%CURRENCY_3%}</span>
-													</div>
-												</div>
-												<div class="px-2">～</div>
-												<div class="input-group">
-													<input type="text" class="form-control" name="S_DRAW_POINT_TO" value="{%S_DRAW_POINT_TO%}">
-													<div class="input-group-append">
-														<span class="input-group-text">{%CURRENCY_3%}</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">ブラック</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_BLACK_FLG" style="width:180px;">
-													{%SEL_BLACK_FLG%}
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">状態</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_STATUS" style="width:180px;">
-													{%SEL_STATUS%}
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">使用した招待コード</div>
-											<div>
-												<input type="text" class="form-control" name="S_INVITE_CD" value="{%S_INVITE_CD%}">
-											</div>
-										</div>
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">テスター</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_TESTER" style="width:180px;">
-													{%SEL_TESTER%}
-												</select>
-											</div>
-										</div>
-										<!--if:{AUTH_MEMBER_MOBILE}-->
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">携帯番号</div>
-											<div>
-												<input type="text" class="form-control" name="S_MOBILE" value="{%S_MOBILE%}">&nbsp;<small class="text-muted">（前方一致）</small>
-											</div>
-										</div>
-										<!--/if:{AUTH_MEMBER_MOBILE}-->
-										<!--if:{GIFT_AGENT}-->
-										<div class="col-lg-6 d-flex align-items-center">
-											<div class="search-title">{%GIFT_AGENT_DISPNAME%}</div>
-											<div>
-												<select class="custom-select custom-select-sm" name="S_AGENT" style="width:180px;">
-													{%SEL_AGENT%}
-												</select>
-											</div>
-										</div>
-										<!--/if:{GIFT_AGENT}-->
-										<div class="col-12 text-center border-top">
-											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
-											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
-										</div>
-									</div>
-								</div><!-- /.panel-body -->
-							</div><!-- /#collapseOne -->
-						</div><!-- /#accordion -->
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .search-row { grid-template-columns: 1fr; }
+            .data-table-wrapper { overflow-x: auto; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="vendor/flatpickr/css/flatpickr.min.css">
+</head>
+<body>
 
-						<div class="card mt-3">
-							<div class="card-header d-flex justify-content-between">
-								<div class="vertical-center">
-									{%P%} / {%ALLP%} (全{%ALLROW%}件)
-									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
-										{%PAGING%}
-									</ul>
-								</div>
-								<div>
-									<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
-									<a href="javascript:void(0);" class="btn btn-warning" onClick="output();">ダウンロード</a>
-								</div>
-							</div>
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-list th-center-bg mb-0">
-									<thead>
-										<tr>
-											<th>会員No<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="member_no asc" onClick="reSort('member_no asc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="member_no desc" onClick="reSort('member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th>ニックネーム<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="nickname asc, member_no desc" onClick="reSort('nickname asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="nickname desc, member_no desc" onClick="reSort('nickname desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th>メールアドレス</th>
-											<!--if:{AUTH_MEMBER_MOBILE}-->
-											<th>携帯番号</th>
-											<!--/if:{AUTH_MEMBER_MOBILE}-->
-											<th>プレイpt<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="point asc, member_no desc" onClick="reSort('point asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="point desc, member_no desc" onClick="reSort('point desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th>抽選pt<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="draw_point asc, member_no desc" onClick="reSort('draw_point asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="draw_point desc, member_no desc" onClick="reSort('draw_point desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<!--if:{MENU_goods_status}-->
-											<th>応募口数</th>
-											<!--/if:{MENU_goods_status}-->
-											<th>登録日時<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="join_dt asc, member_no desc" onClick="reSort('join_dt asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="join_dt desc, member_no desc" onClick="reSort('join_dt desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th>最終ログイン<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="login_dt asc, member_no desc" onClick="reSort('login_dt asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="login_dt desc, member_no desc" onClick="reSort('login_dt desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th>状態<br />
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="state asc, member_no desc" onClick="reSort('state asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="state desc, member_no desc" onClick="reSort('state desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<!--loop:{LIST}-->
-										<tr>
-											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%MEMBER_NO%}');">{%DISP_MEMBER_NO%}</a></td>
-											<td>
-												{%NICKNAME%}
-												<!--if:{BLACK_FLG}-->{%MEMBER_BADGE_BLACK%}<!--/if:{BLACK_FLG}-->
-												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
-												<!--if:{IS_AGENT}-->{%MEMBER_BADGE_AGENT%}<!--/if:{IS_AGENT}-->
-											</td>
-											<td>{%MAIL%}</td>
-											<!--if:{AUTH_MEMBER_MOBILE}-->
-											<td><a  style="pointer-events: none;"><!--if:{EXT_MOBILE}-->[{%INTERNATIONAL_CD%}]&nbsp;{%MOBILE%}<!--/if:{EXT_MOBILE}--></a></td>
-											<!--/if:{AUTH_MEMBER_MOBILE}-->
-											<td class="text-right"><!--if:{MENU_pointhistory}--><a href="pointhistory.php?S_MEMBER_NO={%MEMBER_NO%}"><!--/if:{MENU_pointhistory}-->{%PLAY_POINT%}<!--if:{MENU_pointhistory}--></a><!--/if:{MENU_pointhistory}-->　 <!--if:{NO_QUIT}--><a href="javascript:void(0);" onClick="openDetail2('{%MEMBER_NO%}');">調整</a><!--/if:{NO_QUIT}--><!--if:{IS_QUIT}-->　　<!--/if:{IS_QUIT}--></td>
-											<td class="text-right"><!--if:{MENU_drawhistory}--><a href="drawhistory.php?S_MEMBER_NO={%MEMBER_NO%}"><!--/if:{MENU_drawhistory}-->{%DRAW_POINT%}<!--if:{MENU_drawhistory}--></a><!--/if:{MENU_drawhistory}--></td>
-											<!--if:{MENU_goods_status}-->
-											<td class="text-center"><a href="goods_status.php?S_MEMBER_NO={%MEMBER_NO%}">{%DRAW_COUNT%}</a></td>
-											<!--/if:{MENU_goods_status}-->
-											<!--if:{JOIN_DT_FLG}-->
-											<td class="text-center">{%JOIN_DT%}</td>
-											<!--/if:{JOIN_DT_FLG}-->
-											<!--if:{TEMP_DT_FLG}-->
-											<td class="text-center color-del-member">{%TEMP_DT%}</td>
-											<!--/if:{TEMP_DT_FLG}-->
-											<td class="text-center">{%LAST_LOGIN_DT%}</td>
-											<td class="text-center">{%STATUS%}</td>
-										</tr>
-										<!--/loop:{LIST}-->
-									</tbody>
-								</table>
-							</div><!-- /.table-responsive -->
-							<div class="card-footer d-flex justify-content-start">
-								<div class="vertical-center">
-									{%P%} / {%ALLP%} (全{%ALLROW%}件)
-									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
-										{%PAGING%}
-									</ul>
-								</div>
-							</div>
-						</div><!-- /.card -->
-					</div><!-- /.container-fluid -->
-				</form>
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2><i class="fas fa-dragon"></i> RYU8 Admin</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="member.php" class="active"><i class="fas fa-users"></i> Member Management</a></li>
+            <li><a href="model.php"><i class="fas fa-gamepad"></i> Model Management</a></li>
+            <li><a href="machines.php"><i class="fas fa-desktop"></i> Machine Management</a></li>
+            <li><a href="camera.php"><i class="fas fa-video"></i> Camera Management</a></li>
+            <li><a href="camera_settings.php"><i class="fas fa-cog"></i> Camera Assignment</a></li>
+            <li><a href="signaling.php"><i class="fas fa-server"></i> Signaling</a></li>
+            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> Streaming</a></li>
+        </ul>
+    </aside>
 
-				<!--#include file="footer.html"-->
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-users"></i> Member Management</h1>
+            <div class="topbar-actions">
+                <a href="javascript:void(0);" onclick="openDetail('');" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Member
+                </a>
+                <a href="javascript:void(0);" class="btn btn-warning" onclick="output();">
+                    <i class="fas fa-download"></i> Download CSV
+                </a>
+            </div>
+        </div>
 
-			</div><!-- /#content-wrapper -->
+        <form action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+        <input type="hidden" name="M" value="">
+        <input type="hidden" name="ODR" value="{%ODR%}">
+        <input type="hidden" name="P" value="{%P%}">
 
-		</div><!-- /#wrapper -->
+        <!-- 検索パネル -->
+        <div class="search-panel {%S_OPEN%}">
+            <div class="search-panel-header" onclick="this.parentElement.classList.toggle('collapsed');">
+                <h3><i class="fas fa-search"></i> Search Filters</h3>
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <div class="search-panel-body">
+                <div class="search-row">
+                    <div class="search-field">
+                        <label>Member No</label>
+                        <input type="text" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">
+                    </div>
+                    <div class="search-field">
+                        <label>Nickname <small>(Partial Match)</small></label>
+                        <input type="text" name="S_NICKNAME" value="{%S_NICKNAME%}">
+                    </div>
+                    <div class="search-field">
+                        <label>Email <small>(Partial Match)</small></label>
+                        <input type="text" name="S_MAIL" value="{%S_MAIL%}">
+                    </div>
+                    <div class="search-field">
+                        <label>Registration Date</label>
+                        <div class="search-range">
+                            <input type="text" class="flatpickr" name="JOIN_DT_FROM" value="{%JOIN_DT_FROM%}" placeholder="From">
+                            <span>～</span>
+                            <input type="text" class="flatpickr" name="JOIN_DT_TO" value="{%JOIN_DT_TO%}" placeholder="To">
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>Play Points</label>
+                        <div class="search-range">
+                            <input type="text" name="S_PLAY_POINT_FROM" value="{%S_PLAY_POINT_FROM%}" placeholder="Min">
+                            <span>～</span>
+                            <input type="text" name="S_PLAY_POINT_TO" value="{%S_PLAY_POINT_TO%}" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>Draw Points</label>
+                        <div class="search-range">
+                            <input type="text" name="S_DRAW_POINT_FROM" value="{%S_DRAW_POINT_FROM%}" placeholder="Min">
+                            <span>～</span>
+                            <input type="text" name="S_DRAW_POINT_TO" value="{%S_DRAW_POINT_TO%}" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label>Blacklist Status</label>
+                        <select name="S_BLACK_FLG">
+                            {%SEL_BLACK_FLG%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>Account Status</label>
+                        <select name="S_STATUS">
+                            {%SEL_STATUS%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>Invite Code Used</label>
+                        <input type="text" name="S_INVITE_CD" value="{%S_INVITE_CD%}">
+                    </div>
+                    <div class="search-field">
+                        <label>Tester</label>
+                        <select name="S_TESTER">
+                            {%SEL_TESTER%}
+                        </select>
+                    </div>
+                    <!--if:{AUTH_MEMBER_MOBILE}-->
+                    <div class="search-field">
+                        <label>Mobile Number <small>(Prefix Match)</small></label>
+                        <input type="text" name="S_MOBILE" value="{%S_MOBILE%}">
+                    </div>
+                    <!--/if:{AUTH_MEMBER_MOBILE}-->
+                    <!--if:{GIFT_AGENT}-->
+                    <div class="search-field">
+                        <label>{%GIFT_AGENT_DISPNAME%}</label>
+                        <select name="S_AGENT">
+                            {%SEL_AGENT%}
+                        </select>
+                    </div>
+                    <!--/if:{GIFT_AGENT}-->
+                </div>
+                <div class="search-actions">
+                    <a href="javascript:void(0);" class="btn btn-reset" onclick="reset();">
+                        <i class="fas fa-undo"></i> Reset
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-search" onclick="reSearch();">
+                        <i class="fas fa-search"></i> Search
+                    </a>
+                </div>
+            </div>
+        </div>
 
-		<!--#include file="inc_script.html"-->
+        <!-- データテーブル -->
+        <div class="data-table-wrapper">
+            <div class="data-table-header">
+                <div class="pagination-info">
+                    Page {%P%} / {%ALLP%} (Total: {%ALLROW%} members)
+                </div>
+                <ul class="pagination" id="PAGEMOVE_TOP">
+                    {%PAGING%}
+                </ul>
+            </div>
 
-	<script src="js/list.js"></script>
-	<script type="text/javascript">
-	// 検索実行
-	function reSearch() {
-		var frm = window.document.MAINFORM;
+            <table>
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            Member No
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('member_no asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th>
+                            Nickname
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('nickname asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('nickname desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th>Email</th>
+                        <!--if:{AUTH_MEMBER_MOBILE}-->
+                        <th>Mobile</th>
+                        <!--/if:{AUTH_MEMBER_MOBILE}-->
+                        <th class="text-right">
+                            Play Pt
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('point asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('point desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th class="text-right">
+                            Draw Pt
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('draw_point asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('draw_point desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <!--if:{MENU_goods_status}-->
+                        <th class="text-center">Entry Count</th>
+                        <!--/if:{MENU_goods_status}-->
+                        <th class="text-center">
+                            Registration
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('join_dt asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('join_dt desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th class="text-center">
+                            Last Login
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('login_dt asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('login_dt desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th class="text-center">
+                            Status
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('state asc, member_no desc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('state desc, member_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--loop:{LIST}-->
+                    <tr>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" onclick="openDetail('{%MEMBER_NO%}');">{%DISP_MEMBER_NO%}</a>
+                        </td>
+                        <td>
+                            {%NICKNAME%}
+                            <!--if:{BLACK_FLG}--><span class="badge badge-black">BLACK</span><!--/if:{BLACK_FLG}-->
+                            <!--if:{IS_TESTER}--><span class="badge badge-tester">TESTER</span><!--/if:{IS_TESTER}-->
+                            <!--if:{IS_AGENT}--><span class="badge badge-agent">AGENT</span><!--/if:{IS_AGENT}-->
+                        </td>
+                        <td>{%MAIL%}</td>
+                        <!--if:{AUTH_MEMBER_MOBILE}-->
+                        <td><!--if:{EXT_MOBILE}-->[{%INTERNATIONAL_CD%}] {%MOBILE%}<!--/if:{EXT_MOBILE}--></td>
+                        <!--/if:{AUTH_MEMBER_MOBILE}-->
+                        <td class="text-right">
+                            <!--if:{MENU_pointhistory}--><a href="pointhistory.php?S_MEMBER_NO={%MEMBER_NO%}"><!--/if:{MENU_pointhistory}-->{%PLAY_POINT%}<!--if:{MENU_pointhistory}--></a><!--/if:{MENU_pointhistory}-->
+                            <!--if:{NO_QUIT}-->&nbsp;<a href="javascript:void(0);" onclick="openDetail2('{%MEMBER_NO%}');">Adjust</a><!--/if:{NO_QUIT}-->
+                        </td>
+                        <td class="text-right">
+                            <!--if:{MENU_drawhistory}--><a href="drawhistory.php?S_MEMBER_NO={%MEMBER_NO%}"><!--/if:{MENU_drawhistory}-->{%DRAW_POINT%}<!--if:{MENU_drawhistory}--></a><!--/if:{MENU_drawhistory}-->
+                        </td>
+                        <!--if:{MENU_goods_status}-->
+                        <td class="text-center"><a href="goods_status.php?S_MEMBER_NO={%MEMBER_NO%}">{%DRAW_COUNT%}</a></td>
+                        <!--/if:{MENU_goods_status}-->
+                        <td class="text-center">
+                            <!--if:{JOIN_DT_FLG}-->{%JOIN_DT%}<!--/if:{JOIN_DT_FLG}-->
+                            <!--if:{TEMP_DT_FLG}--><span style="color: var(--admin-danger);">{%TEMP_DT%}</span><!--/if:{TEMP_DT_FLG}-->
+                        </td>
+                        <td class="text-center">{%LAST_LOGIN_DT%}</td>
+                        <td class="text-center">{%STATUS%}</td>
+                    </tr>
+                    <!--/loop:{LIST}-->
+                </tbody>
+            </table>
 
-		if (!chk_number("{%A0560%}", frm["S_MEMBER_NO"].value, false)) return false;
-		if (!chk_charHalf("{%A0503%}", frm["S_MAIL"].value, false)) return false;
-		if (!chk_date("{%A0561%}", frm["JOIN_DT_FROM"].value, false)) return false;
-		if (!chk_date("{%A0562%}", frm["JOIN_DT_TO"].value, false)) return false;
-		if (frm["JOIN_DT_FROM"].value.length > 0 && frm["JOIN_DT_TO"].value.length > 0) {
-			if (!compare_date("{%A0563%}", frm["JOIN_DT_FROM"].value, frm["JOIN_DT_TO"].value, false)) return false;
-		}
-		if (!chk_number("{%A0564%}", frm["S_PLAY_POINT_FROM"].value, false)) return false;
-		if (!chk_number("{%A0565%}", frm["S_PLAY_POINT_TO"].value, false)) return false;
-		if (frm["S_PLAY_POINT_FROM"].value.length > 0 && frm["S_PLAY_POINT_TO"].value.length > 0) {
-			if (!compare_numeric("{%A0566%}", frm["S_PLAY_POINT_FROM"].value, frm["S_PLAY_POINT_TO"].value, false)) return false;
-		}
-		if (!chk_number("{%A0567%}", frm["S_DRAW_POINT_FROM"].value, false)) return false;
-		if (!chk_number("{%A0568%}", frm["S_DRAW_POINT_TO"].value, false)) return false;
-		if (frm["S_DRAW_POINT_FROM"].value.length > 0 && frm["S_DRAW_POINT_TO"].value.length > 0) {
-			if (!compare_numeric("{%A0569%}", frm["S_DRAW_POINT_FROM"].value, frm["S_DRAW_POINT_TO"].value, false)) return false;
-		}
-		<!--if:{AUTH_MEMBER_MOBILE}-->
-		if (!chk_number("{%A0538%}", frm["S_MOBILE"].value, false)) return false;
-		<!--/if:{AUTH_MEMBER_MOBILE}-->
+            <div class="data-table-header" style="margin-top: 20px;">
+                <div class="pagination-info">
+                    Page {%P%} / {%ALLP%} (Total: {%ALLROW%} members)
+                </div>
+                <ul class="pagination" id="PAGEMOVE_BTM">
+                    {%PAGING%}
+                </ul>
+            </div>
+        </div>
 
-		// クリア
-		frm["P"].value = "1";
-		trans();
-	}
+        </form>
+    </main>
+</div>
 
-	// 詳細画面Open
-	function openDetail(key) {
-		win_open("{%SELF%}", "M=detail&NO=" + key, "member_detail", 820, 800);
-	}
-	// ポイント修正画面Open
-	function openDetail2(key) {
-		win_open("{%SELF%}", "M=detail2&NO=" + key, "member_detail", 820, 900);
-	}
-	
-	// CSV出力
-	function output() {
-		var frm = window.document.MAINFORM;
-		frm.reset();		// フォームリセット
-		frm["M"].value = "output";
-		frm.submit();
-		frm["M"].value = "";
-	}
+<!--#include file="inc_script.html"-->
 
-	// 初期処理
-	function init() {
-		sortImageActive();
-		//writePageMove();
-	}
+<script src="vendor/flatpickr/js/flatpickr.min.js"></script>
+<script src="vendor/flatpickr/js/flatpickr-{%DEFAULT_LANG%}.js?{%SYS_VERDATE%}"></script>
+<script src="js/list.js"></script>
+<script>
+// Flatpickr初期化
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr('.flatpickr', {
+        dateFormat: 'Y-m-d',
+        altInput: true,
+        altFormat: 'Y-m-d'
+    });
+});
 
-	window.onload=init
-	</script>
-	</body>
+// 検索実行
+function reSearch() {
+    var frm = window.document.MAINFORM;
+
+    if (!chk_number("{%A0560%}", frm["S_MEMBER_NO"].value, false)) return false;
+    if (!chk_charHalf("{%A0503%}", frm["S_MAIL"].value, false)) return false;
+    if (!chk_date("{%A0561%}", frm["JOIN_DT_FROM"].value, false)) return false;
+    if (!chk_date("{%A0562%}", frm["JOIN_DT_TO"].value, false)) return false;
+    if (frm["JOIN_DT_FROM"].value.length > 0 && frm["JOIN_DT_TO"].value.length > 0) {
+        if (!compare_date("{%A0563%}", frm["JOIN_DT_FROM"].value, frm["JOIN_DT_TO"].value, false)) return false;
+    }
+    if (!chk_number("{%A0564%}", frm["S_PLAY_POINT_FROM"].value, false)) return false;
+    if (!chk_number("{%A0565%}", frm["S_PLAY_POINT_TO"].value, false)) return false;
+    if (frm["S_PLAY_POINT_FROM"].value.length > 0 && frm["S_PLAY_POINT_TO"].value.length > 0) {
+        if (!compare_numeric("{%A0566%}", frm["S_PLAY_POINT_FROM"].value, frm["S_PLAY_POINT_TO"].value, false)) return false;
+    }
+    if (!chk_number("{%A0567%}", frm["S_DRAW_POINT_FROM"].value, false)) return false;
+    if (!chk_number("{%A0568%}", frm["S_DRAW_POINT_TO"].value, false)) return false;
+    if (frm["S_DRAW_POINT_FROM"].value.length > 0 && frm["S_DRAW_POINT_TO"].value.length > 0) {
+        if (!compare_numeric("{%A0569%}", frm["S_DRAW_POINT_FROM"].value, frm["S_DRAW_POINT_TO"].value, false)) return false;
+    }
+    <!--if:{AUTH_MEMBER_MOBILE}-->
+    if (!chk_number("{%A0538%}", frm["S_MOBILE"].value, false)) return false;
+    <!--/if:{AUTH_MEMBER_MOBILE}-->
+
+    // クリア
+    frm["P"].value = "1";
+    trans();
+}
+
+// ソート
+function reSort(sort) {
+    var frm = window.document.MAINFORM;
+    frm["ODR"].value = sort;
+    frm["P"].value = "1";
+    trans();
+}
+
+// 詳細画面Open
+function openDetail(key) {
+    win_open("{%SELF%}", "M=detail&NO=" + key, "member_detail", 820, 800);
+}
+
+// ポイント修正画面Open
+function openDetail2(key) {
+    win_open("{%SELF%}", "M=detail2&NO=" + key, "member_detail", 820, 900);
+}
+
+// CSV出力
+function output() {
+    var frm = window.document.MAINFORM;
+    frm.reset();
+    frm["M"].value = "output";
+    frm.submit();
+    frm["M"].value = "";
+}
+
+// リセット
+function reset() {
+    var frm = window.document.MAINFORM;
+    frm.reset();
+    frm.submit();
+}
+
+// フォーム送信
+function trans() {
+    var frm = window.document.MAINFORM;
+    frm.submit();
+}
+
+// 初期処理
+function init() {
+    sortImageActive();
+}
+
+window.onload = init;
+</script>
+</body>
 </html>

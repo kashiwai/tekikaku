@@ -1,120 +1,183 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<!--#include file="head.html"-->
-		<title>{%SITE_TITLE%} - ギフト枠加算設定</title>
-	</head>
-	
-	<body id="page-top">
-		
-		<!--#include file="navigation.html"-->
-		
-		<div id="wrapper" class="main-win">
-			<!--#include file="sidebar.html"-->
-			
-			<!-- Page Contents ================================================== -->
-			<div id="content-wrapper">
-				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
-				<input type="hidden" name="ODR" value="{%ODR%}">
-				<input type="hidden" name="P" value="{%P%}">
-					
-					<div class="container-fluid">
-						<h3 class="page-header"><i class="fas fa-fw fa-gift"></i> ギフト枠加算設定</h3>
-						
-						<div class="card mt-3" style="max-width:780px;">
-							<div class="card-header d-flex justify-content-between">
-								<div class="vertical-center">
-									{%P%} / {%ALLP%} (全{%ALLROW%}件)
-									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
-										{%PAGING%}
-									</ul>
-								</div>
-								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
-							</div>
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:100%;">
-									<thead>
-										<tr>
-											<th style="width:180px;">設定No
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="addset_no asc" onClick="reSort('addset_no asc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="addset_no desc" onClick="reSort('addset_no desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th>集計タイプ
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="addset_type asc, base_val asc" onClick="reSort('addset_type asc, base_val asc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="addset_type desc, base_val asc" onClick="reSort('addset_type desc, base_val asc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-											<th style="width:200px;">しきい値
-											</th>
-											<th>加算{%CURRENCY_3%}枠
-												<div class="list-sort">
-													<a href="javascript:void(0);" class="sort-asc" name="add_point asc" onClick="reSort('add_point asc');"><i class="fas fa-angle-up"></i></a>
-													<a href="javascript:void(0);" class="sort-desc" name="add_point desc" onClick="reSort('add_point desc');"><i class="fas fa-angle-down"></i></a>
-												</div>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<!--loop:{LIST}-->
-										<tr>
-											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%ADDSET_NO%}');">{%ADDSET_NO_PAD%}</a></td>
-											<td>{%ADDSET_TYPE_NAME%}</td>
-											<td class="text-right">{%BASE_VAL%}&nbsp;{%VALUNIT%}</td>
-											<td class="text-right">{%ADD_POINT%}&nbsp;{%CURRENCY_3%}</td>
-										</tr>
-										<!--/loop:{LIST}-->
-									</tbody>
-								</table>
-							</div><!-- /.table-responsive -->
-							<div class="card-footer d-flex justify-content-start">
-								<div class="vertical-center">
-									{%P%} / {%ALLP%} (全{%ALLROW%}件)
-									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
-										{%PAGING%}
-									</ul>
-								</div>
-							</div>
-						</div><!-- /.card -->
-					</div><!-- /.container-fluid -->
-				</form>
-				
-				<!--#include file="footer.html"-->
-				
-			</div><!-- /#content-wrapper -->
-			
-		</div><!-- /#wrapper -->
-		
-		<!--#include file="inc_script.html"-->
-		
-		<script src="js/list.js"></script>
-		<script type="text/javascript">
-			// 検索実行
-			function reSearch() {
-				var frm = window.document.MAINFORM;
-				// クリア
-				frm["P"].value = "1";
-				trans();
-			}
-			
-			// 詳細画面Open
-			function openDetail(key1) {
-				if( key1 == ''){
-					win_open("{%SELF%}", "M=detail", "giftaddset_detail", 820, 500);
-				}else{
-					win_open("{%SELF%}", "M=detail&NO=" + key1, "giftaddset_detail", 820, 500);
-				}
-			}
-			
-			// 初期処理
-			function init() {
-				sortImageActive();
-			}
-			
-			window.onload=init
-		</script>
-		
-	</body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - Gift Frame Addition Settings</title>
+
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); display: flex; align-items: center; gap: 10px; }
+
+        /* テーブルカード */
+        .table-card { background: var(--admin-card); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; max-width: 780px; }
+        .table-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--admin-border); }
+        .table-info { display: flex; align-items: center; gap: 15px; color: var(--admin-text-muted); font-size: 14px; }
+        .pagination { display: flex; list-style: none; gap: 5px; margin: 0; }
+        .pagination a { padding: 5px 10px; border-radius: 4px; background: var(--admin-darker); color: var(--admin-text); text-decoration: none; transition: all 0.3s; }
+        .pagination a:hover { background: var(--admin-primary); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--admin-darker); }
+        th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: var(--admin-text-muted); white-space: nowrap; position: relative; }
+        th.text-center { text-align: center; }
+        .list-sort { display: inline-flex; flex-direction: column; gap: 2px; margin-left: 8px; }
+        .list-sort a { color: var(--admin-text-muted); font-size: 12px; transition: color 0.3s; }
+        .list-sort a:hover { color: var(--admin-primary); }
+        td { padding: 12px; border-top: 1px solid var(--admin-border); color: var(--admin-text); }
+        td.text-center { text-align: center; }
+        td.text-right { text-align: right; }
+        tbody tr { transition: background 0.3s; }
+        tbody tr:hover { background: rgba(3, 118, 201, 0.05); }
+        td a { color: var(--admin-primary); text-decoration: none; transition: color 0.3s; }
+        td a:hover { color: var(--admin-info); text-decoration: underline; }
+        .table-footer { padding: 15px 20px; border-top: 1px solid var(--admin-border); }
+
+        /* ボタン */
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .table-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <!--#include file="head.html"-->
+</head>
+<body id="page-top">
+
+<!--#include file="navigation.html"-->
+
+<div class="admin-layout">
+    <!--#include file="sidebar.html"-->
+
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-gift"></i> Gift Frame Addition Settings</h1>
+        </div>
+
+        <form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+        <input type="hidden" name="ODR" value="{%ODR%}">
+        <input type="hidden" name="P" value="{%P%}">
+
+        <div class="table-card">
+            <div class="table-header">
+                <div class="table-info">
+                    <span>{%P%} / {%ALLP%} (Total: {%ALLROW%})</span>
+                    <ul class="pagination" id="PAGEMOVE_TOP">
+                        {%PAGING%}
+                    </ul>
+                </div>
+                <a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary"><i class="fas fa-plus"></i> New Entry</a>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:180px;">Setting No
+                                <div class="list-sort">
+                                    <a href="javascript:void(0);" class="sort-asc" name="addset_no asc" onClick="reSort('addset_no asc');"><i class="fas fa-angle-up"></i></a>
+                                    <a href="javascript:void(0);" class="sort-desc" name="addset_no desc" onClick="reSort('addset_no desc');"><i class="fas fa-angle-down"></i></a>
+                                </div>
+                            </th>
+                            <th>Aggregation Type
+                                <div class="list-sort">
+                                    <a href="javascript:void(0);" class="sort-asc" name="addset_type asc, base_val asc" onClick="reSort('addset_type asc, base_val asc');"><i class="fas fa-angle-up"></i></a>
+                                    <a href="javascript:void(0);" class="sort-desc" name="addset_type desc, base_val asc" onClick="reSort('addset_type desc, base_val asc');"><i class="fas fa-angle-down"></i></a>
+                                </div>
+                            </th>
+                            <th style="width:200px;">Threshold</th>
+                            <th>Addition {%CURRENCY_3%} Frame
+                                <div class="list-sort">
+                                    <a href="javascript:void(0);" class="sort-asc" name="add_point asc" onClick="reSort('add_point asc');"><i class="fas fa-angle-up"></i></a>
+                                    <a href="javascript:void(0);" class="sort-desc" name="add_point desc" onClick="reSort('add_point desc');"><i class="fas fa-angle-down"></i></a>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--loop:{LIST}-->
+                        <tr>
+                            <td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%ADDSET_NO%}');">{%ADDSET_NO_PAD%}</a></td>
+                            <td>{%ADDSET_TYPE_NAME%}</td>
+                            <td class="text-right">{%BASE_VAL%}&nbsp;{%VALUNIT%}</td>
+                            <td class="text-right">{%ADD_POINT%}&nbsp;{%CURRENCY_3%}</td>
+                        </tr>
+                        <!--/loop:{LIST}-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">
+                <div class="table-info">
+                    <span>{%P%} / {%ALLP%} (Total: {%ALLROW%})</span>
+                    <ul class="pagination" id="PAGEMOVE_BTM">
+                        {%PAGING%}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        </form>
+
+        <!--#include file="footer.html"-->
+
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+<script src="js/list.js"></script>
+<script type="text/javascript">
+    // 検索実行
+    function reSearch() {
+        var frm = window.document.MAINFORM;
+        // クリア
+        frm["P"].value = "1";
+        trans();
+    }
+
+    // 詳細画面Open
+    function openDetail(key1) {
+        if( key1 == ''){
+            win_open("{%SELF%}", "M=detail", "giftaddset_detail", 820, 500);
+        }else{
+            win_open("{%SELF%}", "M=detail&NO=" + key1, "giftaddset_detail", 820, 500);
+        }
+    }
+
+    // 初期処理
+    function init() {
+        sortImageActive();
+    }
+
+    window.onload=init
+</script>
+
+</body>
 </html>

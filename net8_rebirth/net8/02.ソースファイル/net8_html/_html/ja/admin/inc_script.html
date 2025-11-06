@@ -33,3 +33,512 @@
 
 		<!-- Custom scripts for all pages-->
 		<script src="js/sb-admin.min.js?{%SYS_VERDATE%}"></script>
+
+		<!-- 🐲 RYU8 Loading Animation System -->
+		<style>
+		/* 🐲 RYU8 ローディングシステム */
+		:root {
+		    --loading-primary: #0376C9;
+		    --loading-secondary: #A88A59;
+		    --loading-dragon: #00C48C;
+		    --loading-glow: rgba(3, 118, 201, 0.5);
+		}
+
+		/* フルスクリーンオーバーレイ */
+		.ryujin-loading-overlay {
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: rgba(15, 17, 23, 0.98);
+		    backdrop-filter: blur(10px);
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    z-index: 9999;
+		    opacity: 0;
+		    visibility: hidden;
+		    transition: opacity 0.3s ease, visibility 0.3s ease;
+		}
+
+		.ryujin-loading-overlay.active {
+		    opacity: 1;
+		    visibility: visible;
+		}
+
+		/* ローディングコンテナ */
+		.ryujin-loading-container {
+		    text-align: center;
+		    position: relative;
+		}
+
+		/* 🐲 ドラゴンサークル */
+		.dragon-circle {
+		    width: 200px;
+		    height: 200px;
+		    position: relative;
+		    margin: 0 auto 30px;
+		}
+
+		.dragon-ring {
+		    position: absolute;
+		    width: 100%;
+		    height: 100%;
+		    border: 3px solid transparent;
+		    border-radius: 50%;
+		    animation: dragonRotate 3s linear infinite;
+		}
+
+		.dragon-ring:nth-child(1) {
+		    border-top-color: var(--loading-primary);
+		    animation-duration: 2s;
+		}
+
+		.dragon-ring:nth-child(2) {
+		    border-right-color: var(--loading-dragon);
+		    animation-duration: 2.5s;
+		    animation-direction: reverse;
+		}
+
+		.dragon-ring:nth-child(3) {
+		    border-bottom-color: var(--loading-secondary);
+		    animation-duration: 3s;
+		}
+
+		@keyframes dragonRotate {
+		    0% { transform: rotate(0deg); }
+		    100% { transform: rotate(360deg); }
+		}
+
+		/* 中央のドラゴンアイコン */
+		.dragon-core {
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		    font-size: 60px;
+		    color: var(--loading-primary);
+		    animation: dragonPulse 2s ease-in-out infinite;
+		    text-shadow: 0 0 20px var(--loading-glow);
+		}
+
+		@keyframes dragonPulse {
+		    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+		    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+		}
+
+		/* 六角形パーティクル */
+		.dragon-particles {
+		    position: absolute;
+		    width: 100%;
+		    height: 100%;
+		    top: 0;
+		    left: 0;
+		}
+
+		.particle {
+		    position: absolute;
+		    width: 8px;
+		    height: 8px;
+		    background: var(--loading-primary);
+		    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+		    animation: particleFloat 3s ease-in-out infinite;
+		    opacity: 0.6;
+		}
+
+		.particle:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
+		.particle:nth-child(2) { top: 30%; left: 80%; animation-delay: 0.5s; }
+		.particle:nth-child(3) { top: 70%; left: 80%; animation-delay: 1s; }
+		.particle:nth-child(4) { top: 90%; left: 50%; animation-delay: 1.5s; }
+		.particle:nth-child(5) { top: 70%; left: 20%; animation-delay: 2s; }
+		.particle:nth-child(6) { top: 30%; left: 20%; animation-delay: 2.5s; }
+
+		@keyframes particleFloat {
+		    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+		    50% { transform: translateY(-20px) scale(1.2); opacity: 0.8; }
+		}
+
+		/* ローディングテキスト */
+		.loading-text {
+		    font-size: 20px;
+		    font-weight: 600;
+		    color: #E5E9F2;
+		    margin-bottom: 15px;
+		    animation: textGlow 2s ease-in-out infinite;
+		}
+
+		@keyframes textGlow {
+		    0%, 100% { text-shadow: 0 0 10px rgba(3, 118, 201, 0.3); }
+		    50% { text-shadow: 0 0 20px rgba(3, 118, 201, 0.6); }
+		}
+
+		.loading-subtext {
+		    font-size: 14px;
+		    color: #99A1B7;
+		    margin-top: 10px;
+		}
+
+		/* プログレスバー */
+		.ryujin-progress-bar {
+		    width: 300px;
+		    height: 4px;
+		    background: rgba(46, 52, 71, 0.5);
+		    border-radius: 10px;
+		    overflow: hidden;
+		    margin: 20px auto 0;
+		    position: relative;
+		}
+
+		.progress-fill {
+		    height: 100%;
+		    background: linear-gradient(90deg,
+		        var(--loading-primary) 0%,
+		        var(--loading-dragon) 50%,
+		        var(--loading-primary) 100%);
+		    background-size: 200% 100%;
+		    animation: progressShine 2s linear infinite;
+		    border-radius: 10px;
+		    box-shadow: 0 0 10px var(--loading-glow);
+		    transition: width 0.3s ease;
+		}
+
+		@keyframes progressShine {
+		    0% { background-position: 200% 0; }
+		    100% { background-position: -200% 0; }
+		}
+
+		/* インラインローディングスピナー（ボタン用） */
+		.ryujin-spinner {
+		    display: inline-block;
+		    width: 16px;
+		    height: 16px;
+		    border: 2px solid rgba(255, 255, 255, 0.3);
+		    border-top-color: #fff;
+		    border-radius: 50%;
+		    animation: spin 0.8s linear infinite;
+		    margin-right: 8px;
+		    vertical-align: middle;
+		}
+
+		@keyframes spin {
+		    0% { transform: rotate(0deg); }
+		    100% { transform: rotate(360deg); }
+		}
+
+		/* データテーブルローディング */
+		.table-loading {
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: rgba(37, 40, 57, 0.95);
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    z-index: 100;
+		    border-radius: 12px;
+		}
+
+		.table-loading-content {
+		    text-align: center;
+		}
+
+		.loading-dots {
+		    display: flex;
+		    gap: 8px;
+		    justify-content: center;
+		    margin-top: 15px;
+		}
+
+		.loading-dot {
+		    width: 12px;
+		    height: 12px;
+		    background: var(--loading-primary);
+		    border-radius: 50%;
+		    animation: dotBounce 1.4s ease-in-out infinite;
+		}
+
+		.loading-dot:nth-child(1) { animation-delay: 0s; }
+		.loading-dot:nth-child(2) { animation-delay: 0.2s; }
+		.loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+		@keyframes dotBounce {
+		    0%, 80%, 100% { transform: scale(1); opacity: 0.5; }
+		    40% { transform: scale(1.3); opacity: 1; }
+		}
+
+		/* レスポンシブ（スマホ最適化） */
+		@media (max-width: 768px) {
+		    .dragon-circle {
+		        width: 150px;
+		        height: 150px;
+		    }
+
+		    .dragon-core {
+		        font-size: 40px;
+		    }
+
+		    .ryujin-progress-bar {
+		        width: 250px;
+		    }
+
+		    .loading-text {
+		        font-size: 18px;
+		    }
+
+		    .loading-subtext {
+		        font-size: 12px;
+		    }
+		}
+		</style>
+
+		<!-- フルスクリーンローディングオーバーレイ -->
+		<div class="ryujin-loading-overlay" id="ryu8Loading">
+		    <div class="ryujin-loading-container">
+		        <!-- ドラゴンサークル -->
+		        <div class="dragon-circle">
+		            <!-- 回転リング -->
+		            <div class="dragon-ring"></div>
+		            <div class="dragon-ring"></div>
+		            <div class="dragon-ring"></div>
+
+		            <!-- 中央ドラゴンアイコン -->
+		            <div class="dragon-core">
+		                <i class="fas fa-dragon"></i>
+		            </div>
+
+		            <!-- パーティクル -->
+		            <div class="dragon-particles">
+		                <div class="particle"></div>
+		                <div class="particle"></div>
+		                <div class="particle"></div>
+		                <div class="particle"></div>
+		                <div class="particle"></div>
+		                <div class="particle"></div>
+		            </div>
+		        </div>
+
+		        <!-- ローディングテキスト -->
+		        <div class="loading-text">RYU8</div>
+		        <div class="loading-subtext" id="loadingStatus">Loading...</div>
+
+		        <!-- プログレスバー -->
+		        <div class="ryujin-progress-bar">
+		            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+		        </div>
+		    </div>
+		</div>
+
+		<script>
+		// 🐲 RYU8 ローディングシステム
+		const Ryu8Loading = {
+		    overlay: null,
+		    progressFill: null,
+		    statusText: null,
+
+		    // 初期化
+		    init() {
+		        this.overlay = document.getElementById('ryu8Loading');
+		        this.progressFill = document.getElementById('progressFill');
+		        this.statusText = document.getElementById('loadingStatus');
+		    },
+
+		    // ローディング表示
+		    show(message = 'Loading...') {
+		        if (!this.overlay) this.init();
+		        this.overlay.classList.add('active');
+		        if (this.statusText) {
+		            this.statusText.textContent = message;
+		        }
+		        this.setProgress(0);
+		    },
+
+		    // ローディング非表示
+		    hide() {
+		        if (!this.overlay) return;
+		        this.setProgress(100);
+		        setTimeout(() => {
+		            this.overlay.classList.remove('active');
+		        }, 300);
+		    },
+
+		    // プログレス設定
+		    setProgress(percent) {
+		        if (this.progressFill) {
+		            this.progressFill.style.width = percent + '%';
+		        }
+		    },
+
+		    // ステータス更新
+		    setStatus(message) {
+		        if (this.statusText) {
+		            this.statusText.textContent = message;
+		        }
+		    },
+
+		    // 自動プログレス（フェイク）
+		    autoProgress(duration = 2000) {
+		        let progress = 0;
+		        const interval = 50;
+		        const step = (100 / duration) * interval;
+
+		        const timer = setInterval(() => {
+		            progress += step;
+		            if (progress >= 90) {
+		                progress = 90; // 90%で止める（完了時に100%にする）
+		                clearInterval(timer);
+		            }
+		            this.setProgress(progress);
+		        }, interval);
+
+		        return timer;
+		    }
+		};
+
+		// ページ読み込み時のローディング
+		window.addEventListener('DOMContentLoaded', () => {
+		    Ryu8Loading.init();
+		    Ryu8Loading.show('Loading Page...');
+		    const timer = Ryu8Loading.autoProgress(1500);
+		});
+
+		window.addEventListener('load', () => {
+		    Ryu8Loading.setProgress(100);
+		    setTimeout(() => {
+		        Ryu8Loading.hide();
+		    }, 300);
+		});
+
+		// フォーム送信時のローディング
+		document.addEventListener('submit', (e) => {
+		    if (e.target.tagName === 'FORM') {
+		        // フォームのaction/methodで判定
+		        const action = e.target.getAttribute('action') || '';
+		        const method = e.target.getAttribute('method') || '';
+
+		        if (action.includes('delete') || action.includes('mode=delete')) {
+		            Ryu8Loading.show('Deleting...');
+		        } else if (action.includes('save') || method.toLowerCase() === 'post') {
+		            Ryu8Loading.show('Saving...');
+		        } else {
+		            Ryu8Loading.show('Processing...');
+		        }
+		        Ryu8Loading.autoProgress(2000);
+		    }
+		});
+
+		// 状況別ローディングヘルパー関数
+		const Ryu8 = {
+		    // データ読み込み
+		    loadData: function(callback) {
+		        Ryu8Loading.show('Loading Data...');
+		        const timer = Ryu8Loading.autoProgress(3000);
+		        if (callback) callback(timer);
+		    },
+
+		    // 保存
+		    save: function(callback) {
+		        Ryu8Loading.show('Saving...');
+		        const timer = Ryu8Loading.autoProgress(2000);
+		        if (callback) callback(timer);
+		    },
+
+		    // 削除
+		    delete: function(callback) {
+		        Ryu8Loading.show('Deleting...');
+		        const timer = Ryu8Loading.autoProgress(2000);
+		        if (callback) callback(timer);
+		    },
+
+		    // 接続
+		    connect: function(callback) {
+		        Ryu8Loading.show('Connecting...');
+		        const timer = Ryu8Loading.autoProgress(3000);
+		        if (callback) callback(timer);
+		    },
+
+		    // アップロード
+		    upload: function(callback) {
+		        Ryu8Loading.show('Uploading...');
+		        const timer = Ryu8Loading.autoProgress(3000);
+		        if (callback) callback(timer);
+		    },
+
+		    // ダウンロード
+		    download: function(callback) {
+		        Ryu8Loading.show('Downloading...');
+		        const timer = Ryu8Loading.autoProgress(3000);
+		        if (callback) callback(timer);
+		    },
+
+		    // 検索
+		    search: function(callback) {
+		        Ryu8Loading.show('Searching...');
+		        const timer = Ryu8Loading.autoProgress(2000);
+		        if (callback) callback(timer);
+		    },
+
+		    // カスタム
+		    custom: function(message, callback) {
+		        Ryu8Loading.show(message);
+		        const timer = Ryu8Loading.autoProgress(3000);
+		        if (callback) callback(timer);
+		    },
+
+		    // 完了
+		    complete: function() {
+		        Ryu8Loading.setProgress(100);
+		        setTimeout(() => {
+		            Ryu8Loading.hide();
+		        }, 300);
+		    }
+		};
+
+		// Ajaxローディング用ヘルパー
+		function showLoading(message) {
+		    Ryu8Loading.show(message);
+		    return Ryu8Loading.autoProgress(3000);
+		}
+
+		function hideLoading() {
+		    Ryu8Loading.hide();
+		}
+
+		// データテーブルローディング用
+		function showTableLoading(tableId) {
+		    const table = document.getElementById(tableId);
+		    if (!table) return;
+
+		    const wrapper = table.closest('.data-table-wrapper');
+		    if (!wrapper) return;
+
+		    const loading = document.createElement('div');
+		    loading.className = 'table-loading';
+		    loading.innerHTML = `
+		        <div class="table-loading-content">
+		            <div class="dragon-core" style="position: relative; transform: none;">
+		                <i class="fas fa-dragon"></i>
+		            </div>
+		            <div class="loading-text" style="font-size: 16px; margin-top: 15px;">Loading...</div>
+		            <div class="loading-dots">
+		                <div class="loading-dot"></div>
+		                <div class="loading-dot"></div>
+		                <div class="loading-dot"></div>
+		            </div>
+		        </div>
+		    `;
+
+		    wrapper.style.position = 'relative';
+		    wrapper.appendChild(loading);
+
+		    return loading;
+		}
+
+		function hideTableLoading(loadingElement) {
+		    if (loadingElement && loadingElement.parentNode) {
+		        loadingElement.parentNode.removeChild(loadingElement);
+		    }
+		}
+		</script>
