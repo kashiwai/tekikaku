@@ -519,6 +519,15 @@ $GLOBALS["dummyFlgStatus"] = array(
 define('AUTO_PUSH', false); // 自動プッシュボタン機能（通常はfalse）
 define('PAYMENT_URL', URL_SSL_SITE . 'payment/'); // 決済URL
 
+// シグナリングサーバー設定（WebRTC用）
+// 各台のsignaling_idに対応するシグナリングサーバーのホスト:ポート
+$GLOBALS["RTC_Signaling_Servers"] = array(
+    "default" => "mgg-signaling-production-c1bd.up.railway.app:443",
+    "PEER001" => "mgg-signaling-production-c1bd.up.railway.app:443",
+    "PEER002" => "mgg-signaling-production-c1bd.up.railway.app:443",
+    "PEER003" => "mgg-signaling-production-c1bd.up.railway.app:443"
+);
+
 // WebRTC設定ファイルの読み込み
 require_once(__DIR__ . '/webRTC_setting.php');
 
