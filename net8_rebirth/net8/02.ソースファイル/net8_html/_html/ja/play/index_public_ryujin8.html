@@ -171,7 +171,8 @@ function connectWebRTC() {
 
     peer.on('open', function(id) {
         console.log('✅ Peer ID:', id);
-        updateStatus('カメラに接続中...');
+        console.log('📡 Connecting to camera:', cameraid);
+        updateStatus('カメラに接続中... (Camera: ' + cameraid + ')');
 
         // カメラIDに接続
         dataConnection = peer.connect(cameraid, {
@@ -179,12 +180,29 @@ function connectWebRTC() {
         });
 
         dataConnection.on('open', function() {
-            console.log('✅ Data connection opened');
+            console.log('✅ Data connection opened with camera');
+            updateStatus('データ接続完了。映像待機中...');
         });
 
         dataConnection.on('error', function(err) {
             console.error('❌ Data connection error:', err);
+            updateStatus('データ接続エラー: ' + err.message);
         });
+
+        dataConnection.on('close', function() {
+            console.log('📴 Data connection closed');
+            updateStatus('データ接続が切断されました');
+        });
+
+        // 10秒後にタイムアウト警告
+        setTimeout(function() {
+            if (!callConnection) {
+                console.warn('⚠️ No call received after 10 seconds');
+                console.warn('⚠️ Camera ID:', cameraid);
+                console.warn('⚠️ Is Windows PC running?');
+                updateStatus('映像が開始されません。Windows PCが起動しているか確認してください。');
+            }
+        }, 10000);
     });
 
     peer.on('call', function(call) {
