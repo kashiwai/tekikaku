@@ -24,8 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // 既存の設定ファイル読み込み
-require_once('../../_etc/setting.php');
-require_once('../../_lib/SmartDB.php');
+require_once('../../_etc/require_files.php');
 
 // 認証ヘッダー確認（簡易版）
 $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
@@ -53,15 +52,17 @@ if (!isset($input['modelId'])) {
 $modelId = $input['modelId'];
 
 try {
-    $db = new SmartDB(DB_DSN);
+    $pdo = get_db_connection();
 
     // 1. 機種情報を取得
     $modelSql = "SELECT model_no, model_cd, model_name, category
                  FROM mst_model
-                 WHERE model_cd = " . $db->conv_sql($modelId, FD_TEXT) . "
+                 WHERE model_cd = :model_id
                  AND del_flg = 0";
 
-    $model = $db->getRow($modelSql);
+    $stmt = $pdo->prepare($modelSql);
+    $stmt->execute(['model_id' => $modelId]);
+    $model = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$model) {
         http_response_code(404);
@@ -79,7 +80,7 @@ try {
                     m.camera_no,
                     m.machine_status
                 FROM dat_machine m
-                WHERE m.model_no = " . $db->conv_sql($model['model_no'], FD_NUM) . "
+                WHERE m.model_no = :model_no
                 AND m.del_flg = 0
                 AND m.machine_status = 0
                 AND m.end_date >= CURDATE()
@@ -90,7 +91,9 @@ try {
                 )
                 LIMIT 1";
 
-    $machine = $db->getRow($machineSql);
+    $stmt = $pdo->prepare($machineSql);
+    $stmt->execute(['model_no' => $model['model_no']]);
+    $machine = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$machine) {
         http_response_code(503);
@@ -120,8 +123,10 @@ try {
     $cameraInfo = null;
     if ($machine['camera_no']) {
         $cameraSql = "SELECT camera_url FROM mst_camera
-                      WHERE camera_no = " . $db->conv_sql($machine['camera_no'], FD_NUM);
-        $camera = $db->getRow($cameraSql);
+                      WHERE camera_no = :camera_no";
+        $stmt = $pdo->prepare($cameraSql);
+        $stmt->execute(['camera_no' => $machine['camera_no']]);
+        $camera = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($camera) {
             $cameraInfo = [
                 'cameraNo' => $machine['camera_no'],
