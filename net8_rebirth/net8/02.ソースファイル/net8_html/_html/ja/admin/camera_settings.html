@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>カメラ割り当て設定 - 竜神8 管理画面</title>
+
+    <style>
+        /* 竜神8 Admin Premium Design */
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .topbar-actions { display: flex; gap: 15px; align-items: center; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--admin-card); padding: 20px; border-radius: 12px; border-left: 4px solid var(--admin-primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stat-card-title { color: var(--admin-text-muted); font-size: 14px; margin-bottom: 10px; }
+        .stat-card-value { font-size: 32px; font-weight: bold; color: var(--admin-text); }
+        .data-table-wrapper { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .data-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .data-table-header h3 { font-size: 18px; color: var(--admin-text); }
+        .search-box { padding: 8px 16px; background: var(--admin-dark); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); outline: none; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--admin-darker); }
+        th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: var(--admin-text-muted); }
+        td { padding: 12px; border-top: 1px solid var(--admin-border); color: var(--admin-text); }
+        tbody tr:hover { background: rgba(3, 118, 201, 0.05); }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge.success { background: rgba(0, 196, 140, 0.2); color: var(--admin-success); }
+        .badge.danger { background: rgba(255, 100, 124, 0.2); color: var(--admin-danger); }
+        .badge.warning { background: rgba(255, 162, 107, 0.2); color: var(--admin-warning); }
+        select.form-control { padding: 6px 12px; background: var(--admin-dark); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); font-size: 13px; }
+    </style>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- サイドバー -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2><i class="fas fa-dragon"></i> 竜神8 Admin</h2>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="index.php"><i class="fas fa-tachometer-alt"></i> ダッシュボード</a></li>
+            <li><a href="member.php"><i class="fas fa-users"></i> 会員管理</a></li>
+            <li><a href="model.php"><i class="fas fa-gamepad"></i> 機種管理</a></li>
+            <li><a href="machines.php"><i class="fas fa-desktop"></i> 台管理</a></li>
+            <li><a href="camera.php"><i class="fas fa-video"></i> カメラ管理</a></li>
+            <li><a href="camera_settings.php" class="active"><i class="fas fa-cog"></i> カメラ割り当て</a></li>
+            <li><a href="signaling.php"><i class="fas fa-server"></i> Signaling</a></li>
+            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> 配信管理</a></li>
+        </ul>
+    </aside>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- トップバー -->
+        <div class="topbar">
+            <h1><i class="fas fa-cog"></i> カメラ割り当て設定</h1>
+            <div class="topbar-actions">
+                <a href="camera.php" class="btn btn-primary">
+                    <i class="fas fa-video"></i> カメラ管理
+                </a>
+            </div>
+        </div>
+
+        <!-- 統計カード -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-title">全台数</div>
+                <div class="stat-card-value">{$machine_count}</div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--admin-success);">
+                <div class="stat-card-title">割り当て済み</div>
+                <div class="stat-card-value">{$assigned_count}</div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--admin-warning);">
+                <div class="stat-card-title">未割り当て</div>
+                <div class="stat-card-value">{$unassigned_count}</div>
+            </div>
+        </div>
+
+        <!-- データテーブル -->
+        <div class="data-table-wrapper">
+            <div class="data-table-header">
+                <h3><i class="fas fa-table"></i> 台・カメラ割り当て一覧</h3>
+                <input type="text" class="search-box" placeholder="検索..." id="searchBox">
+            </div>
+
+            <table id="machineTable">
+                <thead>
+                    <tr>
+                        <th>台番号</th>
+                        <th>台CD</th>
+                        <th>機種名</th>
+                        <th>割り当てカメラ</th>
+                        <th>カメラ状態</th>
+                        <th>カメラ変更</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {section name=i loop=$machine_list}
+                    <tr>
+                        <td>#{$machine_list[i].machine_no}</td>
+                        <td>{$machine_list[i].machine_cd}</td>
+                        <td>{$machine_list[i].model_name}</td>
+                        <td>
+                            {if $machine_list[i].camera_no}
+                                <strong>{$machine_list[i].camera_name}</strong><br>
+                                <small style="color: var(--admin-text-muted);">
+                                    <code>{$machine_list[i].camera_mac}</code>
+                                </small>
+                            {else}
+                                <span class="badge warning">未割り当て</span>
+                            {/if}
+                        </td>
+                        <td>
+                            {if $machine_list[i].camera_no}
+                                {if $machine_list[i].camera_state == 1}
+                                    <span class="badge success">オンライン</span>
+                                {else}
+                                    <span class="badge danger">オフライン</span>
+                                {/if}
+                            {else}
+                                -
+                            {/if}
+                        </td>
+                        <td>
+                            <form method="post" action="camera_settings.php?mode=assign" style="display: inline;">
+                                <input type="hidden" name="machine_no" value="{$machine_list[i].machine_no}">
+                                <select name="camera_no" class="form-control" onchange="this.form.submit()">
+                                    <option value="0">-- 選択してください --</option>
+                                    {section name=j loop=$camera_list}
+                                    <option value="{$camera_list[j].camera_no}"
+                                        {if $machine_list[i].camera_no == $camera_list[j].camera_no}selected{/if}>
+                                        {$camera_list[j].camera_name} ({$camera_list[j].camera_mac})
+                                    </option>
+                                    {/section}
+                                </select>
+                            </form>
+                        </td>
+                        <td>
+                            {if $machine_list[i].camera_no}
+                            <a href="camera_settings.php?mode=unassign&machine_no={$machine_list[i].machine_no}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('カメラ割り当てを解除しますか？')">
+                                <i class="fas fa-unlink"></i> 解除
+                            </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {sectionelse}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px;">
+                            台が登録されていません
+                        </td>
+                    </tr>
+                    {/section}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+// 検索機能
+document.getElementById('searchBox').addEventListener('keyup', function() {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#machineTable tbody tr');
+
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchValue) ? '' : 'none';
+    });
+});
+</script>
+
+</body>
+</html>
