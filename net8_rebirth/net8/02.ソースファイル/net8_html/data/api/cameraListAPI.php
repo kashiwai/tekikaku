@@ -84,6 +84,9 @@ function GetNoCamera($DB) {
 	// データ取得
 	getData($_GET, array("MAC","ID","IP") );
 
+	// MAC addressを大文字に統一（case-insensitive対応）
+	$_GET["MAC"] = strtoupper($_GET["MAC"]);
+
 	$api = new APItool();
 
 	$sql = (new SqlString($DB))
@@ -223,6 +226,9 @@ function addList($DB) {
 	// データ取得
 	getData($_POST, array("MAC_ADDRESS", "IDENTIFING_NUMBER", "SYSTEM_NAME", "PRODUCT_NAME", "CPU_NAME", "CORE", "UUID") );
 
+	// MAC addressを大文字に統一（case-insensitive対応）
+	$_POST["MAC_ADDRESS"] = strtoupper($_POST["MAC_ADDRESS"]);
+
 	$api = new APItool();
 
 	$sql = (new SqlString($DB))
@@ -296,6 +302,9 @@ function ExistList($DB){
 
 	// データ取得
 	getData($_POST, array("MAC_ADDRESS", "LICENSE_ID" ));
+
+	// MAC addressを大文字に統一（case-insensitive対応）
+	$_POST["MAC_ADDRESS"] = strtoupper($_POST["MAC_ADDRESS"]);
 
 	$api = new APItool();
 
