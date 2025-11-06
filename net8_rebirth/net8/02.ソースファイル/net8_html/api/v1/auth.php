@@ -24,8 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // 既存の設定ファイル読み込み
-require_once('../../_etc/setting.php');
-require_once('../../_lib/SmartDB.php');
+require_once('../../_etc/require_files.php');
 
 // リクエストボディ取得
 $input = json_decode(file_get_contents('php://input'), true);
@@ -41,17 +40,19 @@ if (!isset($input['apiKey'])) {
 
 $apiKey = $input['apiKey'];
 
-// APIキー検証（簡易版 - 本番では暗号化が必要）
+// APIキー検証
 try {
-    $db = new SmartDB(DB_DSN);
+    $pdo = get_db_connection();
 
-    // APIキーテーブルから検証
+    // APIキーテーブルから検証（PDO prepared statement使用）
     $sql = "SELECT * FROM api_keys
-            WHERE key_value = " . $db->conv_sql($apiKey, FD_TEXT) . "
+            WHERE key_value = :api_key
             AND is_active = 1
             AND (expires_at IS NULL OR expires_at > NOW())";
 
-    $apiKeyData = $db->getRow($sql);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['api_key' => $apiKey]);
+    $apiKeyData = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$apiKeyData) {
         http_response_code(401);
