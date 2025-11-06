@@ -97,7 +97,7 @@ function GetNoCamera($DB) {
 		->createSQL("\n");
 
 	$row = $DB->getRow($sql);
-	if ( mb_strlen($row["mac_address"]) == 0 ){
+	if ( empty($row) || mb_strlen($row["mac_address"]) == 0 ){
 		$api->setError("macアドレスが登録されていません。");
 		$api->outputJson();
 		return;
@@ -153,7 +153,7 @@ function GetNoCamera($DB) {
 		->createSQL("\n");
 
 	$row = $DB->getRow($sql);
-	if ( mb_strlen($row["machine_no"]) == 0 ){
+	if ( empty($row) || mb_strlen($row["machine_no"]) == 0 ){
 		$api->setError("mst_cameraにmacアドレスが登録されていません。");
 	} else {
 		$api->set("machine_no", $row["machine_no"] );
