@@ -79,8 +79,9 @@ try {
     // 最終使用日時を更新
     $updateSql = "UPDATE api_keys
                   SET last_used_at = NOW()
-                  WHERE id = " . $db->conv_sql($apiKeyData['id'], FD_NUM);
-    $db->query($updateSql);
+                  WHERE id = :api_key_id";
+    $stmt = $pdo->prepare($updateSql);
+    $stmt->execute(['api_key_id' => $apiKeyData['id']]);
 
     // 成功レスポンス
     http_response_code(200);
