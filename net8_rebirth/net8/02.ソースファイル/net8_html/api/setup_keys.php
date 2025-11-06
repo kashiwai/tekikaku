@@ -27,13 +27,28 @@ try {
 
     echo "📄 SQL file loaded: api/setup_api_keys_table.sql\n\n";
 
+    // Remove comments and empty lines
+    $lines = explode("\n", $sql);
+    $cleaned_lines = [];
+    foreach ($lines as $line) {
+        $line = trim($line);
+        // Skip comment lines and empty lines
+        if (empty($line) || substr($line, 0, 2) === '--') {
+            continue;
+        }
+        $cleaned_lines[] = $line;
+    }
+    $cleaned_sql = implode("\n", $cleaned_lines);
+
     // Split SQL into individual statements
     $statements = array_filter(
-        array_map('trim', explode(';', $sql)),
+        array_map('trim', explode(';', $cleaned_sql)),
         function($stmt) {
-            return !empty($stmt) && substr($stmt, 0, 2) !== '--';
+            return !empty($stmt);
         }
     );
+
+    echo "Cleaned SQL, total statements: " . count($statements) . "\n";
 
     echo "🔧 Executing SQL statements...\n";
     echo "Total statements found: " . count($statements) . "\n\n";
