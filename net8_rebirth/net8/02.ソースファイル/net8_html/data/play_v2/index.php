@@ -129,7 +129,7 @@ function DispTop($template) {
 		$jsDir = "js_src";
 	}
 	*/
-	$jsDir = "js";
+	$jsDir = "/data/play_v2/js";
 
 	//ブラウザチェック
 	$browserStatus = $webRTC->checkBrowser(true);
