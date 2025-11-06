@@ -14,11 +14,11 @@
 <link href="/ryujin8_assets/css/play.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 
-<!-- 既存のWebRTC JavaScript -->
+<!-- PeerJS for WebRTC -->
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
+
 <script>
 // WebRTC設定（PHPから代入）
-var languageMode   = '{%LANG%}';
-var machineno      = '{%MACHINE_NO%}';
 var cameraid       = '{%CAMERA_ID%}';
 var peerjskey      = '{%PEERJSKEY%}';
 var memberno       = '{%MEMBERNO%}';
@@ -26,20 +26,7 @@ var authID         = '{%AUTHID%}';
 var sigHost        = '{%SIGHOST%}';
 var sigPort        = '{%SIGPORT%}';
 var iceServers     = {%ICESERVERS%};
-var autopush       = '{%AUTO_PUSH%}';
-var purchase       = {%PURCHASE%};
-var errorMessages  = {%ERRORMESSAGES%};
-var layoutOption   = {%LAYOUTOPTION%};
-var convCredit     = {%CONVCREDIT%};
-var convPlaypoint  = {%CONVPLAYPOINT%};
-var browserVersion = '{%BROWSERVERSION%}';
-var username       = '{%USERNAME%}';
 </script>
-<script src="/data/play_v2/js/peer_ie.js?{%TIMESTAMP%}" type="text/javascript"></script>
-<script src="https://cdn.temasys.com.sg/adapterjs/0.15.x/adapter.screenshare.js"></script>
-<script src="{%JSDIR%}/view_functions.js?{%TIMESTAMP%}" type="text/javascript"></script>
-<script src="{%JSDIR%}/view_auth.js?{%TIMESTAMP%}-{%MACHINE_NO%}-{%AUTHID%}" type="text/javascript"></script>
-<script src="/data/play_v2/js/playground.js?{%TIMESTAMP%}" type="text/javascript"></script>
 
 </head>
 
@@ -137,12 +124,11 @@ var username       = '{%USERNAME%}';
 <section class="play-machine">
 
 <!--遊技台動画（WebRTC）-->
-<div class="video-wrapper">
-<video id="video" muted="muted" autoplay="autoplay" playsinline style="width:100%;height:100%;object-fit:contain;background:#000;">
+<div class="video-wrapper" style="position:relative;width:100%;height:600px;background:#000;">
+<video id="webrtc-video" autoplay playsinline style="width:100%;height:100%;object-fit:contain;background:#000;">
 </video>
-<div id="loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;background:rgba(0,0,0,0.7);padding:20px;border-radius:10px;text-align:center;">
-<div class="loader">Loading...</div>
-<div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
+<div id="connection-status" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;background:rgba(0,0,0,0.7);padding:20px;border-radius:10px;text-align:center;z-index:10;">
+<p id="status-text" style="font-size:16px;margin:0;">接続中...</p>
 </div>
 </div>
 
@@ -157,7 +143,109 @@ var username       = '{%USERNAME%}';
 
 </div>
 
-<!-- WebRTC接続は既存のJavaScriptファイルが処理します -->
+<script>
+// シンプルなWebRTC接続スクリプト
+let peer = null;
+let dataConnection = null;
+let callConnection = null;
+
+function updateStatus(message) {
+    document.getElementById('status-text').innerText = message;
+}
+
+function connectWebRTC() {
+    updateStatus('シグナリングサーバに接続中...');
+
+    const peersetting = {
+        host: sigHost,
+        port: parseInt(sigPort),
+        secure: true,
+        key: peerjskey,
+        token: authID,
+        config: {
+            'iceServers': iceServers
+        }
+    };
+
+    peer = new Peer(memberno, peersetting);
+
+    peer.on('open', function(id) {
+        console.log('✅ Peer ID:', id);
+        updateStatus('カメラに接続中...');
+
+        // カメラIDに接続
+        dataConnection = peer.connect(cameraid, {
+            'metadata': memberno + ':' + authID
+        });
+
+        dataConnection.on('open', function() {
+            console.log('✅ Data connection opened');
+        });
+
+        dataConnection.on('error', function(err) {
+            console.error('❌ Data connection error:', err);
+        });
+    });
+
+    peer.on('call', function(call) {
+        console.log('📞 Receiving call from:', call.peer);
+        callConnection = call;
+
+        // Answerして映像を受信
+        call.answer();
+
+        call.on('stream', function(stream) {
+            console.log('🎥 Received stream');
+            const video = document.getElementById('webrtc-video');
+            video.srcObject = stream;
+            video.play();
+
+            // 接続成功
+            document.getElementById('connection-status').style.display = 'none';
+        });
+
+        call.on('error', function(err) {
+            console.error('❌ Call error:', err);
+            updateStatus('映像接続エラー: ' + err.message);
+        });
+
+        call.on('close', function() {
+            console.log('📴 Call closed');
+            updateStatus('接続が切断されました');
+            document.getElementById('connection-status').style.display = 'block';
+        });
+    });
+
+    peer.on('error', function(err) {
+        console.error('❌ Peer error:', err);
+        updateStatus('接続エラー: ' + err.type);
+    });
+}
+
+// ページ読み込み時に接続開始
+window.addEventListener('load', function() {
+    console.log('🚀 WebRTC Configuration:', {
+        cameraid: cameraid,
+        sigHost: sigHost,
+        sigPort: sigPort
+    });
+
+    connectWebRTC();
+});
+
+// ページ離脱時にクリーンアップ
+window.addEventListener('beforeunload', function() {
+    if (callConnection) {
+        callConnection.close();
+    }
+    if (dataConnection) {
+        dataConnection.close();
+    }
+    if (peer) {
+        peer.destroy();
+    }
+});
+</script>
 
 </body>
 </html>

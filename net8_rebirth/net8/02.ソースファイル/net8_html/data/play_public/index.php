@@ -123,52 +123,16 @@ function DispTop($template) {
 
 	$template->assignCommon();
 
+	// WebRTC接続に必要な最小限の変数のみ
 	$template->assign("CAMERA_ID"       , $camera);
 	$template->assign("MACHINE_NO"      , $machineRow["machine_no"]);
 	$template->assign("MODEL_NAME"      , $machineRow["model_name"]);
-	$template->assign("MODEL_ROMAN"     , $machineRow["model_roman"]);
-	$template->assign("MODEL_CD"        , $machineRow["model_cd"]);
-	$template->assign("CATEGORY"        , $machineRow["category"]);
 	$template->assign("PEERJSKEY"       , $GLOBALS["RTC_PEER_APIKEY"]);
 	$template->assign("MEMBERNO"        , $memberNo );
 	$template->assign("AUTHID"          , $oneTimeAuthID);
 	$template->assign("SIGHOST"         , $sighost);
 	$template->assign("SIGPORT"         , $sigport);
 	$template->assign("ICESERVERS"      , $webRTC->getIceServers($camera) );
-	$template->assign("AUTO_PUSH"       , false ); // オートプレイ無効（手動操作）
-
-	// デモ用：大きなポイント値を設定
-	$template->assign("PURCHASE"        , json_encode([
-		["id" => "demo", "amount" => 999999, "price" => 0]
-	]));
-	$template->assign("CONVCREDIT"      , 1);
-	$template->assign("CONVPLAYPOINT"   , 1);
-
-	$template->assign("MAX"             , $prizeball_data["MAX"] ?? 0);
-	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"] ?? 0);
-	$template->assign("NAVEL"           , $prizeball_data["NAVEL"] ?? 0);
-	$template->assign("TULIP"           , $prizeball_data["TULIP"] ?? 0);
-	$template->assign("ATTACKER1"       , $prizeball_data["ATTACKER1"] ?? 0);
-	$template->assign("ATTACKER2"       , $prizeball_data["ATTACKER2"] ?? 0);
-	$template->assign("ERRORMESSAGES"   , json_encode([]));
-	$template->assign("LAYOUTOPTION"    , json_encode($layout_data));
-
-	$template->assign("IMAGE_REEL"      , $machineRow["image_reel"]);
-	$template->assign("TIMESTAMP"       , "ts=".time() );
-	$template->assign("JSDIR"           , $jsDir );
-	$template->assign("LANG"            , FOLDER_LANG );
-	$template->assign("USERNAME"        , "デモプレイヤー" );
-	$template->assign("CLOSETIME"       , "24:00" );
-	$template->assign("PACHI_RATE"      , 0 );
-	$template->assign("RATE_DISPLAY"    , "d-none");
-
-	$template->if_enable("PUSH_BONUS", false);
-
-	$template->assign("PAYMENT_URL"    , "", true);
-	$template->assign("PAYMENT_HIDDEN" , "", false);
-
-	$template->assign("BROWSERVERSION"  , "{$browserStatus["name"]}/{$browserStatus["version"]}" );
-	$template->assign("NOTICETIME"      , "24:00");
 
 	$template->flush();
 }
