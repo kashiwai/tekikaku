@@ -26,8 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // 既存の設定ファイル読み込み
 require_once('../../_etc/require_files.php');
 
-// 認証ヘッダー確認（簡易版）
-$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+// 認証ヘッダー確認（複数ソース対応）
+$authHeader = '';
+if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+} elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+    $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+} elseif (function_exists('apache_request_headers')) {
+    $headers = apache_request_headers();
+    if (isset($headers['Authorization'])) {
+        $authHeader = $headers['Authorization'];
+    }
+}
+
 if (empty($authHeader)) {
     http_response_code(401);
     echo json_encode([
