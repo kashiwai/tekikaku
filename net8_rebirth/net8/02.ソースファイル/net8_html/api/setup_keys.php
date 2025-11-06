@@ -4,7 +4,7 @@
  * Run this once to create API keys tables and insert demo data
  */
 
-require_once(__DIR__ . '/_etc/require_files.php');
+require_once(__DIR__ . '/../_etc/require_files.php');
 
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -18,7 +18,7 @@ try {
     echo "✅ Database connection successful\n\n";
 
     // Read SQL setup file
-    $sql_file = __DIR__ . '/api/setup_api_keys_table.sql';
+    $sql_file = __DIR__ . '/setup_api_keys_table.sql';
     $sql = file_get_contents($sql_file);
 
     if (!$sql) {
