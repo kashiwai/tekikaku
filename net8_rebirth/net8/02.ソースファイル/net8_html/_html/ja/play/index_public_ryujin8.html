@@ -19,15 +19,15 @@
 
 <script>
 // WebRTC設定（PHPから代入）
-var cameraid       = '{{CAMERA_ID}}';
-var peerjskey      = '{{PEERJSKEY}}';
-var memberno       = '{{MEMBERNO}}';
-var authID         = '{{AUTHID}}';
-var sigHost        = '{{SIGHOST}}';
-var sigPort        = '{{SIGPORT}}';
-var iceServers     = {{ICESERVERS}};
-var modelName      = '{{MODEL_NAME}}';
-var category       = '{{CATEGORY}}';
+var cameraid       = '{%CAMERA_ID%}';
+var peerjskey      = '{%PEERJSKEY%}';
+var memberno       = '{%MEMBERNO%}';
+var authID         = '{%AUTHID%}';
+var sigHost        = '{%SIGHOST%}';
+var sigPort        = '{%SIGPORT%}';
+var iceServers     = {%ICESERVERS%};
+var modelName      = '{%MODEL_NAME%}';
+var category       = '{%CATEGORY%}';
 </script>
 
 </head>
@@ -46,8 +46,8 @@ var category       = '{{CATEGORY}}';
 
 <!--台番号と機種情報-->
 <div class="info-header">
-<p class="machine-number">{{MACHINE_NO}}</p>
-<p class="machine-name">{{MODEL_NAME}}</p>
+<p class="machine-number">{%MACHINE_NO%}</p>
+<p class="machine-name">{%MODEL_NAME%}</p>
 <p class="btn-info">
 <span id="view-only-badge" style="background:#ff6b6b;color:white;padding:5px 10px;border-radius:5px;font-size:14px;">視聴専用</span>
 </p>

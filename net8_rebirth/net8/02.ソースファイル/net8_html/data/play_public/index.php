@@ -15,7 +15,10 @@ require_once('../../_sys/WebRTCAPI.php');				// requireファイル
 require_once('../../_etc/webRTC_setting.php');			// webRTCセッティングファイル
 
 // 項目定義
-define("PUBLIC_HTML",  "play/index_public_ryujin8");	// Ryujin8ベースの視聴専用テンプレート
+define("PRE_1p_HTML",  "play/index_pachi");				// テンプレートHTMLプレフィックス（パチンコ縦画面）
+define("PRE_1l_HTML",  "play/index_pachi_ls_v2");		// テンプレートHTMLプレフィックス（パチンコ横画面）
+define("PRE_2p_HTML",  "play/index_slot");				// テンプレートHTMLプレフィックス（スロット縦画面）
+define("PRE_2l_HTML",  "play/index_slot_ls_v2");		// テンプレートHTMLプレフィックス（スロット横画面）
 define("ERR_HTML",     "play/no_assign");				// テンプレートHTMLプレフィックス(エラー時）
 
 // メイン処理
@@ -106,13 +109,6 @@ function DispTop($template) {
 		$layout_data["hide"][] = "nonepushorder";
 	}
 
-	// 視聴専用：操作UIを非表示にする
-	$layout_data["hide"][] = "max_bet_button";
-	$layout_data["hide"][] = "max_button";
-	$layout_data["hide"][] = "start_button";
-	$layout_data["hide"][] = "point_display";
-	$layout_data["hide"][] = "payment_button";
-
 	//接続先の情報
 	$camera  = $machineRow["camera_name"];
 	$sig = explode(":", $GLOBALS["RTC_Signaling_Servers"][$machineRow["signaling_id"]]);
@@ -125,8 +121,20 @@ function DispTop($template) {
 		return;
 	}
 
-	// 画面表示開始（視聴専用：全てRyujin8テンプレート使用）
-	$template->open(PUBLIC_HTML . ".html");
+	// 画面表示開始
+	if ( $machineRow["category"] == "1" ){
+		if ( $layout_data["video_portrait"] == "1" ){
+			$template->open(PRE_1p_HTML . ".html");
+		} else {
+			$template->open(PRE_1l_HTML . ".html");
+		}
+	} else {
+		if ( $layout_data["video_portrait"] == "1" ){
+			$template->open(PRE_2p_HTML . ".html");
+		} else {
+			$template->open(PRE_2l_HTML . ".html");
+		}
+	}
 
 	$template->assignCommon();
 
@@ -142,12 +150,14 @@ function DispTop($template) {
 	$template->assign("SIGHOST"         , $sighost);
 	$template->assign("SIGPORT"         , $sigport);
 	$template->assign("ICESERVERS"      , $webRTC->getIceServers($camera) );
-	$template->assign("AUTO_PUSH"       , false ); // 視聴専用：オートプレイ無効
+	$template->assign("AUTO_PUSH"       , false ); // オートプレイ無効（手動操作）
 
-	// 視聴専用：ポイント関連は空
-	$template->assign("PURCHASE"        , json_encode([]));
-	$template->assign("CONVCREDIT"      , 0);
-	$template->assign("CONVPLAYPOINT"   , 0);
+	// デモ用：大きなポイント値を設定
+	$template->assign("PURCHASE"        , json_encode([
+		["id" => "demo", "amount" => 999999, "price" => 0]
+	]));
+	$template->assign("CONVCREDIT"      , 1);
+	$template->assign("CONVPLAYPOINT"   , 1);
 
 	$template->assign("MAX"             , $prizeball_data["MAX"] ?? 0);
 	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"] ?? 0);
@@ -162,7 +172,7 @@ function DispTop($template) {
 	$template->assign("TIMESTAMP"       , "ts=".time() );
 	$template->assign("JSDIR"           , $jsDir );
 	$template->assign("LANG"            , FOLDER_LANG );
-	$template->assign("USERNAME"        , "視聴者" ); // 視聴専用
+	$template->assign("USERNAME"        , "デモプレイヤー" );
 	$template->assign("CLOSETIME"       , "24:00" );
 	$template->assign("PACHI_RATE"      , 0 );
 	$template->assign("RATE_DISPLAY"    , "d-none");
