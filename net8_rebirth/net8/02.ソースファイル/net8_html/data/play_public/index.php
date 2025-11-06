@@ -15,10 +15,7 @@ require_once('../../_sys/WebRTCAPI.php');				// requireファイル
 require_once('../../_etc/webRTC_setting.php');			// webRTCセッティングファイル
 
 // 項目定義
-define("PRE_1p_HTML",  "play/index_pachi");				// テンプレートHTMLプレフィックス（パチンコ縦画面）
-define("PRE_1l_HTML",  "play/index_pachi_ls_v2");		// テンプレートHTMLプレフィックス（パチンコ横画面）
-define("PRE_2p_HTML",  "play/index_slot");				// テンプレートHTMLプレフィックス（スロット縦画面）
-define("PRE_2l_HTML",  "play/index_slot_ls_v2");		// テンプレートHTMLプレフィックス（スロット横画面）
+define("PUBLIC_HTML",  "play/index_public_ryujin8");	// Ryujin8ベースの視聴専用テンプレート
 define("ERR_HTML",     "play/no_assign");				// テンプレートHTMLプレフィックス(エラー時）
 
 // メイン処理
@@ -128,20 +125,8 @@ function DispTop($template) {
 		return;
 	}
 
-	// 画面表示開始
-	if ( $machineRow["category"] == "1" ){
-		if ( $layout_data["video_portrait"] == "1" ){
-			$template->open(PRE_1p_HTML . ".html");
-		} else {
-			$template->open(PRE_1l_HTML . ".html");
-		}
-	} else {
-		if ( $layout_data["video_portrait"] == "1" ){
-			$template->open(PRE_2p_HTML . ".html");
-		} else {
-			$template->open(PRE_2l_HTML . ".html");
-		}
-	}
+	// 画面表示開始（視聴専用：全てRyujin8テンプレート使用）
+	$template->open(PUBLIC_HTML . ".html");
 
 	$template->assignCommon();
 
@@ -150,6 +135,7 @@ function DispTop($template) {
 	$template->assign("MODEL_NAME"      , $machineRow["model_name"]);
 	$template->assign("MODEL_ROMAN"     , $machineRow["model_roman"]);
 	$template->assign("MODEL_CD"        , $machineRow["model_cd"]);
+	$template->assign("CATEGORY"        , $machineRow["category"]);
 	$template->assign("PEERJSKEY"       , $GLOBALS["RTC_PEER_APIKEY"]);
 	$template->assign("MEMBERNO"        , $memberNo );
 	$template->assign("AUTHID"          , $oneTimeAuthID);
