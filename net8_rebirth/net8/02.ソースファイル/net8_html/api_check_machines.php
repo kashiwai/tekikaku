@@ -38,7 +38,7 @@ try {
     $machines = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // カメラ一覧も取得
-    $sql2 = "SELECT camera_no, camera_name, camera_mac, machine_no
+    $sql2 = "SELECT camera_no, camera_name, camera_mac
              FROM mst_camera
              WHERE del_flg = 0
              ORDER BY camera_no
