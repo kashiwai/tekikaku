@@ -64,10 +64,10 @@ define('DB_OPTIONS', [
 ]);
 
 // シグナリングサーバ設定
-define('SIGNALING_HOST', $_SERVER['SIGNALING_HOST'] ?? $_ENV['SIGNALING_HOST'] ?? getenv('SIGNALING_HOST') ?: 'localhost');
-define('SIGNALING_PORT', $_SERVER['SIGNALING_PORT'] ?? $_ENV['SIGNALING_PORT'] ?? getenv('SIGNALING_PORT') ?: '59000');
+define('SIGNALING_HOST', $_SERVER['SIGNALING_HOST'] ?? $_ENV['SIGNALING_HOST'] ?? getenv('SIGNALING_HOST') ?: 'mgg-signaling-production-c1bd.up.railway.app');
+define('SIGNALING_PORT', $_SERVER['SIGNALING_PORT'] ?? $_ENV['SIGNALING_PORT'] ?? getenv('SIGNALING_PORT') ?: '443');
 define('SIGNALING_KEY', $_SERVER['SIGNALING_KEY'] ?? $_ENV['SIGNALING_KEY'] ?? getenv('SIGNALING_KEY') ?: 'peerjs');
-define('SIGNALING_PATH', $_SERVER['SIGNALING_PATH'] ?? $_ENV['SIGNALING_PATH'] ?? getenv('SIGNALING_PATH') ?: '/');
+define('SIGNALING_PATH', $_SERVER['SIGNALING_PATH'] ?? $_ENV['SIGNALING_PATH'] ?? getenv('SIGNALING_PATH') ?: '/peerjs');
 
 // STUN/TURNサーバ設定（将来の実装用）
 define('STUN_SERVER', getenv('STUN_SERVER') ?: 'stun:stun.l.google.com:19302');
