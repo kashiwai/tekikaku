@@ -314,8 +314,20 @@ function DispTop($template) {
 				,"U5069" => $template->message("U5069")
 	) );
 
-	// 画面表示開始（Ryujin8デザイン統一）
-	$template->open("play/index_v2_ryujin8.html");
+	// 画面表示開始
+	if ( $machineRow["category"] == "1" ){
+		if ( $layout_data["video_portrait"] == "1" ){
+			$template->open(PRE_1p_HTML . ".html");
+		} else {
+			$template->open(PRE_1l_HTML . ".html");
+		}
+	} else {
+		if ( $layout_data["video_portrait"] == "1" ){
+			$template->open(PRE_2p_HTML . ".html");
+		} else {
+			$template->open(PRE_2l_HTML . ".html");
+		}
+	}
 	
 	//決済用データ抽出用
 	$SPOINT = new SettlementPoint( $template->DB );
