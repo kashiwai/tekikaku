@@ -70,11 +70,23 @@ function DispTop($template) {
 		return;
 	}
 
-	// 視聴専用：ダミーのmember_noを使用
-	$memberNo = sha1("public_viewer_" . $_GET["NO"] . "_" . time());
+	// 視聴専用：member_no=0のハッシュを使用（userAuthAPI.phpで検証される）
+	$memberNo = sha1(sprintf("%06d", 0));  // sha1("000000") = "c984aed014aec7623a54f0591da07a85fd4b762d"
 
 	//ワンタイムパスの発行
 	$oneTimeAuthID = $webRTC->getOneTimeAuthID();
+
+	// lnk_machineテーブルにonetime_idを登録（userAuthAPI.phpで検証される）
+	$sql = (new SqlString())
+		->setAutoConvert( [$template->DB,"conv_sql"] )
+		->update( "lnk_machine" )
+			->set()
+				->value( "onetime_id", $oneTimeAuthID, FD_STR)
+			->where()
+				->and( "machine_no =", $_GET["NO"], FD_NUM)
+		->createSQL("\n");
+
+	$template->DB->query($sql);
 
 	//台情報の取得
 	$sql = (new SqlString())
