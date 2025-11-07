@@ -54,10 +54,17 @@
 		}, false);
 	</script>
 	<body class="play-page" oncontextmenu="return false;">
-		<div id="loading">
-			<div class="loader">Loading...</div>
-			<div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
-			<div id="loading_pay">精算中です。しばらくお待ち下さい。</div>
+		<!-- モダンローディング表示 -->
+		<div id="loading" class="loading-overlay">
+			<div class="loading-container">
+				<div class="loading-spinner-double"></div>
+				<div id="loading_connect" class="loading-text">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
+				<div id="loading_pay" class="loading-text" style="display:none;">精算中です。しばらくお待ち下さい。</div>
+				<div class="loading-progress">
+					<div class="loading-progress-bar"></div>
+				</div>
+			</div>
+		</div>
 			<div id="loadinglost">
 				<a id="loading_cancel" class="btn btn-primary btn-loading game-after-button">Exit</a>
 				<a id="btn_reload2" class="btn btn-primary btn-loading">Reload</a>

@@ -7,6 +7,17 @@
 
 	<body id="index" class="ip-page">
 
+	<!-- ローディング表示 -->
+	<div id="pageLoading" class="loading-overlay">
+		<div class="loading-container">
+			<div class="loading-spinner-double"></div>
+			<div class="loading-text">読み込み中...</div>
+			<div class="loading-progress">
+				<div class="loading-progress-bar"></div>
+			</div>
+		</div>
+	</div>
+
 	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
@@ -134,6 +145,38 @@
 					}
 				}
 			]
+		});
+
+		// スライダー初期化完了後、ローディング非表示
+		setTimeout(function() {
+			hideLoading();
+		}, 300);
+	});
+
+	// ローディング非表示関数
+	function hideLoading() {
+		var loading = document.getElementById('pageLoading');
+		if (loading) {
+			loading.classList.add('hidden');
+		}
+	}
+
+	// 画像読み込み完了後にもローディング非表示
+	window.addEventListener('load', function() {
+		hideLoading();
+	});
+
+	// 機種選択リンククリック時にローディング表示
+	document.addEventListener('DOMContentLoaded', function() {
+		var machineLinks = document.querySelectorAll('.p-postList__link');
+		machineLinks.forEach(function(link) {
+			link.addEventListener('click', function() {
+				var loading = document.getElementById('pageLoading');
+				if (loading) {
+					loading.classList.remove('hidden');
+					document.querySelector('#pageLoading .loading-text').textContent = '機種情報を読み込み中...';
+				}
+			});
 		});
 	});
 	</script>

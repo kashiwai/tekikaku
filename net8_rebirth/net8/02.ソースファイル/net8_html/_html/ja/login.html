@@ -7,6 +7,19 @@
 
 	<body id="login" class="ip-page">
 
+	<!-- ローディング表示 -->
+	<div id="loginLoading" class="loading-overlay hidden">
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+			<div class="loading-text">ログイン中...</div>
+			<div class="loading-dots">
+				<div class="loading-dot"></div>
+				<div class="loading-dot"></div>
+				<div class="loading-dot"></div>
+			</div>
+		</div>
+	</div>
+
 	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
@@ -80,8 +93,32 @@
 			alert('パスワードを入力してください');
 			return false;
 		}
+
+		// バリデーション通過後、ローディング表示
+		showLoading();
 		return true;
 	}
+
+	// ローディング表示関数
+	function showLoading() {
+		var loading = document.getElementById('loginLoading');
+		if (loading) {
+			loading.classList.remove('hidden');
+		}
+	}
+
+	// ローディング非表示関数
+	function hideLoading() {
+		var loading = document.getElementById('loginLoading');
+		if (loading) {
+			loading.classList.add('hidden');
+		}
+	}
+
+	// ページ読み込み完了時にローディング非表示
+	window.addEventListener('load', function() {
+		hideLoading();
+	});
 	</script>
 
 	</body>
