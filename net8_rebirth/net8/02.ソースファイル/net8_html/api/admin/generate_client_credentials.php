@@ -268,6 +268,16 @@ $rate_limit = (int)($_POST['rate_limit'] ?? 10000);
                     📥 お客様向け接続ガイドを生成
                 </a>
 
+                <a href="export_client_config.php?auth=net8_admin_2025&key_id=<?php echo $api_key_id; ?>&format=json"
+                   class="download-btn" style="background: #3b82f6;">
+                    📦 環境設定データ（JSON）
+                </a>
+
+                <a href="export_client_config.php?auth=net8_admin_2025&key_id=<?php echo $api_key_id; ?>&format=csv"
+                   class="download-btn" style="background: #10b981;">
+                    📊 環境設定データ（CSV）
+                </a>
+
                 <a href="?auth=net8_admin_2025" class="download-btn" style="background: #667eea;">
                     ⬅️ 新規発行に戻る
                 </a>
