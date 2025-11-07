@@ -76,11 +76,13 @@ function DispTop($template) {
 	//ワンタイムパスの発行
 	$oneTimeAuthID = $webRTC->getOneTimeAuthID();
 
-	// lnk_machineテーブルにonetime_idを登録（userAuthAPI.phpで検証される）
+	// lnk_machineテーブルを視聴専用モードに設定（userAuthAPI.phpで検証される）
 	$sql = (new SqlString())
 		->setAutoConvert( [$template->DB,"conv_sql"] )
 		->update( "lnk_machine" )
 			->set()
+				->value( "member_no", "0", FD_NUM)       // 視聴専用: member_no=0
+				->value( "assign_flg", "9", FD_NUM)      // カメラ待機中
 				->value( "onetime_id", $oneTimeAuthID, FD_STR)
 			->where()
 				->and( "machine_no =", $_GET["NO"], FD_NUM)
