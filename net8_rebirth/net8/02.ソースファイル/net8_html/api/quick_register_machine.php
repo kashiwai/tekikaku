@@ -23,9 +23,12 @@ try {
                   VALUES (:model_no, :signaling_id, 0, DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 0)";
 
     $stmt = $pdo->prepare($insertSql);
+    // Generate short signaling_id
+    $randomId = 'sig' . substr(md5(uniqid()), 0, 5);
+
     $stmt->execute([
         'model_no' => $model['model_no'],
-        'signaling_id' => 'sig_hok_' . substr(time(), -6)
+        'signaling_id' => $randomId
     ]);
 
     $machineNo = $pdo->lastInsertId();
