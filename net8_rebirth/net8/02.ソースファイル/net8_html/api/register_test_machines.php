@@ -57,18 +57,14 @@ try {
         camera_no,
         machine_status,
         end_date,
-        del_flg,
-        created_at,
-        updated_at
+        del_flg
     ) VALUES (
         (SELECT model_no FROM mst_model WHERE model_cd = :model_cd AND del_flg = 0 LIMIT 1),
         :signaling_id,
         NULL,
         0,
         DATE_ADD(CURDATE(), INTERVAL 1 YEAR),
-        0,
-        NOW(),
-        NOW()
+        0
     )";
 
     $registered = 0;
