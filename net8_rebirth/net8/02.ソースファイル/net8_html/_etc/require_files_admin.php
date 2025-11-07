@@ -55,6 +55,9 @@ if (!defined('SESSION_SID_ADMIN')) {
 if (!defined('ADMIN_LIST_ROWMAX')) {
     define('ADMIN_LIST_ROWMAX', 50);  // 管理画面リスト表示の最大行数
 }
+if (!defined('PAGE_SPAN')) {
+    define('PAGE_SPAN', 5);  // ページネーションで現在ページの前後に表示するページ数
+}
 
 // メニュー権限設定（空配列で初期化、必要に応じて設定ファイルで上書き）
 if (!isset($GLOBALS["AuthMenuID"])) {
