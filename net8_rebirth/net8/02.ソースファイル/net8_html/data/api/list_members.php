@@ -14,7 +14,7 @@ try {
     $DB = new NetDB();
 
     // メンバー一覧取得
-    $sql = "SELECT member_no, mail, nickname, playpoint, tester_flg, regist_dt
+    $sql = "SELECT member_no, mail, nickname, point, tester_flg, regist_dt
             FROM mst_member
             ORDER BY member_no DESC
             LIMIT 20";
@@ -31,7 +31,7 @@ try {
                 'member_no' => (int)$m['member_no'],
                 'mail' => $m['mail'],
                 'nickname' => $m['nickname'],
-                'playpoint' => (int)$m['playpoint'],
+                'playpoint' => (int)$m['point'],
                 'tester_flg' => $m['tester_flg'],
                 'regist_dt' => $m['regist_dt']
             ];

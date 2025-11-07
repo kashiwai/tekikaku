@@ -26,7 +26,7 @@ try {
     }
 
     // 現在のポイント確認
-    $sql = "SELECT member_no, mail, playpoint FROM mst_member WHERE member_no = ?";
+    $sql = "SELECT member_no, mail, point FROM mst_member WHERE member_no = ?";
     $stmt = $DB->prepare($sql);
     $stmt->execute([$memberNo]);
     $before = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,12 +40,12 @@ try {
     }
 
     // ポイント追加
-    $sql = "UPDATE mst_member SET playpoint = playpoint + ? WHERE member_no = ?";
+    $sql = "UPDATE mst_member SET point = point + ? WHERE member_no = ?";
     $stmt = $DB->prepare($sql);
     $stmt->execute([$amount, $memberNo]);
 
     // 更新後の確認
-    $sql = "SELECT member_no, mail, playpoint FROM mst_member WHERE member_no = ?";
+    $sql = "SELECT member_no, mail, point FROM mst_member WHERE member_no = ?";
     $stmt = $DB->prepare($sql);
     $stmt->execute([$memberNo]);
     $after = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -56,12 +56,12 @@ try {
         'before' => [
             'member_no' => $before['member_no'],
             'mail' => $before['mail'],
-            'playpoint' => (int)$before['playpoint']
+            'playpoint' => (int)$before['point']
         ],
         'after' => [
             'member_no' => $after['member_no'],
             'mail' => $after['mail'],
-            'playpoint' => (int)$after['playpoint']
+            'playpoint' => (int)$after['point']
         ],
         'charged' => $amount
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
