@@ -62,5 +62,5 @@ RUN chown -R www-data:www-data /var/www/html \
 EXPOSE ${PORT:-80}
 
 # Apache起動
-# Force rebuild: 2025-11-07 11:50 - Fix ryujin8_assets routing
+# Force rebuild: 2025-11-07 12:47 - Add client credential generation system
 CMD ["apache2-foreground"]
