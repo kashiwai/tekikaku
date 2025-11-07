@@ -2,18 +2,18 @@
 <html lang="ja">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-		<meta name="format-detection" content="telephone=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<title>PLAY GROUND</title>
 
+		<!-- Bootstrap core CSS -->
+		<link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<!-- Webfont -->
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/css?family=Chakra+Petch" rel="stylesheet">
-
-		<!-- New Design Play CSS -->
-		<link href="/css/play.css?{%TIMESTAMP%}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="/data/play_v2/css/styles_ls_v001.css?{%TIMESTAMP%}" rel="stylesheet">
 
 	</head>
 	<script>
@@ -53,18 +53,11 @@
 			t = now;
 		}, false);
 	</script>
-	<body class="play-page" oncontextmenu="return false;">
-		<!-- モダンローディング表示 -->
-		<div id="loading" class="loading-overlay">
-			<div class="loading-container">
-				<div class="loading-spinner-double"></div>
-				<div id="loading_connect" class="loading-text">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
-				<div id="loading_pay" class="loading-text" style="display:none;">精算中です。しばらくお待ち下さい。</div>
-				<div class="loading-progress">
-					<div class="loading-progress-bar"></div>
-				</div>
-			</div>
-		</div>
+	<body class="playground" oncontextmenu="return false;">
+		<div id="loading">
+			<div class="loader">Loading...</div>
+			<div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
+			<div id="loading_pay">精算中です。しばらくお待ち下さい。</div>
 			<div id="loadinglost">
 				<a id="loading_cancel" class="btn btn-primary btn-loading game-after-button">Exit</a>
 				<a id="btn_reload2" class="btn btn-primary btn-loading">Reload</a>
