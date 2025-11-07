@@ -25,7 +25,7 @@ try {
     $stmt = $pdo->prepare($insertSql);
     $stmt->execute([
         'model_no' => $model['model_no'],
-        'signaling_id' => 'sig_hokuto_quick_' . time()
+        'signaling_id' => 'sig_hok_' . substr(time(), -6)
     ]);
 
     $machineNo = $pdo->lastInsertId();
