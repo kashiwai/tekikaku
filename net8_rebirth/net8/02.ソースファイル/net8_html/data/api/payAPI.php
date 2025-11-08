@@ -31,12 +31,20 @@
  *           2023/04/14 修正 村上 俊行 精算行動終了コードを設定
  */
 
+// エラー表示を抑制（APIレスポンスのJSON整合性のため）
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+ini_set('display_errors', '0');
+
 // インクルード
 require_once('../../_etc/require_files.php');			// requireファイル
 require_once('../../_sys/APItool.php');					// APItool
 require_once('../../_sys/PlayPoint.php');				// PlayPoint Class
 require_once('../../_sys/ContactBox.php');				// ContactBox Class
 require_once('./Logger.php');								// Logger Class
+
+// 定数が未定義の場合のフォールバック
+if (!defined('POINT_CALC_MODE')) define('POINT_CALC_MODE', 'default');
+if (!defined('API_PROXY')) define('API_PROXY', '');
 
 //2020-08-24 USE_CHATが定義されていたらインクルード
 if ( defined ('USE_CHAT') ){
