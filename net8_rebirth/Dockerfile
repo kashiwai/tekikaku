@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP拡張機能のインストール
@@ -52,8 +53,26 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 777 /var/www/html/data/img/model \
     && chmod -R 777 /var/www/html/data/uploads
 
+# ==========================================
+# Cloud SQL Auth Proxy（トンネルプログラム）
+# ==========================================
+# Cloud SQL Proxyをダウンロード
+RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy \
+    && chmod +x /usr/local/bin/cloud_sql_proxy
+
+# GCPサービスアカウントキー用ディレクトリ作成
+RUN mkdir -p /secrets
+
+# GCPサービスアカウントキーをコピー
+COPY avamodb-1e63f7e1a1f2.json /secrets/gcp-key.json
+RUN chmod 600 /secrets/gcp-key.json
+
+# 起動スクリプトをコピー
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 # ポート公開（Railwayは環境変数PORTを使用）
 EXPOSE ${PORT:-80}
 
-# Apache起動
-CMD ["apache2-foreground"]
+# トンネルプログラム + Apache起動
+CMD ["/start.sh"]
