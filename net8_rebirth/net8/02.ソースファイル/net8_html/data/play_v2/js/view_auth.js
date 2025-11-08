@@ -109,7 +109,6 @@ var _savestream;					//Video確認用
 		host: sigHost,
 		//2020-09-18 Port変更可能に修正
 		port: sigPort,
-		secure: true,  // HTTPS/WSS使用（ngrok対応）
 		key:peerjskey,
 		token:authID,
 		config: {
@@ -436,11 +435,22 @@ var _savestream;					//Video確認用
 			dataConnection.send(_sendStr( 'cpb', data));
 		});
 
-		//クレジット変換ボタン処理
+		//クレジット変換ボタン処理（従来の全額変換）
 		$('#convCredit').bind(_click, function(){
 			console.log( 'click convCredit:'+ cccCount);
 			if (cccCount == 0){
 				dataConnection.send(_sendStr( 'ccc', ''));
+				cccCount++;
+			}
+		});
+
+		//クレジット変換ボタン処理（金額指定）
+		$('.conv-amount-btn').bind(_click, function(){
+			var amount = $(this).data('amount');
+			console.log( 'click conv-amount-btn: ' + amount);
+			if (cccCount == 0){
+				// 金額指定で変換（ccaコマンド: Convert Credit Amount）
+				dataConnection.send(_sendStr( 'cca', amount));
 				cccCount++;
 			}
 		});

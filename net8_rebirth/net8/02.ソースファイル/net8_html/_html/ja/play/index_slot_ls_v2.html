@@ -388,7 +388,23 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<a id="convCredit" class="btn btn-block btn-primary" data-dismiss="modal">{%CURRENCY_2%}変換 (<span id="conv_point"></span> {%CURRENCY_1%} → <span id="conv_credit"></span> {%CURRENCY_2%})</a>
+					<p class="text-center mb-3">変換金額を選択してください</p>
+					<div class="btn-group-vertical w-100" role="group">
+						<button type="button" class="btn btn-outline-primary btn-lg mb-2 conv-amount-btn" data-amount="500" data-dismiss="modal">
+							500 {%CURRENCY_2%} (2,500 {%CURRENCY_1%})
+						</button>
+						<button type="button" class="btn btn-outline-primary btn-lg mb-2 conv-amount-btn" data-amount="1000" data-dismiss="modal">
+							1,000 {%CURRENCY_2%} (5,000 {%CURRENCY_1%})
+						</button>
+						<button type="button" class="btn btn-outline-primary btn-lg mb-2 conv-amount-btn" data-amount="3000" data-dismiss="modal">
+							3,000 {%CURRENCY_2%} (15,000 {%CURRENCY_1%})
+						</button>
+						<button type="button" class="btn btn-outline-primary btn-lg mb-2 conv-amount-btn" data-amount="5000" data-dismiss="modal">
+							5,000 {%CURRENCY_2%} (25,000 {%CURRENCY_1%})
+						</button>
+					</div>
+					<!-- 従来の全額変換ボタン（非表示） -->
+					<a id="convCredit" class="btn btn-block btn-primary d-none" data-dismiss="modal">{%CURRENCY_2%}変換 (<span id="conv_point"></span> {%CURRENCY_1%} → <span id="conv_credit"></span> {%CURRENCY_2%})</a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
