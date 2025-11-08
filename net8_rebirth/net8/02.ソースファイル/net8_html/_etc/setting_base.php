@@ -82,6 +82,8 @@ define('SMTP_SECURE', getenv('SMTP_SECURE') ?: ''); // tls or ssl
 // API設定
 define('API_VERSION', 'v1');
 define('API_RATE_LIMIT', 100); // 1時間あたりのリクエスト数
+define('API_PROXY', getenv('API_PROXY') ?: ''); // API Proxy URL（空文字列で無効化）
+define('POINT_CALC_MODE', getenv('POINT_CALC_MODE') ?: 'default'); // ポイント計算モード
 
 // ディレクトリパス設定
 define('DIR_BASE', '/var/www/html/data/');
