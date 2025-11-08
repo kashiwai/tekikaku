@@ -5175,3 +5175,159 @@ a.photo-edit {
 
 
 }
+
+/* ========================================
+   スマホ対応強化 - 見やすさ改善
+   ======================================== */
+@media screen and (max-width: 768px) {
+    /* トップビジュアル */
+    #index-visual img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* コーナータブ */
+    .corner-tabs .tab-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .corner-tabs .tab-item {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 120px;
+        padding: 12px 8px;
+        font-size: 14px;
+        text-align: center;
+        border-radius: 8px;
+        background: #f5f5f5;
+    }
+
+    .corner-tabs .tab-item.flow-active {
+        background: #0376C9;
+        color: #fff;
+    }
+
+    /* スライダー */
+    .slider .item {
+        padding: 10px;
+    }
+
+    .slider .item img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .slider .p-postList__title {
+        font-size: 14px;
+        margin-top: 8px;
+        display: block;
+    }
+
+    .slider .m-type {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: #0376C9;
+        color: #fff;
+        display: inline-block;
+        margin-top: 8px;
+    }
+
+    /* 設置機種リスト */
+    .rec-list h4 {
+        font-size: 20px;
+        margin: 20px 0 15px;
+        padding-left: 10px;
+        border-left: 4px solid #0376C9;
+    }
+
+    .rec-list ul {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .rec-list li {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .rec-list li img {
+        width: 100%;
+        height: auto;
+    }
+
+    .rec-list .m-list-title {
+        font-size: 13px;
+        padding: 8px;
+        display: block;
+        text-align: center;
+    }
+
+    .rec-list .m-type {
+        font-size: 11px;
+        padding: 4px 6px;
+        margin: 8px;
+        display: inline-block;
+        background: #0376C9;
+        color: #fff;
+        border-radius: 4px;
+    }
+
+    /* お知らせ */
+    .site-info h4 {
+        font-size: 20px;
+        margin: 20px 0 15px;
+        padding-left: 10px;
+        border-left: 4px solid #0376C9;
+    }
+
+    .site-info .p-postList__item {
+        padding: 15px 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .site-info .new-date {
+        font-size: 12px;
+        color: #666;
+        margin-right: 10px;
+    }
+
+    .site-info .new-m-type {
+        font-size: 11px;
+        padding: 3px 8px;
+        background: #0376C9;
+        color: #fff;
+        border-radius: 3px;
+        margin-right: 10px;
+    }
+
+    .site-info .m-list-title p {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-top: 8px;
+    }
+
+    /* コンテンツ全体の余白調整 */
+    .index-contents {
+        padding: 0 5px;
+    }
+
+    .contents {
+        padding: 10px 0;
+    }
+}
+
+/* タブレット対応 (768px - 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .rec-list ul {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
