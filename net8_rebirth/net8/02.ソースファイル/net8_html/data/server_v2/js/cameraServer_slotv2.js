@@ -1108,6 +1108,25 @@
 							});
 							return;
 						}
+						if ( _t == 'cca' ){
+							//プレイポイント→クレジット変換処理（金額指定）
+							var amount = parseInt(_msg);
+							console.log('📝 Convert credit amount request:', amount);
+							execConvCreditAmount(amount)
+							.then(function(data){
+								//正常終了
+								keysocket.send('@CREDIT_'+game.credit);
+								dataConnection.send( _sendStr('Acre', game.credit) );
+								dataConnection.send( _sendStr('Apt',  game.playpoint) );
+								dataConnection.send( _sendStr('Cst',  'ok') );
+								console.log('✅ Convert credit amount success');
+							},function(data){
+								console.log('❌ Convert credit amount failed:', data);
+								//エラー処理
+								dataConnection.send( _sendStr('Cst',  data.status) );
+							});
+							return;
+						}
 						if ( _t == 'pay' ){
 							//精算処理
 							pay('', '11')

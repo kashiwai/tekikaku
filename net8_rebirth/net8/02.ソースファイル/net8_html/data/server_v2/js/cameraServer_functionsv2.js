@@ -800,6 +800,73 @@
 	}
 
 	/*
+	 * プレイポイント→クレジット変換処理（金額指定）
+	 * @access	public
+	 * @param	int			amount			変換するクレジット数
+	 * @return	Promise		resolve:data	APIの結果
+	 * @info    指定されたクレジット数に必要なポイントを計算して変換
+	 */
+	function execConvCreditAmount(amount){
+		return new Promise(function(resolve, reject) {
+			// クレジット数からポイント数を計算
+			// game.conv_point : game.conv_credit = X : amount
+			// X = (amount / game.conv_credit) * game.conv_point
+			var needPoint = Math.floor((amount / game.conv_credit) * game.conv_point);
+
+			console.log('🔍 Convert credit amount:', amount, 'Need point:', needPoint);
+
+			//会員の種別を判別
+			if ( game.tester_flg == 0 ){
+				if ( game.playpoint < needPoint ){
+					console.log('❌ Not enough points:', game.playpoint, '<', needPoint);
+					reject({status: 'ng', message: 'ポイント不足'});
+					return;
+				}
+				usePlayPoint(needPoint)
+				.then(function(data){
+					//変換
+					game.playpoint    -= needPoint;
+					game.credit       += amount;
+					//変動ログに追加
+					game.in_point     += needPoint;
+					//2020-05-18 間違って加算しているので削除
+					//game.out_credit   += amount;
+					//2022-09-26 ログに有効期限ポイントを記録
+					if (data.exppoint > 0){
+						keysocket.send('@EXP_POINT ' + data.exppoint);
+					}
+					console.log('✅ Convert success:', needPoint, 'points ->', amount, 'credits');
+					//ログに記録
+					playLog()
+					.then(function(data){
+						resolve(data)
+					},
+					function(data){
+						resolve(data)
+					});
+				},function(data){
+					console.log( '❌ [usePlayPoint] reject' );
+					reject(data);
+				});
+			} else {
+				game.credit       += amount;
+				//変動ログに追加
+				//2020-05-18 間違って加算しているので削除
+				//game.out_credit   += amount;
+				console.log('✅ Tester convert success:', amount, 'credits');
+				//ログに記録
+				playLog()
+				.then(function(data){
+					resolve(data)
+				},
+				function(data){
+					resolve(data)
+				});
+			}
+		});
+	}
+
+	/*
 	 * プレイポイント使用（API起動)
 	 * @access	public
 	 * @param	int			point			使用するプレイポイント
