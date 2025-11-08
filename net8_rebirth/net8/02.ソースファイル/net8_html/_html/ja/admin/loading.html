@@ -353,37 +353,38 @@ const Ryu8Loading = {
     }
 };
 
-// ページ読み込み時のローディング
+// ページ読み込み時のローディング（管理画面では無効化）
 window.addEventListener('DOMContentLoaded', () => {
     Ryu8Loading.init();
-    Ryu8Loading.show('Loading Page...');
-    const timer = Ryu8Loading.autoProgress(1500);
+    // 管理画面では自動ローディングを表示しない
+    // Ryu8Loading.show('Loading Page...');
+    // const timer = Ryu8Loading.autoProgress(1500);
 });
 
 window.addEventListener('load', () => {
-    Ryu8Loading.setProgress(100);
-    setTimeout(() => {
-        Ryu8Loading.hide();
-    }, 300);
+    // Ryu8Loading.setProgress(100);
+    // setTimeout(() => {
+    //     Ryu8Loading.hide();
+    // }, 300);
 });
 
-// フォーム送信時のローディング
-document.addEventListener('submit', (e) => {
-    if (e.target.tagName === 'FORM') {
-        // フォームのaction/methodで判定
-        const action = e.target.getAttribute('action') || '';
-        const method = e.target.getAttribute('method') || '';
-
-        if (action.includes('delete') || action.includes('mode=delete')) {
-            Ryu8Loading.show('Deleting...');
-        } else if (action.includes('save') || method.toLowerCase() === 'post') {
-            Ryu8Loading.show('Saving...');
-        } else {
-            Ryu8Loading.show('Processing...');
-        }
-        Ryu8Loading.autoProgress(2000);
-    }
-});
+// フォーム送信時のローディング（管理画面では無効化）
+// document.addEventListener('submit', (e) => {
+//     if (e.target.tagName === 'FORM') {
+//         // フォームのaction/methodで判定
+//         const action = e.target.getAttribute('action') || '';
+//         const method = e.target.getAttribute('method') || '';
+//
+//         if (action.includes('delete') || action.includes('mode=delete')) {
+//             Ryu8Loading.show('Deleting...');
+//         } else if (action.includes('save') || method.toLowerCase() === 'post') {
+//             Ryu8Loading.show('Saving...');
+//         } else {
+//             Ryu8Loading.show('Processing...');
+//         }
+//         Ryu8Loading.autoProgress(2000);
+//     }
+// });
 
 // 状況別ローディングヘルパー関数
 const Ryu8 = {
