@@ -594,3 +594,16 @@ margin: -6px auto 0px;
 font-size: 12px;*/
 
 
+
+/* 緊急対応: 管理画面のローディングを完全に非表示 */
+.ryujin-loading-overlay,
+#ryu8Loading,
+[class*="loading-overlay"],
+[class*="Loading"],
+div[style*="loading"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
+}
