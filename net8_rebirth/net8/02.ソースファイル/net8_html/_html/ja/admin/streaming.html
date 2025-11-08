@@ -89,24 +89,23 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-card-title">配信可能台数</div>
-                <div class="stat-card-value">{$total_streaming}</div>
+                <div class="stat-card-value">{%total_streaming%}</div>
             </div>
             <div class="stat-card" style="border-left-color: var(--admin-success);">
                 <div class="stat-card-title">オンライン</div>
-                <div class="stat-card-value">{$online_cameras}</div>
+                <div class="stat-card-value">{%online_cameras%}</div>
             </div>
             <div class="stat-card" style="border-left-color: var(--admin-danger);">
                 <div class="stat-card-title">オフライン</div>
-                <div class="stat-card-value">{$offline_cameras}</div>
+                <div class="stat-card-value">{%offline_cameras%}</div>
             </div>
             <div class="stat-card" style="border-left-color: var(--admin-warning);">
                 <div class="stat-card-title">視聴者数</div>
-                <div class="stat-card-value">{$total_viewers}</div>
+                <div class="stat-card-value">{%total_viewers%}</div>
             </div>
         </div>
 
         <!-- カテゴリ別統計 -->
-        {if $category_stats}
         <div class="data-table-wrapper">
             <div class="data-table-header">
                 <h3><i class="fas fa-chart-pie"></i> カテゴリ別統計</h3>
@@ -121,21 +120,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {section name=i loop=$category_stats}
+                    <!--loop:CATEGORY-->
                     <tr>
-                        <td>{$category_stats[i].category_name}</td>
-                        <td>{$category_stats[i].machine_count}台</td>
-                        <td>{$category_stats[i].online_count}台</td>
-                        <td>
-                            {math equation="round(x / y * 100, 1)" x=$category_stats[i].online_count y=$category_stats[i].machine_count assign=rate}
-                            {$rate}%
-                        </td>
+                        <td>{%category_name%}</td>
+                        <td>{%machine_count%}台</td>
+                        <td>{%online_count%}台</td>
+                        <td>{%rate%}%</td>
                     </tr>
-                    {/section}
+                    <!--/loop:CATEGORY-->
                 </tbody>
             </table>
         </div>
-        {/if}
 
         <!-- 配信一覧 -->
         <div class="data-table-wrapper">
@@ -158,42 +153,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {section name=i loop=$streaming_list}
+                    <!--loop:STREAMING-->
                     <tr>
-                        <td>#{$streaming_list[i].machine_no}</td>
-                        <td>{$streaming_list[i].machine_cd}</td>
-                        <td>{$streaming_list[i].model_name}</td>
+                        <td>#{%machine_no%}</td>
+                        <td>{%machine_cd%}</td>
+                        <td>{%model_name%}</td>
                         <td>
-                            <strong>{$streaming_list[i].camera_name}</strong><br>
+                            <strong>{%camera_name%}</strong><br>
                             <small style="color: var(--admin-text-muted);">
-                                <code>{$streaming_list[i].camera_mac}</code>
+                                <code>{%camera_mac%}</code>
                             </small>
                         </td>
-                        <td>{$streaming_list[i].camera_ip|default:'-'}</td>
+                        <td>{%camera_ip%}</td>
                         <td>
-                            {if $streaming_list[i].camera_state == 1}
+                            <!--if:camera_online-->
                                 <span class="streaming-indicator online"></span>
                                 <span class="badge success">配信中</span>
-                            {else}
+                            <!--/if:camera_online-->
+                            <!--if:camera_offline-->
                                 <span class="streaming-indicator offline"></span>
                                 <span class="badge danger">停止中</span>
-                            {/if}
+                            <!--/if:camera_offline-->
                         </td>
-                        <td>{$streaming_list[i].viewer_count}人</td>
+                        <td>{%viewer_count%}人</td>
                         <td>
-                            <a href="../../user/play.php?machine_no={$streaming_list[i].machine_no}"
+                            <a href="../../user/play.php?machine_no={%machine_no%}"
                                class="btn btn-primary btn-sm" target="_blank">
                                 <i class="fas fa-eye"></i> プレビュー
                             </a>
                         </td>
                     </tr>
-                    {sectionelse}
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 40px;">
-                            配信可能な台が登録されていません
-                        </td>
-                    </tr>
-                    {/section}
+                    <!--/loop:STREAMING-->
                 </tbody>
             </table>
         </div>

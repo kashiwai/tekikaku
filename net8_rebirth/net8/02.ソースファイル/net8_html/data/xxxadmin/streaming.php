@@ -125,14 +125,64 @@ function DispList($template) {
 		$category_stats[] = $row;
 	}
 
-	// テンプレートに設定
-	$template->assign('streaming_list', $streaming_list);
-	$template->assign('category_stats', $category_stats);
+	// テンプレート開く
+	$template->open(PRE_HTML . ".html");
+	$template->assignCommon();
+
+	// 統計値を設定
 	$template->assign('total_streaming', $total_streaming);
 	$template->assign('online_cameras', $online_cameras);
 	$template->assign('offline_cameras', $offline_cameras);
 	$template->assign('total_viewers', $total_viewers);
 
+	// 配信リストをループ処理で展開
+	if (count($streaming_list) > 0) {
+		$template->loop_start('STREAMING');
+		foreach ($streaming_list as $machine) {
+			$template->assign('machine_no', isset($machine['machine_no']) ? $machine['machine_no'] : '');
+			$template->assign('machine_cd', isset($machine['machine_cd']) ? $machine['machine_cd'] : '');
+			$template->assign('machine_status', isset($machine['machine_status']) ? $machine['machine_status'] : '');
+			$template->assign('release_date', isset($machine['release_date']) ? $machine['release_date'] : '');
+			$template->assign('model_name', isset($machine['model_name']) ? $machine['model_name'] : '');
+			$template->assign('model_cd', isset($machine['model_cd']) ? $machine['model_cd'] : '');
+			$template->assign('category', isset($machine['category']) ? $machine['category'] : '');
+			$template->assign('camera_no', isset($machine['camera_no']) ? $machine['camera_no'] : '');
+			$template->assign('camera_name', isset($machine['camera_name']) ? $machine['camera_name'] : '');
+			$template->assign('camera_mac', isset($machine['camera_mac']) ? $machine['camera_mac'] : '');
+			$template->assign('camera_state', isset($machine['camera_state']) ? $machine['camera_state'] : '0');
+			$template->assign('camera_ip', isset($machine['camera_ip']) && $machine['camera_ip'] != '' ? $machine['camera_ip'] : '-');
+			$template->assign('camera_system', isset($machine['camera_system']) ? $machine['camera_system'] : '');
+			$template->assign('viewer_count', isset($machine['viewer_count']) ? $machine['viewer_count'] : '0');
+
+			// カメラ状態表示用
+			$template->if_enable('camera_online', isset($machine['camera_state']) && $machine['camera_state'] == 1);
+			$template->if_enable('camera_offline', !isset($machine['camera_state']) || $machine['camera_state'] != 1);
+
+			$template->loop_next();
+		}
+		$template->loop_end();
+	}
+
+	// カテゴリ統計をループ処理で展開
+	if (count($category_stats) > 0) {
+		$template->loop_start('CATEGORY');
+		foreach ($category_stats as $category) {
+			$template->assign('category', isset($category['category']) ? $category['category'] : '');
+			$template->assign('category_name', isset($category['category_name']) ? $category['category_name'] : '');
+			$template->assign('machine_count', isset($category['machine_count']) ? $category['machine_count'] : '0');
+			$template->assign('online_count', isset($category['online_count']) ? $category['online_count'] : '0');
+
+			// 稼働率を計算
+			$machine_count = intval($category['machine_count']);
+			$online_count = intval($category['online_count']);
+			$rate = ($machine_count > 0) ? round(($online_count / $machine_count) * 100, 1) : 0;
+			$template->assign('rate', $rate);
+
+			$template->loop_next();
+		}
+		$template->loop_end();
+	}
+
 	// 表示
-	$template->display(PRE_HTML . ".html");
+	$template->flush();
 }
