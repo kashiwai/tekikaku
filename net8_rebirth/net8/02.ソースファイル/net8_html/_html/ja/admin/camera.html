@@ -384,43 +384,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {section name=i loop=$camera_list}
+                    <!--loop:CAMERA-->
                     <tr>
-                        <td>#{$camera_list[i].camera_no}</td>
-                        <td><code>{$camera_list[i].camera_mac}</code></td>
-                        <td>{$camera_list[i].camera_name}</td>
-                        <td>{$camera_list[i].ip_address|default:'-'}</td>
-                        <td>{$camera_list[i].machine_count}台</td>
+                        <td>#{%camera_no%}</td>
+                        <td><code>{%camera_mac%}</code></td>
+                        <td>{%camera_name%}</td>
+                        <td>{%ip_address%}</td>
+                        <td>{%machine_count%}台</td>
                         <td>
-                            {if $camera_list[i].state == 1}
+                            <!--if:state_online-->
                                 <span class="badge success">オンライン</span>
-                            {elseif $camera_list[i].state == 0}
+                            <!--/if:state_online-->
+                            <!--if:state_offline-->
                                 <span class="badge danger">オフライン</span>
-                            {else}
+                            <!--/if:state_offline-->
+                            <!--if:state_unknown-->
                                 <span class="badge warning">未設定</span>
-                            {/if}
+                            <!--/if:state_unknown-->
                         </td>
-                        <td>{$camera_list[i].add_dt|date_format:"%Y/%m/%d %H:%M"}</td>
+                        <td>{%add_dt%}</td>
                         <td>
                             <div class="action-buttons">
-                                <a href="camera.php?mode=detail&camera_no={$camera_list[i].camera_no}" class="btn btn-primary btn-sm">
+                                <a href="camera.php?mode=detail&camera_no={%camera_no%}" class="btn btn-primary btn-sm">
                                     <i class="fas fa-edit"></i> 編集
                                 </a>
-                                <a href="camera.php?mode=delete&camera_no={$camera_list[i].camera_no}"
+                                <a href="camera.php?mode=delete&camera_no={%camera_no%}"
                                    class="btn btn-danger btn-sm"
-                                   onclick="return confirm('カメラ「{$camera_list[i].camera_name}」を削除しますか？')">
+                                   onclick="return confirm('カメラ「{%camera_name%}」を削除しますか？')">
                                     <i class="fas fa-trash"></i> 削除
                                 </a>
                             </div>
                         </td>
                     </tr>
-                    {sectionelse}
+                    <!--/loop:CAMERA-->
+                    <!--if:HAS_CAMERAS--><!--else:HAS_CAMERAS-->
                     <tr>
                         <td colspan="8" style="text-align: center; padding: 40px;">
                             カメラが登録されていません
                         </td>
                     </tr>
-                    {/section}
+                    <!--/else:HAS_CAMERAS--><!--/if:HAS_CAMERAS-->
                 </tbody>
             </table>
         </div>
