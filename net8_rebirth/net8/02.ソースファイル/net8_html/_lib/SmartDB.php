@@ -87,9 +87,9 @@ class SmartDB {
 			try {
 				// PDOインスタンスを生成 (URLデコードして渡す)
 				$this->_db = new PDO($pdo_dsn, urldecode($argv[2]), urldecode($argv[3]),
-					array( 
-					            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, 
-					            PDO::ATTR_EMULATE_PREPARES => false, 
+					array(
+					            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+					            PDO::ATTR_EMULATE_PREPARES => true,  // trueに変更: SQL文字列内の:を誤認識しないように
 					) 			// エラー（例外）が発生した時の処理を記述
 				);
 			} catch (PDOException $e) {
