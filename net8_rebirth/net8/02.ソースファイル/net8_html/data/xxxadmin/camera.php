@@ -89,12 +89,38 @@ function DispList($template) {
 		$camera_list[] = $row;
 	}
 
-	// テンプレートに設定
-	$template->assign('camera_list', $camera_list);
+	// テンプレート表示（SmartTemplate API使用）
+	$template->open(PRE_HTML . ".html");
+	$template->assignCommon();
+
+	// カメラ数
 	$template->assign('camera_count', count($camera_list));
 
-	// 表示
-	$template->display(PRE_HTML . ".html");
+	// カメラリストをループで設定
+	if (count($camera_list) > 0) {
+		$template->loop_start('CAMERA');
+		foreach ($camera_list as $camera) {
+			$template->assign('camera_no', $camera['camera_no']);
+			$template->assign('camera_mac', $camera['camera_mac']);
+			$template->assign('camera_name', $camera['camera_name']);
+			$template->assign('ip_address', $camera['ip_address'] ?? '-');
+			$template->assign('machine_count', $camera['machine_count']);
+			$template->assign('add_dt', date('Y/m/d H:i', strtotime($camera['add_dt'])));
+
+			// 状態バッジの条件分岐
+			$template->if_enable('state_online', $camera['state'] == 1);
+			$template->if_enable('state_offline', $camera['state'] == 0);
+			$template->if_enable('state_unknown', !isset($camera['state']) || ($camera['state'] != 0 && $camera['state'] != 1));
+
+			$template->loop_next();
+		}
+		$template->loop_end();
+		$template->if_enable('HAS_CAMERAS', true);
+	} else {
+		$template->if_enable('HAS_CAMERAS', false);
+	}
+
+	$template->flush();
 }
 
 /**
