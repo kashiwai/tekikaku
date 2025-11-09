@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    wget \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP拡張機能のインストール
