@@ -39,14 +39,29 @@ if (!getenv('RAILWAY_ENVIRONMENT')) {
     }
 }
 
-// データベース接続設定
-// ⚠️ 重要: すべてのDB接続をGCP Cloud SQL (Railway MySQL) に統一
-// Railway環境変数は使用せず、GCP DBに強制接続
-define('DB_HOST', '136.116.70.86');                // GCP Cloud SQL IP（固定）
-define('DB_PORT', '3306');                         // MySQLポート（固定）
-define('DB_NAME', 'net8_dev');                     // データベース名（固定）
-define('DB_USER', 'net8tech001');                  // DBユーザー（固定）
-define('DB_PASSWORD', 'Nene11091108!!');          // DBパスワード（正しい値に更新）
+// ==========================================
+// Railway Private Networking対応
+// ==========================================
+// MYSQL_PRIVATE_URLが存在する場合は、プライベートネットワーク経由で接続
+// これにより外部からのDB直接アクセスを完全にブロック
+$mysql_url = getenv('MYSQL_PRIVATE_URL') ?: getenv('MYSQL_URL') ?: null;
+
+if ($mysql_url) {
+    // URLをパース: mysql://user:password@host:port/database
+    $db_parts = parse_url($mysql_url);
+    define('DB_HOST', $db_parts['host'] ?? '136.116.70.86');
+    define('DB_PORT', $db_parts['port'] ?? 3306);
+    define('DB_NAME', ltrim($db_parts['path'] ?? '/net8_dev', '/'));
+    define('DB_USER', $db_parts['user'] ?? 'net8tech001');
+    define('DB_PASSWORD', $db_parts['pass'] ?? 'CaD?7&Bi+_:`QKb*');
+} else {
+    // フォールバック：個別環境変数から読み込み
+    define('DB_HOST', $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '136.116.70.86');
+    define('DB_PORT', $_SERVER['DB_PORT'] ?? $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?: '3306');
+    define('DB_NAME', $_SERVER['DB_NAME'] ?? $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'net8_dev');
+    define('DB_USER', $_SERVER['DB_USER'] ?? $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'net8tech001');
+    define('DB_PASSWORD', $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: 'CaD?7&Bi+_:`QKb*');
+}
 define('DB_CHARSET', 'utf8mb4');
 
 // データベースDSN（Data Source Name）
