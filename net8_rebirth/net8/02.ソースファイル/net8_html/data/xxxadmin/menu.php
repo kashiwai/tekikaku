@@ -39,6 +39,10 @@ require_once('../../_etc/require_files_admin.php');
                     <span class="nav-icon">🎰</span>
                     <span>マシン一覧</span>
                 </a>
+                <a href="machine_control.php" class="nav-item">
+                    <span class="nav-icon">🎮</span>
+                    <span>マシンコントロール</span>
+                </a>
                 <a href="model.php" class="nav-item">
                     <span class="nav-icon">📦</span>
                     <span>機種管理</span>
@@ -46,6 +50,18 @@ require_once('../../_etc/require_files_admin.php');
                 <a href="maker.php" class="nav-item">
                     <span class="nav-icon">🏢</span>
                     <span>メーカー</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">カメラ・配信</div>
+                <a href="camera.php" class="nav-item">
+                    <span class="nav-icon">📹</span>
+                    <span>カメラ管理</span>
+                </a>
+                <a href="streaming.php" class="nav-item">
+                    <span class="nav-icon">📡</span>
+                    <span>ストリーミング</span>
                 </a>
             </div>
 
@@ -66,6 +82,14 @@ require_once('../../_etc/require_files_admin.php');
                 <a href="system.php" class="nav-item">
                     <span class="nav-icon">⚙️</span>
                     <span>設定</span>
+                </a>
+                <a href="signaling.php" class="nav-item">
+                    <span class="nav-icon">🔧</span>
+                    <span>シグナリング</span>
+                </a>
+                <a href="api_keys_manage.php" class="nav-item">
+                    <span class="nav-icon">🔑</span>
+                    <span>API管理</span>
                 </a>
                 <a href="logout.php" class="nav-item">
                     <span class="nav-icon">🚪</span>
@@ -232,8 +256,39 @@ require_once('../../_etc/require_files_admin.php');
                     </nav>
                 </div>
 
-                <!-- 検索・モニター -->
+                <!-- カメラ・配信管理 -->
                 <div class="card fade-in" style="animation-delay: 0.7s;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📹</span>
+                            カメラ・配信管理
+                        </h2>
+                        <span class="card-badge">3</span>
+                    </div>
+                    <nav style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="camera.php" class="btn btn-outline">カメラ管理</a>
+                        <a href="camera_settings.php" class="btn btn-outline">カメラ設定</a>
+                        <a href="streaming.php" class="btn btn-outline">ストリーミング設定</a>
+                    </nav>
+                </div>
+
+                <!-- マシン詳細管理 -->
+                <div class="card fade-in" style="animation-delay: 0.8s;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🎮</span>
+                            マシン詳細管理
+                        </h2>
+                        <span class="card-badge">2</span>
+                    </div>
+                    <nav style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="machine_control.php" class="btn btn-outline">マシンコントロール</a>
+                        <a href="machine_edit.php" class="btn btn-outline">マシン編集</a>
+                    </nav>
+                </div>
+
+                <!-- 検索・モニター -->
+                <div class="card fade-in" style="animation-delay: 0.9s;">
                     <div class="card-header">
                         <h2 class="card-title">
                             <span>🔍</span>
@@ -247,8 +302,23 @@ require_once('../../_etc/require_files_admin.php');
                     </nav>
                 </div>
 
+                <!-- 技術設定 -->
+                <div class="card fade-in" style="animation-delay: 1.0s;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🔧</span>
+                            技術設定
+                        </h2>
+                        <span class="card-badge">2</span>
+                    </div>
+                    <nav style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="signaling.php" class="btn btn-outline">シグナリングサーバー</a>
+                        <a href="api_keys_manage.php" class="btn btn-outline">API管理</a>
+                    </nav>
+                </div>
+
                 <!-- システム設定 -->
-                <div class="card fade-in" style="animation-delay: 0.8s;">
+                <div class="card fade-in" style="animation-delay: 1.1s;">
                     <div class="card-header">
                         <h2 class="card-title">
                             <span>⚙️</span>
