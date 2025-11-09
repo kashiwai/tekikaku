@@ -384,7 +384,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!--{CAMERA}-->
+                    <!--loop:CAMERA-->
                     <tr>
                         <td>#{%camera_no%}</td>
                         <td><code>{%camera_mac%}</code></td>
@@ -392,15 +392,15 @@
                         <td>{%ip_address%}</td>
                         <td>{%machine_count%}台</td>
                         <td>
-                            <!--{if:state_online-->
+                            <!--if:state_online-->
                                 <span class="badge success">オンライン</span>
-                            <!--{/if:state_online-->
-                            <!--{if:state_offline-->
+                            <!--/if:state_online-->
+                            <!--if:state_offline-->
                                 <span class="badge danger">オフライン</span>
-                            <!--{/if:state_offline-->
-                            <!--{if:state_unknown-->
+                            <!--/if:state_offline-->
+                            <!--if:state_unknown-->
                                 <span class="badge warning">未設定</span>
-                            <!--{/if:state_unknown-->
+                            <!--/if:state_unknown-->
                         </td>
                         <td>{%add_dt%}</td>
                         <td>
@@ -416,14 +416,14 @@
                             </div>
                         </td>
                     </tr>
-                    <!--{/CAMERA}-->
-                    <!--{if:HAS_CAMERAS--><!--{else:HAS_CAMERAS-->
+                    <!--/loop:CAMERA-->
+                    <!--if:HAS_CAMERAS--><!--else:HAS_CAMERAS-->
                     <tr>
                         <td colspan="8" style="text-align: center; padding: 40px;">
                             カメラが登録されていません
                         </td>
                     </tr>
-                    <!--{/else:HAS_CAMERAS--><!--{/if:HAS_CAMERAS-->
+                    <!--/else:HAS_CAMERAS--><!--/if:HAS_CAMERAS-->
                 </tbody>
             </table>
         </div>

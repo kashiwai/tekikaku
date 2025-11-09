@@ -115,54 +115,15 @@ function DispList($template) {
 		$camera_list[] = $row;
 	}
 
-	// テンプレート表示（SmartTemplate API使用）
-	$template->open(PRE_HTML . ".html");
-	$template->assignCommon();
-
-	// 統計情報
+	// テンプレートに設定
+	$template->assign('machine_list', $machine_list);
+	$template->assign('camera_list', $camera_list);
 	$template->assign('machine_count', count($machine_list));
 	$template->assign('assigned_count', $assigned_count);
 	$template->assign('unassigned_count', $unassigned_count);
 
-	// 台リストをループで設定
-	if (count($machine_list) > 0) {
-		$template->loop_start('MACHINE');
-		foreach ($machine_list as $machine) {
-			$template->assign('machine_no', $machine['machine_no']);
-			$template->assign('machine_cd', $machine['machine_cd']);
-			$template->assign('model_name', $machine['model_name']);
-			$template->assign('camera_name', $machine['camera_name'] ?? '未割り当て');
-			$template->assign('camera_mac', $machine['camera_mac'] ?? '');
-			$template->assign('camera_ip', $machine['camera_ip'] ?? '-');
-
-			// カメラセレクトボックスのHTMLを生成
-			$select_html = '<select name="camera_no" class="form-control" onchange="this.form.submit()">';
-			$select_html .= '<option value="0">-- 選択してください --</option>';
-			foreach ($camera_list as $camera) {
-				$selected = (!empty($machine['camera_no']) && $machine['camera_no'] == $camera['camera_no']) ? 'selected' : '';
-				$select_html .= sprintf(
-					'<option value="%d" %s>%s (%s)</option>',
-					$camera['camera_no'],
-					$selected,
-					htmlspecialchars($camera['camera_name']),
-					htmlspecialchars($camera['camera_mac'])
-				);
-			}
-			$select_html .= '</select>';
-			$template->assign('camera_select_html', $select_html);
-
-			// 条件分岐
-			$template->if_enable('has_camera', !empty($machine['camera_no']));
-			$template->if_enable('no_camera', empty($machine['camera_no']));
-			$template->if_enable('camera_online', isset($machine['camera_state']) && $machine['camera_state'] == 1);
-			$template->if_enable('camera_offline', isset($machine['camera_state']) && $machine['camera_state'] == 0);
-
-			$template->loop_next();
-		}
-		$template->loop_end();
-	}
-
-	$template->flush();
+	// 表示
+	$template->display(PRE_HTML . ".html");
 }
 
 /**

@@ -76,19 +76,12 @@ function DispList($template) {
 		$settings['signaling_port']
 	);
 
-	// テンプレート表示（SmartTemplate API使用）
-	$template->open(PRE_HTML . ".html");
-	$template->assignCommon();
-
-	// 設定値を個別にassign
-	foreach ($settings as $key => $value) {
-		$template->assign($key, $value);
-	}
-
-	// 接続ステータス
+	// テンプレートに設定
+	$template->assign('settings', $settings);
 	$template->assign('connection_status', $connection_status);
 
-	$template->flush();
+	// 表示
+	$template->display(PRE_HTML . ".html");
 }
 
 /**
