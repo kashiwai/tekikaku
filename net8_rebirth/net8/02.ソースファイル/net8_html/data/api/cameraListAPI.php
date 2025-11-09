@@ -84,8 +84,8 @@ function GetNoCamera($DB) {
 	// データ取得
 	getData($_GET, array("MAC","ID","IP") );
 
-	// MAC addressを大文字に統一（case-insensitive対応）
-	$_GET["MAC"] = strtoupper($_GET["MAC"]);
+	// MAC addressを小文字に統一（case-insensitive対応）
+	$_GET["MAC"] = strtolower($_GET["MAC"]);
 
 	$api = new APItool();
 
