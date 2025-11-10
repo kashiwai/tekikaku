@@ -223,13 +223,20 @@ function GetNoCamera($DB) {
  */
 function addList($DB) {
 
-	// データ取得
-	getData($_POST, array("MAC_ADDRESS", "IDENTIFING_NUMBER", "SYSTEM_NAME", "PRODUCT_NAME", "CPU_NAME", "CORE", "UUID") );
+	// データ取得（LICENSE_IDを追加）
+	getData($_POST, array("MAC_ADDRESS", "IDENTIFING_NUMBER", "SYSTEM_NAME", "PRODUCT_NAME", "CPU_NAME", "CORE", "UUID", "LICENSE_ID") );
 
 	// MAC addressを小文字に統一（case-insensitive対応）
 	$_POST["MAC_ADDRESS"] = strtolower($_POST["MAC_ADDRESS"]);
 
 	$api = new APItool();
+
+	// License IDがローカルから送られてきているかチェック
+	if ( empty($_POST["LICENSE_ID"]) ){
+		$api->setError("License IDが送信されていません。NET8License.pyでLicense IDを生成してください。");
+		$api->outputJson();
+		return;
+	}
 
 	$sql = (new SqlString($DB))
 		->select()
@@ -242,7 +249,8 @@ function addList($DB) {
 
 	$row = $DB->getRow($sql);
 	if ( mb_strlen($row["mac_address"]) == 0 ){
-		$license_id = getLicenseID($_POST["MAC_ADDRESS"]);
+		// ローカルから送られてきたLicense IDを使用（サーバー側では生成しない）
+		$license_id = $_POST["LICENSE_ID"];
 
 		// トランザクション開始
 		$DB->autoCommit(false);

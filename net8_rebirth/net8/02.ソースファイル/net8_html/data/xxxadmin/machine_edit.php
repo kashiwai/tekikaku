@@ -786,15 +786,11 @@ function ProcUpdate($template) {
             $count_row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
             if ($count_row['cnt'] > 0) {
-                // 既存レコードがある場合のみUPDATE
-                // License IDを再生成
-                $license_id = getLicenseID($mac_address);
-
+                // 既存レコードがある場合はcamera_noのみ更新（License IDは再生成しない）
                 $sql = (new SqlString())
                         ->setAutoConvert( [$template->DB,"conv_sql"] )
                         ->update("mst_cameralist")
                             ->set()
-                                ->value("license_id", $license_id, FD_STR)
                                 ->value("camera_no", $camera_no, FD_NUM)
                                 ->value("del_flg", 0, FD_NUM)
                                 ->value("upd_dt", "current_timestamp", FD_FUNCTION)
@@ -803,10 +799,10 @@ function ProcUpdate($template) {
                         ->createSQL();
 
                 $template->DB->query($sql);
-                $license_id_message = "📝 License ID: " . substr($license_id, 0, 30) . "...";
+                $license_id_message = "✅ 既存のLicense IDを保持（再生成しない）";
             } else {
                 // 新規の場合はINSERTしない（NET8License.pyに任せる）
-                $license_id_message = "⚠️ 新しいMACアドレスです。NET8License.pyを実行してください。";
+                $license_id_message = "⚠️ 新しいMACアドレスです。NET8License.pyを実行してLicense IDを生成してください。";
             }
         }
 
