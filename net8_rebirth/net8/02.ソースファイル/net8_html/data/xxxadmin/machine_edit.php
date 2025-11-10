@@ -52,14 +52,18 @@ function DispEdit($template, $message = "") {
         exit;
     }
 
-    // マシン情報取得
+    // マシン情報取得（カメラ情報も含む）
     $sql = (new SqlString())
             ->setAutoConvert( [$template->DB,"conv_sql"] )
             ->select()
-                ->field("*")
-                ->from("dat_machine")
+                ->field("dm.*")
+                ->field("mc.camera_mac")
+                ->field("mcl.license_id")
+                ->from("dat_machine dm")
+                ->join("left", "mst_camera mc", "dm.camera_no = mc.camera_no")
+                ->join("left", "mst_cameralist mcl", "mc.camera_mac = mcl.mac_address")
                 ->where()
-                    ->and("machine_no = ", $machine_no, FD_NUM)
+                    ->and("dm.machine_no = ", $machine_no, FD_NUM)
             ->createSQL();
 
     $machine = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
@@ -344,17 +348,41 @@ function DispEdit($template, $message = "") {
 
                 <div class="form-group">
                     <label class="form-label" for="mac_address">
-                        MACアドレス
+                        MACアドレス <span class="required">*</span>
                     </label>
                     <input
                         type="text"
                         id="mac_address"
                         name="mac_address"
                         class="form-input"
-                        value="<?= htmlspecialchars($machine['mac_address'] ?: '') ?>"
-                        placeholder="00:00:00:00:00:01"
+                        value="<?= htmlspecialchars($machine['camera_mac'] ?: $machine['mac_address'] ?: '') ?>"
+                        placeholder="00:00:00:00:00:01 または 00-00-00-00-00-01"
+                        pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+                        required
                     >
-                    <div class="form-help">NICのMACアドレス（例: 00:11:22:33:44:55）</div>
+                    <div class="form-help">
+                        Win側の認証に使用されます（コロン区切り or ハイフン区切り）<br>
+                        例: 00:11:22:33:44:55 または 00-11-22-33-44-55
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="license_id">
+                        License ID（自動生成）
+                    </label>
+                    <input
+                        type="text"
+                        id="license_id"
+                        name="license_id"
+                        class="form-input"
+                        value="<?= htmlspecialchars($machine['license_id'] ?: '（MACアドレス保存時に自動生成されます）') ?>"
+                        readonly
+                        style="background: #f1f5f9; cursor: not-allowed;"
+                    >
+                    <div class="form-help">
+                        MACアドレスから自動生成されます（手動入力不要）<br>
+                        Win側の認証に必要です
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -389,30 +417,141 @@ function DispEdit($template, $message = "") {
 }
 
 /**
+ * ライセンスIDの生成（cameraListAPI.phpと同じロジック）
+ */
+function getLicenseID($mac_address) {
+    $api = new APItool();
+    $encdata = $api->pyEncrypt($mac_address, LICENSE_CODE);
+    return $encdata;
+}
+
+/**
  * 更新処理
  */
 function ProcUpdate($template) {
     getData($_POST, array("machine_no", "name", "status", "ip_address", "mac_address", "chrome_rd_session_id"));
 
-    $sql = (new SqlString())
-            ->setAutoConvert( [$template->DB,"conv_sql"] )
-            ->update("dat_machine")
-                ->set()
-                    ->value("name", $_POST["name"], FD_STR)
-                    ->value("status", $_POST["status"], FD_STR)
-                    ->value("ip_address", $_POST["ip_address"], FD_STR)
-                    ->value("mac_address", $_POST["mac_address"], FD_STR)
-                    ->value("chrome_rd_session_id", $_POST["chrome_rd_session_id"], FD_STR)
-                ->where()
-                    ->and("machine_no = ", $_POST["machine_no"], FD_NUM)
-            ->createSQL();
+    // MACアドレスの正規化（コロン→ハイフン、小文字化）
+    $mac_address = strtolower(str_replace(':', '-', trim($_POST["mac_address"])));
 
-    $template->DB->query($sql);
+    // MACアドレスのバリデーション
+    if (!preg_match('/^([0-9a-f]{2}-){5}[0-9a-f]{2}$/', $mac_address)) {
+        $_GET['machine_no'] = $_POST['machine_no'];
+        $message = "❌ MACアドレスのフォーマットが不正です。正しい形式: 00:11:22:33:44:55";
+        DispEdit($template, $message);
+        return;
+    }
 
-    // 編集画面に戻る（成功メッセージ付き）
-    $_GET['machine_no'] = $_POST['machine_no'];
-    $message = "✅ マシン情報を更新しました。";
-    DispEdit($template, $message);
+    // License IDを自動生成
+    $license_id = getLicenseID($mac_address);
+
+    try {
+        // トランザクション開始
+        $template->DB->autoCommit(false);
+
+        // ❶ dat_machine を更新
+        $sql = (new SqlString())
+                ->setAutoConvert( [$template->DB,"conv_sql"] )
+                ->update("dat_machine")
+                    ->set()
+                        ->value("name", $_POST["name"], FD_STR)
+                        ->value("status", $_POST["status"], FD_STR)
+                        ->value("ip_address", $_POST["ip_address"], FD_STR)
+                        ->value("mac_address", $mac_address, FD_STR)
+                        ->value("chrome_rd_session_id", $_POST["chrome_rd_session_id"], FD_STR)
+                    ->where()
+                        ->and("machine_no = ", $_POST["machine_no"], FD_NUM)
+                ->createSQL();
+
+        $template->DB->query($sql);
+
+        // camera_no を取得
+        $sql = (new SqlString())
+                ->setAutoConvert( [$template->DB,"conv_sql"] )
+                ->select()
+                    ->field("camera_no")
+                    ->from("dat_machine")
+                    ->where()
+                        ->and("machine_no = ", $_POST["machine_no"], FD_NUM)
+                ->createSQL();
+
+        $machine_row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
+        $camera_no = $machine_row['camera_no'];
+
+        if ($camera_no) {
+            // ❷ mst_camera の camera_mac を更新
+            $sql = (new SqlString())
+                    ->setAutoConvert( [$template->DB,"conv_sql"] )
+                    ->update("mst_camera")
+                        ->set()
+                            ->value("camera_mac", $mac_address, FD_STR)
+                        ->where()
+                            ->and("camera_no = ", $camera_no, FD_NUM)
+                    ->createSQL();
+
+            $template->DB->query($sql);
+
+            // ❸ mst_cameralist を INSERT または UPDATE
+            // 既存レコードをチェック
+            $sql = (new SqlString())
+                    ->setAutoConvert( [$template->DB,"conv_sql"] )
+                    ->select()
+                        ->field("COUNT(*) as cnt")
+                        ->from("mst_cameralist")
+                        ->where()
+                            ->and("mac_address = ", $mac_address, FD_STR)
+                    ->createSQL();
+
+            $count_row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
+
+            if ($count_row['cnt'] > 0) {
+                // UPDATE
+                $sql = (new SqlString())
+                        ->setAutoConvert( [$template->DB,"conv_sql"] )
+                        ->update("mst_cameralist")
+                            ->set()
+                                ->value("license_id", $license_id, FD_STR)
+                                ->value("camera_no", $camera_no, FD_NUM)
+                                ->value("del_flg", 0, FD_NUM)
+                                ->value("upd_dt", "current_timestamp", FD_FUNCTION)
+                            ->where()
+                                ->and("mac_address = ", $mac_address, FD_STR)
+                        ->createSQL();
+            } else {
+                // INSERT
+                $sql = (new SqlString())
+                        ->setAutoConvert( [$template->DB,"conv_sql"] )
+                        ->insert()
+                            ->into("mst_cameralist")
+                                ->value("mac_address", $mac_address, FD_STR)
+                                ->value("license_id", $license_id, FD_STR)
+                                ->value("camera_no", $camera_no, FD_NUM)
+                                ->value("del_flg", 0, FD_NUM)
+                                ->value("add_dt", "current_timestamp", FD_FUNCTION)
+                        ->createSQL();
+            }
+
+            $template->DB->query($sql);
+        }
+
+        // コミット
+        $template->DB->autoCommit(true);
+
+        // 編集画面に戻る（成功メッセージ付き）
+        $_GET['machine_no'] = $_POST['machine_no'];
+        $message = "✅ マシン情報を更新しました（3テーブル同期完了）<br>";
+        $message .= "📝 License ID: " . substr($license_id, 0, 30) . "...<br>";
+        $message .= "🔐 Win側の認証に反映されます。slotserver.iniのIDと一致します。";
+        DispEdit($template, $message);
+
+    } catch (Exception $e) {
+        // ロールバック
+        $template->DB->autoCommit(true);
+
+        $_GET['machine_no'] = $_POST['machine_no'];
+        $message = "❌ 更新に失敗しました: " . htmlspecialchars($e->getMessage());
+        DispEdit($template, $message);
+    }
 }
 
 ?>
