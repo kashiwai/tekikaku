@@ -24,6 +24,7 @@ echo "<pre>\n";
 try {
     $pdo = get_db_connection();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
     echo "✅ データベース接続成功\n\n";
 
