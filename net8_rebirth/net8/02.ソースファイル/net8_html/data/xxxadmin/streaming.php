@@ -160,7 +160,7 @@ function DispList($template) {
 
 			$template->loop_next();
 		}
-		$template->loop_end();
+		$template->loop_end('STREAMING');
 	}
 
 	// カテゴリ統計をループ処理で展開
@@ -180,7 +180,7 @@ function DispList($template) {
 
 			$template->loop_next();
 		}
-		$template->loop_end();
+		$template->loop_end('CATEGORY');
 	}
 
 	// 表示

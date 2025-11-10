@@ -76,12 +76,22 @@ function DispList($template) {
 		$settings['signaling_port']
 	);
 
-	// テンプレートに設定
-	$template->assign('settings', $settings);
+	// テンプレート表示（SmartTemplate API使用）
+	$template->open(PRE_HTML . ".html");
+	$template->assignCommon();
+
+	// 設定値を個別にアサイン
+	$template->assign('signaling_host', $settings['signaling_host']);
+	$template->assign('signaling_port', $settings['signaling_port']);
+	$template->assign('signaling_key', $settings['signaling_key']);
+	$template->assign('signaling_path', $settings['signaling_path']);
+	$template->assign('stun_server', $settings['stun_server']);
+	$template->assign('turn_server', $settings['turn_server']);
+	$template->assign('turn_username', $settings['turn_username']);
+	$template->assign('turn_credential', $settings['turn_credential']);
 	$template->assign('connection_status', $connection_status);
 
-	// 表示
-	$template->display(PRE_HTML . ".html");
+	$template->flush();
 }
 
 /**

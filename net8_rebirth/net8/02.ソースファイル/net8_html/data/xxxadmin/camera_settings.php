@@ -115,15 +115,52 @@ function DispList($template) {
 		$camera_list[] = $row;
 	}
 
-	// テンプレートに設定
-	$template->assign('machine_list', $machine_list);
-	$template->assign('camera_list', $camera_list);
+	// テンプレート表示（SmartTemplate API使用）
+	$template->open(PRE_HTML . ".html");
+	$template->assignCommon();
+
 	$template->assign('machine_count', count($machine_list));
 	$template->assign('assigned_count', $assigned_count);
 	$template->assign('unassigned_count', $unassigned_count);
 
-	// 表示
-	$template->display(PRE_HTML . ".html");
+	// マシンリストのループ
+	if (count($machine_list) > 0) {
+		$template->loop_start('MACHINE');
+		foreach ($machine_list as $machine) {
+			$template->assign('machine_no', $machine['machine_no']);
+			$template->assign('machine_cd', $machine['machine_cd']);
+			$template->assign('model_name', $machine['model_name']);
+			$template->assign('model_cd', $machine['model_cd']);
+			$template->assign('camera_no', $machine['camera_no'] ?? 0);
+			$template->assign('camera_name', $machine['camera_name'] ?? '未割当');
+			$template->assign('camera_mac', $machine['camera_mac'] ?? '');
+			$template->assign('camera_ip', $machine['camera_ip'] ?? '-');
+			$template->assign('camera_state', $machine['camera_state'] ?? 0);
+
+			// カメラ割り当て状態
+			$template->if_enable('has_camera', !empty($machine['camera_no']));
+
+			$template->loop_next();
+		}
+		$template->loop_end('MACHINE');
+		$template->if_enable('HAS_MACHINES', true);
+	} else {
+		$template->if_enable('HAS_MACHINES', false);
+	}
+
+	// カメラリストのループ（割り当て用セレクトボックス）
+	if (count($camera_list) > 0) {
+		$template->loop_start('CAMERA');
+		foreach ($camera_list as $camera) {
+			$template->assign('camera_no', $camera['camera_no']);
+			$template->assign('camera_name', $camera['camera_name']);
+			$template->assign('camera_mac', $camera['camera_mac']);
+			$template->loop_next();
+		}
+		$template->loop_end('CAMERA');
+	}
+
+	$template->flush();
 }
 
 /**

@@ -114,7 +114,7 @@ function DispList($template) {
 
 			$template->loop_next();
 		}
-		$template->loop_end();
+		$template->loop_end('CAMERA');
 		$template->if_enable('HAS_CAMERAS', true);
 	} else {
 		$template->if_enable('HAS_CAMERAS', false);
