@@ -97,15 +97,15 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-card-title">全台数</div>
-                <div class="stat-card-value">{$machine_count}</div>
+                <div class="stat-card-value">{%machine_count%}</div>
             </div>
             <div class="stat-card" style="border-left-color: var(--admin-success);">
                 <div class="stat-card-title">割り当て済み</div>
-                <div class="stat-card-value">{$assigned_count}</div>
+                <div class="stat-card-value">{%assigned_count%}</div>
             </div>
             <div class="stat-card" style="border-left-color: var(--admin-warning);">
                 <div class="stat-card-title">未割り当て</div>
-                <div class="stat-card-value">{$unassigned_count}</div>
+                <div class="stat-card-value">{%unassigned_count%}</div>
             </div>
         </div>
 
@@ -129,63 +129,68 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {section name=i loop=$machine_list}
+                    <!--if:HAS_MACHINES-->
+                    <!--loop:MACHINE-->
                     <tr>
-                        <td>#{$machine_list[i].machine_no}</td>
-                        <td>{$machine_list[i].machine_cd}</td>
-                        <td>{$machine_list[i].model_name}</td>
+                        <td>#{%machine_no%}</td>
+                        <td>{%machine_cd%}</td>
+                        <td>{%model_name%}</td>
                         <td>
-                            {if $machine_list[i].camera_no}
-                                <strong>{$machine_list[i].camera_name}</strong><br>
+                            <!--if:has_camera-->
+                                <strong>{%camera_name%}</strong><br>
                                 <small style="color: var(--admin-text-muted);">
-                                    <code>{$machine_list[i].camera_mac}</code>
+                                    <code>{%camera_mac%}</code>
                                 </small>
-                            {else}
+                            <!--/if:has_camera-->
+                            <!--if:!has_camera-->
                                 <span class="badge warning">未割り当て</span>
-                            {/if}
+                            <!--/if:!has_camera-->
                         </td>
                         <td>
-                            {if $machine_list[i].camera_no}
-                                {if $machine_list[i].camera_state == 1}
+                            <!--if:has_camera-->
+                                <!--if:state_online-->
                                     <span class="badge success">オンライン</span>
-                                {else}
+                                <!--/if:state_online-->
+                                <!--if:state_offline-->
                                     <span class="badge danger">オフライン</span>
-                                {/if}
-                            {else}
+                                <!--/if:state_offline-->
+                            <!--/if:has_camera-->
+                            <!--if:!has_camera-->
                                 -
-                            {/if}
+                            <!--/if:!has_camera-->
                         </td>
                         <td>
                             <form method="post" action="camera_settings.php?mode=assign" style="display: inline;">
-                                <input type="hidden" name="machine_no" value="{$machine_list[i].machine_no}">
+                                <input type="hidden" name="machine_no" value="{%machine_no%}">
                                 <select name="camera_no" class="form-control" onchange="this.form.submit()">
                                     <option value="0">-- 選択してください --</option>
-                                    {section name=j loop=$camera_list}
-                                    <option value="{$camera_list[j].camera_no}"
-                                        {if $machine_list[i].camera_no == $camera_list[j].camera_no}selected{/if}>
-                                        {$camera_list[j].camera_name} ({$camera_list[j].camera_mac})
+                                    <!--loop:CAMERA-->
+                                    <option value="{%camera_no%}">
+                                        {%camera_name%} ({%camera_mac%})
                                     </option>
-                                    {/section}
+                                    <!--/loop:CAMERA-->
                                 </select>
                             </form>
                         </td>
                         <td>
-                            {if $machine_list[i].camera_no}
-                            <a href="camera_settings.php?mode=unassign&machine_no={$machine_list[i].machine_no}"
+                            <!--if:has_camera-->
+                            <a href="camera_settings.php?mode=unassign&machine_no={%machine_no%}"
                                class="btn btn-danger btn-sm"
                                onclick="return confirm('カメラ割り当てを解除しますか？')">
                                 <i class="fas fa-unlink"></i> 解除
                             </a>
-                            {/if}
+                            <!--/if:has_camera-->
                         </td>
                     </tr>
-                    {sectionelse}
+                    <!--/loop:MACHINE-->
+                    <!--/if:HAS_MACHINES-->
+                    <!--if:!HAS_MACHINES-->
                     <tr>
                         <td colspan="7" style="text-align: center; padding: 40px;">
                             台が登録されていません
                         </td>
                     </tr>
-                    {/section}
+                    <!--/if:!HAS_MACHINES-->
                 </tbody>
             </table>
         </div>

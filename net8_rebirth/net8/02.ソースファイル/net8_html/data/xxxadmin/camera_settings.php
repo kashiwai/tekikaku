@@ -140,24 +140,28 @@ function DispList($template) {
 			// カメラ割り当て状態
 			$template->if_enable('has_camera', !empty($machine['camera_no']));
 
+			// カメラオンライン状態
+			$template->if_enable('state_online', isset($machine['camera_state']) && $machine['camera_state'] == 1);
+			$template->if_enable('state_offline', !isset($machine['camera_state']) || $machine['camera_state'] != 1);
+
+			// カメラリストのループ（割り当て用セレクトボックス） - 各マシンごとに展開
+			if (count($camera_list) > 0) {
+				$template->loop_start('CAMERA');
+				foreach ($camera_list as $camera) {
+					$template->assign('camera_no', $camera['camera_no']);
+					$template->assign('camera_name', $camera['camera_name']);
+					$template->assign('camera_mac', $camera['camera_mac']);
+					$template->loop_next();
+				}
+				$template->loop_end('CAMERA');
+			}
+
 			$template->loop_next();
 		}
 		$template->loop_end('MACHINE');
 		$template->if_enable('HAS_MACHINES', true);
 	} else {
 		$template->if_enable('HAS_MACHINES', false);
-	}
-
-	// カメラリストのループ（割り当て用セレクトボックス）
-	if (count($camera_list) > 0) {
-		$template->loop_start('CAMERA');
-		foreach ($camera_list as $camera) {
-			$template->assign('camera_no', $camera['camera_no']);
-			$template->assign('camera_name', $camera['camera_name']);
-			$template->assign('camera_mac', $camera['camera_mac']);
-			$template->loop_next();
-		}
-		$template->loop_end('CAMERA');
 	}
 
 	$template->flush();
