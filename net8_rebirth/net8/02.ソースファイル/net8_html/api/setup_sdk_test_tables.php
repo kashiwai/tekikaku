@@ -53,26 +53,35 @@ try {
 
     foreach ($sql_statements as $sql) {
         try {
-            $pdo->exec($sql);
-            $success_count++;
-
             // ステートメントの種類を判定
-            if (stripos($sql, 'CREATE TABLE') !== false) {
-                preg_match('/CREATE TABLE.*?`(\w+)`/i', $sql, $matches);
-                $table_name = $matches[1] ?? 'unknown';
-                echo "✅ テーブル作成/確認: {$table_name}\n";
-            } elseif (stripos($sql, 'INSERT INTO') !== false) {
-                preg_match('/INSERT INTO.*?`(\w+)`/i', $sql, $matches);
-                $table_name = $matches[1] ?? 'unknown';
-                echo "✅ データ挿入: {$table_name}\n";
-            } elseif (stripos($sql, 'SELECT') !== false) {
+            if (stripos($sql, 'SELECT') !== false) {
+                // SELECT文の場合はquery()を使用
                 $stmt = $pdo->query($sql);
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($result) {
                     echo "✅ 確認クエリ実行: " . json_encode($result, JSON_UNESCAPED_UNICODE) . "\n";
                 }
-                $stmt->closeCursor(); // ステートメントをクローズ
+                $stmt->closeCursor();
                 $stmt = null;
+                $success_count++;
+            } elseif (stripos($sql, 'CREATE TABLE') !== false) {
+                // CREATE TABLE文の場合
+                $pdo->exec($sql);
+                preg_match('/CREATE TABLE.*?`(\w+)`/i', $sql, $matches);
+                $table_name = $matches[1] ?? 'unknown';
+                echo "✅ テーブル作成/確認: {$table_name}\n";
+                $success_count++;
+            } elseif (stripos($sql, 'INSERT INTO') !== false) {
+                // INSERT文の場合
+                $pdo->exec($sql);
+                preg_match('/INSERT INTO.*?`(\w+)`/i', $sql, $matches);
+                $table_name = $matches[1] ?? 'unknown';
+                echo "✅ データ挿入: {$table_name}\n";
+                $success_count++;
+            } else {
+                // その他のSQL文
+                $pdo->exec($sql);
+                $success_count++;
             }
         } catch (PDOException $e) {
             $error_count++;
