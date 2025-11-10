@@ -42,29 +42,38 @@ try {
 
     // ❶ mst_cameralistでの検索（License IDなし）
     echo "【ステップ1】 mst_cameralistでMACアドレスのみで検索\n";
-    $sql = "SELECT
-        mac_address,
-        license_id,
-        camera_no,
-        state,
-        del_flg,
-        add_dt
-    FROM mst_cameralist
-    WHERE mac_address = '" . $DB->real_escape_string($mac_normalized) . "'";
+    $sql = (new SqlString($DB))
+        ->select()
+            ->field("mac_address")
+            ->field("license_id")
+            ->field("camera_no")
+            ->field("state")
+            ->field("del_flg")
+            ->field("add_dt")
+        ->from("mst_cameralist")
+        ->where()
+            ->and("mac_address =", $mac_normalized, FD_STR)
+        ->createSQL();
 
     echo "SQL: " . $sql . "\n\n";
-    $result = $DB->query($sql);
-    $rows = [];
-    while ($row = $result->fetch_assoc()) {
-        $rows[] = $row;
-    }
+
+    $rows = $DB->getAll($sql, PDO::FETCH_ASSOC);
 
     if (empty($rows)) {
         echo "❌ MACアドレスが見つかりません\n";
         echo "登録されているMACアドレス一覧:\n";
-        $sql = "SELECT mac_address, LEFT(license_id, 30) as license_preview, del_flg FROM mst_cameralist LIMIT 10";
-        $result = $DB->query($sql);
-        while ($row = $result->fetch_assoc()) {
+
+        $sql = (new SqlString($DB))
+            ->select()
+                ->field("mac_address")
+                ->field("LEFT(license_id, 30) as license_preview")
+                ->field("del_flg")
+            ->from("mst_cameralist")
+            ->limit(10)
+            ->createSQL();
+
+        $all_rows = $DB->getAll($sql, PDO::FETCH_ASSOC);
+        foreach ($all_rows as $row) {
             echo "  - " . $row['mac_address'] . " (del_flg: " . $row['del_flg'] . ") License: " . $row['license_preview'] . "...\n";
         }
     } else {
@@ -100,21 +109,23 @@ try {
 
         // ❸ 完全な認証チェック（cameraListAPI.phpと同じ条件）
         echo "【ステップ3】 完全な認証チェック（cameraListAPI.phpと同じ条件）\n";
-        $sql = "SELECT
-            mac_address,
-            ip_address,
-            license_id,
-            camera_no
-        FROM mst_cameralist
-        WHERE mac_address = '" . $DB->real_escape_string($mac_normalized) . "'
-        AND license_id = '" . $DB->real_escape_string($license_id) . "'
-        AND del_flg = 0";
+        $sql = (new SqlString($DB))
+            ->select()
+                ->field("mac_address")
+                ->field("ip_address")
+                ->field("license_id")
+                ->field("camera_no")
+            ->from("mst_cameralist")
+            ->where()
+                ->and("mac_address =", $mac_normalized, FD_STR)
+                ->and("license_id =", $license_id, FD_STR)
+                ->and("del_flg =", "0", FD_NUM)
+            ->createSQL();
 
         echo "SQL: " . $sql . "\n\n";
-        $result = $DB->query($sql);
-        $auth_row = $result->fetch_assoc();
+        $auth_row = $DB->getRow($sql, PDO::FETCH_ASSOC);
 
-        if ($auth_row) {
+        if ($auth_row && !empty($auth_row['mac_address'])) {
             echo "✅ 認証成功！\n";
             print_r($auth_row);
         } else {
@@ -128,18 +139,20 @@ try {
 
     // ❹ mst_cameraの確認
     echo "\n【ステップ4】 mst_cameraの確認\n";
-    $sql = "SELECT
-        camera_no,
-        camera_mac,
-        camera_name,
-        del_flg
-    FROM mst_camera
-    WHERE camera_mac = '" . $DB->real_escape_string($mac_normalized) . "'";
+    $sql = (new SqlString($DB))
+        ->select()
+            ->field("camera_no")
+            ->field("camera_mac")
+            ->field("camera_name")
+            ->field("del_flg")
+        ->from("mst_camera")
+        ->where()
+            ->and("camera_mac =", $mac_normalized, FD_STR)
+        ->createSQL();
 
-    $result = $DB->query($sql);
-    $camera_row = $result->fetch_assoc();
+    $camera_row = $DB->getRow($sql, PDO::FETCH_ASSOC);
 
-    if ($camera_row) {
+    if ($camera_row && !empty($camera_row['camera_mac'])) {
         echo "✅ mst_cameraに登録あり\n";
         print_r($camera_row);
     } else {
