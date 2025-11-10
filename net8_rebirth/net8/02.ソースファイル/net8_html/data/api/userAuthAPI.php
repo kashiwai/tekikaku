@@ -60,22 +60,35 @@ function EchoJson($DB) {
 
 	$nowDate = Date("Y-m-d H:i:s");
 
-	// データ取得
-	getData($_GET, array("MACHINENO", "PLAYDT", "MEMBERNO", "ONETIMEAUTHID"));
+	// デバッグログ: 受信パラメータを記録
+	error_log("[userAuthAPI] GET params: " . json_encode($_GET));
+
+	// データ取得（ONETIMEAUTHIDは任意に変更）
+	getData($_GET, array("MACHINENO", "PLAYDT", "MEMBERNO"));
 
 	//API設定
 	$api = new APItool();
 
 	//DBの登録情報をチェック
-	$sql = (new SqlString($DB))
+	// ONETIMEAUTHIDが送信されている場合はそれも使って照合、なければMACHINENOのみで照合
+	$sqlBuilder = (new SqlString($DB))
 		->select()
 			->field("machine_no, member_no,start_dt")
 			->from("lnk_machine")
 			->where()
-				->and( "machine_no =", $_GET["MACHINENO"], FD_STR)
-				->and( "onetime_id =", $_GET["ONETIMEAUTHID"], FD_STR)
-		->createSQL("\n");
-		
+				->and( "machine_no =", $_GET["MACHINENO"], FD_STR);
+
+	// ONETIMEAUTHIDが送信されていて空でない場合のみ、条件に追加
+	if (!empty($_GET["ONETIMEAUTHID"])) {
+		$sqlBuilder->and( "onetime_id =", $_GET["ONETIMEAUTHID"], FD_STR);
+		error_log("[userAuthAPI] Using onetime_id: " . $_GET["ONETIMEAUTHID"]);
+	} else {
+		error_log("[userAuthAPI] No onetime_id provided, checking by machine_no only");
+	}
+
+	$sql = $sqlBuilder->createSQL("\n");
+	error_log("[userAuthAPI] SQL: " . $sql);
+
 	$row = $DB->getRow($sql);
 
 	//2020-06-25 Notice修正
