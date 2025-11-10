@@ -530,6 +530,13 @@ $GLOBALS["RTC_Signaling_Servers"] = array(
     "PEER003" => "mgg-signaling-production-c1bd.up.railway.app:443"
 );
 
+// テスター会員用ダミークレジット設定
+// カテゴリごとのダミークレジット値（テスター会員がプレイ時に使用）
+$GLOBALS["Dummy_Credit_Array"] = array(
+    "1" => 50000,  // パチンコ: 50,000クレジット
+    "2" => 50000   // スロット: 50,000クレジット
+);
+
 // WebRTC設定ファイルの読み込み
 require_once(__DIR__ . '/webRTC_setting.php');
 

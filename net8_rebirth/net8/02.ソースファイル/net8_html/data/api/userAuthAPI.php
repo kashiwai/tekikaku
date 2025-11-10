@@ -195,6 +195,24 @@ function EchoJson($DB) {
 
 function initTable( $DB, $machine_no, $jsonArray ) {
 
+	//プレイログの重複チェック（PRIMARY KEY: play_dt, machine_no）
+	$checkSql = (new SqlString($DB))
+		->select()
+			->field("COUNT(*) as cnt")
+			->from("log_play")
+			->where()
+				->and( "play_dt =", $jsonArray["play_dt"], FD_STR)
+				->and( "machine_no =", $machine_no, FD_NUM)
+		->createSQL("\n");
+
+	$checkRow = $DB->getRow($checkSql);
+
+	// 既にレコードが存在する場合はINSERTをスキップ
+	if ($checkRow["cnt"] > 0) {
+		error_log("[userAuthAPI] log_play record already exists for play_dt=" . $jsonArray["play_dt"] . ", machine_no=" . $machine_no);
+		return;
+	}
+
 	//プレイログの初期化
 	$sql = (new SqlString($DB))
 		->insert()
@@ -204,7 +222,7 @@ function initTable( $DB, $machine_no, $jsonArray ) {
 				->value("member_no",    $jsonArray["member_no"])
 				->value("start_point",  $jsonArray["playpoint"])
 		->createSQL("\n");
-		
+
 	$ret = $DB->query($sql);
 
 }
