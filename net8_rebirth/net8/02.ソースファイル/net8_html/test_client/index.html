@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET8 SDK - テストクライアント</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .code-box {
+            background: #1a1a2e;
+            color: #51cf66;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-secondary {
+            background: #868e96;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d3f9d8;
+            border: 1px solid #51cf66;
+            color: #2b8a3e;
+        }
+        .status.error {
+            background: #ffe3e3;
+            border: 1px solid #ff6b6b;
+            color: #c92a2a;
+        }
+        .status.info {
+            background: #e7f5ff;
+            border: 1px solid #339af0;
+            color: #1864ab;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 NET8 SDK - テストクライアント</h1>
+        <p class="subtitle">ダミー企業「テストパートナー株式会社」によるSDK統合テスト環境</p>
+
+        <!-- ナビゲーション -->
+        <div class="nav-links">
+            <a href="index.html" class="btn">📋 トップ</a>
+            <a href="sdk_integration_guide.html" class="btn">📚 SDK統合ガイド</a>
+            <a href="demo_game.html" class="btn">🎮 ゲームデモ</a>
+            <a href="test_all_models.html" class="btn">🎰 全機種テスト</a>
+            <a href="../api/admin/sdk_test_dashboard.php?auth=net8_admin_2025" class="btn btn-secondary" target="_blank">📊 テストダッシュボード</a>
+        </div>
+
+        <!-- 企業情報 -->
+        <div class="info-box">
+            <h3>🏢 テスト企業情報</h3>
+            <p><strong>企業名:</strong> テストパートナー株式会社</p>
+            <p><strong>APIキー:</strong> <code>pk_test_dummy_partner_2025</code></p>
+            <p><strong>環境:</strong> test（テスト環境）</p>
+            <p><strong>レート制限:</strong> 100,000リクエスト/日</p>
+        </div>
+
+        <!-- SDK統合方法 -->
+        <div class="info-box">
+            <h3>📦 SDK統合方法（3行で完了）</h3>
+            <p>実際のクライアント企業がSDKを統合する場合、以下の3行をHTMLに追加するだけです：</p>
+            <div class="code-box">
+&lt;!-- 1. SDKを読み込む --&gt;<br>
+&lt;script src="https://mgg-webservice-production.up.railway.app/sdk/net8-sdk-beta.js"&gt;&lt;/script&gt;<br><br>
+
+&lt;!-- 2. コンテナを用意 --&gt;<br>
+&lt;div id="game-container"&gt;&lt;/div&gt;<br><br>
+
+&lt;!-- 3. SDKを初期化してゲーム起動 --&gt;<br>
+&lt;script&gt;<br>
+  const net8 = new NET8SDK('pk_test_dummy_partner_2025');<br>
+  net8.launch('#game-container', { modelId: 'HOKUTO4GO' });<br>
+&lt;/script&gt;
+            </div>
+        </div>
+
+        <!-- APIテストセクション -->
+        <div class="info-box">
+            <h3>🔌 APIテスト</h3>
+            <p>以下のボタンをクリックして、各APIの動作を確認できます：</p>
+
+            <button class="btn" onclick="testHealthCheck()">1. ヘルスチェックAPI</button>
+            <button class="btn" onclick="testAuth()">2. 認証API（JWT取得）</button>
+            <button class="btn" onclick="testModels()">3. 機種一覧API</button>
+            <button class="btn" onclick="testGameStart()">4. ゲーム開始API</button>
+            <button class="btn" onclick="runFullTest()" style="background: #51cf66;">🚀 完全テスト実行</button>
+
+            <div id="test-results"></div>
+        </div>
+
+        <!-- 利用可能なページ -->
+        <div class="info-box">
+            <h3>📄 利用可能なテストページ</h3>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li><a href="sdk_integration_guide.html" style="color: #667eea; font-weight: 600;">📚 SDK統合ガイド</a> - 完全な統合ドキュメント・サンプルコード・モックテスト方法</li>
+                <li><a href="demo_game.html" style="color: #667eea; font-weight: 600;">ゲームデモページ</a> - 実際のゲーム起動デモ</li>
+                <li><a href="test_all_models.html" style="color: #667eea; font-weight: 600;">全機種テストページ</a> - すべての機種を一括テスト</li>
+                <li><a href="../sdk/mock-game.html" style="color: #667eea; font-weight: 600;">🧪 モックゲームシミュレーター</a> - 実機なしでイベントテスト</li>
+                <li><a href="../api/admin/sdk_test_dashboard.php?auth=net8_admin_2025" target="_blank" style="color: #667eea; font-weight: 600;">E2Eテストダッシュボード</a> - 自動テスト結果確認</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://mgg-webservice-production.up.railway.app';
+        const API_KEY = 'pk_test_dummy_partner_2025';
+        let jwtToken = null;
+
+        function showResult(message, type = 'info') {
+            const results = document.getElementById('test-results');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        async function testHealthCheck() {
+            clearResults();
+            showResult('⏳ ヘルスチェックAPI テスト中...', 'info');
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/health.php`);
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    showResult(`✅ ヘルスチェック成功！ レスポンスタイム: ${data.response_time_ms}ms`, 'success');
+                    console.log('Health check response:', data);
+                } else {
+                    showResult('⚠️ ヘルスチェック: ステータスが "ok" ではありません', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuth() {
+            clearResults();
+            showResult('⏳ 認証API テスト中...', 'info');
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/auth.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apiKey: API_KEY })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.token) {
+                    jwtToken = data.token;
+                    showResult(`✅ 認証成功！ JWT取得完了（環境: ${data.environment}）`, 'success');
+                    showResult(`トークン: ${data.token.substring(0, 50)}...`, 'info');
+                    console.log('Auth response:', data);
+                } else {
+                    showResult('❌ 認証失敗: トークンが取得できませんでした', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+
+        async function testModels() {
+            clearResults();
+            showResult('⏳ 機種一覧API テスト中...', 'info');
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/models.php?apiKey=${API_KEY}`);
+                const data = await response.json();
+
+                if (data.success && data.models) {
+                    showResult(`✅ 機種一覧取得成功！ 利用可能機種数: ${data.count}`, 'success');
+                    data.models.forEach(model => {
+                        showResult(`  - ${model.id}: ${model.name} (${model.category})`, 'info');
+                    });
+                    console.log('Models response:', data);
+                } else {
+                    showResult('❌ 機種一覧取得失敗', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGameStart() {
+            clearResults();
+
+            if (!jwtToken) {
+                showResult('⚠️ 先に認証APIテストを実行してJWTを取得してください', 'error');
+                return;
+            }
+
+            showResult('⏳ ゲーム開始API テスト中...', 'info');
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/game_start.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ modelId: 'HOKUTO4GO' })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const mode = data.mock ? 'モック（テスト環境）' : '実機';
+                    showResult(`✅ ゲーム開始成功！ モード: ${mode}`, 'success');
+                    if (data.sessionId) {
+                        showResult(`セッションID: ${data.sessionId}`, 'info');
+                    }
+                    console.log('Game start response:', data);
+                } else {
+                    showResult(`❌ ゲーム開始失敗: ${data.message || '不明なエラー'}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+
+        async function runFullTest() {
+            clearResults();
+            showResult('🚀 完全テストシーケンス開始...', 'info');
+
+            await testHealthCheck();
+            await new Promise(r => setTimeout(r, 500));
+
+            await testAuth();
+            await new Promise(r => setTimeout(r, 500));
+
+            await testModels();
+            await new Promise(r => setTimeout(r, 500));
+
+            await testGameStart();
+
+            showResult('✅ 完全テストシーケンス完了！', 'success');
+        }
+    </script>
+</body>
+</html>

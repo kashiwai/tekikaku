@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET8 Mock Game Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-play { background: #51cf66; color: white; }
+        .btn-win { background: #ffd43b; color: #333; }
+        .btn-lose { background: #ff6b6b; color: white; }
+        .btn-bonus { background: #ff8c42; color: white; }
+        .btn-score { background: #4dabf7; color: white; }
+        .btn-end { background: #868e96; color: white; }
+
+        .auto-play-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: 0.3s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #51cf66;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .log-container {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 3px;
+            border-left: 3px solid transparent;
+        }
+
+        .log-play { color: #4dabf7; border-left-color: #4dabf7; }
+        .log-win { color: #51cf66; border-left-color: #51cf66; }
+        .log-lose { color: #ff6b6b; border-left-color: #ff6b6b; }
+        .log-bonus { color: #ff8c42; border-left-color: #ff8c42; }
+        .log-score { color: #ffd43b; border-left-color: #ffd43b; }
+        .log-end { color: #868e96; border-left-color: #868e96; }
+        .log-ready { color: #00ff88; border-left-color: #00ff88; }
+
+        .scenario-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-badge.active {
+            background: #51cf66;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 NET8 Mock Game Simulator</h1>
+        <p class="subtitle">実機なしでSDKのイベントコールバックをテスト</p>
+
+        <!-- ステータス -->
+        <div class="section">
+            <h2>📡 通信状態</h2>
+            <span class="status-badge" id="status-badge">準備完了</span>
+            <p style="margin-top: 10px; font-size: 13px; opacity: 0.8;">
+                親ウィンドウURL: <span id="parent-url">検出中...</span>
+            </p>
+        </div>
+
+        <!-- 手動イベントトリガー -->
+        <div class="section">
+            <h2>🎯 手動イベントトリガー</h2>
+            <div class="controls">
+                <button class="btn-play" onclick="sendEvent('play', {action: 'spin'})">
+                    🎮 PLAY
+                </button>
+                <button class="btn-win" onclick="sendEvent('win', {score: 1000, multiplier: 2})">
+                    🎉 WIN
+                </button>
+                <button class="btn-lose" onclick="sendEvent('lose', {score: 0})">
+                    😢 LOSE
+                </button>
+                <button class="btn-bonus" onclick="sendEvent('bonus', {type: 'free_spin', count: 10})">
+                    ⭐ BONUS
+                </button>
+                <button class="btn-score" onclick="sendEvent('score', {score: Math.floor(Math.random() * 5000)})">
+                    📊 SCORE
+                </button>
+                <button class="btn-end" onclick="sendEvent('end', {totalScore: 5000, duration: 300})">
+                    🏁 END
+                </button>
+            </div>
+        </div>
+
+        <!-- 自動プレイモード -->
+        <div class="section">
+            <h2>🤖 自動プレイモード</h2>
+            <div class="auto-play-controls">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="auto-play-toggle" onchange="toggleAutoPlay()">
+                    <span class="slider"></span>
+                </label>
+                <span>自動プレイ（1.5秒ごとにランダムイベント発火）</span>
+            </div>
+        </div>
+
+        <!-- シナリオモード -->
+        <div class="section">
+            <h2>📜 シナリオ実行</h2>
+            <div class="scenario-buttons">
+                <button onclick="runScenario('winning')">
+                    🎉 勝利シナリオ
+                </button>
+                <button onclick="runScenario('bonus')">
+                    ⭐ ボーナスシナリオ
+                </button>
+                <button onclick="runScenario('losing')">
+                    😢 敗北シナリオ
+                </button>
+                <button onclick="runScenario('complete')">
+                    🎬 フルゲームシナリオ
+                </button>
+            </div>
+        </div>
+
+        <!-- イベントログ -->
+        <div class="section">
+            <h2>📝 送信イベントログ</h2>
+            <div class="log-container" id="log-container"></div>
+        </div>
+    </div>
+
+    <script>
+        let autoPlayInterval = null;
+        let parentOrigin = null;
+        let eventCounter = 0;
+
+        // 初期化
+        window.addEventListener('load', () => {
+            // 親ウィンドウのoriginを取得
+            if (window.parent !== window) {
+                parentOrigin = document.referrer ? new URL(document.referrer).origin : '*';
+                document.getElementById('parent-url').textContent = parentOrigin;
+            } else {
+                document.getElementById('parent-url').textContent = 'スタンドアロンモード';
+            }
+
+            // 準備完了イベントを送信
+            setTimeout(() => {
+                sendEvent('ready', { timestamp: Date.now() });
+            }, 500);
+
+            addLog('🚀 モックゲームシミュレーター起動', 'ready');
+        });
+
+        // イベント送信
+        function sendEvent(eventType, payload = {}) {
+            eventCounter++;
+
+            const eventData = {
+                type: `game:${eventType}`,
+                payload: {
+                    ...payload,
+                    eventId: eventCounter,
+                    timestamp: Date.now()
+                }
+            };
+
+            // 親ウィンドウにPostMessage送信
+            if (window.parent !== window) {
+                window.parent.postMessage(eventData, parentOrigin || '*');
+                addLog(`📤 送信: ${eventType.toUpperCase()} - ${JSON.stringify(payload)}`, eventType);
+
+                // ステータスバッジを一時的にアクティブ化
+                const badge = document.getElementById('status-badge');
+                badge.classList.add('active');
+                badge.textContent = `送信: ${eventType.toUpperCase()}`;
+                setTimeout(() => {
+                    badge.classList.remove('active');
+                    badge.textContent = '準備完了';
+                }, 1000);
+            } else {
+                addLog(`⚠️ 親ウィンドウが見つかりません（スタンドアロンモード）`, eventType);
+            }
+        }
+
+        // ログ追加
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // 自動プレイ切り替え
+        function toggleAutoPlay() {
+            const isEnabled = document.getElementById('auto-play-toggle').checked;
+
+            if (isEnabled) {
+                addLog('🤖 自動プレイ開始', 'play');
+                autoPlayInterval = setInterval(() => {
+                    const events = [
+                        { type: 'play', data: { action: 'auto_spin' } },
+                        { type: 'score', data: { score: Math.floor(Math.random() * 3000) } },
+                        { type: 'win', data: { score: Math.floor(Math.random() * 5000) } },
+                        { type: 'lose', data: { score: 0 } },
+                        { type: 'bonus', data: { type: 'free_spin', count: Math.floor(Math.random() * 10) + 1 } }
+                    ];
+
+                    const randomEvent = events[Math.floor(Math.random() * events.length)];
+                    sendEvent(randomEvent.type, randomEvent.data);
+                }, 1500);
+            } else {
+                addLog('⏸️ 自動プレイ停止', 'end');
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = null;
+                }
+            }
+        }
+
+        // シナリオ実行
+        async function runScenario(scenario) {
+            addLog(`🎬 シナリオ実行: ${scenario}`, 'play');
+
+            const scenarios = {
+                winning: [
+                    { type: 'play', data: { action: 'spin' }, delay: 0 },
+                    { type: 'score', data: { score: 500 }, delay: 1000 },
+                    { type: 'win', data: { score: 2000, multiplier: 3 }, delay: 2000 },
+                    { type: 'end', data: { totalScore: 2000, result: 'win' }, delay: 3000 }
+                ],
+                bonus: [
+                    { type: 'play', data: { action: 'spin' }, delay: 0 },
+                    { type: 'bonus', data: { type: 'free_spin', count: 10 }, delay: 1000 },
+                    { type: 'win', data: { score: 5000, multiplier: 5 }, delay: 2500 },
+                    { type: 'end', data: { totalScore: 5000, result: 'bonus' }, delay: 4000 }
+                ],
+                losing: [
+                    { type: 'play', data: { action: 'spin' }, delay: 0 },
+                    { type: 'score', data: { score: 100 }, delay: 1000 },
+                    { type: 'lose', data: { score: 0 }, delay: 2000 },
+                    { type: 'end', data: { totalScore: 0, result: 'lose' }, delay: 3000 }
+                ],
+                complete: [
+                    { type: 'play', data: { action: 'spin' }, delay: 0 },
+                    { type: 'score', data: { score: 300 }, delay: 800 },
+                    { type: 'play', data: { action: 'spin' }, delay: 1600 },
+                    { type: 'bonus', data: { type: 'free_spin', count: 5 }, delay: 2400 },
+                    { type: 'win', data: { score: 1500 }, delay: 3200 },
+                    { type: 'score', data: { score: 1800 }, delay: 4000 },
+                    { type: 'win', data: { score: 3000, multiplier: 2 }, delay: 4800 },
+                    { type: 'end', data: { totalScore: 3000, duration: 5000 }, delay: 5600 }
+                ]
+            };
+
+            const steps = scenarios[scenario] || [];
+            for (const step of steps) {
+                await new Promise(resolve => setTimeout(resolve, step.delay));
+                sendEvent(step.type, step.data);
+            }
+
+            addLog(`✅ シナリオ完了: ${scenario}`, 'ready');
+        }
+    </script>
+</body>
+</html>

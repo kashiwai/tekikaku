@@ -252,8 +252,24 @@
             <p id="status-text">SDK未初期化</p>
         </div>
 
-        <!-- コントロール -->
+        <!-- モード選択 -->
         <div class="demo-section">
+            <h2>🎛️ テストモード選択</h2>
+            <div class="controls">
+                <button onclick="setMode('mock')" id="btn-mode-mock" class="btn-secondary">
+                    🧪 モックモード（実機なしテスト）
+                </button>
+                <button onclick="setMode('real')" id="btn-mode-real">
+                    🎰 実機モード（本番API接続）
+                </button>
+            </div>
+            <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;" id="mode-description">
+                実機モードを選択してください
+            </p>
+        </div>
+
+        <!-- コントロール -->
+        <div class="demo-section" id="control-section" style="display: none;">
             <h2>🎮 クイックスタート</h2>
             <div class="controls">
                 <button onclick="initializeSDK()">1. SDK初期化</button>
@@ -297,6 +313,107 @@ game.start();
     <script>
         let game = null;
         let models = [];
+        let currentMode = null; // 'mock' or 'real'
+
+        // モード選択
+        function setMode(mode) {
+            currentMode = mode;
+
+            if (mode === 'mock') {
+                log('🧪 モックモードを選択しました', 'info');
+                document.getElementById('mode-description').textContent =
+                    '✅ モックモード: 実機なしでSDKイベントをテストできます';
+                document.getElementById('btn-mode-mock').classList.remove('btn-secondary');
+                document.getElementById('btn-mode-real').classList.add('btn-secondary');
+
+                // モックゲームを表示
+                loadMockGame();
+
+                // コントロールセクションは非表示
+                document.getElementById('control-section').style.display = 'none';
+                document.getElementById('models-section').style.display = 'none';
+
+            } else if (mode === 'real') {
+                log('🎰 実機モードを選択しました', 'info');
+                document.getElementById('mode-description').textContent =
+                    '✅ 実機モード: 本番APIに接続してゲームを起動します';
+                document.getElementById('btn-mode-real').classList.remove('btn-secondary');
+                document.getElementById('btn-mode-mock').classList.add('btn-secondary');
+
+                // コントロールセクションを表示
+                document.getElementById('control-section').style.display = 'block';
+
+                // モックゲームを削除
+                const container = document.getElementById('game-container');
+                container.innerHTML = '';
+                container.classList.add('empty');
+            }
+        }
+
+        // モックゲームを読み込み
+        function loadMockGame() {
+            log('モックゲームシミュレーターを読み込み中...', 'info');
+
+            const container = document.getElementById('game-container');
+            container.classList.remove('empty');
+            container.innerHTML = `
+                <iframe
+                    src="mock-game.html"
+                    style="width: 100%; height: 100%; border: none; border-radius: 15px;"
+                    id="mock-game-iframe"
+                ></iframe>
+            `;
+
+            // モックゲームからのPostMessageを受信
+            window.addEventListener('message', handleMockGameEvent);
+
+            log('✅ モックゲーム読み込み完了', 'success');
+            log('💡 モックゲーム画面で各種イベントを発火してテストできます', 'info');
+        }
+
+        // モックゲームイベントハンドラー
+        function handleMockGameEvent(event) {
+            // セキュリティチェック（同一オリジンのみ）
+            if (event.origin !== window.location.origin) {
+                return;
+            }
+
+            const { type, payload } = event.data;
+            if (!type || !type.startsWith('game:')) {
+                return;
+            }
+
+            // イベントタイプを抽出（例: 'game:play' → 'play'）
+            const eventType = type.replace('game:', '');
+
+            // ログに表示
+            switch(eventType) {
+                case 'ready':
+                    log('✅ モックゲーム準備完了', 'success');
+                    break;
+                case 'play':
+                    log(`🎮 ゲームプレイ: ${JSON.stringify(payload)}`, 'info');
+                    break;
+                case 'win':
+                    log(`🎉 勝利！ スコア: ${payload.score || 'N/A'}`, 'success');
+                    break;
+                case 'lose':
+                    log(`😢 敗北... スコア: ${payload.score || 'N/A'}`, 'warn');
+                    break;
+                case 'bonus':
+                    log(`⭐ ボーナス発動！ ${JSON.stringify(payload)}`, 'success');
+                    break;
+                case 'score':
+                    log(`📊 スコア更新: ${payload.score}`, 'info');
+                    break;
+                case 'end':
+                    log(`🏁 ゲーム終了 結果: ${JSON.stringify(payload)}`, 'info');
+                    break;
+                case 'error':
+                    log(`❌ エラー: ${payload.message || JSON.stringify(payload)}`, 'error');
+                    break;
+            }
+        }
 
         // ログ出力
         function log(message, type = 'info') {
@@ -453,7 +570,9 @@ game.start();
 
         // 初期ログ
         log('NET8 SDK Demo起動', 'info');
-        log('「1. SDK初期化」ボタンをクリックして開始してください', 'info');
+        log('まず、テストモードを選択してください', 'info');
+        log('💡 モックモード: 実機なしでイベントコールバックをテスト', 'info');
+        log('💡 実機モード: 本番APIに接続してゲームを起動', 'info');
     </script>
 </body>
 </html>
