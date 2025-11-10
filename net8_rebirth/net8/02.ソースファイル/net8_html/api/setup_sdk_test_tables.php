@@ -37,16 +37,25 @@ try {
 
     $sql_content = file_get_contents($sql_file);
 
-    // コメントと空行を除去
+    // コメント行を除去
+    $lines = explode("\n", $sql_content);
+    $cleaned_lines = array_filter($lines, function($line) {
+        $line = trim($line);
+        return !empty($line) &&
+               substr($line, 0, 2) !== '--' &&
+               substr($line, 0, 2) !== '/*';
+    });
+    $sql_content_cleaned = implode("\n", $cleaned_lines);
+
+    // セミコロンで分割してSQL文を抽出
     $sql_statements = array_filter(
-        array_map('trim', explode(';', $sql_content)),
+        array_map('trim', explode(';', $sql_content_cleaned)),
         function($stmt) {
-            $stmt = trim($stmt);
-            return !empty($stmt) &&
-                   substr($stmt, 0, 2) !== '--' &&
-                   substr($stmt, 0, 2) !== '/*';
+            return !empty(trim($stmt));
         }
     );
+
+    echo "📝 パースされたSQL文の数: " . count($sql_statements) . "\n\n";
 
     $success_count = 0;
     $error_count = 0;
