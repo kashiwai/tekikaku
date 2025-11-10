@@ -188,6 +188,54 @@
             // コンテナをクリアしてiframeを追加
             this.container.innerHTML = '';
             this.container.appendChild(this.iframe);
+
+            // ゲームイベント受信のためのpostMessage設定
+            this._setupGameEventListener();
+        }
+
+        /**
+         * ゲームイベントリスナー設定
+         */
+        _setupGameEventListener() {
+            window.addEventListener('message', (event) => {
+                // セキュリティチェック
+                if (event.origin !== this.sdk.apiUrl) {
+                    return;
+                }
+
+                const data = event.data;
+                if (!data || !data.type) {
+                    return;
+                }
+
+                // ゲームイベントを処理
+                switch (data.type) {
+                    case 'game:ready':
+                        this._emit('ready', data.payload);
+                        break;
+                    case 'game:play':
+                        this._emit('play', data.payload);
+                        break;
+                    case 'game:win':
+                        this._emit('win', data.payload);
+                        break;
+                    case 'game:lose':
+                        this._emit('lose', data.payload);
+                        break;
+                    case 'game:bonus':
+                        this._emit('bonus', data.payload);
+                        break;
+                    case 'game:score':
+                        this._emit('score', data.payload);
+                        break;
+                    case 'game:end':
+                        this._emit('end', data.payload);
+                        break;
+                    case 'game:error':
+                        this._emit('error', data.payload);
+                        break;
+                }
+            });
         }
 
         /**

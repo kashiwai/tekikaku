@@ -292,7 +292,7 @@ game.start();
     </div>
 
     <!-- NET8 SDK読み込み -->
-    <script src="net8-sdk-beta.js"></script>
+    <script src="https://mgg-webservice-production.up.railway.app/sdk/net8-sdk-beta.js"></script>
 
     <script>
         let game = null;
@@ -404,7 +404,32 @@ game.start();
                 });
 
                 game.on('error', (error) => {
-                    log(`❌ ゲームエラー: ${error.message}`, 'error');
+                    log(`❌ ゲームエラー: ${error.message || error}`, 'error');
+                });
+
+                // ゲームプレイイベント
+                game.on('play', (data) => {
+                    log(`🎮 ゲームプレイ: ${JSON.stringify(data)}`, 'info');
+                });
+
+                game.on('win', (data) => {
+                    log(`🎉 勝利！ スコア: ${data.score || 'N/A'}`, 'success');
+                });
+
+                game.on('lose', (data) => {
+                    log(`😢 敗北... スコア: ${data.score || 'N/A'}`, 'warn');
+                });
+
+                game.on('bonus', (data) => {
+                    log(`⭐ ボーナス発動！ ${JSON.stringify(data)}`, 'success');
+                });
+
+                game.on('score', (data) => {
+                    log(`📊 スコア更新: ${data.score}`, 'info');
+                });
+
+                game.on('end', (data) => {
+                    log(`🏁 ゲーム終了 結果: ${JSON.stringify(data)}`, 'info');
                 });
 
                 // ゲーム開始
