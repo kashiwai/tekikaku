@@ -71,6 +71,8 @@ try {
                 if ($result) {
                     echo "✅ 確認クエリ実行: " . json_encode($result, JSON_UNESCAPED_UNICODE) . "\n";
                 }
+                $stmt->closeCursor(); // ステートメントをクローズ
+                $stmt = null;
             }
         } catch (PDOException $e) {
             $error_count++;
@@ -87,6 +89,8 @@ try {
     // テストAPIキー確認
     $stmt = $pdo->query("SELECT * FROM api_keys WHERE key_value = 'pk_test_dummy_partner_2025'");
     $test_key = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    $stmt = null;
 
     if ($test_key) {
         echo "🔑 テスト用APIキー情報:\n";
@@ -108,6 +112,8 @@ try {
         } else {
             echo "  ❌ {$table} (未作成)\n";
         }
+        $stmt->closeCursor();
+        $stmt = null;
     }
 
     echo "\n🎉 セットアップが正常に完了しました！\n";
