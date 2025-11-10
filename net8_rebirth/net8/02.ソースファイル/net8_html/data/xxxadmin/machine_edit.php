@@ -52,13 +52,24 @@ function DispEdit($template, $message = "") {
         exit;
     }
 
-    // マシン情報取得（カメラ情報も含む）
+    // マシン情報取得（カメラ情報 + ライセンス情報も含む）
     $sql = (new SqlString())
             ->setAutoConvert( [$template->DB,"conv_sql"] )
             ->select()
                 ->field("dm.*")
                 ->field("mc.camera_mac")
+                ->field("mc.camera_name")
                 ->field("mcl.license_id")
+                ->field("mcl.identifing_number")
+                ->field("mcl.system_name")
+                ->field("mcl.product_name")
+                ->field("mcl.cpu_name")
+                ->field("mcl.core")
+                ->field("mcl.uuid")
+                ->field("mcl.state")
+                ->field("mcl.ip_address AS cameralist_ip")
+                ->field("mcl.add_dt")
+                ->field("mcl.upd_dt")
                 ->from("dat_machine dm")
                 ->join("left", "mst_camera mc", "dm.camera_no = mc.camera_no")
                 ->join("left", "mst_cameralist mcl", "mc.camera_mac = mcl.mac_address")
@@ -260,6 +271,150 @@ function DispEdit($template, $message = "") {
             color: #0f172a;
             font-family: 'Courier New', monospace;
         }
+
+        /* ライセンス情報セクション */
+        .license-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .license-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .license-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0c4a6e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #16a34a;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+
+        .license-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .license-warning strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .license-warning code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .license-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .license-item {
+            background: white;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #e0f2fe;
+        }
+
+        .license-item-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .license-item-value {
+            font-size: 14px;
+            color: #0f172a;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .license-item-value.empty {
+            color: #94a3b8;
+            font-style: italic;
+            font-family: inherit;
+        }
+
+        .state-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .state-online {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .state-offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .state-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .state-dot.online {
+            background: #16a34a;
+        }
+
+        .state-dot.offline {
+            background: #dc2626;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
     </style>
 </head>
 <body>
@@ -297,6 +452,134 @@ function DispEdit($template, $message = "") {
                         <span class="info-value"><?= substr($machine['token'], 0, 30) ?>...</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- ライセンス情報セクション -->
+            <div class="license-section">
+                <div class="license-header">
+                    <div class="license-title">
+                        🔐 Windows PC ライセンス情報
+                    </div>
+                    <?php if (!empty($machine['license_id'])): ?>
+                        <span class="badge badge-success">✓ 登録済み</span>
+                    <?php else: ?>
+                        <span class="badge badge-warning">⚠ 未登録</span>
+                    <?php endif; ?>
+                </div>
+
+                <?php if (empty($machine['license_id'])): ?>
+                    <!-- 未登録の場合の警告 -->
+                    <div class="license-warning">
+                        <strong>⚠️ NET8License.pyが未実行です</strong>
+                        Windows PC側で以下のコマンドを実行してください:<br>
+                        <code>python NET8License.py</code><br>
+                        <small>実行すると、ハードウェア情報とライセンスIDが自動登録されます。</small>
+                    </div>
+                <?php else: ?>
+                    <!-- ライセンス情報グリッド -->
+                    <div class="license-grid">
+                        <!-- License ID -->
+                        <div class="license-item" style="grid-column: span 2;">
+                            <div class="license-item-label">🔑 License ID</div>
+                            <div class="license-item-value">
+                                <?= htmlspecialchars($machine['license_id']) ?>
+                            </div>
+                        </div>
+
+                        <!-- MACアドレス -->
+                        <div class="license-item">
+                            <div class="license-item-label">📡 MAC Address</div>
+                            <div class="license-item-value">
+                                <?= htmlspecialchars($machine['camera_mac'] ?: '未設定') ?>
+                            </div>
+                        </div>
+
+                        <!-- 状態 -->
+                        <div class="license-item">
+                            <div class="license-item-label">📊 接続状態</div>
+                            <div class="license-item-value">
+                                <?php if ($machine['state'] == 1): ?>
+                                    <span class="state-indicator state-online">
+                                        <span class="state-dot online"></span>
+                                        オンライン
+                                    </span>
+                                <?php else: ?>
+                                    <span class="state-indicator state-offline">
+                                        <span class="state-dot offline"></span>
+                                        オフライン
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- IdentifyingNumber -->
+                        <div class="license-item">
+                            <div class="license-item-label">🆔 Serial Number</div>
+                            <div class="license-item-value <?= empty($machine['identifing_number']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['identifing_number'] ?: '未取得') ?>
+                            </div>
+                        </div>
+
+                        <!-- System Name -->
+                        <div class="license-item">
+                            <div class="license-item-label">💻 System Name</div>
+                            <div class="license-item-value <?= empty($machine['system_name']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['system_name'] ?: '未取得') ?>
+                            </div>
+                        </div>
+
+                        <!-- Product Name -->
+                        <div class="license-item">
+                            <div class="license-item-label">🖥️ Product Name</div>
+                            <div class="license-item-value <?= empty($machine['product_name']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['product_name'] ?: '未取得') ?>
+                            </div>
+                        </div>
+
+                        <!-- IP Address -->
+                        <div class="license-item">
+                            <div class="license-item-label">🌐 IP Address</div>
+                            <div class="license-item-value <?= empty($machine['cameralist_ip']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['cameralist_ip'] ?: '未取得') ?>
+                            </div>
+                        </div>
+
+                        <!-- CPU -->
+                        <div class="license-item">
+                            <div class="license-item-label">⚙️ CPU</div>
+                            <div class="license-item-value <?= empty($machine['cpu_name']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['cpu_name'] ?: '未取得') ?>
+                                <?php if (!empty($machine['core'])): ?>
+                                    (<?= $machine['core'] ?> cores)
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- UUID -->
+                        <div class="license-item">
+                            <div class="license-item-label">🔢 UUID</div>
+                            <div class="license-item-value <?= empty($machine['uuid']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['uuid'] ?: '未取得') ?>
+                            </div>
+                        </div>
+
+                        <!-- 登録日時 -->
+                        <div class="license-item">
+                            <div class="license-item-label">📅 登録日時</div>
+                            <div class="license-item-value <?= empty($machine['add_dt']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['add_dt'] ?: '未取得') ?>
+                            </div>
+                        </div>
+
+                        <!-- 最終更新 -->
+                        <div class="license-item">
+                            <div class="license-item-label">🔄 最終更新</div>
+                            <div class="license-item-value <?= empty($machine['upd_dt']) ? 'empty' : '' ?>">
+                                <?= htmlspecialchars($machine['upd_dt'] ?: '未更新') ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- 編集フォーム -->
