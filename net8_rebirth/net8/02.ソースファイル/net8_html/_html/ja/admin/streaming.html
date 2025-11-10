@@ -120,14 +120,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!--loop:CATEGORY-->
+                    <!--loop:{CATEGORY}-->
                     <tr>
                         <td>{%category_name%}</td>
                         <td>{%machine_count%}台</td>
                         <td>{%online_count%}台</td>
                         <td>{%rate%}%</td>
                     </tr>
-                    <!--/loop:CATEGORY-->
+                    <!--/loop:{CATEGORY}-->
                 </tbody>
             </table>
         </div>
@@ -153,7 +153,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!--loop:STREAMING-->
+                    <!--loop:{STREAMING}-->
                     <tr>
                         <td>#{%machine_no%}</td>
                         <td>{%machine_cd%}</td>
@@ -166,14 +166,14 @@
                         </td>
                         <td>{%camera_ip%}</td>
                         <td>
-                            <!--if:camera_online-->
+                            <!--if:{camera_online}-->
                                 <span class="streaming-indicator online"></span>
                                 <span class="badge success">配信中</span>
-                            <!--/if:camera_online-->
-                            <!--if:camera_offline-->
+                            <!--/if:{camera_online}-->
+                            <!--if:{camera_offline}-->
                                 <span class="streaming-indicator offline"></span>
                                 <span class="badge danger">停止中</span>
-                            <!--/if:camera_offline-->
+                            <!--/if:{camera_offline}-->
                         </td>
                         <td>{%viewer_count%}人</td>
                         <td>
@@ -183,7 +183,7 @@
                             </a>
                         </td>
                     </tr>
-                    <!--/loop:STREAMING-->
+                    <!--/loop:{STREAMING}-->
                 </tbody>
             </table>
         </div>
