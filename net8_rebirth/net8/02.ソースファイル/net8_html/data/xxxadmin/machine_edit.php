@@ -10,6 +10,7 @@
  */
 
 require_once('../../_etc/require_files_admin.php');
+require_once('../../_sys/APItool.php');  // APItool追加
 
 // メイン処理
 main();
@@ -725,9 +726,6 @@ function ProcUpdate($template) {
         return;
     }
 
-    // License IDを自動生成
-    $license_id = getLicenseID($mac_address);
-
     try {
         // トランザクション開始
         $template->DB->autoCommit(false);
@@ -774,7 +772,7 @@ function ProcUpdate($template) {
 
             $template->DB->query($sql);
 
-            // ❸ mst_cameralist を INSERT または UPDATE
+            // ❸ mst_cameralist を UPDATE（既存レコードがある場合のみ）
             // 既存レコードをチェック
             $sql = (new SqlString())
                     ->setAutoConvert( [$template->DB,"conv_sql"] )
@@ -788,7 +786,10 @@ function ProcUpdate($template) {
             $count_row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
 
             if ($count_row['cnt'] > 0) {
-                // UPDATE
+                // 既存レコードがある場合のみUPDATE
+                // License IDを再生成
+                $license_id = getLicenseID($mac_address);
+
                 $sql = (new SqlString())
                         ->setAutoConvert( [$template->DB,"conv_sql"] )
                         ->update("mst_cameralist")
@@ -800,21 +801,13 @@ function ProcUpdate($template) {
                             ->where()
                                 ->and("mac_address = ", $mac_address, FD_STR)
                         ->createSQL();
-            } else {
-                // INSERT
-                $sql = (new SqlString())
-                        ->setAutoConvert( [$template->DB,"conv_sql"] )
-                        ->insert()
-                            ->into("mst_cameralist")
-                                ->value("mac_address", $mac_address, FD_STR)
-                                ->value("license_id", $license_id, FD_STR)
-                                ->value("camera_no", $camera_no, FD_NUM)
-                                ->value("del_flg", 0, FD_NUM)
-                                ->value("add_dt", "current_timestamp", FD_FUNCTION)
-                        ->createSQL();
-            }
 
-            $template->DB->query($sql);
+                $template->DB->query($sql);
+                $license_id_message = "📝 License ID: " . substr($license_id, 0, 30) . "...";
+            } else {
+                // 新規の場合はINSERTしない（NET8License.pyに任せる）
+                $license_id_message = "⚠️ 新しいMACアドレスです。NET8License.pyを実行してください。";
+            }
         }
 
         // コミット
@@ -822,9 +815,11 @@ function ProcUpdate($template) {
 
         // 編集画面に戻る（成功メッセージ付き）
         $_GET['machine_no'] = $_POST['machine_no'];
-        $message = "✅ マシン情報を更新しました（3テーブル同期完了）<br>";
-        $message .= "📝 License ID: " . substr($license_id, 0, 30) . "...<br>";
-        $message .= "🔐 Win側の認証に反映されます。slotserver.iniのIDと一致します。";
+        $message = "✅ マシン情報を更新しました<br>";
+        if (isset($license_id_message)) {
+            $message .= $license_id_message . "<br>";
+        }
+        $message .= "🔐 MACアドレスが更新されました。";
         DispEdit($template, $message);
 
     } catch (Exception $e) {
