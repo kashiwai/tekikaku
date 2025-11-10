@@ -365,6 +365,26 @@ function DispTop($template) {
             </div>
 
             <div class="nav-section">
+                <div class="nav-section-title">会員管理</div>
+                <a href="member.php" class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>会員一覧</span>
+                </a>
+                <a href="memberplayhistory.php" class="nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>会員別プレイ履歴</span>
+                </a>
+                <a href="owner.php" class="nav-item">
+                    <span class="nav-icon">👔</span>
+                    <span>オーナー管理</span>
+                </a>
+                <a href="admin.php" class="nav-item">
+                    <span class="nav-icon">🔐</span>
+                    <span>管理者設定</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
                 <div class="nav-section-title">マシン管理</div>
                 <a href="machines.php" class="nav-item">
                     <span class="nav-icon">🎰</span>
@@ -376,19 +396,147 @@ function DispTop($template) {
                 </a>
                 <a href="maker.php" class="nav-item">
                     <span class="nav-icon">🏢</span>
-                    <span>メーカー</span>
+                    <span>メーカー管理</span>
+                </a>
+                <a href="corner.php" class="nav-item">
+                    <span class="nav-icon">🏪</span>
+                    <span>コーナー管理</span>
+                </a>
+                <a href="machine_control.php" class="nav-item">
+                    <span class="nav-icon">🎮</span>
+                    <span>台制御</span>
+                </a>
+                <a href="moniter.php" class="nav-item">
+                    <span class="nav-icon">📺</span>
+                    <span>モニター</span>
                 </a>
             </div>
 
             <div class="nav-section">
-                <div class="nav-section-title">会員・ポイント</div>
-                <a href="member.php" class="nav-item">
-                    <span class="nav-icon">👥</span>
-                    <span>会員管理</span>
+                <div class="nav-section-title">カメラ・配信</div>
+                <a href="camera.php" class="nav-item">
+                    <span class="nav-icon">📹</span>
+                    <span>カメラ管理</span>
                 </a>
+                <a href="camera_settings.php" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>カメラ割当</span>
+                </a>
+                <a href="signaling.php" class="nav-item">
+                    <span class="nav-icon">📡</span>
+                    <span>シグナリング</span>
+                </a>
+                <a href="streaming.php" class="nav-item">
+                    <span class="nav-icon">📺</span>
+                    <span>ストリーミング</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">ポイント管理</div>
                 <a href="pointgrant.php" class="nav-item">
                     <span class="nav-icon">💰</span>
                     <span>ポイント付与</span>
+                </a>
+                <a href="pointhistory.php" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>ポイント履歴</span>
+                </a>
+                <a href="pointconvert.php" class="nav-item">
+                    <span class="nav-icon">🔄</span>
+                    <span>ポイント変換</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">売上・購入</div>
+                <a href="sales.php" class="nav-item">
+                    <span class="nav-icon">💵</span>
+                    <span>売上管理</span>
+                </a>
+                <a href="purchase.php" class="nav-item">
+                    <span class="nav-icon">🛒</span>
+                    <span>購入管理</span>
+                </a>
+                <a href="purchasehistory.php" class="nav-item">
+                    <span class="nav-icon">📜</span>
+                    <span>購入履歴</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">プレイ履歴</div>
+                <a href="playhistory.php" class="nav-item">
+                    <span class="nav-icon">🎮</span>
+                    <span>プレイ履歴</span>
+                </a>
+                <a href="search.php" class="nav-item">
+                    <span class="nav-icon">🔍</span>
+                    <span>検索</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">商品・発送</div>
+                <a href="goods.php" class="nav-item">
+                    <span class="nav-icon">🎁</span>
+                    <span>商品管理</span>
+                </a>
+                <a href="goods_status.php" class="nav-item">
+                    <span class="nav-icon">📦</span>
+                    <span>商品ステータス</span>
+                </a>
+                <a href="goods_drawpick.php" class="nav-item">
+                    <span class="nav-icon">🎯</span>
+                    <span>抽選ピック</span>
+                </a>
+                <a href="drawhistory.php" class="nav-item">
+                    <span class="nav-icon">🎲</span>
+                    <span>抽選履歴</span>
+                </a>
+                <a href="gift.php" class="nav-item">
+                    <span class="nav-icon">🎀</span>
+                    <span>ギフト管理</span>
+                </a>
+                <a href="gifthistory.php" class="nav-item">
+                    <span class="nav-icon">📖</span>
+                    <span>ギフト履歴</span>
+                </a>
+                <a href="giftaddset.php" class="nav-item">
+                    <span class="nav-icon">➕</span>
+                    <span>ギフト追加設定</span>
+                </a>
+                <a href="giftlimit.php" class="nav-item">
+                    <span class="nav-icon">⏱️</span>
+                    <span>ギフト制限</span>
+                </a>
+                <a href="shipping.php" class="nav-item">
+                    <span class="nav-icon">🚚</span>
+                    <span>発送管理</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">コンテンツ</div>
+                <a href="notice.php" class="nav-item">
+                    <span class="nav-icon">📢</span>
+                    <span>お知らせ</span>
+                </a>
+                <a href="magazine.php" class="nav-item">
+                    <span class="nav-icon">📰</span>
+                    <span>マガジン</span>
+                </a>
+                <a href="coupon.php" class="nav-item">
+                    <span class="nav-icon">🎫</span>
+                    <span>クーポン</span>
+                </a>
+                <a href="benefits.php" class="nav-item">
+                    <span class="nav-icon">🌟</span>
+                    <span>特典</span>
+                </a>
+                <a href="address.php" class="nav-item">
+                    <span class="nav-icon">📍</span>
+                    <span>住所管理</span>
                 </a>
             </div>
 
@@ -396,7 +544,15 @@ function DispTop($template) {
                 <div class="nav-section-title">システム</div>
                 <a href="system.php" class="nav-item">
                     <span class="nav-icon">⚙️</span>
-                    <span>設定</span>
+                    <span>システム設定</span>
+                </a>
+                <a href="image_upload.php" class="nav-item">
+                    <span class="nav-icon">🖼️</span>
+                    <span>画像アップロード</span>
+                </a>
+                <a href="api_keys_manage.php" class="nav-item">
+                    <span class="nav-icon">🔑</span>
+                    <span>APIキー管理</span>
                 </a>
                 <a href="logout.php" class="nav-item">
                     <span class="nav-icon">🚪</span>
