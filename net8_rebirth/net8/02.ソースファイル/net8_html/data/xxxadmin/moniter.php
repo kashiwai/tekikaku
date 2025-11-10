@@ -85,7 +85,12 @@ function DispList($template, $message = "") {
 	// 画面表示開始
 	$template->open(PRE_HTML . ".html");
 	$template->assignCommon();
-	
+
+	// 緊急メッセージリストの初期化（未定義の場合は空配列）
+	if (!isset($GLOBALS["emgMessageList"])) {
+		$GLOBALS["emgMessageList"] = [];
+	}
+
 	// リスト処理
 	$template->loop_start("LIST");
 	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
@@ -100,11 +105,11 @@ function DispList($template, $message = "") {
 			$template->loop_next();
 		}
 		$template->loop_end("SUBEMGLIST");
-		
+
 		$template->loop_next();
 	}
 	$template->loop_end("LIST");
-	
+
 	// 緊急メッセージリスト全体ボタン用
 	$template->loop_start("EMGLIST");
 	foreach( $GLOBALS["emgMessageList"] as $key => $msg){
