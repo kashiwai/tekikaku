@@ -34,7 +34,8 @@ class NetDB extends SmartDB {
 	public function __construct() {
 		// DB接続
 		parent::__construct(DB_DSN);
-		$this->query("set names utf8");
+		$this->query("SET NAMES utf8mb4");
+		$this->query("SET CHARACTER SET utf8mb4");
 	}
 
 	/**

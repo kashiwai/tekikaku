@@ -1645,8 +1645,9 @@ picture {
 
 .slick-list a img{
 	display: block;
-	width: 500px;
-	height: auto;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 	transform:scale(1);
 	transition:0.3s;
 }
@@ -1725,8 +1726,9 @@ section.rec-list ul li a .image-wrapper{
 
 section.rec-list ul li a img{
 	display: block;
-	width: 500px;
-	height: auto;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 	transform:scale(1);
 	transition:0.3s;
 }
@@ -4003,7 +4005,10 @@ section.rec-list ul li a .image-wrapper{
 }
 
 section.rec-list ul li a img{
-	width: 500px;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 }
 
 section.rec-list ul li a img:hover{
