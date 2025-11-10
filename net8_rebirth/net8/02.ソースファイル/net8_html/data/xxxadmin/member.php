@@ -1187,14 +1187,14 @@ function _chkStatusArray( $ary, $status){
 	$ret = [];
 	if( $status == "0"){
 		//仮登録の場合
-		$ret[0] = $ary[0];
-		$ret[1] = $ary[1];
+		if(isset($ary[0])) $ret[0] = $ary[0];
+		if(isset($ary[1])) $ret[1] = $ary[1];
 	}else if( $status == "1"){
 		//本登録の場合
-		$ret[1] = $ary[1];
-		$ret[9] = $ary[9];
+		if(isset($ary[1])) $ret[1] = $ary[1];
+		if(isset($ary[9])) $ret[9] = $ary[9];
 	}else if( $status == "9"){
-		$ret[9] = $ary[9];
+		if(isset($ary[9])) $ret[9] = $ary[9];
 	}else{
 		$ret = $ary;
 	}
