@@ -95,6 +95,56 @@
             align-items: center;
         }
 
+        /* データテーブルスタイル */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+        }
+        .data-table thead {
+            background: var(--admin-darker);
+        }
+        .data-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--admin-text);
+            border-bottom: 2px solid var(--admin-border);
+            white-space: nowrap;
+        }
+        .data-table tbody {
+            display: table-row-group;
+        }
+        .data-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--admin-border);
+            color: var(--admin-text-muted);
+            font-size: 13px;
+        }
+        .data-table tr:hover {
+            background: rgba(3, 118, 201, 0.05);
+        }
+        .data-table .machine-link {
+            color: var(--admin-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .data-table .machine-link:hover {
+            text-decoration: underline;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-1 { background: rgba(0, 196, 140, 0.2); color: var(--admin-success); }
+        .status-0, .status- { background: rgba(255, 100, 124, 0.2); color: var(--admin-danger); }
+        .mac-address { font-family: 'Courier New', monospace; font-size: 12px; }
+        .license-id { font-family: 'Courier New', monospace; font-size: 11px; color: var(--admin-info); }
+
         /* レスポンシブ */
         @media (max-width: 768px) {
             .sidebar { display: none; }
@@ -235,16 +285,50 @@
                 </div>
             </div>
 
-            <ul id="machineList">
-                <li>
-                    <input type="checkbox" name="m_1" id="m_1" />
-                    <label for="m_1">ファンキージャグラー</label>
-                </li>
-                <li>
-                    <input type="checkbox" name="m_2" id="m_2" />
-                    <label for="m_2">SLOT魔法少女まどか☆マギカ</label>
-                </li>
-            </ul>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" id="selectAll" /></th>
+                        <th>マシン番号</th>
+                        <th>台名</th>
+                        <th>カテゴリ</th>
+                        <th>機種名</th>
+                        <th>メーカー</th>
+                        <th>オーナー</th>
+                        <th>カメラ番号</th>
+                        <th>カメラMAC</th>
+                        <th>カメラ名</th>
+                        <th>カメラ状態</th>
+                        <th>MACアドレス</th>
+                        <th>IPアドレス</th>
+                        <th>ライセンスID</th>
+                        <th>ステータス</th>
+                        <th>更新日時</th>
+                    </tr>
+                </thead>
+                <tbody>
+<!--loop:{LIST}-->
+                    <tr>
+                        <td><input type="checkbox" class="machine_checkbox" name="machine_no[]" value="{%MACHINE_NO%}" /></td>
+                        <td><a href="javascript:void(0);" onclick="openSetting('{%MACHINE_NO%}');" class="machine-link">{%MACHINE_NO_PAD%}</a></td>
+                        <td>{%MACHINE_NAME%}</td>
+                        <td>{%CATEGORY_LABEL%}</td>
+                        <td>{%MODEL_NAME%}</td>
+                        <td>{%MAKER_NAME%}</td>
+                        <td>{%OWNER_NICKNAME%}</td>
+                        <td>{%CAMERA_NO%}</td>
+                        <td class="mac-address">{%CAMERA_MAC%}</td>
+                        <td>{%CAMERA_NAME%}</td>
+                        <td><span class="status-badge status-{%CAMERA_STATE%}">{%CAMERA_STATE_LABEL%}</span></td>
+                        <td class="mac-address">{%MAC_ADDRESS%}</td>
+                        <td>{%CAMERALIST_IP%}</td>
+                        <td class="license-id" title="{%LICENSE_ID_FULL%}">{%LICENSE_ID%}</td>
+                        <td>{%MACHINE_STATUS_LABEL%}</td>
+                        <td>{%UPD_DT%}</td>
+                    </tr>
+<!--/loop:{LIST}-->
+                </tbody>
+            </table>
 
             <div class="data-table-header" style="margin-top: 20px;">
                 <div class="pagination-info">

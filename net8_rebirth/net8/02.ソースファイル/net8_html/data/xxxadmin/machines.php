@@ -164,11 +164,16 @@ function DispList($template, $message = "") {
 	$rsql = $sqls
 			->resetField()
 			->field("dm.machine_no, dm.model_no, dm.owner_no, dm.camera_no, dm.signaling_id, dm.convert_no, dm.release_date, dm.end_date, dm.machine_corner, dm.machine_status, dm.del_flg, dm.upd_dt")
-			->field("mo.model_cd, mo.model_name, mo.maker_no, mo.image_list")
+			->field("dm.mac_address, dm.ip_address, dm.name AS machine_name")
+			->field("mo.model_cd, mo.model_name, mo.maker_no, mo.image_list, mo.category")
 			->field("ow.owner_nickname")
 			->field("ma.maker_name, ma.maker_roman")
 			->field("mcp.convert_name")
+			->field("mc.camera_mac, mc.camera_name")
+			->field("mcl.license_id, mcl.state AS camera_state, mcl.ip_address AS cameralist_ip")
 			->from("left join mst_convertPoint mcp on mcp.convert_no = dm.convert_no" )
+			->from("left join mst_camera mc on mc.camera_no = dm.camera_no" )
+			->from("left join mst_cameralist mcl on mcl.mac_address = mc.camera_mac" )
 			->groupby( "dm.machine_no" )
 			->orderby( "dm.camera_no" )
 		->createSql("\n");
@@ -228,6 +233,25 @@ function DispList($template, $message = "") {
 		$template->assign("MACHINE_STATUS_LABEL", $template->getArrayValue($GLOBALS["machineStatusList"], $row["machine_status"]), true);
 		$template->assign("UPD_DT"              , $row["upd_dt"], true);
 		$template->assign("DEL_FLG_LABEL"       , $template->getArrayValue($GLOBALS["AdminStatus"], $row["del_flg"]), true);
+
+		// 追加フィールド（機械詳細情報）
+		$template->assign("MACHINE_NAME"        , $row["machine_name"], true);
+		$template->assign("MAC_ADDRESS"         , $row["mac_address"], true);
+		$template->assign("IP_ADDRESS"          , $row["ip_address"], true);
+		$template->assign("CAMERA_MAC"          , $row["camera_mac"], true);
+		$template->assign("CAMERA_NAME"         , $row["camera_name"], true);
+		// License IDは長いので最初の30文字のみ表示
+		$license_id_short = !empty($row["license_id"]) ? substr($row["license_id"], 0, 30) . "..." : "";
+		$template->assign("LICENSE_ID"          , $license_id_short, true);
+		$template->assign("LICENSE_ID_FULL"     , $row["license_id"], true);
+		$template->assign("CAMERA_STATE"        , $row["camera_state"], true);
+		$camera_state_label = ($row["camera_state"] == "1") ? "接続中" : "未接続";
+		$template->assign("CAMERA_STATE_LABEL"  , $camera_state_label, true);
+		$template->assign("CAMERALIST_IP"       , $row["cameralist_ip"], true);
+		$category_label = ($row["category"] == "1") ? "パチンコ" : (($row["category"] == "2") ? "スロット" : "");
+		$template->assign("CATEGORY"            , $row["category"], true);
+		$template->assign("CATEGORY_LABEL"      , $category_label, true);
+
 		// コーナー
 		$_CORNERS = "";
 		foreach ( explode(',', $row["machine_corner"]) as $value) {
