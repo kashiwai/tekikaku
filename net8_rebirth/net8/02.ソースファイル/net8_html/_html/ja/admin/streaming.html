@@ -49,8 +49,11 @@
         .badge.success { background: rgba(0, 196, 140, 0.2); color: var(--admin-success); }
         .badge.danger { background: rgba(255, 100, 124, 0.2); color: var(--admin-danger); }
         .badge.warning { background: rgba(255, 162, 107, 0.2); color: var(--admin-warning); }
-        .streaming-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; animation: pulse 2s infinite; }
-        .streaming-indicator.online { background: var(--admin-success); }
+        .badge.info { background: rgba(61, 217, 235, 0.2); color: #3DD9EB; }
+        .streaming-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+        .streaming-indicator.playing { background: var(--admin-success); animation: pulse 2s infinite; }
+        .streaming-indicator.ready { background: #3DD9EB; animation: pulse 2s infinite; }
+        .streaming-indicator.maintenance { background: var(--admin-warning); }
         .streaming-indicator.offline { background: var(--admin-danger); }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
@@ -166,14 +169,8 @@
                         </td>
                         <td>{%camera_ip%}</td>
                         <td>
-                            <!--if:{camera_online}-->
-                                <span class="streaming-indicator online"></span>
-                                <span class="badge success">配信中</span>
-                            <!--/if:{camera_online}-->
-                            <!--if:{camera_offline}-->
-                                <span class="streaming-indicator offline"></span>
-                                <span class="badge danger">停止中</span>
-                            <!--/if:{camera_offline}-->
+                            <span class="streaming-indicator {%status%}"></span>
+                            <span class="badge {%status_color%}">{%status_label%}</span>
                         </td>
                         <td>{%viewer_count%}人</td>
                         <td>

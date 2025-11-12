@@ -86,16 +86,40 @@ function DispList($template) {
 	$total_viewers = 0;
 
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-		$streaming_list[] = $row;
-		$total_streaming++;
+		// ステータス判定ロジック
+		$camera_state = intval($row['camera_state']);
+		$machine_status = intval($row['machine_status']);
+		$viewer_count = intval($row['viewer_count']);
 
-		if ($row['camera_state'] == 1) {
+		// ステータス判定
+		if ($machine_status == 0) {
+			$status = 'maintenance';
+			$status_label = 'メンテナンス中';
+			$status_color = 'warning';
+		} elseif ($camera_state != 1) {
+			$status = 'offline';
+			$status_label = 'オフライン';
+			$status_color = 'danger';
+			$offline_cameras++;
+		} elseif ($viewer_count > 0) {
+			$status = 'playing';
+			$status_label = '接続中';
+			$status_color = 'success';
 			$online_cameras++;
 		} else {
-			$offline_cameras++;
+			$status = 'ready';
+			$status_label = '待機中';
+			$status_color = 'info';
+			$online_cameras++;
 		}
 
-		$total_viewers += intval($row['viewer_count']);
+		$row['status'] = $status;
+		$row['status_label'] = $status_label;
+		$row['status_color'] = $status_color;
+
+		$streaming_list[] = $row;
+		$total_streaming++;
+		$total_viewers += $viewer_count;
 	}
 
 	// カテゴリ別統計
@@ -154,9 +178,20 @@ function DispList($template) {
 			$template->assign('camera_system', isset($machine['camera_system']) ? $machine['camera_system'] : '');
 			$template->assign('viewer_count', isset($machine['viewer_count']) ? $machine['viewer_count'] : '0');
 
+			// ステータス情報
+			$template->assign('status', isset($machine['status']) ? $machine['status'] : 'offline');
+			$template->assign('status_label', isset($machine['status_label']) ? $machine['status_label'] : 'オフライン');
+			$template->assign('status_color', isset($machine['status_color']) ? $machine['status_color'] : 'danger');
+
 			// カメラ状態表示用
 			$template->if_enable('camera_online', isset($machine['camera_state']) && $machine['camera_state'] == 1);
 			$template->if_enable('camera_offline', !isset($machine['camera_state']) || $machine['camera_state'] != 1);
+
+			// ステータス別の条件分岐
+			$template->if_enable('status_playing', isset($machine['status']) && $machine['status'] == 'playing');
+			$template->if_enable('status_ready', isset($machine['status']) && $machine['status'] == 'ready');
+			$template->if_enable('status_maintenance', isset($machine['status']) && $machine['status'] == 'maintenance');
+			$template->if_enable('status_offline', isset($machine['status']) && $machine['status'] == 'offline');
 
 			$template->loop_next();
 		}
