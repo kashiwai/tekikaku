@@ -1,16 +1,14 @@
 /**
  * NET8 Gaming SDK - Beta Version
- * Version: 1.0.0-beta
- * Created: 2025-11-06
- *
- * 超シンプル版SDK - 明日までのデモ用
+ * Version: 1.0.1-beta
+ * Updated: 2025-11-12 - Fixed infinite loop issues
  */
 
 (function(window) {
     'use strict';
 
     // SDK設定
-    const SDK_VERSION = '1.0.0-beta';
+    const SDK_VERSION = '1.0.1-beta';
     const DEFAULT_API_URL = 'https://mgg-webservice-production.up.railway.app';
 
     /**
@@ -22,16 +20,30 @@
             this.apiUrl = DEFAULT_API_URL;
             this.token = null;
             this.initialized = false;
+            this.isInitializing = false; // 初期化中フラグ
         }
 
         /**
          * SDK初期化
          */
         async init(apiKey, options = {}) {
+            // 既に初期化済みの場合はスキップ
+            if (this.initialized) {
+                console.log('[Net8 SDK] Already initialized');
+                return;
+            }
+
+            // 初期化中の場合はスキップ
+            if (this.isInitializing) {
+                console.log('[Net8 SDK] Initialization in progress...');
+                return;
+            }
+
             if (!apiKey || !apiKey.startsWith('pk_')) {
                 throw new Error('Invalid API key format. Must start with "pk_"');
             }
 
+            this.isInitializing = true;
             this.apiKey = apiKey;
             this.apiUrl = options.apiUrl || DEFAULT_API_URL;
 
@@ -60,6 +72,8 @@
             } catch (error) {
                 console.error('[Net8 SDK] Initialization failed:', error);
                 throw error;
+            } finally {
+                this.isInitializing = false;
             }
         }
 
@@ -113,6 +127,8 @@
             this.machineNo = null;
             this.playUrl = null;
             this.iframe = null;
+            this.isStarting = false; // ゲーム開始中フラグ
+            this.isStarted = false; // ゲーム開始済みフラグ
 
             // イベントリスナー
             this.listeners = {};
@@ -140,6 +156,19 @@
          * ゲーム開始
          */
         async start() {
+            // 既に開始済みの場合はスキップ
+            if (this.isStarted) {
+                console.log('[Net8 Game] Already started');
+                return;
+            }
+
+            // 開始処理中の場合はスキップ
+            if (this.isStarting) {
+                console.log('[Net8 Game] Start in progress...');
+                return;
+            }
+
+            this.isStarting = true;
             console.log(`[Net8 Game] Starting game: ${this.model}`);
 
             try {
@@ -165,9 +194,13 @@
                 this.machineNo = data.machineNo;
                 this.playUrl = `${this.sdk.apiUrl}${data.playUrl}`;
 
+                // イベントリスナーを先に設定
+                this._setupGameEventListener();
+
                 // ゲーム画面を表示（iframeで既存システムを表示）
                 this._displayGame();
 
+                this.isStarted = true;
                 this._emit('ready');
                 console.log('[Net8 Game] Game started successfully');
 
@@ -175,6 +208,8 @@
                 console.error('[Net8 Game] Failed to start:', error);
                 this._emit('error', error);
                 throw error;
+            } finally {
+                this.isStarting = false;
             }
         }
 
@@ -182,6 +217,11 @@
          * ゲーム画面を表示
          */
         _displayGame() {
+            // 既存のiframeがあれば削除
+            if (this.iframe) {
+                this.iframe.remove();
+            }
+
             // iframeを作成
             this.iframe = document.createElement('iframe');
             this.iframe.src = this.playUrl;
@@ -192,9 +232,6 @@
             // コンテナをクリアしてiframeを追加
             this.container.innerHTML = '';
             this.container.appendChild(this.iframe);
-
-            // ゲームイベント受信のためのpostMessage設定
-            this._setupGameEventListener();
         }
 
         /**
@@ -203,8 +240,11 @@
         _setupGameEventListener() {
             // 既にリスナーが登録されている場合はスキップ
             if (this._isListenerAttached) {
+                console.log('[Net8 Game] Event listener already attached');
                 return;
             }
+
+            console.log('[Net8 Game] Setting up event listener');
 
             // メッセージハンドラーを作成
             this._messageHandler = (event) => {
@@ -255,10 +295,18 @@
          * イベントリスナー登録
          */
         on(event, handler) {
+            if (typeof handler !== 'function') {
+                throw new Error('Event handler must be a function');
+            }
+
             if (!this.listeners[event]) {
                 this.listeners[event] = [];
             }
-            this.listeners[event].push(handler);
+
+            // 同じハンドラーが既に登録されていないかチェック
+            if (!this.listeners[event].includes(handler)) {
+                this.listeners[event].push(handler);
+            }
         }
 
         /**
@@ -266,9 +314,15 @@
          */
         _emit(event, ...args) {
             if (this.listeners[event]) {
-                this.listeners[event].forEach(handler => {
+                // リスナーのコピーを作成して反復（リスナー配列の変更を防ぐ）
+                const listeners = [...this.listeners[event]];
+
+                listeners.forEach(handler => {
                     try {
-                        handler(...args);
+                        // setTimeoutで非同期実行してスタックオーバーフロー防止
+                        setTimeout(() => {
+                            handler(...args);
+                        }, 0);
                     } catch (error) {
                         console.error(`[Net8 Game] Event handler error (${event}):`, error);
                     }
@@ -277,9 +331,26 @@
         }
 
         /**
+         * イベントリスナー削除
+         */
+        off(event, handler) {
+            if (this.listeners[event]) {
+                if (handler) {
+                    // 特定のハンドラーを削除
+                    this.listeners[event] = this.listeners[event].filter(h => h !== handler);
+                } else {
+                    // イベントの全ハンドラーを削除
+                    delete this.listeners[event];
+                }
+            }
+        }
+
+        /**
          * ゲーム終了
          */
         destroy() {
+            console.log('[Net8 Game] Destroying game...');
+
             // イベントリスナーを削除
             if (this._messageHandler && this._isListenerAttached) {
                 window.removeEventListener('message', this._messageHandler);
@@ -295,17 +366,31 @@
 
             // リスナーをクリア
             this.listeners = {};
+
+            // フラグをリセット
+            this.isStarting = false;
+            this.isStarted = false;
+
             console.log('[Net8 Game] Game destroyed');
         }
     }
 
     // グローバルに公開
-    const net8 = new Net8SDK();
-    window.Net8 = net8;
+    const net8Instance = new Net8SDK();
 
-    // 便利なヘルパー
-    window.Net8.createGame = function(config) {
-        return net8.createGame(config);
+    // Net8オブジェクトを作成
+    window.Net8 = {
+        // SDK初期化
+        init: (apiKey, options) => net8Instance.init(apiKey, options),
+
+        // 機種一覧取得
+        getModels: () => net8Instance.getModels(),
+
+        // ゲーム作成
+        createGame: (config) => net8Instance.createGame(config),
+
+        // バージョン情報
+        version: SDK_VERSION
     };
 
     console.log(`[Net8 SDK v${SDK_VERSION}] Loaded`);
