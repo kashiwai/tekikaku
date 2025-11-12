@@ -314,6 +314,7 @@ game.start();
         let game = null;
         let models = [];
         let currentMode = null; // 'mock' or 'real'
+        let mockListenerAttached = false; // モックゲームイベントリスナー登録フラグ
 
         // モード選択
         function setMode(mode) {
@@ -340,6 +341,13 @@ game.start();
                 document.getElementById('btn-mode-real').classList.remove('btn-secondary');
                 document.getElementById('btn-mode-mock').classList.add('btn-secondary');
 
+                // モックゲームイベントリスナーを削除
+                if (mockListenerAttached) {
+                    window.removeEventListener('message', handleMockGameEvent);
+                    mockListenerAttached = false;
+                    log('✅ モックゲームイベントリスナーを削除しました', 'info');
+                }
+
                 // コントロールセクションを表示
                 document.getElementById('control-section').style.display = 'block';
 
@@ -364,8 +372,12 @@ game.start();
                 ></iframe>
             `;
 
-            // モックゲームからのPostMessageを受信
-            window.addEventListener('message', handleMockGameEvent);
+            // モックゲームからのPostMessageを受信（重複登録を防止）
+            if (!mockListenerAttached) {
+                window.addEventListener('message', handleMockGameEvent);
+                mockListenerAttached = true;
+                log('✅ モックゲームイベントリスナーを登録しました', 'info');
+            }
 
             log('✅ モックゲーム読み込み完了', 'success');
             log('💡 モックゲーム画面で各種イベントを発火してテストできます', 'info');
