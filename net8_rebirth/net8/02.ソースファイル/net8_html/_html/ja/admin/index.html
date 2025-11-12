@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{%SITE_TITLE%} - Dashboard</title>
+    <title>{%SITE_TITLE%} - ダッシュボード</title>
 
     <style>
         :root {
@@ -97,26 +97,26 @@
 <div class="admin-layout">
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <h2><i class="fas fa-dragon"></i> RYU8 Admin</h2>
+            <h2><i class="fas fa-dragon"></i> 竜神8 管理画面</h2>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="index.php" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="member.php"><i class="fas fa-users"></i> Member Management</a></li>
-            <li><a href="model.php"><i class="fas fa-gamepad"></i> Model Management</a></li>
-            <li><a href="machines.php"><i class="fas fa-desktop"></i> Machine Management</a></li>
-            <li><a href="camera.php"><i class="fas fa-video"></i> Camera Management</a></li>
-            <li><a href="camera_settings.php"><i class="fas fa-cog"></i> Camera Assignment</a></li>
-            <li><a href="signaling.php"><i class="fas fa-server"></i> Signaling</a></li>
-            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> Streaming</a></li>
+            <li><a href="index.php" class="active"><i class="fas fa-tachometer-alt"></i> ダッシュボード</a></li>
+            <li><a href="member.php"><i class="fas fa-users"></i> 会員管理</a></li>
+            <li><a href="model.php"><i class="fas fa-gamepad"></i> 機種管理</a></li>
+            <li><a href="machines.php"><i class="fas fa-desktop"></i> 台管理</a></li>
+            <li><a href="camera.php"><i class="fas fa-video"></i> カメラ管理</a></li>
+            <li><a href="camera_settings.php"><i class="fas fa-cog"></i> カメラ割り当て</a></li>
+            <li><a href="signaling.php"><i class="fas fa-server"></i> シグナリング</a></li>
+            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> 配信管理</a></li>
         </ul>
     </aside>
 
     <main class="main-content">
         <div class="topbar">
-            <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+            <h1><i class="fas fa-tachometer-alt"></i> ダッシュボード</h1>
             <div class="topbar-actions">
                 <a href="javascript:location.reload();" class="btn btn-primary">
-                    <i class="fas fa-sync"></i> Refresh
+                    <i class="fas fa-sync"></i> 更新
                 </a>
             </div>
         </div>
@@ -124,25 +124,25 @@
         <!-- メイン統計カード -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-card-title">Total Members</div>
+                <div class="stat-card-title">会員数</div>
                 <div class="stat-card-value">{%DISP_REGIST_MEMBER_Y%}</div>
-                <div class="stat-card-subtitle">Yesterday Registrations</div>
+                <div class="stat-card-subtitle">昨日の登録</div>
             </div>
             <div class="stat-card success">
-                <div class="stat-card-title">Total Games</div>
+                <div class="stat-card-title">ゲーム数</div>
                 <div class="stat-card-value">{%DISP_GAME_COUNT_Y%}</div>
-                <div class="stat-card-subtitle">Yesterday</div>
+                <div class="stat-card-subtitle">昨日</div>
             </div>
             <!--if:{MENU_sales}-->
             <div class="stat-card warning">
-                <div class="stat-card-title">Sales Count</div>
+                <div class="stat-card-title">売上件数</div>
                 <div class="stat-card-value">{%DISP_SALES_COUNT_Y%}</div>
-                <div class="stat-card-subtitle">Yesterday</div>
+                <div class="stat-card-subtitle">昨日</div>
             </div>
             <div class="stat-card info">
-                <div class="stat-card-title">Sales Amount</div>
+                <div class="stat-card-title">売上金額</div>
                 <div class="stat-card-value">{%DISP_SALES_VALUE_Y%}</div>
-                <div class="stat-card-subtitle">Yesterday</div>
+                <div class="stat-card-subtitle">昨日</div>
             </div>
             <!--/if:{MENU_sales}-->
         </div>
@@ -150,52 +150,52 @@
         <!-- レポートテーブル -->
         <div class="data-table-wrapper">
             <div class="data-table-header">
-                <h3><i class="fas fa-chart-line"></i> Report Summary</h3>
+                <h3><i class="fas fa-chart-line"></i> レポート概要</h3>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        <th class="text-center">Yesterday<br><small>{%DISP_YESTADAY%}</small></th>
-                        <th class="text-center">This Month<br><small>{%DISP_MONTH%}</small></th>
-                        <th class="text-center">Last Month<br><small>{%DISP_LASTMONTH%}</small></th>
+                        <th class="text-center">昨日<br><small>{%DISP_YESTADAY%}</small></th>
+                        <th class="text-center">今月<br><small>{%DISP_MONTH%}</small></th>
+                        <th class="text-center">先月<br><small>{%DISP_LASTMONTH%}</small></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>Member Registrations</th>
+                        <th>会員登録</th>
                         <td class="text-center"><!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_Y%}&JOIN_DT_TO={%DT_TO_Y%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_Y%}<!--if:{MENU_member}--></a><!--/if:{MENU_member}--></td>
                         <td class="text-center"><!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_M%}&JOIN_DT_TO={%DT_TO_M%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_M%}<!--if:{MENU_member}--></a><!--/if:{MENU_member}--></td>
                         <td class="text-center"><!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_L%}&JOIN_DT_TO={%DT_TO_L%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_L%}<!--if:{MENU_member}--></a><!--/if:{MENU_member}--></td>
                     </tr>
                     <tr>
-                        <th>Member Cancellations</th>
+                        <th>会員退会</th>
                         <td class="text-center">{%DISP_UNSUB_MEMBER_Y%}</td>
                         <td class="text-center">{%DISP_UNSUB_MEMBER_M%}</td>
                         <td class="text-center">{%DISP_UNSUB_MEMBER_L%}</td>
                     </tr>
                     <!--if:{MENU_sales}-->
                     <tr>
-                        <th>Sales Count</th>
+                        <th>売上件数</th>
                         <td class="text-center">{%DISP_SALES_COUNT_Y%}</td>
                         <td class="text-center">{%DISP_SALES_COUNT_M%}</td>
                         <td class="text-center">{%DISP_SALES_COUNT_L%}</td>
                     </tr>
                     <tr>
-                        <th>Sales Amount</th>
+                        <th>売上金額</th>
                         <td class="text-center">{%DISP_SALES_VALUE_Y%}</td>
                         <td class="text-center">{%DISP_SALES_VALUE_M%}</td>
                         <td class="text-center">{%DISP_SALES_VALUE_L%}</td>
                     </tr>
                     <!--/if:{MENU_sales}-->
                     <tr>
-                        <th>Total Games</th>
+                        <th>ゲーム数</th>
                         <td class="text-center">{%DISP_GAME_COUNT_Y%}</td>
                         <td class="text-center">{%DISP_GAME_COUNT_M%}</td>
                         <td class="text-center">{%DISP_GAME_COUNT_L%}</td>
                     </tr>
                     <tr>
-                        <th>Credit Difference</th>
+                        <th>クレジット差分</th>
                         <td class="text-center">{%DISP_CREDIT_Y%}</td>
                         <td class="text-center">{%DISP_CREDIT_M%}</td>
                         <td class="text-center">{%DISP_CREDIT_L%}</td>
@@ -204,13 +204,13 @@
                     <!--if:{GIFT_AGENT}-->
                     <!--if:{ADMTOP_GIFT_AGENT}-->
                     <tr>
-                        <th>{%GIFT_AGENT_DISPNAME%} Gift Sent</th>
+                        <th>{%GIFT_AGENT_DISPNAME%} ギフト送信</th>
                         <td class="text-center"><a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_Y%}&S_GIFT_DT_TO={%DT_TO_Y%}">{%DISP_AGENT_GIFTSEND_POINT_Y%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_Y%}</a></td>
                         <td class="text-center"><a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_M%}&S_GIFT_DT_TO={%DT_TO_M%}">{%DISP_AGENT_GIFTSEND_POINT_M%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_M%}</a></td>
                         <td class="text-center"><a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_L%}&S_GIFT_DT_TO={%DT_TO_L%}">{%DISP_AGENT_GIFTSEND_POINT_L%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_L%}</a></td>
                     </tr>
                     <tr>
-                        <th>{%GIFT_AGENT_DISPNAME%} Gift Received</th>
+                        <th>{%GIFT_AGENT_DISPNAME%} ギフト受信</th>
                         <td class="text-center"><a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_Y%}&S_GIFT_DT_TO={%DT_TO_Y%}">{%DISP_AGENT_GIFTRECV_POINT_Y%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_Y%}</a></td>
                         <td class="text-center"><a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_M%}&S_GIFT_DT_TO={%DT_TO_M%}">{%DISP_AGENT_GIFTRECV_POINT_M%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_M%}</a></td>
                         <td class="text-center"><a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_L%}&S_GIFT_DT_TO={%DT_TO_L%}">{%DISP_AGENT_GIFTRECV_POINT_L%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_L%}</a></td>
@@ -225,18 +225,18 @@
         <!--if:{MENU_goods}-->
         <!-- 抽選状況 -->
         <div class="section-header">
-            <h2><i class="fas fa-gift"></i> Drawing Status</h2>
-            <!--if:{DATE_SWITCH_ABNORMAL}--><small>Current: {%DSP_NOW%}</small><!--/if:{DATE_SWITCH_ABNORMAL}-->
+            <h2><i class="fas fa-gift"></i> 抽選状況</h2>
+            <!--if:{DATE_SWITCH_ABNORMAL}--><small>現在: {%DSP_NOW%}</small><!--/if:{DATE_SWITCH_ABNORMAL}-->
         </div>
         <div class="stats-grid">
             <a href="goods.php?RECEPT_START_DT_TO={%DT_NOW%}&RECEPT_END_DT_FROM={%DT_NOW%}&S_DRAW_STATE=0" class="action-card info">
                 <div class="action-card-icon">
                     <i class="far fa-check-square"></i>
                 </div>
-                <div class="action-card-title">Accepting</div>
+                <div class="action-card-title">受付中</div>
                 <div class="action-card-value">{%DISP_IN_GOODS%}</div>
                 <div class="action-card-footer">
-                    <span>View Details</span>
+                    <span>詳細を見る</span>
                     <i class="fas fa-angle-right"></i>
                 </div>
             </a>
@@ -244,10 +244,10 @@
                 <div class="action-card-icon">
                     <i class="fas fa-dice"></i>
                 </div>
-                <div class="action-card-title">Auto Draw Waiting</div>
+                <div class="action-card-title">自動抽選待ち</div>
                 <div class="action-card-value">{%DISP_WAIT_GOODS%}</div>
                 <div class="action-card-footer">
-                    <span>View Details</span>
+                    <span>詳細を見る</span>
                     <i class="fas fa-angle-right"></i>
                 </div>
             </a>
@@ -255,10 +255,10 @@
                 <div class="action-card-icon">
                     <i class="far fa-hand-paper"></i>
                 </div>
-                <div class="action-card-title">Manual Draw Waiting</div>
+                <div class="action-card-title">手動抽選待ち</div>
                 <div class="action-card-value">{%DISP_WAIT_MANUAL_GOODS%}</div>
                 <div class="action-card-footer">
-                    <span>View Details</span>
+                    <span>詳細を見る</span>
                     <i class="fas fa-angle-right"></i>
                 </div>
             </a>
@@ -268,17 +268,17 @@
         <!--if:{MENU_shipping}-->
         <!-- 発送状況 -->
         <div class="section-header">
-            <h2><i class="fas fa-truck"></i> Shipping Status</h2>
+            <h2><i class="fas fa-truck"></i> 発送状況</h2>
         </div>
         <div class="stats-grid">
             <a href="shipping.php?CHK_STATUS%5B%5D=0" class="action-card success">
                 <div class="action-card-icon">
                     <i class="far fa-edit"></i>
                 </div>
-                <div class="action-card-title">Awaiting Address Input</div>
+                <div class="action-card-title">住所入力待ち</div>
                 <div class="action-card-value">{%DISP_WAIT_INPUT_ADDRESS%}</div>
                 <div class="action-card-footer">
-                    <span>View Details</span>
+                    <span>詳細を見る</span>
                     <i class="fas fa-angle-right"></i>
                 </div>
             </a>
@@ -286,10 +286,10 @@
                 <div class="action-card-icon">
                     <i class="fas fa-boxes"></i>
                 </div>
-                <div class="action-card-title">Awaiting Shipment</div>
+                <div class="action-card-title">発送待ち</div>
                 <div class="action-card-value">{%DISP_WAIT_SEND%}</div>
                 <div class="action-card-footer">
-                    <span>View Details</span>
+                    <span>詳細を見る</span>
                     <i class="fas fa-angle-right"></i>
                 </div>
             </a>
