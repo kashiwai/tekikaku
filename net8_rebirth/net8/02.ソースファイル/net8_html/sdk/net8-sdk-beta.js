@@ -116,6 +116,10 @@
 
             // イベントリスナー
             this.listeners = {};
+
+            // メッセージハンドラーの参照を保持（削除用）
+            this._messageHandler = null;
+            this._isListenerAttached = false;
         }
 
         /**
@@ -197,7 +201,13 @@
          * ゲームイベントリスナー設定
          */
         _setupGameEventListener() {
-            window.addEventListener('message', (event) => {
+            // 既にリスナーが登録されている場合はスキップ
+            if (this._isListenerAttached) {
+                return;
+            }
+
+            // メッセージハンドラーを作成
+            this._messageHandler = (event) => {
                 // セキュリティチェック
                 if (event.origin !== this.sdk.apiUrl) {
                     return;
@@ -235,7 +245,10 @@
                         this._emit('error', data.payload);
                         break;
                 }
-            });
+            };
+
+            window.addEventListener('message', this._messageHandler);
+            this._isListenerAttached = true;
         }
 
         /**
@@ -267,10 +280,20 @@
          * ゲーム終了
          */
         destroy() {
+            // イベントリスナーを削除
+            if (this._messageHandler && this._isListenerAttached) {
+                window.removeEventListener('message', this._messageHandler);
+                this._messageHandler = null;
+                this._isListenerAttached = false;
+            }
+
+            // iframeを削除
             if (this.iframe) {
                 this.iframe.remove();
                 this.iframe = null;
             }
+
+            // リスナーをクリア
             this.listeners = {};
             console.log('[Net8 Game] Game destroyed');
         }
