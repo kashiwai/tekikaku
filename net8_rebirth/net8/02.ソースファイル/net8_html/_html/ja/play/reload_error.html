@@ -97,7 +97,12 @@
 
 			if (countdown <= 0) {
 				clearInterval(interval);
-				window.location.href = retryButton.href;
+				// iframe内の場合は親ウィンドウを遷移
+				if (window.top !== window.self) {
+					window.top.location.href = retryButton.href;
+				} else {
+					window.location.href = retryButton.href;
+				}
 			}
 		}, 1000);
 	</script>
