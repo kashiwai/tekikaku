@@ -282,7 +282,7 @@ header .pc nav li a{
 	height: 129px;
 	margin-left: 1em;
 	font-size: 12pt;
-	color: #fff;
+	color: #ff6b35; /* オレンジ色 */
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -3587,7 +3587,7 @@ header{
 /* メニュー内リストのリンクのスタイル */
 .menu-set .menu ul li a {
   text-decoration: none;
-  color: #333;
+  color: #4a9eff; /* 薄いブルー色 */
   font-size: 4vw;
   line-height: 1;
   display: block;
@@ -3607,7 +3607,7 @@ header{
 
 /* メニュー内リストのリンクのホバー時のスタイル */
 .menu-set .menu ul li a:hover {
-  color: #bf7497;
+  color: #2d7dd2; /* ホバー時は濃いブルー */
 }
 
 .menu-set nav.menu p {
