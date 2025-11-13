@@ -512,7 +512,7 @@ function DispMachineList($template, $message = "") {
                         </label>
                         <input type="number" name="camera_no" value="<?= $machine['camera_no'] ?>"
                                style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;"
-                               min="1" max="999" required>
+                               min="1" max="99999999" required>
                     </div>
 
                     <div style="margin-bottom: 12px;">
