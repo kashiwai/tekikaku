@@ -97,6 +97,168 @@
 		var execText = '確認画面に進む';
 	</script>
 <!--#include file="{%PAGESCRIPT%}point_buy.html"-->
-	
+
+	<style>
+	/* ポイント購入ページスマホ対応 */
+	.container {
+		max-width: 1200px;
+		padding: 0 15px;
+	}
+
+	h1.h3 {
+		font-size: 24px;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.now-point {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		border: none;
+		border-radius: 15px;
+		padding: 20px;
+		text-align: center;
+		font-size: 18px;
+		box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+		margin: 20px 0;
+	}
+
+	.now-point strong {
+		font-size: 32px;
+		font-weight: bold;
+		display: block;
+		margin: 10px 0;
+	}
+
+	.panel-buy-point {
+		margin: 20px 0;
+	}
+
+	.panel-buy-point > p {
+		font-size: 18px;
+		font-weight: bold;
+		color: #333;
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.card {
+		border-radius: 15px;
+		border: 2px solid transparent;
+		transition: all 0.3s ease;
+		cursor: pointer;
+		overflow: hidden;
+	}
+
+	.card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+		border-color: #667eea;
+	}
+
+	.card-body {
+		padding: 25px;
+	}
+
+	.card-title {
+		color: #667eea;
+		font-size: 20px;
+		font-weight: bold;
+		margin-bottom: 15px;
+	}
+
+	.card-title i {
+		margin-right: 10px;
+		font-size: 24px;
+	}
+
+	.card-text {
+		color: #666;
+		font-size: 14px;
+	}
+
+	.card-text i {
+		font-size: 32px;
+		margin: 0 10px;
+		color: #667eea;
+	}
+
+	.priceBlock {
+		margin-bottom: 20px;
+	}
+
+	.btn-primary {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		border: none;
+		padding: 15px 30px;
+		font-size: 16px;
+		font-weight: bold;
+		border-radius: 12px;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+	}
+
+	.btn-primary:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+	}
+
+	.btn-block {
+		width: 100%;
+		display: block;
+	}
+
+	/* スマホ対応 */
+	@media (max-width: 768px) {
+		.container {
+			padding: 0 10px;
+		}
+
+		h1.h3 {
+			font-size: 20px;
+			margin: 15px 0;
+		}
+
+		.now-point {
+			padding: 15px;
+			font-size: 16px;
+		}
+
+		.now-point strong {
+			font-size: 28px;
+		}
+
+		.panel-buy-point > p {
+			font-size: 16px;
+		}
+
+		.card-body {
+			padding: 20px;
+		}
+
+		.card-title {
+			font-size: 18px;
+		}
+
+		.card-title i {
+			font-size: 20px;
+		}
+
+		.card-text {
+			font-size: 13px;
+		}
+
+		.card-text i {
+			font-size: 24px;
+			margin: 5px;
+		}
+
+		.btn-primary {
+			padding: 12px 20px;
+			font-size: 14px;
+		}
+	}
+	</style>
+
 	</body>
 </html>
