@@ -50,9 +50,11 @@ define('MODEL_LIST_VIEW', 20); // 機種一覧の1ページ表示件数
 define('SELECT_VALUE_NONE', ''); // セレクトボックスの「選択なし」値
 define('SELECT_VALUE_ALL', '0'); // セレクトボックスの「すべて」値
 
-// デバッグモード（本番環境では必ずfalseに設定）
-// 一時的にエラー詳細表示を有効化（登録エラー調査のため）
-define('DEBUG_MODE', true);
+// デバッグモード（環境変数APP_ENVで制御）
+// APP_ENV=production → DEBUG_MODE=false
+// APP_ENV=development → DEBUG_MODE=true
+$app_env = getenv('APP_ENV') ?: 'production';
+define('DEBUG_MODE', $app_env === 'development');
 
 // エラー表示設定
 if (DEBUG_MODE) {
@@ -147,8 +149,14 @@ $GLOBALS["MagazineReadStatus"] = array(
 );
 
 $GLOBALS["langList"] = array(
-    "ja" => "日本語",
-    "en" => "English"
+    "ja" => array(
+        "name" => "日本語",
+        "names" => array("ja" => "日本語", "en" => "English")
+    ),
+    "en" => array(
+        "name" => "English",
+        "names" => array("ja" => "日本語", "en" => "English")
+    )
 );
 
 // カテゴリ使用設定
@@ -375,6 +383,21 @@ if (!defined('API_CAMERA_ADD_NO')) define('API_CAMERA_ADD_NO', 1);  // カメラ
 if (!defined('AUTO_PAY_TIME')) define('AUTO_PAY_TIME', 180);  // 自動精算時間（180秒 = 3分）
 if (!defined('NOTICE_CLOSE_TIME')) define('NOTICE_CLOSE_TIME', 30);  // 閉店予告時間（30分前）
 if (!defined('CHROME_RESTART_TIME')) define('CHROME_RESTART_TIME', 28800);  // Chrome再起動時間（28800秒 = 8時間）
+
+// お知らせ画面関連の定数
+if (!defined('ADMIN_PATH')) define('ADMIN_PATH', '/xxxadmin/');  // 管理画面パス
+if (!defined('DIR_IMG_NOTICE_DIR')) define('DIR_IMG_NOTICE_DIR', '/content/images/notice/');  // お知らせ画像ディレクトリ
+if (!defined('NOTICE_TITLE_MAX')) define('NOTICE_TITLE_MAX', 100);  // お知らせタイトル最大文字数
+if (!defined('NOTICE_SUB_TITLE_MAX')) define('NOTICE_SUB_TITLE_MAX', 200);  // お知らせサブタイトル最大文字数
+if (!defined('NOTICE_LIST_TITLE_MAX')) define('NOTICE_LIST_TITLE_MAX', 50);  // お知らせ一覧タイトル最大文字数
+
+// お知らせリンクタイプリスト
+$GLOBALS["noticeLinkTypeList"] = array(
+    "0" => "なし",           // リンクなし
+    "1" => "同一ウィンドウ", // 同じウィンドウで開く
+    "2" => "別ウィンドウ",   // 新しいウィンドウで開く
+    "3" => "ポップアップ"    // ポップアップで開く
+);
 
 $GLOBALS["MailParam"] = array(
     "Host" => SMTP_HOST,
