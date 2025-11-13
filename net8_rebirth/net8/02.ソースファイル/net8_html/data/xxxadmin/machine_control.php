@@ -532,6 +532,9 @@ function DispMachineList($template, $message = "") {
                 </form>
 
                 <div class="machine-actions" style="margin-top: 12px;">
+                    <a href="machine_model_edit.php?machine_no=<?= $machine['machine_no'] ?>" class="btn-action btn-edit">
+                        🎮 機種変更
+                    </a>
                     <a href="machine_edit.php?machine_no=<?= $machine['machine_no'] ?>" class="btn-action btn-edit">
                         ✏️ 詳細編集
                     </a>

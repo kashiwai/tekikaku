@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{%SITE_TITLE%} - Corner Management</title>
+	<title>{%SITE_TITLE%} - コーナー管理</title>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 	<style>
 		:root {
@@ -90,32 +90,32 @@
 			<input type="hidden" name="P" value="{%P%}">
 
 				<div class="container-fluid">
-					<h3 class="page-header"><i class="fas fa-wrench"></i> Corner Management</h3>
+					<h3 class="page-header"><i class="fas fa-wrench"></i> コーナー管理</h3>
 
 					<div class="card">
 						<div class="card-header d-flex justify-content-between">
 							<div class="vertical-center">
-								{%P%} / {%ALLP%} (Total {%ALLROW%} items)
+								{%P%} / {%ALLP%} (全 {%ALLROW%} 件)
 								<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
 									{%PAGING%}
 								</ul>
 							</div>
-							<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">New Registration</a>
+							<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
 						</div>
 						<div class="table-responsive">
 							<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
 								<thead>
 									<tr>
-										<th style="width:120px;">Corner No<br />
+										<th style="width:120px;">コーナー番号<br />
 											<div class="list-sort">
 												<a href="javascript:void(0);" class="sort-asc" name="corner_no asc" onClick="reSort('corner_no asc');"><i class="fas fa-angle-up"></i></a>
 												<a href="javascript:void(0);" class="sort-desc" name="corner_no desc" onClick="reSort('corner_no desc');"><i class="fas fa-angle-down"></i></a>
 											</div>
 										</th>
-										<th>Corner Name</th>
-										<th>Corner Name (EN)</th>
-										<th style="width:100px;">Notice Display</th>
-										<th style="width:100px;">Machine List</th>
+										<th>コーナー名</th>
+										<th>コーナー名（英語）</th>
+										<th style="width:120px;">お知らせ表示</th>
+										<th style="width:100px;">機種一覧</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -125,12 +125,12 @@
 										<td>{%CORNER_NAME%}</td>
 										<td>{%CORNER_ROMAN%}</td>
 										<td class="text-center">
-											<!--if:{DISP_NOTICE}-->Yes<!--/if:{DISP_NOTICE}-->
-											<!--if:{NO_DISP_NOTICE}-->No<!--/if:{NO_DISP_NOTICE}-->
+											<!--if:{DISP_NOTICE}-->はい<!--/if:{DISP_NOTICE}-->
+											<!--if:{NO_DISP_NOTICE}-->いいえ<!--/if:{NO_DISP_NOTICE}-->
 										</td>
 										<td class="text-center">
-											<!--if:{EXISTS_LIST}--><a href="search.php?S_CORNER_NO={%CORNER_NO%}">View</a><!--/if:{EXISTS_LIST}-->
-											<!--if:{NO_EXISTS_LIST}-->None<!--/if:{NO_EXISTS_LIST}-->
+											<!--if:{EXISTS_LIST}--><a href="search.php?S_CORNER_NO={%CORNER_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
+											<!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
 										</td>
 									</tr>
 									<!--/loop:{LIST}-->
@@ -139,7 +139,7 @@
 						</div>
 						<div class="card-footer d-flex justify-content-start">
 							<div class="vertical-center">
-								{%P%} / {%ALLP%} (Total {%ALLROW%} items)
+								{%P%} / {%ALLP%} (全 {%ALLROW%} 件)
 								<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
 									{%PAGING%}
 								</ul>

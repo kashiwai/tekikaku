@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{%SITE_TITLE%} - Corner Detail</title>
+	<title>{%SITE_TITLE%} - コーナー詳細</title>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 	<style>
 		:root {
@@ -86,7 +86,7 @@
 				<input type="hidden" name="CORNER_NO" value="{%CORNER_NO%}">
 
 				<div class="container-fluid">
-					<h3 class="page-header"><i class="fas fa-wrench"></i> Corner Detail</h3>
+					<h3 class="page-header"><i class="fas fa-wrench"></i> コーナー詳細</h3>
 					<!--if:{ERRMSG}-->
 					<div class="alert alert-danger">
 						{%ERRMSG%}
@@ -95,39 +95,39 @@
 					<table class="table-input">
 						<tbody>
 							<tr>
-								<th>Corner Name<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+								<th>コーナー名<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
 								<td>
-									<input type="text" class="form-control" name="CORNER_NAME" value="{%CORNER_NAME%}" maxlength="20" style="width:300px;">
+									<input type="text" class="form-control" name="CORNER_NAME" value="{%CORNER_NAME%}" maxlength="20" style="width:300px;" placeholder="例: パチスロ">
 								</td>
 							</tr>
 							<tr>
-								<th>Corner Name (English)</th>
+								<th>コーナー名（英語）</th>
 								<td>
-									<input type="text" class="form-control" name="CORNER_ROMAN" value="{%CORNER_ROMAN%}" maxlength="50" style="width:300px;">
+									<input type="text" class="form-control" name="CORNER_ROMAN" value="{%CORNER_ROMAN%}" maxlength="50" style="width:300px;" placeholder="例: pachislot">
 								</td>
 							</tr>
 							<tr>
-								<th>Notice Display</th>
+								<th>お知らせ表示</th>
 								<td>
 									<div class="custom-control custom-checkbox custom-control-inline">
 										<input type="checkbox" class="custom-control-input" id="customCheck" name="NOTICE_FLG" value="1"{%CHK_NOTICE_FLG%}>
-										<label class="custom-control-label" for="customCheck">Display</label>
+										<label class="custom-control-label" for="customCheck">表示する</label>
 									</div>
 								</td>
 							</tr>
 							<tr>
-								<th>Remarks</th>
-								<td><textarea class="form-control" rows="6" name="REMARKS">{%REMARKS%}</textarea></td>
+								<th>備考</th>
+								<td><textarea class="form-control" rows="6" name="REMARKS" placeholder="コーナーに関する備考を入力してください">{%REMARKS%}</textarea></td>
 							</tr>
 						</tbody>
 					</table>
 					<hr>
 					<div class="row">
 						<div class="col-6">
-							<!--if:{UPD}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">Delete</a><!--/if:{UPD}-->
+							<!--if:{UPD}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削除</a><!--/if:{UPD}-->
 						</div>
 						<div class="col-6 text-right">
-							<input type="submit" class="btn btn-primary" value="Register">
+							<input type="submit" class="btn btn-primary" value="登録">
 						</div>
 					</div>
 				</div>
@@ -152,10 +152,12 @@
 			}
 
 			swal({
-				title: 'Register Corner',
+				title: 'コーナーを登録',
 				text: "{%A0001%}",
 				type: 'question',
-				showCancelButton: true
+				showCancelButton: true,
+				confirmButtonText: '登録',
+				cancelButtonText: 'キャンセル'
 			}).then(function() {
 				frm.submit();
 			});
@@ -165,10 +167,12 @@
 		function del() {
 			var frm = window.document.MAINFORM;
 			swal({
-				title: 'Delete Corner',
+				title: 'コーナーを削除',
 				text: "{%A0002%}",
 				type: 'warning',
-				showCancelButton: true
+				showCancelButton: true,
+				confirmButtonText: '削除',
+				cancelButtonText: 'キャンセル'
 			}).then(function() {
 				location.href = frm.action + "&ACT=del&NO={%NO%}";
 			});
