@@ -367,22 +367,22 @@ function RegistData($template) {
 function DispComplete($template) {
 	// データ取得
 	getData($_GET , array("ACT"));
-	
+
 	switch ($_GET["ACT"]) {
 		case "update":
 			// 更新
-			$title = $template->message("A1232");
-			$msg = $template->message("A1233");
+			$title = "コーナー更新完了";
+			$msg = "コーナー情報を更新しました。";
 			break;
 		case "del":
 			// 削除
-			$title = $template->message("A1234");
-			$msg = $template->message("A1235");
+			$title = "コーナー削除完了";
+			$msg = "コーナーを削除しました。";
 			break;
 		default:
 			// 新規登録
-			$title = $template->message("A1230");
-			$msg = $template->message("A1231");
+			$title = "コーナー登録完了";
+			$msg = "新しいコーナーを登録しました。";
 	}
 	// 完了画面表示
 	$template->dispProcEnd( $title, "", $msg);

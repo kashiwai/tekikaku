@@ -76,6 +76,11 @@
 			.vertical-center { flex-direction: column; align-items: flex-start; }
 			.table th, .table td { padding: 10px; font-size: 12px; }
 		}
+
+		@media (max-width: 1200px) {
+			.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+			.container-fluid { padding: 0 10px; }
+		}
 	</style>
 </head>
 <body id="page-top">
@@ -103,7 +108,7 @@
 							<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
 						</div>
 						<div class="table-responsive">
-							<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+							<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="width:100%; min-width:800px;">
 								<thead>
 									<tr>
 										<th style="width:120px;">コーナー番号<br />
