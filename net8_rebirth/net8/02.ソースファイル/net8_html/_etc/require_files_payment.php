@@ -33,4 +33,7 @@ foreach ($payment_libs as $lib) {
 if (!defined('PAYMENT_ENABLED')) define('PAYMENT_ENABLED', false); // 開発環境では決済無効
 if (!defined('PAYMENT_TEST_MODE')) define('PAYMENT_TEST_MODE', true); // テストモード
 
+// 決済ディレクトリのパス定義
+if (!defined('PAYMENT_DIR')) define('PAYMENT_DIR', __DIR__ . '/../data/payment/gash/');
+
 ?>
