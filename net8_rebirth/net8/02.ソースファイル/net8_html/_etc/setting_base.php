@@ -151,11 +151,17 @@ $GLOBALS["MagazineReadStatus"] = array(
 $GLOBALS["langList"] = array(
     "ja" => array(
         "name" => "日本語",
-        "names" => array("ja" => "日本語", "en" => "English")
+        "names" => array(
+            array("lang" => "ja", "name" => "日本語"),
+            array("lang" => "en", "name" => "English")
+        )
     ),
     "en" => array(
         "name" => "English",
-        "names" => array("ja" => "日本語", "en" => "English")
+        "names" => array(
+            array("lang" => "ja", "name" => "日本語"),
+            array("lang" => "en", "name" => "English")
+        )
     )
 );
 

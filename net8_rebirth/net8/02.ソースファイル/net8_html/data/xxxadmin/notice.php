@@ -230,7 +230,7 @@ function DispDetail($template, $message = "") {
 		$row = $template->DB->getRow( $sql, PDO::FETCH_ASSOC);
 		// 2020/04/28 [ADD Start]
 		if (empty($row["notice_no"])) {		// データ不存在は通常あり得ないのでシステムエラー
-			$template->dispProcError($template->message("A0003"), false);
+			$template->dispProcError("指定されたお知らせが見つかりません。", false);
 			return;
 		}
 		// 2020/04/28 [ADD End]
@@ -286,8 +286,8 @@ function DispDetail($template, $message = "") {
 	$template->open(PRE_HTML . "_detail.html");
 	// 2020/04/28 [ADD Start] 共通置換される前に置換
 	$defLangName = $GLOBALS["langList"][FOLDER_LANG]["names"][array_search(FOLDER_LANG, array_column($GLOBALS["langList"][FOLDER_LANG]["names"], 'lang'))]["name"];
-	$template->assign("A2016", $template->message("A2016", $defLangName), true);
-	$template->assign("A2020", $template->message("A2020", $defLangName), true);
+	$template->assign("A2016", "お知らせ画像（" . $defLangName . "）を選択してください。", true);
+	$template->assign("A2020", "お知らせ内容（" . $defLangName . "）を入力してください。", true);
 	// 2020/04/28 [ADD End] 共通置換される前に置換
 	$template->assignCommon();
 	$template->assign("ERRMSG", $message);
@@ -435,7 +435,7 @@ function RegistData($template) {
 			if (isset($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name']) && !empty($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name'])) {
 				try {
 					if (!isset($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['error']) || !is_int($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['error'])) {
-						throw new RuntimeException($template->message("A2017", $trgLang));
+						throw new RuntimeException("画像のアップロードに失敗しました。");
 					}
 					
 					switch ($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['error']) {
@@ -443,25 +443,25 @@ function RegistData($template) {
 							break;
 						case UPLOAD_ERR_NO_FILE:   // ファイル未選択
 							if (mb_strlen($_POST["NOTICE_NO"]) == 0 && $lang["lang"] == FOLDER_LANG) {
-								throw new RuntimeException($template->message("A2016", $trgLang));
+								throw new RuntimeException("お知らせ画像（" . $trgLang . "）を選択してください。");
 							}
 							break;
 						case UPLOAD_ERR_INI_SIZE:  // php.ini定義の最大サイズ超過
 						case UPLOAD_ERR_FORM_SIZE: // フォーム定義の最大サイズ超過
-							throw new RuntimeException($template->message("A2019", $trgLang));
+							throw new RuntimeException("画像ファイルのサイズが大きすぎます。");
 						default:
-							throw new RuntimeException($template->message("A2017", $trgLang));
+							throw new RuntimeException("画像のアップロードに失敗しました。");
 					}
 					
 					// ファイルサイズチェック
 					if ($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['size'] > (UPFILE_IMG_MAX * 1024 *1024)) {
-						throw new RuntimeException($template->message("A2019", $trgLang));
+						throw new RuntimeException("画像ファイルのサイズが大きすぎます。");
 					}
 					
 					// MIMEタイプチェック(拡張子)
 					$chkMime = array_column($GLOBALS["ImgExtension"], 'mine', 'ext');
 					if (!$ext = array_search(mime_content_type($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name']), $chkMime, true)) {
-						throw new RuntimeException($template->message("A2018", $trgLang));
+						throw new RuntimeException("画像ファイルの形式が不正です。");
 					}
 					
 					// 保存
@@ -475,7 +475,7 @@ function RegistData($template) {
 						}
 					} else {
 						$upfile = "";
-						throw new RuntimeException($template->message("A2017", $trgLang));
+						throw new RuntimeException("画像のアップロードに失敗しました。");
 					}
 				} catch (RuntimeException $e) {
 					DispDetail($template, $e->getMessage());
