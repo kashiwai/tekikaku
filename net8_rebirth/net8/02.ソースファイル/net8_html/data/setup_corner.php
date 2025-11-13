@@ -16,22 +16,24 @@ try {
     echo "<pre>";
 
     // パチスロコーナー登録
-    $sql1 = "INSERT INTO mst_corner (corner_no, corner_name, corner_roman, del_flg, ins_dt, upd_dt)
-             VALUES (1, 'パチスロ', 'pachislot', 0, NOW(), NOW())
+    $sql1 = "INSERT INTO mst_corner (corner_name, corner_roman, del_flg, add_no, add_dt, upd_no, upd_dt)
+             VALUES ('パチスロ', 'pachislot', 0, 1, NOW(), 1, NOW())
              ON DUPLICATE KEY UPDATE
                corner_name = VALUES(corner_name),
                corner_roman = VALUES(corner_roman),
+               upd_no = 1,
                upd_dt = NOW()";
 
     $pdo->exec($sql1);
     echo "✓ パチスロコーナー登録完了\n";
 
     // 新台コーナー登録
-    $sql2 = "INSERT INTO mst_corner (corner_no, corner_name, corner_roman, del_flg, ins_dt, upd_dt)
-             VALUES (2, '新台', 'shindai', 0, NOW(), NOW())
+    $sql2 = "INSERT INTO mst_corner (corner_name, corner_roman, del_flg, add_no, add_dt, upd_no, upd_dt)
+             VALUES ('新台', 'shindai', 0, 1, NOW(), 1, NOW())
              ON DUPLICATE KEY UPDATE
                corner_name = VALUES(corner_name),
                corner_roman = VALUES(corner_roman),
+               upd_no = 1,
                upd_dt = NOW()";
 
     $pdo->exec($sql2);
