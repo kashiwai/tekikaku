@@ -263,7 +263,7 @@ function addList($DB) {
 	// ローカルから送られてきたLicense IDを使用（サーバー側では生成しない）
 	$license_id = $_POST["LICENSE_ID"];
 
-	if ( mb_strlen($row["mac_address"]) == 0 ){
+	if ( !$row || mb_strlen($row["mac_address"]) == 0 ){
 		// 新規登録
 
 		// トランザクション開始
@@ -420,7 +420,7 @@ function addCamera($DB, $requested_camera_no = 0){
 		->createSQL();
 	$cameraRow = $DB->getRow($sql);
 
-	if ( mb_strlen($cameraRow["camera_no"]) == 0 ){
+	if ( !$cameraRow || mb_strlen($cameraRow["camera_no"]) == 0 ){
 		// トランザクション開始
 		$DB->autoCommit(false);
 		//macアドレスが登録されていないので新規にmst_cameraに登録する。
