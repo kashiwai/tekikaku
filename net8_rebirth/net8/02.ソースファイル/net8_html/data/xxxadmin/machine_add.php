@@ -46,9 +46,35 @@ function DispForm($template) {
     $current_max = $row['max_no'] ?? 0;
     $next_no = $current_max + 1;
 
-    // 機種リスト取得
-    $sql = "SELECT model_no, model_name FROM mst_model WHERE del_flg = 0 ORDER BY model_no";
+    // 機種リスト取得（設定に基づいた並び順）
+    $orderBy = getModelSortOrderBy();
+    $sql = "SELECT model_no, model_name FROM mst_model WHERE del_flg = 0 {$orderBy}";
     $models = $template->DB->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+    /**
+     * 並び順設定を取得
+     */
+    function getModelSortOrderBy() {
+        $configFile = '../../_etc/model_sort_config.json';
+        if (file_exists($configFile)) {
+            $config = json_decode(file_get_contents($configFile), true);
+            $sortOrder = $config['sort_order'] ?? 'model_no';
+        } else {
+            $sortOrder = 'model_no';
+        }
+
+        switch ($sortOrder) {
+            case 'model_name':
+                return 'ORDER BY model_name';
+            case 'category_model_no':
+                return 'ORDER BY category, model_no';
+            case 'category_model_name':
+                return 'ORDER BY category, model_name';
+            case 'model_no':
+            default:
+                return 'ORDER BY model_no';
+        }
+    }
 
     // オーナーリスト取得
     $sql = "SELECT owner_no, owner_nickname FROM mst_owner WHERE del_flg = 0 ORDER BY owner_no";

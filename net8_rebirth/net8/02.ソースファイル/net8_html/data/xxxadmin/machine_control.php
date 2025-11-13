@@ -404,6 +404,9 @@ function DispMachineList($template, $message = "") {
 
             <div class="header-actions">
                 <a href="index.php" class="btn btn-secondary">← ダッシュボードに戻る</a>
+                <a href="model_sort_settings.php" class="btn btn-secondary" title="機種リストの並び順を設定">
+                    ⚙️ 機種並び順設定
+                </a>
                 <form method="POST" action="machine_control.php" style="display: inline;">
                     <input type="hidden" name="M" value="bulk_register">
                     <button type="submit" class="btn btn-primary" onclick="return confirm('40台のマシンを一括登録しますか？\n既存のデータは保持されます。');">
