@@ -260,14 +260,16 @@ function addList($DB) {
 		->createSQL("\n");
 
 	$row = $DB->getRow($sql);
+	// ローカルから送られてきたLicense IDを使用（サーバー側では生成しない）
+	$license_id = $_POST["LICENSE_ID"];
+
 	if ( mb_strlen($row["mac_address"]) == 0 ){
-		// ローカルから送られてきたLicense IDを使用（サーバー側では生成しない）
-		$license_id = $_POST["LICENSE_ID"];
+		// 新規登録
 
 		// トランザクション開始
 		$DB->autoCommit(false);
 
-		//lnk_machineを更新
+		//mst_cameralistに挿入
 		$sql = (new SqlString($DB))
 			->insert()
 				->into("mst_cameralist")
@@ -295,7 +297,37 @@ function addList($DB) {
 		}
 		$api->set("mode",  "insert" );
 	} else {
-		$license_id = $row["license_id"];
+		// 既存のMAC - ローカルのLICENSE_IDでサーバー側を上書き更新
+
+		// トランザクション開始
+		$DB->autoCommit(false);
+
+		// システム情報とLICENSE_IDを更新
+		$sql = (new SqlString($DB))
+			->update("mst_cameralist")
+				->set()
+					->value("identifing_number",    $_POST["IDENTIFING_NUMBER"], FD_STR)
+					->value("system_name",          $_POST["SYSTEM_NAME"], FD_STR)
+					->value("product_name",         $_POST["PRODUCT_NAME"], FD_STR)
+					->value("cpu_name",             $_POST["CPU_NAME"], FD_STR)
+					->value("core",                 $_POST["CORE"], FD_NUM)
+					->value("license_id",           $license_id, FD_STR)
+					->value("uuid",                 $_POST["UUID"], FD_STR)
+					->value("upd_no",               "1", FD_NUM)
+					->value("upd_dt",               "current_timestamp", FD_FUNCTION)
+				->where()
+					->and( "mac_address = ", $_POST["MAC_ADDRESS"], FD_STR)
+			->createSQL("\n");
+		$ret = $DB->query($sql);
+		if ( !$ret ){
+			$DB->rollBack();
+			$api->setError("mst_cameralist update error");
+			$api->outputJson();
+			return;
+		} else {
+			//コミット
+			$DB->autoCommit(true);
+		}
 		$api->set("mode",  "update" );
 	}
 
