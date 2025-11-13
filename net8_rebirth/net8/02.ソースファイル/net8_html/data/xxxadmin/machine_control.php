@@ -338,13 +338,22 @@ function DispMachineList($template, $message = "") {
         }
 
         .message {
-            background: #dcfce7;
-            border-left: 4px solid #16a34a;
-            color: #166534;
             padding: 16px;
             border-radius: 8px;
             margin-bottom: 24px;
             font-size: 14px;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            color: #166534;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            color: #991b1b;
         }
 
         .empty-state {
@@ -405,8 +414,8 @@ function DispMachineList($template, $message = "") {
         </div>
 
         <?php if (!empty($message)): ?>
-        <div class="message">
-            <?= htmlspecialchars($message) ?>
+        <div class="message <?= strpos($message, '❌') !== false ? 'error' : 'success' ?>">
+            <?= $message ?>
         </div>
         <?php endif; ?>
 
@@ -492,9 +501,39 @@ function DispMachineList($template, $message = "") {
                     <?php endif; ?>
                 </div>
 
-                <div class="machine-actions">
+                <!-- カメラNo編集フォーム -->
+                <form method="POST" action="machine_control.php" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
+                    <input type="hidden" name="M" value="update">
+                    <input type="hidden" name="machine_no" value="<?= $machine['machine_no'] ?>">
+
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 4px;">
+                            📹 新しいカメラNo:
+                        </label>
+                        <input type="number" name="camera_no" value="<?= $machine['camera_no'] ?>"
+                               style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;"
+                               min="1" max="999" required>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 4px;">
+                            💻 MACアドレス (任意):
+                        </label>
+                        <input type="text" name="mac_address" value="<?= htmlspecialchars($machine['mac_address'] ?: '') ?>"
+                               style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-family: 'Courier New', monospace;"
+                               placeholder="e0:51:d8:16:13:3d"
+                               pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$">
+                        <small style="color: #64748b; font-size: 11px;">※MACアドレスを入力すると、mst_camera/mst_cameralistも連携更新されます</small>
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                        💾 カメラNo更新
+                    </button>
+                </form>
+
+                <div class="machine-actions" style="margin-top: 12px;">
                     <a href="machine_edit.php?machine_no=<?= $machine['machine_no'] ?>" class="btn-action btn-edit">
-                        ✏️ 編集
+                        ✏️ 詳細編集
                     </a>
                     <form method="POST" action="machine_control.php" style="display: inline;">
                         <input type="hidden" name="M" value="delete">
@@ -586,6 +625,100 @@ function ProcBulkRegister($template) {
     } catch (Exception $e) {
         $template->DB->autoCommit(true);
         throw $e;
+    }
+}
+
+/**
+ * マシン更新処理（カメラNo変更）
+ */
+function ProcUpdate($template) {
+    getData($_POST, array("machine_no", "camera_no", "mac_address"));
+
+    $machine_no = intval($_POST["machine_no"]);
+    $new_camera_no = intval($_POST["camera_no"]);
+    $mac_address = isset($_POST["mac_address"]) ? strtolower(trim($_POST["mac_address"])) : '';
+
+    $template->DB->autoCommit(false);
+
+    try {
+        // 1. dat_machineのcamera_noを更新
+        $update_machine_sql = (new SqlString())
+                ->setAutoConvert( [$template->DB,"conv_sql"] )
+                ->update("dat_machine")
+                    ->set()
+                        ->value("camera_no", $new_camera_no, FD_NUM)
+                    ->where()
+                        ->and("machine_no = ", $machine_no, FD_NUM)
+                ->createSQL();
+
+        $template->DB->query($update_machine_sql);
+
+        // 2. MACアドレスが入力されている場合、mst_cameraとmst_cameralistを連携
+        if (!empty($mac_address)) {
+            // mst_cameraにレコードが存在するかチェック
+            $check_camera_sql = (new SqlString())
+                    ->setAutoConvert( [$template->DB,"conv_sql"] )
+                    ->select()
+                        ->field("camera_no, camera_mac")
+                        ->from("mst_camera")
+                        ->where()
+                            ->and("camera_no = ", $new_camera_no, FD_NUM)
+                            ->and("del_flg = ", 0, FD_NUM)
+                    ->createSQL();
+
+            $existing_camera = $template->DB->getRow($check_camera_sql, PDO::FETCH_ASSOC);
+
+            if ($existing_camera) {
+                // 既存のcamera_noレコードのMAC addressを更新
+                $update_camera_sql = (new SqlString())
+                        ->setAutoConvert( [$template->DB,"conv_sql"] )
+                        ->update("mst_camera")
+                            ->set()
+                                ->value("camera_mac", $mac_address, FD_STR)
+                            ->where()
+                                ->and("camera_no = ", $new_camera_no, FD_NUM)
+                        ->createSQL();
+
+                $template->DB->query($update_camera_sql);
+            } else {
+                // 新規にmst_cameraにレコードを作成
+                $insert_camera_sql = (new SqlString())
+                        ->setAutoConvert( [$template->DB,"conv_sql"] )
+                        ->insert("mst_camera")
+                            ->value("camera_no", $new_camera_no, FD_NUM)
+                            ->value("camera_mac", $mac_address, FD_STR)
+                            ->value("camera_name", "CAMERA-" . str_pad($new_camera_no, 2, '0', STR_PAD_LEFT), FD_STR)
+                            ->value("camera_status", 1, FD_NUM)
+                            ->value("del_flg", 0, FD_NUM)
+                            ->value("add_no", 1, FD_NUM)
+                            ->value("add_dt", "current_timestamp", FD_FUNCTION)
+                        ->createSQL();
+
+                $template->DB->query($insert_camera_sql);
+            }
+
+            // 3. mst_cameralistのcamera_noを更新
+            $update_cameralist_sql = (new SqlString())
+                    ->setAutoConvert( [$template->DB,"conv_sql"] )
+                    ->update("mst_cameralist")
+                        ->set()
+                            ->value("camera_no", $new_camera_no, FD_NUM)
+                        ->where()
+                            ->and("mac_address = ", $mac_address, FD_STR)
+                    ->createSQL();
+
+            $template->DB->query($update_cameralist_sql);
+        }
+
+        $template->DB->autoCommit(true);
+
+        $message = "✅ マシン{$machine_no}のカメラNoを {$new_camera_no} に更新しました。";
+        DispMachineList($template, $message);
+
+    } catch (Exception $e) {
+        $template->DB->rollBack();
+        $message = "❌ エラー: " . $e->getMessage();
+        DispMachineList($template, $message);
     }
 }
 

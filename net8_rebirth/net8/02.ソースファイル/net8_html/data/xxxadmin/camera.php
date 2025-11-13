@@ -153,6 +153,44 @@ function DispDetail($template, $camera_no) {
 		$camera_data = $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+	// テンプレート開く
+	$template->open(PRE_HTML . "_detail.html");
+	$template->assignCommon();
+
+	// カメラデータを個別に割り当て
+	if ($camera_data) {
+		$template->assign('camera_no', isset($camera_data['camera_no']) ? $camera_data['camera_no'] : '');
+		$template->assign('camera_name', isset($camera_data['camera_name']) ? $camera_data['camera_name'] : '');
+		$template->assign('camera_mac', isset($camera_data['camera_mac']) ? $camera_data['camera_mac'] : '');
+		$template->assign('camera_status', isset($camera_data['camera_status']) ? $camera_data['camera_status'] : '1');
+		$template->assign('state', isset($camera_data['state']) ? $camera_data['state'] : '0');
+		$template->assign('system_name', isset($camera_data['system_name']) ? $camera_data['system_name'] : '-');
+		$template->assign('ip_address', isset($camera_data['ip_address']) ? $camera_data['ip_address'] : '-');
+		$template->assign('identifing_number', isset($camera_data['identifing_number']) ? $camera_data['identifing_number'] : '-');
+		$template->assign('product_name', isset($camera_data['product_name']) ? $camera_data['product_name'] : '-');
+		$template->assign('cpu_name', isset($camera_data['cpu_name']) ? $camera_data['cpu_name'] : '-');
+		$template->assign('core', isset($camera_data['core']) ? $camera_data['core'] : '-');
+		$template->assign('uuid', isset($camera_data['uuid']) ? $camera_data['uuid'] : '-');
+		$template->assign('license_id', isset($camera_data['license_id']) ? $camera_data['license_id'] : '-');
+	} else {
+		// 新規作成時の初期値
+		$template->assign('camera_no', '');
+		$template->assign('camera_name', '');
+		$template->assign('camera_mac', '');
+		$template->assign('camera_status', '1');
+		$template->assign('state', '0');
+		$template->assign('system_name', '-');
+		$template->assign('ip_address', '-');
+		$template->assign('identifing_number', '-');
+		$template->assign('product_name', '-');
+		$template->assign('cpu_name', '-');
+		$template->assign('core', '-');
+		$template->assign('uuid', '-');
+		$template->assign('license_id', '-');
+	}
+
+	$template->assign('mode', $camera_no > 0 ? 'edit' : 'new');
+
 	// 割り当て済み台一覧取得
 	if ($camera_no > 0) {
 		$machine_sql = "
@@ -172,14 +210,23 @@ function DispDetail($template, $camera_no) {
 		$stmt->execute(['camera_no' => $camera_no]);
 		$machine_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		$template->assign('machine_list', $machine_list);
+		// 台一覧をループで展開
+		if (count($machine_list) > 0) {
+			$template->loop_start('MACHINES');
+			foreach ($machine_list as $machine) {
+				$template->assign('machine_no', isset($machine['machine_no']) ? $machine['machine_no'] : '');
+				$template->assign('machine_cd', isset($machine['machine_cd']) ? $machine['machine_cd'] : '');
+				$template->assign('model_name', isset($machine['model_name']) ? $machine['model_name'] : '');
+				$template->assign('release_date', isset($machine['release_date']) ? $machine['release_date'] : '');
+				$template->assign('machine_status', isset($machine['machine_status']) ? $machine['machine_status'] : '0');
+				$template->loop_next();
+			}
+			$template->loop_end('MACHINES');
+		}
 	}
 
-	$template->assign('camera_data', $camera_data);
-	$template->assign('mode', $camera_no > 0 ? 'edit' : 'new');
-
 	// 表示
-	$template->display(PRE_HTML . "_detail.html");
+	$template->flush();
 }
 
 /**

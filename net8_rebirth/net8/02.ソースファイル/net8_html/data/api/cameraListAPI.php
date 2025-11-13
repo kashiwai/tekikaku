@@ -35,6 +35,7 @@ require_once('../../_etc/require_files.php');			// requireファイル
 require_once('../../_sys/APItool.php');					// APItool
 //require_once('../../_sys/Logger.php');					// Logger
 require_once('./Logger.php');						// Logger
+require_once('./TokenAuth.php');					// トークン認証
 
 // メイン処理
 main();
@@ -88,6 +89,15 @@ function GetNoCamera($DB) {
 	$_GET["MAC"] = strtolower($_GET["MAC"]);
 
 	$api = new APItool();
+
+	// トークン認証（TOKENとMACHINE_NOがある場合）
+	if (isset($_GET["TOKEN"]) && isset($_GET["MACHINE_NO"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
 
 	$sql = (new SqlString($DB))
 		->select()
@@ -223,8 +233,10 @@ function GetNoCamera($DB) {
  */
 function addList($DB) {
 
-	// データ取得（LICENSE_IDを追加）
+	// データ取得（LICENSE_IDとCAMERA_NOを追加）
 	getData($_POST, array("MAC_ADDRESS", "IDENTIFING_NUMBER", "SYSTEM_NAME", "PRODUCT_NAME", "CPU_NAME", "CORE", "UUID", "LICENSE_ID") );
+	// Windows側から要求されたcamera_no（オプション）
+	$requested_camera_no = isset($_POST["CAMERA_NO"]) ? intval($_POST["CAMERA_NO"]) : 0;
 
 	// MAC addressを小文字に統一（case-insensitive対応）
 	$_POST["MAC_ADDRESS"] = strtolower($_POST["MAC_ADDRESS"]);
@@ -287,8 +299,8 @@ function addList($DB) {
 		$api->set("mode",  "update" );
 	}
 
-	//カメラ番号の取得
-	$cameraNo = addCamera($DB);
+	//カメラ番号の取得（Windows側から要求されたcamera_noを渡す）
+	$cameraNo = addCamera($DB, $requested_camera_no);
 	$sql = (new SqlString($DB))
 		->update("mst_cameralist")
 			->set()
@@ -299,6 +311,13 @@ function addList($DB) {
 	$ret = $DB->query($sql);
 	if ( !$ret ){
 		$api->setError("mst_cameralist update error");
+	}
+
+	// MACアドレスからマシン情報を取得してトークンを返す
+	$machine_info = TokenAuth::getMachineByMac($DB, $_POST["MAC_ADDRESS"]);
+	if ($machine_info) {
+		$api->set("machine_no", $machine_info['machine_no']);
+		$api->set("token", $machine_info['token']);
 	}
 
 	$api->set("camera_no",  $cameraNo );
@@ -353,9 +372,10 @@ function ExistList($DB){
  * カメラの追加
  * @access	private
  * @param	object	$DB			DBクラスオブジェクト
- * @return	なし
+ * @param	int		$requested_camera_no	Windows側から要求されたcamera_no
+ * @return	int		camera_no
  */
-function addCamera($DB){
+function addCamera($DB, $requested_camera_no = 0){
 
 	$sql = (new SqlString($DB))
 		->setAutoConvert( [$DB,"conv_sql"] )
@@ -372,23 +392,47 @@ function addCamera($DB){
 		// トランザクション開始
 		$DB->autoCommit(false);
 		//macアドレスが登録されていないので新規にmst_cameraに登録する。
-		$sql = (new SqlString($DB))
-			->insert()
-				->into("mst_camera")
-					->value("camera_mac",  $_POST["MAC_ADDRESS"], FD_STR)
-					->value("camera_name", "camera_entry_mode", FD_STR)
-					->value("add_no",      API_CAMERA_ADD_NO, FD_NUM)
-					->value("add_dt",      "current_timestamp" , FD_FUNCTION)
-			->createSQL();
-		$result = $DB->query($sql);
-		if ( $result == false ){
-			$DB->rollBack();
-			return 0;
+
+		// Windows側から要求されたcamera_noを使用（0の場合は自動採番）
+		if ($requested_camera_no > 0) {
+			// 手動でcamera_noを指定してINSERT
+			$sql = (new SqlString($DB))
+				->insert()
+					->into("mst_camera")
+						->value("camera_no",   $requested_camera_no, FD_NUM)
+						->value("camera_mac",  $_POST["MAC_ADDRESS"], FD_STR)
+						->value("camera_name", "camera_entry_mode", FD_STR)
+						->value("add_no",      API_CAMERA_ADD_NO, FD_NUM)
+						->value("add_dt",      "current_timestamp" , FD_FUNCTION)
+				->createSQL();
+			$result = $DB->query($sql);
+			if ( $result == false ){
+				$DB->rollBack();
+				return 0;
+			}
+			$camera_no = $requested_camera_no;
+		} else {
+			// 自動採番でINSERT（従来の動作）
+			$sql = (new SqlString($DB))
+				->insert()
+					->into("mst_camera")
+						->value("camera_mac",  $_POST["MAC_ADDRESS"], FD_STR)
+						->value("camera_name", "camera_entry_mode", FD_STR)
+						->value("add_no",      API_CAMERA_ADD_NO, FD_NUM)
+						->value("add_dt",      "current_timestamp" , FD_FUNCTION)
+				->createSQL();
+			$result = $DB->query($sql);
+			if ( $result == false ){
+				$DB->rollBack();
+				return 0;
+			}
+			$camera_no = $DB->lastInsertId('camera_no');
 		}
-		$camera_no = $DB->lastInsertId('camera_no');
+
 		$DB->autoCommit(true);
 		return $camera_no;
 	} else {
+		// 既に登録されている場合は、そのcamera_noを返す
 		return $cameraRow["camera_no"];
 	}
 

@@ -31,6 +31,7 @@ require_once('../../_etc/require_files.php');			// requireファイル
 require_once('../../_sys/APItool.php');					// APItool
 //require_once('../../_sys/Logger.php');					// Logger
 require_once('./Logger.php');						// Logger
+require_once('./TokenAuth.php');					// トークン認証
 
 // メイン処理
 main();
@@ -96,6 +97,15 @@ function StartCamera($DB) {
 
 	$api = new APItool();
 
+	// トークン認証
+	if (isset($_GET["TOKEN"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
+
 	// トランザクション開始
 	$DB->autoCommit(false);
 
@@ -140,6 +150,15 @@ function EndCamera($DB) {
 	getData($_GET, array("MACHINE_NO") );
 
 	$api = new APItool();
+
+	// トークン認証
+	if (isset($_GET["TOKEN"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
 
 	// トランザクション開始
 	$DB->autoCommit(false);
@@ -241,6 +260,15 @@ function ResetLink($DB) {
 
 	$api = new APItool();
 
+	// トークン認証
+	if (isset($_GET["TOKEN"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
+
 	// トランザクション開始
 	$DB->autoCommit(false);
 
@@ -319,6 +347,15 @@ function GetStatus($DB) {
 
 	$api = new APItool();
 
+	// トークン認証
+	if (isset($_GET["TOKEN"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
+
 	// トランザクション開始
 	$DB->autoCommit(false);
 	// lnk_machineにアサインされているかをチェック
@@ -352,6 +389,15 @@ function SetSetting($DB) {
 	getData($_GET, array("MACHINE_NO", "LEVEL") );
 
 	$api = new APItool();
+
+	// トークン認証
+	if (isset($_GET["TOKEN"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
 
 	// トランザクション開始
 	$DB->autoCommit(false);
@@ -421,6 +467,15 @@ function SetReboot($DB) {
 	getData($_GET, array("MACHINE_NO") );
 
 	$api = new APItool();
+
+	// トークン認証
+	if (isset($_GET["TOKEN"])) {
+		if (!TokenAuth::verify($DB, $_GET["MACHINE_NO"], $_GET["TOKEN"])) {
+			$api->setError("認証エラー: トークンが無効です");
+			$api->outputJson();
+			return;
+		}
+	}
 
 	// トランザクション開始
 	$DB->autoCommit(false);
