@@ -166,6 +166,17 @@ function DispMachineList($template, $message = "") {
             box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -404,6 +415,9 @@ function DispMachineList($template, $message = "") {
 
             <div class="header-actions">
                 <a href="index.php" class="btn btn-secondary">← ダッシュボードに戻る</a>
+                <a href="sales_analytics.php" class="btn btn-success" title="売上・利益の集計を確認">
+                    💰 売上集計
+                </a>
                 <a href="model_sort_settings.php" class="btn btn-secondary" title="機種リストの並び順を設定">
                     ⚙️ 機種並び順設定
                 </a>
