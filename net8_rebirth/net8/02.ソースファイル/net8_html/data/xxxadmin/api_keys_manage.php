@@ -7,6 +7,9 @@
 
 require_once('../../_etc/require_files_admin.php');
 
+// TemplateAdminインスタンスを生成（セッション管理含む）
+$template = new TemplateAdmin();
+
 // 管理者ログインチェック
 if (!isset($template->Session->AdminInfo)) {
     header('Location: login.php');
