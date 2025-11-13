@@ -46,9 +46,12 @@
 		.pagination li a:hover { background: var(--admin-primary); border-color: var(--admin-primary); }
 		.pagination li.active a { background: var(--admin-primary); border-color: var(--admin-primary); }
 
-		.btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+		.btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
 		.btn-primary { background: var(--admin-primary); color: white; }
 		.btn-primary:hover { background: #0261a8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(3, 118, 201, 0.3); }
+		.btn-sm { padding: 6px 12px; font-size: 13px; }
+		.btn-edit { background: var(--admin-success); color: white; }
+		.btn-edit:hover { background: #00a873; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 196, 140, 0.3); }
 
 		.table-responsive { overflow-x: auto; }
 		.table { width: 100%; border-collapse: separate; border-spacing: 0; }
@@ -105,22 +108,23 @@
 									{%PAGING%}
 								</ul>
 							</div>
-							<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
+							<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新規登録</a>
 						</div>
 						<div class="table-responsive">
-							<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="width:100%; min-width:800px;">
+							<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="width:100%; min-width:700px;">
 								<thead>
 									<tr>
-										<th style="width:120px;">コーナー番号<br />
+										<th style="width:70px;">No<br />
 											<div class="list-sort">
 												<a href="javascript:void(0);" class="sort-asc" name="corner_no asc" onClick="reSort('corner_no asc');"><i class="fas fa-angle-up"></i></a>
 												<a href="javascript:void(0);" class="sort-desc" name="corner_no desc" onClick="reSort('corner_no desc');"><i class="fas fa-angle-down"></i></a>
 											</div>
 										</th>
-										<th>コーナー名</th>
-										<th>コーナー名（英語）</th>
-										<th style="width:120px;">お知らせ表示</th>
-										<th style="width:100px;">機種一覧</th>
+										<th style="width:180px;">コーナー名</th>
+										<th style="width:150px;">英語名</th>
+										<th style="width:100px;">お知らせ</th>
+										<th style="width:80px;">機種</th>
+										<th style="width:80px;">操作</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -136,6 +140,9 @@
 										<td class="text-center">
 											<!--if:{EXISTS_LIST}--><a href="search.php?S_CORNER_NO={%CORNER_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
 											<!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
+										</td>
+										<td class="text-center">
+											<a href="javascript:void(0);" onClick="openDetail('{%CORNER_NO%}');" class="btn btn-edit btn-sm" title="編集"><i class="fas fa-edit"></i></a>
 										</td>
 									</tr>
 									<!--/loop:{LIST}-->

@@ -141,22 +141,23 @@
 		function check() {
 			var frm = window.document.MAINFORM;
 
-			if (!chk_indis("{%A1201%}", frm["CORNER_NAME"].value)) return false;
+			if (!chk_indis("コーナー名を入力してください。", frm["CORNER_NAME"].value)) return false;
 			if (frm["CORNER_NAME"].value.length > 20) {
-				chkAlert("{%A1202%}");
+				chkAlert("コーナー名は20文字以内で入力してください。");
 				return false;
 			}
 			if (frm["CORNER_ROMAN"].value.length > 50) {
-				chkAlert("{%A1203%}");
+				chkAlert("コーナー名（英語）は50文字以内で入力してください。");
 				return false;
 			}
 
+			var isUpdate = frm["CORNER_NO"].value !== "";
 			swal({
-				title: 'コーナーを登録',
-				text: "{%A0001%}",
+				title: isUpdate ? 'コーナー情報を更新' : 'コーナーを新規登録',
+				text: isUpdate ? "「" + frm["CORNER_NAME"].value + "」の情報を更新してもよろしいですか？" : "「" + frm["CORNER_NAME"].value + "」を新規登録してもよろしいですか？",
 				type: 'question',
 				showCancelButton: true,
-				confirmButtonText: '登録',
+				confirmButtonText: isUpdate ? '更新' : '登録',
 				cancelButtonText: 'キャンセル'
 			}).then(function() {
 				frm.submit();
@@ -168,7 +169,7 @@
 			var frm = window.document.MAINFORM;
 			swal({
 				title: 'コーナーを削除',
-				text: "{%A0002%}",
+				text: "「" + frm["CORNER_NAME"].value + "」を削除してもよろしいですか？\nこの操作は取り消せません。",
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonText: '削除',
