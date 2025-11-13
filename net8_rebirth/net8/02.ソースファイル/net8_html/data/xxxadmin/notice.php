@@ -599,18 +599,18 @@ function DispComplete($template) {
 	switch ($_GET["ACT"]) {
 		case "update":
 			// 更新
-			$title = $template->message("A2092");
-			$msg = $template->message("A2093");
+			$title = "お知らせ更新完了";
+			$msg = "お知らせ情報を更新しました。";
 			break;
 		case "del":
 			// 削除
-			$title = $template->message("A2094");
-			$msg = $template->message("A2095");
+			$title = "お知らせ削除完了";
+			$msg = "お知らせを削除しました。";
 			break;
 		default:
 			// 新規登録
-			$title = $template->message("A2090");
-			$msg = $template->message("A2091");
+			$title = "お知らせ登録完了";
+			$msg = "新しいお知らせを登録しました。";
 	}
 	// 完了画面表示
 	$template->dispProcEnd( $title, "", $msg);
@@ -643,43 +643,43 @@ function checkInput($template) {
 		$errMessage = (new SmartAutoCheck($template))
 			//お知らせ名称
 			->item($_POST["NOTICE_NAME"])
-				->required("A2001")
+				->required("お知らせ名称を入力してください。")
 			//リンクタイプ
 			->item($_POST["LINK_TYPE"])
-				->required("A2004")
+				->required("リンクタイプを選択してください。")
 			//リンクURL
 			->item($_POST["LINK_URL"])
 				->case( $_POST["LINK_TYPE"] == 1 )
-					->required("A2005")
-					->chk_url("A2006")
+					->required("リンクURLを入力してください。")
+					->chk_url("正しいURL形式で入力してください。")
 				->case( $_POST["LINK_TYPE"] != 1 )	// 2020/04/28 [ADD]
 					->any()
-					->chk_url("A2006")
+					->chk_url("正しいURL形式で入力してください。")
 			//表示優先（数値チェック）
 			->item($_POST["DISP_ORDER"])
 				->any()
-				->number('A2011')
+				->number('表示優先は数値で入力してください。')
 			//公開開始日
 			->item($_POST["RELEASE_START_DT"])
-				->required("A2007")
-				->date("A2008")
+				->required("公開開始日を入力してください。")
+				->date("正しい日付形式で入力してください。")
 			//公開終了日
 			->item($_POST["RELEASE_END_DT"])
 				->any()
-				->date("A2010")
+				->date("正しい日付形式で入力してください。")
 			//お知らせ画像（デフォルト言語）
 			->item( $_chk_img[ FOLDER_LANG])
-				->required("A2002")
+				->required("お知らせ画像をアップロードしてください。")
 			//お知らせ内容
 			->item( $_POST["CONTENTS"][ FOLDER_LANG])
 				->case( $_POST["LINK_TYPE"] == 2 )
-					->required("A2012")
+					->required("お知らせ内容を入力してください。")
 		->report();
 		// 2020/04/28 [ADD Start]
 		if (count($errMessage) <= 0) {
 			// 開始終了整合チェック
 			if (mb_strlen($_POST["RELEASE_END_DT"]) > 0) {
-				if (strtotime($_POST["RELEASE_START_DT"]) > strtotime($_POST["RELEASE_END_DT"])) $errMessage[] = $template->message("A2015");
+				if (strtotime($_POST["RELEASE_START_DT"]) > strtotime($_POST["RELEASE_END_DT"])) $errMessage[] = "公開終了日は公開開始日より後の日付を入力してください。";
 			}
 		}
 		// 2020/04/28 [ADD End]
