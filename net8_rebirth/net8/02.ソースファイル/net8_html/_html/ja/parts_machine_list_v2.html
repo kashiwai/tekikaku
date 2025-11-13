@@ -60,6 +60,7 @@
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .status-available {
@@ -69,6 +70,21 @@
 
 .status-playing {
     background: #f59e0b;
+    color: white;
+}
+
+.status-maintenance {
+    background: #ef4444;
+    color: white;
+}
+
+.status-closed {
+    background: #6b7280;
+    color: white;
+}
+
+.status-preparation {
+    background: #3b82f6;
     color: white;
 }
 
@@ -236,12 +252,28 @@
     <div class="machine-card-header">
         <div class="machine-number-badge">No.{%NO%}</div>
         <div class="machine-status">
-            <!--if:{AVAILABLE}-->
-            <span class="status-badge status-available">空き</span>
-            <!--/if:{AVAILABLE}-->
-            <!--if:{PLAYING}-->
-            <span class="status-badge status-playing">稼働中</span>
-            <!--/if:{PLAYING}-->
+            <!--if:{CLOSED}-->
+            <span class="status-badge status-closed">営業時間外</span>
+            <!--/if:{CLOSED}-->
+            <!--if:{LINK_MAINTENANCE}-->
+            <span class="status-badge status-maintenance">メンテナンス中</span>
+            <!--/if:{LINK_MAINTENANCE}-->
+            <!--if:{MAINTENANCE}-->
+            <span class="status-badge status-maintenance">メンテナンス中</span>
+            <!--/if:{MAINTENANCE}-->
+            <!--if:{IN_PREPARATION}-->
+            <span class="status-badge status-preparation">準備中</span>
+            <!--/if:{IN_PREPARATION}-->
+            <!--if:{IS_OPEN}-->
+                <!--if:{IS_NORMAL}-->
+                    <!--if:{AVAILABLE}-->
+                    <span class="status-badge status-available">営業中・空き</span>
+                    <!--/if:{AVAILABLE}-->
+                    <!--if:{NOAVAIABLE}-->
+                    <span class="status-badge status-playing">営業中・稼働中</span>
+                    <!--/if:{NOAVAIABLE}-->
+                <!--/if:{IS_NORMAL}-->
+            <!--/if:{IS_OPEN}-->
         </div>
     </div>
 

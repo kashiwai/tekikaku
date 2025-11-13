@@ -80,6 +80,30 @@
 			<ul>
 				<!--loop:{LIST}-->
 				<li>
+					<!-- ステータスバッジ -->
+					<!--if:{CLOSED}-->
+					<div class="machine-status-badge status-closed">営業時間外</div>
+					<!--/if:{CLOSED}-->
+					<!--if:{LINK_MAINTENANCE}-->
+					<div class="machine-status-badge status-maintenance">メンテナンス中</div>
+					<!--/if:{LINK_MAINTENANCE}-->
+					<!--if:{MAINTENANCE}-->
+					<div class="machine-status-badge status-maintenance">メンテナンス中</div>
+					<!--/if:{MAINTENANCE}-->
+					<!--if:{IN_PREPARATION}-->
+					<div class="machine-status-badge status-preparation">準備中</div>
+					<!--/if:{IN_PREPARATION}-->
+					<!--if:{IS_OPEN}-->
+						<!--if:{IS_NORMAL}-->
+							<!--if:{AVAILABLE}-->
+							<div class="machine-status-badge status-available">空き</div>
+							<!--/if:{AVAILABLE}-->
+							<!--if:{NOAVAIABLE}-->
+							<div class="machine-status-badge status-playing">稼働中</div>
+							<!--/if:{NOAVAIABLE}-->
+						<!--/if:{IS_NORMAL}-->
+					<!--/if:{IS_OPEN}-->
+
 					<div class="m-type"><span>{%GENERATION%}</span></div>
 					<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
 						<span class="image-wrapper">
@@ -125,6 +149,53 @@
 	<!--#include file="inc_footer.html"-->
 
 	<!--#include file="inc_script.html"-->
+
+	<style>
+	/* 機種ステータス表示 */
+	.rec-list li {
+		position: relative;
+	}
+	.machine-status-badge {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		padding: 5px 12px;
+		border-radius: 50px;
+		font-size: 11px;
+		font-weight: bold;
+		z-index: 10;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+		white-space: nowrap;
+	}
+	.status-available {
+		background: #4ade80;
+		color: white;
+	}
+	.status-playing {
+		background: #f59e0b;
+		color: white;
+	}
+	.status-maintenance {
+		background: #ef4444;
+		color: white;
+	}
+	.status-closed {
+		background: #6b7280;
+		color: white;
+	}
+	.status-preparation {
+		background: #3b82f6;
+		color: white;
+	}
+	@media (max-width: 768px) {
+		.machine-status-badge {
+			font-size: 10px;
+			padding: 4px 10px;
+			top: 5px;
+			right: 5px;
+		}
+	}
+	</style>
 
 	<script>
 	$(document).ready(function(){

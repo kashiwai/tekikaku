@@ -531,7 +531,8 @@ class TemplateUser extends SmartTemplate {
 			$isLinkMainte = ($assignFlg == 9);	// 実機接続状況：メンテ中
 			$this->if_enable("CLOSED" , !$isOpen);	// 営業時間外
 			$this->if_enable("IS_OPEN", $isOpen);	// 営業時間内
-			$this->if_enable("AVAIABLE"        , ($assignFlg == 0));	// 実機接続状況：未割当
+			$this->if_enable("AVAILABLE"       , ($assignFlg == 0));	// 実機接続状況：未割当
+			$this->if_enable("AVAIABLE"        , ($assignFlg == 0));	// 実機接続状況：未割当（後方互換性）
 			$this->if_enable("NOAVAIABLE"      , ($assignFlg == 1));	// 実機接続状況：割当済
 			$this->if_enable("LINK_MAINTENANCE", $isLinkMainte);		// 実機接続状況：メンテ中
 			$this->if_enable("IN_PREPARATION"  , ($row["machine_status"] == 0 && !$isLinkMainte));	// 実機：準備中
