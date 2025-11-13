@@ -13,6 +13,31 @@
 // インクルード
 require_once('../../_etc/require_files_admin.php');
 
+/**
+ * 並び順設定を取得
+ */
+function getModelSortOrderBy() {
+    $configFile = '../../_etc/model_sort_config.json';
+    if (file_exists($configFile)) {
+        $config = json_decode(file_get_contents($configFile), true);
+        $sortOrder = $config['sort_order'] ?? 'model_no';
+    } else {
+        $sortOrder = 'model_no';
+    }
+
+    switch ($sortOrder) {
+        case 'model_name':
+            return 'ORDER BY model_name';
+        case 'category_model_no':
+            return 'ORDER BY category, model_no';
+        case 'category_model_name':
+            return 'ORDER BY category, model_name';
+        case 'model_no':
+        default:
+            return 'ORDER BY model_no';
+    }
+}
+
 // メイン処理
 main();
 
@@ -65,31 +90,6 @@ function DispForm($template) {
     $orderBy = getModelSortOrderBy();
     $sql = "SELECT model_no, model_name, category FROM mst_model WHERE del_flg = 0 {$orderBy}";
     $models = $template->DB->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-    /**
-     * 並び順設定を取得
-     */
-    function getModelSortOrderBy() {
-        $configFile = '../../_etc/model_sort_config.json';
-        if (file_exists($configFile)) {
-            $config = json_decode(file_get_contents($configFile), true);
-            $sortOrder = $config['sort_order'] ?? 'model_no';
-        } else {
-            $sortOrder = 'model_no';
-        }
-
-        switch ($sortOrder) {
-            case 'model_name':
-                return 'ORDER BY model_name';
-            case 'category_model_no':
-                return 'ORDER BY category, model_no';
-            case 'category_model_name':
-                return 'ORDER BY category, model_name';
-            case 'model_no':
-            default:
-                return 'ORDER BY model_no';
-        }
-    }
 ?>
 <!DOCTYPE html>
 <html lang="ja">
