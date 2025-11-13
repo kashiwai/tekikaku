@@ -304,6 +304,7 @@
                         <th>ライセンスID</th>
                         <th>ステータス</th>
                         <th>更新日時</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -325,6 +326,11 @@
                         <td class="license-id" title="{%LICENSE_ID_FULL%}">{%LICENSE_ID%}</td>
                         <td>{%MACHINE_STATUS_LABEL%}</td>
                         <td>{%UPD_DT%}</td>
+                        <td>
+                            <a href="machine_comprehensive_edit.php?machine_no={%MACHINE_NO%}" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; white-space: nowrap;">
+                                📝 詳細編集
+                            </a>
+                        </td>
                     </tr>
 <!--/loop:{LIST}-->
                 </tbody>
