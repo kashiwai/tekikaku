@@ -1598,6 +1598,14 @@ var _savestream;					//Video確認用
 			if ( $('#'+id).hasClass('reel-stop-topush') ){
 				btnStatus[id] = true;
 				dataConnection.send(_sendStr( 'b'+id.split('sendBtn')[1]+addChar, "down"));
+
+				// タイムアウト処理: 5秒後に強制リセット（サーバー応答遅延対策）
+				setTimeout(function() {
+					if (btnStatus[id]) {
+						console.log('Button timeout reset:', id);
+						btnStatus[id] = false;
+					}
+				}, 5000);
 				//lastid.push(id);
 			} else {
 				console.log( 'NG push' );
