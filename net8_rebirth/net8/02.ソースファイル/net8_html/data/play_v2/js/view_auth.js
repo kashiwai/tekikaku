@@ -963,7 +963,20 @@ var _savestream;					//Video確認用
 			_savestream = URL.createObjectURL(stream);
 			console.log( stream.id )
 			try {
-				document.getElementById('video').srcObject = stream;
+				var videoElement = document.getElementById('video');
+				videoElement.srcObject = stream;
+
+				// モバイルブラウザ対応: 明示的にplay()を呼ぶ
+				videoElement.play().catch(function(error) {
+					console.log('Video autoplay failed:', error);
+					// ユーザーインタラクション後に再試行
+					document.addEventListener('click', function playOnClick() {
+						videoElement.play().catch(function(e) {
+							console.log('Video play on click failed:', e);
+						});
+						document.removeEventListener('click', playOnClick);
+					}, { once: true });
+				});
 			} catch (error) {
 				$('#video').attr('src', URL.createObjectURL(stream));
 			}
@@ -971,7 +984,20 @@ var _savestream;					//Video確認用
 			//
 			var audio = document.querySelector('audio');
 			try {
-				document.getElementById('audio').srcObject = stream;
+				var audioElement = document.getElementById('audio');
+				audioElement.srcObject = stream;
+
+				// モバイルブラウザ対応: 明示的にplay()を呼ぶ
+				audioElement.play().catch(function(error) {
+					console.log('Audio autoplay failed:', error);
+					// ユーザーインタラクション後に再試行
+					document.addEventListener('click', function playAudioOnClick() {
+						audioElement.play().catch(function(e) {
+							console.log('Audio play on click failed:', e);
+						});
+						document.removeEventListener('click', playAudioOnClick);
+					}, { once: true });
+				});
 			} catch (error) {
 				audio.src = window.URL.createObjectURL(stream);
 			}
