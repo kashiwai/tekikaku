@@ -49,6 +49,30 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
 
             echo '<div class="info">✅ データベース接続成功</div>';
 
+            // 画像パス修正処理
+            if (isset($_POST['fix_paths'])) {
+                echo '<div class="info"><strong>🔄 画像パス修正を実行中...</strong></div>';
+
+                $fixSql = "UPDATE mst_model
+                          SET image_list = REPLACE(image_list, 'img/model/', '')
+                          WHERE del_flg = 0
+                            AND image_list IS NOT NULL
+                            AND image_list != ''
+                            AND image_list LIKE 'img/model/%'";
+
+                $affectedRows = $pdo->exec($fixSql);
+
+                if ($affectedRows > 0) {
+                    echo '<div class="info" style="background: #d1fae5; color: #065f46;">';
+                    echo '✅ 画像パス修正完了！<br>';
+                    echo '修正した機種数: ' . $affectedRows . '件<br>';
+                    echo '<a href="?" style="color: #065f46; font-weight: bold;">ページを更新して確認</a>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="info">すべてのパスは正常です。修正不要です。</div>';
+                }
+            }
+
             // 画像が登録されている機種を取得
             $sql = "SELECT model_no, model_cd, model_name, image_list
                     FROM mst_model
@@ -94,6 +118,28 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
             }
 
             echo '</table>';
+
+            // 修正が必要なパスをチェック
+            $needsFix = false;
+            foreach ($models as $model) {
+                if (!empty($model['image_list']) && strpos($model['image_list'], 'img/model/') === 0) {
+                    $needsFix = true;
+                    break;
+                }
+            }
+
+            // 修正ボタン表示
+            if ($needsFix && !isset($_POST['fix_paths'])) {
+                echo '<div style="background: #fee; color: #c00; padding: 15px; border-radius: 5px; margin: 20px 0;">';
+                echo '<strong>⚠️ 警告：画像パスに問題があります</strong><br>';
+                echo 'いくつかの機種の画像パスに <code>img/model/</code> プレフィックスが含まれています。<br>';
+                echo 'これにより画像が正しく表示されません。以下のボタンをクリックして修正してください。';
+                echo '<form method="POST" style="margin-top: 10px;">';
+                echo '<button type="submit" name="fix_paths" style="padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🔧 画像パスを修正する</button>';
+                echo '</form>';
+                echo '</div>';
+            }
+
             echo '</div>';
 
             // ローカルファイル確認
