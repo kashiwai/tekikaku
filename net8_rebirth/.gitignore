@@ -88,3 +88,8 @@ backup/
 **/server_v2/exe/
 **/_lastupdate/
 **/_lastupdate.zip
+
+# Google Cloud Service Account Keys
+**/gcs-key.json
+*.json.key
+service-account*.json

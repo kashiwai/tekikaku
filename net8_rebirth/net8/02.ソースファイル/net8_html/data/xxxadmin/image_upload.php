@@ -3,12 +3,26 @@
  * 機種画像アップロード管理画面
  *
  * 管理画面から機種画像をアップロードし、mst_model.image_listに設定
+ * Google Cloud Storage統合対応
  */
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 // セッション開始
 session_start();
+
+// 設定ファイル読み込み
+require_once('../../_etc/setting.php');
+
+// Composer autoload
+if (file_exists(__DIR__ . '/../../../../vendor/autoload.php')) {
+    require_once __DIR__ . '/../../../../vendor/autoload.php';
+}
+
+// Cloud Storage Helper読み込み
+if (file_exists(__DIR__ . '/../../_sys/CloudStorageHelper.php')) {
+    require_once __DIR__ . '/../../_sys/CloudStorageHelper.php';
+}
 
 // DB接続
 $db_host = $_SERVER['DB_HOST'] ?? $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '136.116.70.86';
@@ -69,27 +83,51 @@ try {
 
         $uploadPath = $uploadDir . '/' . $filename;
 
-        // ファイル移動
-        if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-            // DBに画像パスを登録
-            $imagePath = 'img/model/' . $filename;
-            $stmt = $pdo->prepare("
-                UPDATE mst_model SET
-                    image_list = :image_list,
-                    upd_no = 1,
-                    upd_dt = NOW()
-                WHERE model_cd = :model_cd
-            ");
-            $stmt->execute([
-                'image_list' => $imagePath,
-                'model_cd' => $model_cd
-            ]);
-
-            $message = "画像アップロード成功: {$filename}";
-            $messageType = 'success';
-        } else {
+        // ファイル移動（ローカル保存）
+        if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
             throw new Exception('ファイルの保存に失敗しました');
         }
+
+        $imagePath = 'img/model/' . $filename;
+
+        // Cloud Storage統合が有効な場合はGCSにもアップロード
+        if (defined('GCS_ENABLED') && GCS_ENABLED && class_exists('CloudStorageHelper')) {
+            try {
+                $gcs = new CloudStorageHelper();
+                if ($gcs->isEnabled()) {
+                    $gcsUrl = $gcs->upload($uploadPath, 'models', $filename);
+                    if ($gcsUrl) {
+                        // GCS URLを優先して使用
+                        $imagePath = $gcsUrl;
+                        $message = "画像アップロード成功（Cloud Storage）: {$filename}";
+                    } else {
+                        $message = "画像アップロード成功（ローカル）: {$filename}<br>※ Cloud Storageへのアップロードは失敗しました";
+                    }
+                } else {
+                    $message = "画像アップロード成功（ローカル）: {$filename}<br>※ Cloud Storageは無効です";
+                }
+            } catch (Exception $e) {
+                error_log('GCSアップロードエラー: ' . $e->getMessage());
+                $message = "画像アップロード成功（ローカル）: {$filename}<br>※ Cloud Storageエラー: " . $e->getMessage();
+            }
+        } else {
+            $message = "画像アップロード成功（ローカル）: {$filename}";
+        }
+
+        // DBに画像パスを登録
+        $stmt = $pdo->prepare("
+            UPDATE mst_model SET
+                image_list = :image_list,
+                upd_no = 1,
+                upd_dt = NOW()
+            WHERE model_cd = :model_cd
+        ");
+        $stmt->execute([
+            'image_list' => $imagePath,
+            'model_cd' => $model_cd
+        ]);
+
+        $messageType = 'success';
     }
 
     // 機種一覧取得

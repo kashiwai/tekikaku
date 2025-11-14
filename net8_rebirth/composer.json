@@ -1,0 +1,14 @@
+{
+    "name": "net8/pachinko-system",
+    "description": "NET8 Pachinko Remote Play System",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "google/cloud-storage": "^1.35"
+    },
+    "autoload": {
+        "psr-4": {
+            "Net8\\": "net8/02.ソースファイル/net8_html/_sys/"
+        }
+    }
+}

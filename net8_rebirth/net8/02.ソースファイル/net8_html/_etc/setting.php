@@ -94,6 +94,12 @@ define('TURN_CREDENTIAL', getenv('TURN_CREDENTIAL') ?: '');
 define('ERROR_LOG_PATH', '/var/www/html/_sys/log/error.log');
 define('ACCESS_LOG_PATH', '/var/www/html/_sys/log/access.log');
 
+// Google Cloud Storage設定
+define('GCS_ENABLED', getenv('GCS_ENABLED') === 'true' || getenv('GCS_ENABLED') === '1');
+define('GCS_PROJECT_ID', getenv('GCS_PROJECT_ID') ?: 'avamodb');
+define('GCS_BUCKET_NAME', getenv('GCS_BUCKET_NAME') ?: 'avamodb-net8-images');
+define('GCS_KEY_FILE', getenv('GCS_KEY_FILE') ?: __DIR__ . '/gcs-key.json');
+
 // WebRTC設定ファイルの読み込み
 require_once(__DIR__ . '/webRTC_setting.php');
 
