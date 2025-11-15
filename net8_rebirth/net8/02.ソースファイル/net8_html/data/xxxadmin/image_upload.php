@@ -88,7 +88,8 @@ try {
             throw new Exception('ファイルの保存に失敗しました');
         }
 
-        $imagePath = 'img/model/' . $filename;
+        // 画像パス（ファイル名のみ、テンプレート側で /data/img/model/ が追加される）
+        $imagePath = $filename;
 
         // Cloud Storage統合が有効な場合はGCSにもアップロード
         if (defined('GCS_ENABLED') && GCS_ENABLED && class_exists('CloudStorageHelper')) {
@@ -97,7 +98,7 @@ try {
                 if ($gcs->isEnabled()) {
                     $gcsUrl = $gcs->upload($uploadPath, 'models', $filename);
                     if ($gcsUrl) {
-                        // GCS URLを優先して使用
+                        // GCS URLを優先して使用（フルURLなのでそのまま保存）
                         $imagePath = $gcsUrl;
                         $message = "画像アップロード成功（Cloud Storage）: {$filename}";
                     } else {
