@@ -15,7 +15,7 @@ require_once('../../_sys/WebRTCAPI.php');				// requireファイル
 require_once('../../_etc/webRTC_setting.php');			// webRTCセッティングファイル
 
 // 項目定義
-define("PUBLIC_HTML",  "play/index_public_ryujin8");	// Ryujin8ベースの視聴専用テンプレート
+define("PUBLIC_HTML",  "play/index_public_millionnet8");	// MillionNet8ベースの視聴専用テンプレート
 define("ERR_HTML",     "play/no_assign");				// テンプレートHTMLプレフィックス(エラー時）
 
 // メイン処理
@@ -132,7 +132,7 @@ function DispTop($template) {
 		return;
 	}
 
-	// 画面表示開始（Ryujin8ベースの視聴専用テンプレート使用）
+	// 画面表示開始（MillionNet8ベースの視聴専用テンプレート使用）
 	$template->open(PUBLIC_HTML . ".html");
 
 	$template->assignCommon();

@@ -12,7 +12,7 @@ echo "<!DOCTYPE html>";
 echo "<html lang='ja'>";
 echo "<head>";
 echo "<meta charset='utf-8'>";
-echo "<title>DB接続テスト - 竜神8 管理画面</title>";
+echo "<title>DB接続テスト - MillionNet8 管理画面</title>";
 echo "<style>
 body { font-family: -apple-system, sans-serif; background: #1a1d2e; color: #E5E9F2; padding: 20px; }
 .success { color: #00C48C; }
@@ -29,7 +29,7 @@ code { background: #0f1117; padding: 2px 6px; border-radius: 4px; }
 echo "</head>";
 echo "<body>";
 
-echo "<h1>🔍 DB接続テスト - 竜神8 管理システム</h1>";
+echo "<h1>🔍 DB接続テスト - MillionNet8 管理システム</h1>";
 
 // 設定ファイル読み込み
 require_once('_etc/setting_base.php');
