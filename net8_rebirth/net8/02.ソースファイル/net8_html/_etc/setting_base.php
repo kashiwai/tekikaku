@@ -424,6 +424,18 @@ $GLOBALS["Frow_Fixed_Array"] = array(
     "new" => "新台"
 );
 
+// お知らせタイプ言語設定
+$GLOBALS["noticeTypeLang"] = array(
+    "ja" => array(
+        "notice" => "お知らせ",
+        "corner" => "新規コーナー"
+    ),
+    "en" => array(
+        "notice" => "Notice",
+        "corner" => "New Corner"
+    )
+);
+
 // フロー表示設定
 define('FLOW_COL_MAX', 4); // フロー表示の列数（1行あたりの最大表示数）
 

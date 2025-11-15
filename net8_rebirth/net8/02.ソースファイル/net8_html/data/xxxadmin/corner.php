@@ -400,11 +400,11 @@ function checkInput($template) {
 	$errMessage = (new SmartAutoCheck($template))
 		//コーナー名
 		->item($_POST["CORNER_NAME"])
-			->required("A1201")
-			->maxLength("A1202", 20)					//文字長の最高値
+			->required($template->message("A1201"))
+			->maxLength($template->message("A1202"), 20)					//文字長の最高値
 		//コーナー名（英語）
 		->item($_POST["CORNER_ROMAN"])
-			->maxLength("A1203", 50)					//文字長の最高値
+			->maxLength($template->message("A1203"), 50)					//文字長の最高値
 	->report();
 
 	if (empty($errMessage)) {
