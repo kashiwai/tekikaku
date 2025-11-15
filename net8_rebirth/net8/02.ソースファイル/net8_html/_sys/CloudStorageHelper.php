@@ -26,18 +26,31 @@ class CloudStorageHelper {
 
         if ($this->enabled) {
             try {
-                // サービスアカウントキーのパス
-                $keyFilePath = getenv('GCS_KEY_FILE') ?: __DIR__ . '/../_etc/gcs-key.json';
-
                 // バケット名
                 $this->bucketName = getenv('GCS_BUCKET_NAME') ?: 'avamodb-net8-images';
 
                 // Storage Client初期化
-                $this->storage = new StorageClient([
-                    'keyFilePath' => $keyFilePath,
+                $storageConfig = [
                     'projectId' => getenv('GCS_PROJECT_ID') ?: 'avamodb'
-                ]);
+                ];
 
+                // GCS_KEY_JSON環境変数が設定されている場合はJSONから読み込み
+                $keyJson = getenv('GCS_KEY_JSON');
+                if (!empty($keyJson)) {
+                    // JSON文字列をデコード
+                    $keyData = json_decode($keyJson, true);
+                    if ($keyData) {
+                        $storageConfig['keyFile'] = $keyData;
+                    } else {
+                        throw new Exception('GCS_KEY_JSON is not valid JSON');
+                    }
+                } else {
+                    // ファイルパスから読み込み
+                    $keyFilePath = getenv('GCS_KEY_FILE') ?: __DIR__ . '/../_etc/gcs-key.json';
+                    $storageConfig['keyFilePath'] = $keyFilePath;
+                }
+
+                $this->storage = new StorageClient($storageConfig);
                 $this->bucket = $this->storage->bucket($this->bucketName);
 
             } catch (Exception $e) {
