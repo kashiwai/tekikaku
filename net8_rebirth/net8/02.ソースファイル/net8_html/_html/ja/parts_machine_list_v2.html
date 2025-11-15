@@ -320,9 +320,40 @@
         </div>
 
         <div class="machine-actions">
-            <button class="btn-play" onclick="event.stopPropagation(); location.href='{%SITE_SSL_URL%}play_v2/?NO={%NO%}'">
-                <i class="fas fa-play"></i> プレイする
+            <!--if:{CLOSED}-->
+            <button class="btn-play btn-disabled" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-clock"></i> 営業時間外
             </button>
+            <!--/if:{CLOSED}-->
+            <!--if:{LINK_MAINTENANCE}-->
+            <button class="btn-play btn-disabled" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-tools"></i> メンテナンス中
+            </button>
+            <!--/if:{LINK_MAINTENANCE}-->
+            <!--if:{MAINTENANCE}-->
+            <button class="btn-play btn-disabled" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-tools"></i> メンテナンス中
+            </button>
+            <!--/if:{MAINTENANCE}-->
+            <!--if:{IN_PREPARATION}-->
+            <button class="btn-play btn-disabled" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-pause"></i> 準備中
+            </button>
+            <!--/if:{IN_PREPARATION}-->
+            <!--if:{IS_OPEN}-->
+                <!--if:{IS_NORMAL}-->
+                    <!--if:{AVAILABLE}-->
+                    <button class="btn-play" onclick="event.stopPropagation(); location.href='{%SITE_SSL_URL%}play_v2/?NO={%NO%}'">
+                        <i class="fas fa-play"></i> プレイする
+                    </button>
+                    <!--/if:{AVAILABLE}-->
+                    <!--if:{NOAVAIABLE}-->
+                    <button class="btn-play btn-disabled" disabled style="opacity: 0.5; cursor: not-allowed;">
+                        <i class="fas fa-user"></i> 使用中
+                    </button>
+                    <!--/if:{NOAVAIABLE}-->
+                <!--/if:{IS_NORMAL}-->
+            <!--/if:{IS_OPEN}-->
             <button class="btn-details" onclick="event.stopPropagation(); showMachineDetails({%NO%}, '{%MODEL_NAME%}', '{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}')">
                 <i class="fas fa-info-circle"></i>
             </button>
