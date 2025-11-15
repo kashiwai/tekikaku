@@ -49,7 +49,7 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
 
             echo '<div class="info">✅ データベース接続成功</div>';
 
-            // 画像パス修正処理
+            // 画像パス修正処理（img/model/ を削除してファイル名のみに）
             if (isset($_POST['fix_paths'])) {
                 echo '<div class="info"><strong>🔄 画像パス修正を実行中...</strong></div>';
 
@@ -73,6 +73,31 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
                 }
             }
 
+            // 画像パス復元処理（ファイル名のみの状態から img/model/ を追加）
+            if (isset($_POST['restore_paths'])) {
+                echo '<div class="info"><strong>🔄 画像パス復元を実行中...</strong></div>';
+
+                $restoreSql = "UPDATE mst_model
+                              SET image_list = CONCAT('img/model/', image_list)
+                              WHERE del_flg = 0
+                                AND image_list IS NOT NULL
+                                AND image_list != ''
+                                AND image_list NOT LIKE 'img/model/%'
+                                AND image_list NOT LIKE '%/%'";
+
+                $affectedRows = $pdo->exec($restoreSql);
+
+                if ($affectedRows > 0) {
+                    echo '<div class="info" style="background: #d1fae5; color: #065f46;">';
+                    echo '✅ 画像パス復元完了！<br>';
+                    echo '復元した機種数: ' . $affectedRows . '件<br>';
+                    echo '<a href="?" style="color: #065f46; font-weight: bold;">ページを更新して確認</a>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="info">復元が必要なパスはありません。</div>';
+                }
+            }
+
             // 画像が登録されている機種を取得
             $sql = "SELECT model_no, model_cd, model_name, image_list
                     FROM mst_model
@@ -91,8 +116,14 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
                 $fileExists = false;
 
                 if (!empty($imagePath)) {
-                    // 相対パスを絶対パスに変換
-                    $fullPath = __DIR__ . '/../' . $imagePath;
+                    // ファイル存在チェック
+                    // image_list が "hokuto4go.jpg" なら img/model/ を追加
+                    // image_list が "img/model/hokuto4go.jpg" ならそのまま使用
+                    if (strpos($imagePath, 'img/model/') === 0) {
+                        $fullPath = __DIR__ . '/../' . $imagePath;
+                    } else {
+                        $fullPath = __DIR__ . '/../img/model/' . $imagePath;
+                    }
                     $fileExists = file_exists($fullPath);
                 }
 
@@ -108,7 +139,13 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
                 } else {
                     if ($fileExists) {
                         echo '<td class="status-ok">✓ 存在</td>';
-                        echo '<td><img src="/' . htmlspecialchars($imagePath) . '" alt="' . htmlspecialchars($model['model_name']) . '"></td>';
+                        // 画像表示用のURLを生成
+                        if (strpos($imagePath, 'img/model/') === 0) {
+                            $displayPath = '/data/' . $imagePath;
+                        } else {
+                            $displayPath = '/data/img/model/' . $imagePath;
+                        }
+                        echo '<td><img src="' . htmlspecialchars($displayPath) . '" alt="' . htmlspecialchars($model['model_name']) . '"></td>';
                     } else {
                         echo '<td class="status-error">✗ 不在</td>';
                         echo '<td class="status-error">ファイルなし</td>';
@@ -121,10 +158,11 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
 
             // 修正が必要なパスをチェック
             $needsFix = false;
+            $fixNeededCount = 0;
             foreach ($models as $model) {
                 if (!empty($model['image_list']) && strpos($model['image_list'], 'img/model/') === 0) {
                     $needsFix = true;
-                    break;
+                    $fixNeededCount++;
                 }
             }
 
@@ -132,12 +170,38 @@ $db_password = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? getenv('DB_PAS
             if ($needsFix && !isset($_POST['fix_paths'])) {
                 echo '<div style="background: #fee; color: #c00; padding: 15px; border-radius: 5px; margin: 20px 0;">';
                 echo '<strong>⚠️ 警告：画像パスに問題があります</strong><br>';
-                echo 'いくつかの機種の画像パスに <code>img/model/</code> プレフィックスが含まれています。<br>';
-                echo 'これにより画像が正しく表示されません。以下のボタンをクリックして修正してください。';
+                echo '修正が必要な機種: ' . $fixNeededCount . '件<br>';
+                echo '画像パスに <code>img/model/</code> プレフィックスが含まれているため、トップページで画像が重複パスになっています。<br>';
+                echo '以下のボタンをクリックして、ファイル名のみに修正してください。';
                 echo '<form method="POST" style="margin-top: 10px;">';
                 echo '<button type="submit" name="fix_paths" style="padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🔧 画像パスを修正する</button>';
                 echo '</form>';
                 echo '</div>';
+            } else if (!$needsFix) {
+                // ファイル名のみのパスがあるか確認
+                $hasFilenameOnly = false;
+                foreach ($models as $model) {
+                    if (!empty($model['image_list']) && strpos($model['image_list'], '/') === false) {
+                        $hasFilenameOnly = true;
+                        break;
+                    }
+                }
+
+                if ($hasFilenameOnly) {
+                    echo '<div style="background: #e0f2fe; padding: 15px; border-radius: 5px; margin: 20px 0;">';
+                    echo '<strong>ℹ️ 情報</strong><br>';
+                    echo '一部の画像パスがファイル名のみになっています。<br>';
+                    echo '元の状態に戻す場合は、以下のボタンをクリックしてください。';
+                    echo '<form method="POST" style="margin-top: 10px;">';
+                    echo '<button type="submit" name="restore_paths" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">↩️ img/model/ を追加して復元</button>';
+                    echo '</form>';
+                    echo '</div>';
+                } else {
+                    echo '<div style="background: #d1fae5; color: #065f46; padding: 15px; border-radius: 5px; margin: 20px 0;">';
+                    echo '<strong>✅ 画像パスは正常です</strong><br>';
+                    echo 'すべての画像パスが正しく設定されています。';
+                    echo '</div>';
+                }
             }
 
             echo '</div>';
