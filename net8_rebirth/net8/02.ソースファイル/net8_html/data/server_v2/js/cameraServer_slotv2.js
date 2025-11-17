@@ -753,7 +753,13 @@
 						$('#bb_on').prop('checked', false);
 						$.cookie('bb', 'off', { expires: 365 });
 					} else if ( _tag == 'Signal_5' || _tag == 'Signal_5_End'){
-
+						// ドラム停止時にキー連打防止タイマーをリセット（次ゲーム用）
+						// Reset key cooldown timers when drums stop (for next game)
+						if (_tag == 'Signal_5_End') {
+							Object.keys(keyMapping).forEach(function(key) {
+								keyMapping[key].oldtime = null;
+							});
+						}
 					} else if ( _tag == 'Trr'){
 						drawVideo();
 					} else if ( _tag == 'Trs'){
