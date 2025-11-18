@@ -159,8 +159,10 @@
 				showCancelButton: true,
 				confirmButtonText: isUpdate ? '更新' : '登録',
 				cancelButtonText: 'キャンセル'
-			}).then(function() {
-				frm.submit();
+			}).then(function(result) {
+				if (result.value || result.isConfirmed) {
+					frm.submit();
+				}
 			});
 			return false;
 		}
@@ -174,8 +176,10 @@
 				showCancelButton: true,
 				confirmButtonText: '削除',
 				cancelButtonText: 'キャンセル'
-			}).then(function() {
-				location.href = frm.action + "&ACT=del&NO={%NO%}";
+			}).then(function(result) {
+				if (result.value || result.isConfirmed) {
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				}
 			});
 			return;
 		}

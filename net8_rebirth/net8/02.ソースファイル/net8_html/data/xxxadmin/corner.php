@@ -355,7 +355,9 @@ function RegistData($template) {
 	// コミット(トランザクション終了)
 	$template->DB->autoCommit(true);
 	// 完了画面表示
-	header("Location: " . URL_ADMIN . $template->Self . "?M=end&ACT=" . $mode);
+	$selfUrl = basename($_SERVER['PHP_SELF']);
+	header("Location: " . URL_ADMIN . $selfUrl . "?M=end&ACT=" . $mode);
+	exit;
 }
 
 /**
