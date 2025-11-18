@@ -152,15 +152,15 @@
 			}
 
 			var isUpdate = frm["CORNER_NO"].value !== "";
-			swal({
+			Swal.fire({
 				title: isUpdate ? 'コーナー情報を更新' : 'コーナーを新規登録',
 				text: isUpdate ? "「" + frm["CORNER_NAME"].value + "」の情報を更新してもよろしいですか？" : "「" + frm["CORNER_NAME"].value + "」を新規登録してもよろしいですか？",
-				type: 'question',
+				icon: 'question',
 				showCancelButton: true,
 				confirmButtonText: isUpdate ? '更新' : '登録',
 				cancelButtonText: 'キャンセル'
 			}).then(function(result) {
-				if (result.value || result.isConfirmed) {
+				if (result.isConfirmed) {
 					frm.submit();
 				}
 			});
@@ -169,15 +169,15 @@
 
 		function del() {
 			var frm = window.document.MAINFORM;
-			swal({
+			Swal.fire({
 				title: 'コーナーを削除',
 				text: "「" + frm["CORNER_NAME"].value + "」を削除してもよろしいですか？\nこの操作は取り消せません。",
-				type: 'warning',
+				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonText: '削除',
 				cancelButtonText: 'キャンセル'
 			}).then(function(result) {
-				if (result.value || result.isConfirmed) {
+				if (result.isConfirmed) {
 					location.href = frm.action + "&ACT=del&NO={%NO%}";
 				}
 			});
