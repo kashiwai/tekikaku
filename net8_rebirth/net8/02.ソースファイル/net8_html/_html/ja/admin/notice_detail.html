@@ -263,14 +263,18 @@
 					if (!chk_indis("{%A2020%}", _ckEditors["editor_{%DEF_LANG_S%}"].getData())) return false;
 				}
 				//
-				swal({
+				Swal.fire({
 					title: 'お知らせ登録',
 					text: "{%A0001%}",
-					type: 'question',
-					showCancelButton: true
-				}).then(function() {
-					// 実行
-					frm.submit();
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonText: '登録',
+					cancelButtonText: 'キャンセル'
+				}).then(function(result) {
+					if (result.isConfirmed) {
+						// 実行
+						frm.submit();
+					}
 				});
 				return false;
 			}
@@ -278,14 +282,18 @@
 			// 削除
 			function del() {
 				var frm = window.document.MAINFORM;
-				swal({
+				Swal.fire({
 					title: 'お知らせ削除',
 					text: "{%A0002%}",
-					type: 'warning',
-					showCancelButton: true
-				}).then(function() {
-					// 実行
-					location.href = frm.action + "&ACT=del&NO={%NOTICE_NO%}";
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: '削除',
+					cancelButtonText: 'キャンセル'
+				}).then(function(result) {
+					if (result.isConfirmed) {
+						// 実行
+						location.href = frm.action + "&ACT=del&NO={%NOTICE_NO%}";
+					}
 				});
 				return;
 			}
