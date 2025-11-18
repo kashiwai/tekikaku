@@ -36,7 +36,8 @@ function GetRefTimeToday($nowDt = "", $format = "Y/m/d") {
 	if (mb_strlen($nowDt) <= 0) $nowDt = date("Y/m/d H:i");
 
 	$sysDt = new DateTime($nowDt);
-	if (TimeToNum($sysDt->format("H:i")) < TimeToNum(REFERENCE_TIME)) {
+	$referenceTime = get_business_hours_config('REFERENCE_TIME');
+	if (TimeToNum($sysDt->format("H:i")) < TimeToNum($referenceTime)) {
 		// 基準時間が来ていないので前日
 		$sysDt->modify("-1 day");
 	}
@@ -55,8 +56,10 @@ function GetRefTimeToday($nowDt = "", $format = "Y/m/d") {
 function GetRefTimeTodayExt($nowDt = "", $format = "Y/m/d") {
 
 	if (mb_strlen($nowDt) <= 0) $nowDt = date("Y/m/d H:i");
-	$judgTime = TimeToNum(REFERENCE_TIME);
-	if ($judgTime == 0) $judgTime = TimeToNum(GLOBAL_OPEN_TIME);
+	$referenceTime = get_business_hours_config('REFERENCE_TIME');
+	$openTime = get_business_hours_config('GLOBAL_OPEN_TIME');
+	$judgTime = TimeToNum($referenceTime);
+	if ($judgTime == 0) $judgTime = TimeToNum($openTime);
 
 	$sysDt = new DateTime($nowDt);
 	if (TimeToNum($sysDt->format("H:i")) < $judgTime) {
@@ -79,7 +82,8 @@ function GetRefTimeStart($trgDate = "", $format = "Y/m/d H:i:s") {
 
 	if (mb_strlen($trgDate) <= 0) $trgDate = date("Y/m/d");
 
-	$startDt = new DateTime($trgDate . " " . REFERENCE_TIME);
+	$referenceTime = get_business_hours_config('REFERENCE_TIME');
+	$startDt = new DateTime($trgDate . " " . $referenceTime);
 	return $startDt->format($format);
 
 }
@@ -96,7 +100,8 @@ function GetRefTimeEnd($trgDate = "", $format = "Y/m/d H:i:s") {
 
 	if (mb_strlen($trgDate) <= 0) $trgDate = date("Y/m/d");
 
-	$endDt = new DateTime($trgDate . " " . REFERENCE_TIME);
+	$referenceTime = get_business_hours_config('REFERENCE_TIME');
+	$endDt = new DateTime($trgDate . " " . $referenceTime);
 	$endDt->modify("+1 day");
 	$endDt->modify("-1 second");
 	return $endDt->format($format);
@@ -113,7 +118,8 @@ function GetRefTimeEnd($trgDate = "", $format = "Y/m/d H:i:s") {
 */
 function GetRefTimeOffsetStart($offset = 0, $format = "Y/m/d H:i:s") {
 
-	$startDt = new DateTime(GetRefTimeToday() . " " . REFERENCE_TIME);
+	$referenceTime = get_business_hours_config('REFERENCE_TIME');
+	$startDt = new DateTime(GetRefTimeToday() . " " . $referenceTime);
 	if ($offset != 0) {
 		// 差日数加算
 		$startDt->modify("+" . $offset . " day");

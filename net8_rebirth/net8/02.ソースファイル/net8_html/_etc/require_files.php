@@ -122,3 +122,73 @@ if (!function_exists('redirect')) {
         exit;
     }
 }
+
+// ===================================================================
+// 営業時間設定をDBから読み込み
+// ===================================================================
+// NetDBクラスが読み込まれた後、mst_settingテーブルから営業時間設定を取得
+// setting_base.phpの定数定義をオーバーライドするためグローバル変数に格納
+// ===================================================================
+
+$GLOBALS['RUNTIME_CONFIG'] = [];
+
+try {
+    if (class_exists('NetDB')) {
+        $db = new NetDB();
+
+        // 営業時間関連の設定を取得
+        $sql = "SELECT setting_key, setting_val
+                FROM mst_setting
+                WHERE setting_key IN ('GLOBAL_OPEN_TIME', 'GLOBAL_CLOSE_TIME', 'REFERENCE_TIME')
+                  AND del_flg = 0";
+
+        $result = $db->query($sql);
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $GLOBALS['RUNTIME_CONFIG'][$row['setting_key']] = $row['setting_val'];
+        }
+
+        // デバッグログ（必要に応じて有効化）
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            error_log('[営業時間設定] DB読み込み完了: ' . json_encode($GLOBALS['RUNTIME_CONFIG']));
+        }
+    }
+} catch (Exception $e) {
+    // DB接続エラー時はsetting_base.phpの定数定義をフォールバックとして使用
+    error_log('[営業時間設定] DB読み込みエラー（定数定義をフォールバックとして使用）: ' . $e->getMessage());
+}
+
+// ===================================================================
+// 営業時間設定取得ヘルパー関数
+// ===================================================================
+// DBから取得した値を優先、なければ定数定義を使用
+// ===================================================================
+
+if (!function_exists('get_business_hours_config')) {
+    /**
+     * 営業時間設定を取得
+     *
+     * @param string $key 設定キー (GLOBAL_OPEN_TIME, GLOBAL_CLOSE_TIME, REFERENCE_TIME)
+     * @return string 設定値
+     */
+    function get_business_hours_config($key) {
+        // 1. DBから取得した値を優先
+        if (isset($GLOBALS['RUNTIME_CONFIG'][$key])) {
+            return $GLOBALS['RUNTIME_CONFIG'][$key];
+        }
+
+        // 2. 定数定義をフォールバック
+        if (defined($key)) {
+            return constant($key);
+        }
+
+        // 3. デフォルト値
+        $defaults = [
+            'GLOBAL_OPEN_TIME' => '10:00',
+            'GLOBAL_CLOSE_TIME' => '22:00',
+            'REFERENCE_TIME' => '04:00'
+        ];
+
+        return $defaults[$key] ?? '';
+    }
+}

@@ -219,10 +219,11 @@ class TemplateUser extends SmartTemplate {
 			$this->assign("NOTDISP_CONTACTCNT", $dspCnt, true);
 			$this->if_enable("NOTDISP_CONTACT", $dspCnt > 0);
 		}
-		
-		$this->assign("GLOBAL_OPEN_TIME" , GLOBAL_OPEN_TIME, true);
-		$this->assign("GLOBAL_CLOSE_TIME", GLOBAL_CLOSE_TIME, true);
-		
+
+		// 営業時間設定（DBから取得、フォールバックは定数定義）
+		$this->assign("GLOBAL_OPEN_TIME" , get_business_hours_config('GLOBAL_OPEN_TIME'), true);
+		$this->assign("GLOBAL_CLOSE_TIME", get_business_hours_config('GLOBAL_CLOSE_TIME'), true);
+
 		// 表示ポイント系単位
 		foreach($GLOBALS["viewUnitList"] as $key => $val ){
 			$this->assign("CURRENCY_" . $key, $val, true);
