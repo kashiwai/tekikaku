@@ -286,8 +286,19 @@ function DispDetail($template, $message = "") {
 	$template->open(PRE_HTML . "_detail.html");
 	// 2020/04/28 [ADD Start] 共通置換される前に置換
 	$defLangName = $GLOBALS["langList"][FOLDER_LANG]["names"][array_search(FOLDER_LANG, array_column($GLOBALS["langList"][FOLDER_LANG]["names"], 'lang'))]["name"];
+	$template->assign("A2001", "お知らせ名称を入力してください。", true);
+	$template->assign("A2005", "リンクURLを入力してください。", true);
+	$template->assign("A2006", "リンクURLが正しくありません。", true);
+	$template->assign("A2007", "公開開始日を入力してください。", true);
+	$template->assign("A2008", "公開開始日が正しくありません。", true);
+	$template->assign("A2010", "公開終了日が正しくありません。", true);
+	$template->assign("A2013", "画像ファイル形式が正しくありません。", true);
+	$template->assign("A2014", "画像ファイルサイズが大きすぎます。", true);
+	$template->assign("A2015", "公開終了日は公開開始日より後の日付を入力してください。", true);
 	$template->assign("A2016", "お知らせ画像（" . $defLangName . "）を選択してください。", true);
 	$template->assign("A2020", "お知らせ内容（" . $defLangName . "）を入力してください。", true);
+	$template->assign("A0001", "この内容で登録してもよろしいですか？", true);
+	$template->assign("A0002", "このお知らせを削除してもよろしいですか？", true);
 	// 2020/04/28 [ADD End] 共通置換される前に置換
 	$template->assignCommon();
 	$template->assign("ERRMSG", $message);
