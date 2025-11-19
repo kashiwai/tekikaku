@@ -171,3 +171,42 @@ if (!function_exists('check_admin_auth')) {
         return true;
     }
 }
+
+// 営業時間設定をDBから読み込み（管理画面用）
+$GLOBALS['RUNTIME_CONFIG'] = [];
+try {
+    if (class_exists('NetDB')) {
+        $db = new NetDB();
+        $sql = "SELECT setting_key, setting_val
+                FROM mst_setting
+                WHERE setting_key IN ('GLOBAL_OPEN_TIME', 'GLOBAL_CLOSE_TIME', 'REFERENCE_TIME')
+                  AND del_flg = 0";
+        $result = $db->query($sql);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $GLOBALS['RUNTIME_CONFIG'][$row['setting_key']] = $row['setting_val'];
+        }
+    }
+} catch (Exception $e) {
+    error_log('[Admin営業時間設定] DB読み込みエラー（定数定義をフォールバックとして使用）: ' . $e->getMessage());
+}
+
+// 営業時間設定取得関数（管理画面用）
+if (!function_exists('get_business_hours_config')) {
+    function get_business_hours_config($key) {
+        // 1. グローバル変数から取得（DBから読み込んだ値）
+        if (isset($GLOBALS['RUNTIME_CONFIG'][$key])) {
+            return $GLOBALS['RUNTIME_CONFIG'][$key];
+        }
+        // 2. 定数定義から取得（フォールバック）
+        if (defined($key)) {
+            return constant($key);
+        }
+        // 3. デフォルト値
+        $defaults = [
+            'GLOBAL_OPEN_TIME' => '10:00',
+            'GLOBAL_CLOSE_TIME' => '22:00',
+            'REFERENCE_TIME' => '04:00'
+        ];
+        return $defaults[$key] ?? '';
+    }
+}
