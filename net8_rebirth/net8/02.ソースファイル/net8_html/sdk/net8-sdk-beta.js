@@ -1,14 +1,14 @@
 /**
  * NET8 Gaming SDK - Beta Version
- * Version: 1.0.1-beta
- * Updated: 2025-11-12 - Fixed infinite loop issues
+ * Version: 1.1.0-beta
+ * Updated: 2025-11-18 - Added userId support, point management, game end events
  */
 
 (function(window) {
     'use strict';
 
     // SDK設定
-    const SDK_VERSION = '1.0.1-beta';
+    const SDK_VERSION = '1.1.0-beta';
     const DEFAULT_API_URL = 'https://mgg-webservice-production.up.railway.app';
 
     /**
@@ -122,6 +122,7 @@
         constructor(config, sdk) {
             this.sdk = sdk;
             this.model = config.model;
+            this.userId = config.userId || null; // ユーザーID（パートナー側）
             this.container = this._resolveContainer(config.container);
             this.sessionId = null;
             this.machineNo = null;
@@ -129,6 +130,11 @@
             this.iframe = null;
             this.isStarting = false; // ゲーム開始中フラグ
             this.isStarted = false; // ゲーム開始済みフラグ
+
+            // ゲームデータ
+            this.pointsConsumed = 0;
+            this.pointsWon = 0;
+            this.gameResult = null;
 
             // イベントリスナー
             this.listeners = {};
@@ -173,15 +179,22 @@
 
             try {
                 // ゲームセッション開始API呼び出し
+                const requestBody = {
+                    modelId: this.model
+                };
+
+                // userIdがあれば追加
+                if (this.userId) {
+                    requestBody.userId = this.userId;
+                }
+
                 const response = await fetch(`${this.sdk.apiUrl}/api/v1/game_start.php`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${this.sdk.token}`
                     },
-                    body: JSON.stringify({
-                        modelId: this.model
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!response.ok) {
@@ -193,6 +206,7 @@
                 this.sessionId = data.sessionId;
                 this.machineNo = data.machineNo;
                 this.playUrl = `${this.sdk.apiUrl}${data.playUrl}`;
+                this.pointsConsumed = data.pointsConsumed || 0;
 
                 // イベントリスナーを先に設定
                 this._setupGameEventListener();
@@ -202,6 +216,11 @@
 
                 this.isStarted = true;
                 this._emit('ready');
+                this._emit('started', {
+                    sessionId: this.sessionId,
+                    machineNo: this.machineNo,
+                    pointsConsumed: this.pointsConsumed
+                });
                 console.log('[Net8 Game] Game started successfully');
 
             } catch (error) {
@@ -279,7 +298,8 @@
                         this._emit('score', data.payload);
                         break;
                     case 'game:end':
-                        this._emit('end', data.payload);
+                        // ゲーム終了処理
+                        this._handleGameEnd(data.payload);
                         break;
                     case 'game:error':
                         this._emit('error', data.payload);
@@ -346,7 +366,74 @@
         }
 
         /**
-         * ゲーム終了
+         * ゲーム終了処理
+         */
+        async _handleGameEnd(payload) {
+            console.log('[Net8 Game] Game ended', payload);
+
+            // ゲーム結果を保存
+            this.gameResult = payload.result || 'completed';
+            this.pointsWon = payload.pointsWon || 0;
+
+            try {
+                // ゲーム終了APIを呼び出し
+                const response = await fetch(`${this.sdk.apiUrl}/api/v1/game_end.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.sdk.token}`
+                    },
+                    body: JSON.stringify({
+                        sessionId: this.sessionId,
+                        result: this.gameResult,
+                        pointsWon: this.pointsWon,
+                        resultData: payload
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('[Net8 Game] Failed to record game end');
+                }
+
+                const data = await response.json();
+
+                // ゲーム終了イベントを発火
+                this._emit('end', {
+                    sessionId: this.sessionId,
+                    result: this.gameResult,
+                    pointsConsumed: this.pointsConsumed,
+                    pointsWon: this.pointsWon,
+                    netProfit: this.pointsWon - this.pointsConsumed,
+                    newBalance: data.newBalance || null
+                });
+
+            } catch (error) {
+                console.error('[Net8 Game] Error handling game end:', error);
+                this._emit('error', error);
+            }
+        }
+
+        /**
+         * ゲーム手動終了
+         */
+        async stop() {
+            if (!this.isStarted) {
+                console.log('[Net8 Game] Game not started');
+                return;
+            }
+
+            // ゲーム終了処理を実行
+            await this._handleGameEnd({
+                result: 'cancelled',
+                pointsWon: 0
+            });
+
+            // リソースをクリーンアップ
+            this.destroy();
+        }
+
+        /**
+         * ゲーム破棄
          */
         destroy() {
             console.log('[Net8 Game] Destroying game...');

@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // 既存の設定ファイル読み込み
 require_once('../../_etc/require_files.php');
+require_once(__DIR__ . '/helpers/user_helper.php');
 
 // 認証ヘッダー確認（複数ソース対応）
 $authHeader = '';
@@ -59,12 +60,15 @@ if (!isset($input['modelId'])) {
 }
 
 $modelId = $input['modelId'];
+$partnerUserId = $input['userId'] ?? null; // パートナー側のユーザーID（オプション）
 
 try {
     $pdo = get_db_connection();
 
     // 環境判定（JWTから取得または直接APIキーから判定）
     $environment = 'test'; // デフォルトはtest
+    $apiKeyId = null;
+    $userId = null;
 
     // JWT からapi_key_idを取得して環境判定
     if (!empty($authHeader) && strpos($authHeader, 'Bearer ') === 0) {
@@ -73,13 +77,49 @@ try {
         if (count($parts) === 3) {
             $payload = json_decode(base64_decode($parts[1]), true);
             if (isset($payload['api_key_id'])) {
+                $apiKeyId = $payload['api_key_id'];
                 $envStmt = $pdo->prepare("SELECT environment FROM api_keys WHERE id = :id");
-                $envStmt->execute(['id' => $payload['api_key_id']]);
+                $envStmt->execute(['id' => $apiKeyId]);
                 $envData = $envStmt->fetch(PDO::FETCH_ASSOC);
                 if ($envData) {
                     $environment = $envData['environment'];
                 }
             }
+        }
+    }
+
+    // ユーザー管理（userIdが提供された場合）
+    $userBalance = null;
+    $pointsConsumed = 0;
+    $gamePrice = 100; // デフォルトのゲーム価格（ポイント）
+
+    if ($partnerUserId && $apiKeyId) {
+        // ユーザーを取得または作成
+        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId);
+        $userId = $user['id'];
+
+        // 残高チェック
+        $userBalance = getUserBalance($pdo, $userId);
+
+        if (!$userBalance) {
+            http_response_code(500);
+            echo json_encode([
+                'error' => 'BALANCE_NOT_FOUND',
+                'message' => 'User balance not found'
+            ]);
+            exit;
+        }
+
+        // 残高不足チェック
+        if ($userBalance['balance'] < $gamePrice) {
+            http_response_code(402);
+            echo json_encode([
+                'error' => 'INSUFFICIENT_BALANCE',
+                'message' => 'Insufficient points',
+                'balance' => $userBalance['balance'],
+                'required' => $gamePrice
+            ]);
+            exit;
         }
     }
 
@@ -150,6 +190,43 @@ try {
     // 3. ゲームセッションIDを生成
     $sessionId = 'gs_' . uniqid() . '_' . time();
 
+    // 4. ゲームセッションをDBに記録
+    if ($userId) {
+        // ポイント消費
+        try {
+            $transaction = consumePoints($pdo, $userId, $gamePrice, $sessionId);
+            $pointsConsumed = $transaction['amount'];
+            $userBalance = getUserBalance($pdo, $userId); // 最新残高を取得
+        } catch (Exception $e) {
+            http_response_code(402);
+            echo json_encode([
+                'error' => 'PAYMENT_FAILED',
+                'message' => $e->getMessage()
+            ]);
+            exit;
+        }
+
+        // ゲームセッション記録
+        $stmt = $pdo->prepare("
+            INSERT INTO game_sessions
+            (session_id, user_id, api_key_id, machine_no, model_cd, model_name, points_consumed, status, ip_address, user_agent)
+            VALUES
+            (:session_id, :user_id, :api_key_id, :machine_no, :model_cd, :model_name, :points_consumed, 'playing', :ip, :user_agent)
+        ");
+
+        $stmt->execute([
+            'session_id' => $sessionId,
+            'user_id' => $userId,
+            'api_key_id' => $apiKeyId,
+            'machine_no' => $machine['machine_no'],
+            'model_cd' => $model['model_cd'],
+            'model_name' => $model['model_name'],
+            'points_consumed' => $pointsConsumed,
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
+        ]);
+    }
+
     // 4. WebRTC Signaling情報（環境別）
     if ($environment === 'test' || $environment === 'staging') {
         // モック環境：テスト用シグナリング情報
@@ -206,8 +283,7 @@ try {
     }
 
     // 成功レスポンス（環境情報を追加）
-    http_response_code(200);
-    echo json_encode([
+    $response = [
         'success' => true,
         'environment' => $environment,
         'sessionId' => $sessionId,
@@ -222,7 +298,20 @@ try {
         'camera' => $cameraInfo,
         'playUrl' => "/data/play_v2/index.php?NO={$machine['machine_no']}",
         'mock' => ($environment === 'test' || $environment === 'staging')
-    ]);
+    ];
+
+    // ポイント情報を追加（userIdが提供された場合）
+    if ($userId && $userBalance) {
+        $response['points'] = [
+            'consumed' => $pointsConsumed,
+            'balance' => $userBalance['balance'],
+            'balanceBefore' => $userBalance['balance'] + $pointsConsumed
+        ];
+        $response['pointsConsumed'] = $pointsConsumed; // SDK互換性のため
+    }
+
+    http_response_code(200);
+    echo json_encode($response);
 
 } catch (Exception $e) {
     error_log('Game Start API Error: ' . $e->getMessage());
