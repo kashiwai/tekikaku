@@ -5,7 +5,7 @@
  * このスクリプトはSDK v1.1.0に必要なデータベーステーブルを作成します
  *
  * 使い方:
- * https://mgg-webservice-production.up.railway.app/setup_sdk_extension.php?key=setup_sdk_2025
+ * https://mgg-webservice-production.up.railway.app/data/setup_sdk_extension.php?key=setup_sdk_2025
  */
 
 // セキュリティキーチェック
@@ -16,7 +16,7 @@ if (!isset($_GET['key']) || $_GET['key'] !== $EXEC_KEY) {
 }
 
 // 環境変数から接続情報を取得
-require_once(__DIR__ . '/_etc/require_files.php');
+require_once(__DIR__ . '/../_etc/require_files.php');
 
 header('Content-Type: text/html; charset=UTF-8');
 
