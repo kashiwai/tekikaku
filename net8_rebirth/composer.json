@@ -3,8 +3,8 @@
     "description": "NET8 Pachinko Remote Play System",
     "type": "project",
     "require": {
-        "php": ">=7.4",
-        "google/cloud-storage": "^1.35"
+        "php": ">=7.2",
+        "google/cloud-storage": "^1.23"
     },
     "autoload": {
         "psr-4": {
