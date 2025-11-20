@@ -35,8 +35,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 # Apacheモジュール有効化
 RUN a2enmod rewrite ssl headers
 
-# Composerインストール（Google Cloud Storage用）- 一時的に無効化（SDK API優先）
-# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Composerインストール（Google Cloud Storage用）
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # カスタムPHP設定
 COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
@@ -47,12 +47,12 @@ COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available
 # アプリケーションファイルをコピー（2025-11-10 SmartTemplate対応）
 COPY net8/02.ソースファイル/net8_html /var/www/html
 
-# composer.jsonとcomposer.lockをコピー - 一時的に無効化（SDK API優先）
-# COPY composer.json composer.lock* /var/www/html/
+# composer.jsonとcomposer.lockをコピー
+COPY composer.json composer.lock* /var/www/html/
 
-# 依存関係インストール（Google Cloud Storage PHP SDK）- 一時的に無効化（SDK API優先）
+# 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
-# RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # 画像アップロード用ディレクトリ作成
 RUN mkdir -p /var/www/html/data/img/model \
