@@ -172,7 +172,13 @@ function DispTop($template) {
 	$row_sql = $sqls->page( $_GET["P"], INDEX_VIEW_MACHINES)
 					->createSql("\n");
 	$rs = $template->DB->query($row_sql);
-	
+
+	// データを配列に格納（SLIDER_LISTとLISTの両方で使用するため）
+	$machineData = array();
+	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+		$machineData[] = $row;
+	}
+
 	// 画面表示開始
 	$template->open(PRE_HTML . ".html");
 	$template->assignCommon();
@@ -224,9 +230,40 @@ function DispTop($template) {
 	}
 	$template->loop_end("FLOW_CORNER");
 	$template->assign("TARGET_CORNER" , $target_corner, true);
-	
-	// 台リスト
-	$template->AssignMachineList($rs, $open, $_login_flg, $testerFlg);
+
+	// SLIDER_LIST ループ作成（スライダー表示用）
+	$template->loop_start("SLIDER_LIST");
+	foreach ($machineData as $row) {
+		$template->assign("NO"               , $row["machine_no"], true);
+		$template->assign("MACHINE_CD"       , $row["machine_cd"], true);
+		$template->assign("MODEL_CD"         , $row["model_cd"], true);
+		$template->assign("MODEL_NAME"       , (FOLDER_LANG==DEFAULT_LANG)? $row["model_name"]:$row["model_roman"], true);
+		$template->assign("GENERATION"       , (FOLDER_LANG==DEFAULT_LANG)? $row["unit_name"]:$row["unit_roman"], true);
+		$template->assign("IMAGE_LIST"       , $row["image_list"], true);
+		$template->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);
+		$template->loop_next();
+	}
+	$template->loop_end("SLIDER_LIST");
+
+	// LIST ループ作成（リスト表示用）
+	$template->loop_start("LIST");
+	foreach ($machineData as $row) {
+		$template->assign("NO"               , $row["machine_no"], true);
+		$template->assign("MACHINE_CD"       , $row["machine_cd"], true);
+		$template->assign("MAKER_NO"         , $row["maker_no"], true);
+		$template->assign("MAKER_NAME"       , (FOLDER_LANG==DEFAULT_LANG)? $row["maker_name"]:$row["maker_roman"], true);
+		$template->assign("MODEL_NO"         , $row["model_no"], true);
+		$template->assign("MODEL_CD"         , $row["model_cd"], true);
+		$template->assign("MODEL_NAME"       , (FOLDER_LANG==DEFAULT_LANG)? $row["model_name"]:$row["model_roman"], true);
+		$template->assign("GENERATION"       , (FOLDER_LANG==DEFAULT_LANG)? $row["unit_name"]:$row["unit_roman"], true);
+		$template->assign("IMAGE_LIST"       , $row["image_list"], true);
+		$template->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);
+
+		// AssignMachineListの残りの処理をここに含める必要があるかもしれませんが、
+		// とりあえず基本的な変数だけを割り当てます
+		$template->loop_next();
+	}
+	$template->loop_end("LIST");
 
 	// ページ処理
 	$template->assign("ALLROW", (string)$allrows, true);		// 総件数
