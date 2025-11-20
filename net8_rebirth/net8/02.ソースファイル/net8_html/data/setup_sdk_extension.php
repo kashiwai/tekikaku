@@ -120,24 +120,156 @@ CREATE TABLE IF NOT EXISTS game_sessions (
     INDEX idx_result (result)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Add allowed_domains column to api_keys (if not exists)
-ALTER TABLE api_keys
-ADD COLUMN IF NOT EXISTS allowed_domains JSON DEFAULT NULL
-COMMENT 'List of domains allowed to embed iframes (for X-Frame-Options)';
 ";
 
-    // SQLステートメントを分割して実行
-    $statements = array_filter(array_map('trim', explode(';', $sql_statements)));
+    // SQLステートメントを個別に実行
     $success_count = 0;
     $skip_count = 0;
 
-    foreach ($statements as $statement) {
-        if (empty($statement) || strpos($statement, '--') === 0) {
-            continue;
+    // 1. sdk_users table
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS sdk_users (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            api_key_id INT NOT NULL,
+            partner_user_id VARCHAR(255) NOT NULL,
+            email VARCHAR(255) DEFAULT NULL,
+            display_name VARCHAR(255) DEFAULT NULL,
+            metadata JSON DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            last_login_at TIMESTAMP NULL DEFAULT NULL,
+            is_active TINYINT(1) DEFAULT 1,
+            UNIQUE KEY uk_partner_user (api_key_id, partner_user_id),
+            INDEX idx_api_key (api_key_id),
+            INDEX idx_email (email),
+            INDEX idx_last_login (last_login_at),
+            INDEX idx_active (is_active)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        echo "<p class='success'>✅ テーブル作成: sdk_users</p>\n";
+        $success_count++;
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), 'already exists') !== false) {
+            echo "<p class='warning'>⚠️ 既存: sdk_users</p>\n";
+            $skip_count++;
+        } else {
+            echo "<p class='error'>❌ sdk_users エラー: " . htmlspecialchars($e->getMessage()) . "</p>\n";
         }
+    }
 
-        try {
-            $pdo->exec($statement);
+    // 2. user_balances table
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS user_balances (
+            user_id INT PRIMARY KEY,
+            balance INT NOT NULL DEFAULT 0,
+            total_deposited INT NOT NULL DEFAULT 0,
+            total_consumed INT NOT NULL DEFAULT 0,
+            total_won INT NOT NULL DEFAULT 0,
+            total_withdrawn INT NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            CHECK (balance >= 0)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        echo "<p class='success'>✅ テーブル作成: user_balances</p>\n";
+        $success_count++;
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), 'already exists') !== false) {
+            echo "<p class='warning'>⚠️ 既存: user_balances</p>\n";
+            $skip_count++;
+        } else {
+            echo "<p class='error'>❌ user_balances エラー: " . htmlspecialchars($e->getMessage()) . "</p>\n";
+        }
+    }
+
+    // 3. point_transactions table
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS point_transactions (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            transaction_id VARCHAR(100) UNIQUE NOT NULL,
+            type ENUM('deposit', 'consume', 'payout', 'refund', 'adjust') NOT NULL,
+            amount INT NOT NULL,
+            balance_before INT NOT NULL,
+            balance_after INT NOT NULL,
+            game_session_id VARCHAR(255) DEFAULT NULL,
+            description TEXT DEFAULT NULL,
+            metadata JSON DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_user (user_id),
+            INDEX idx_type (type),
+            INDEX idx_session (game_session_id),
+            INDEX idx_created (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        echo "<p class='success'>✅ テーブル作成: point_transactions</p>\n";
+        $success_count++;
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), 'already exists') !== false) {
+            echo "<p class='warning'>⚠️ 既存: point_transactions</p>\n";
+            $skip_count++;
+        } else {
+            echo "<p class='error'>❌ point_transactions エラー: " . htmlspecialchars($e->getMessage()) . "</p>\n";
+        }
+    }
+
+    // 4. game_sessions table
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS game_sessions (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            session_id VARCHAR(255) UNIQUE NOT NULL,
+            api_key_id INT NOT NULL,
+            user_id INT DEFAULT NULL,
+            machine_no INT NOT NULL,
+            model_cd VARCHAR(50) NOT NULL,
+            model_name VARCHAR(255) DEFAULT NULL,
+            points_consumed INT DEFAULT 0,
+            points_won INT DEFAULT 0,
+            play_duration INT DEFAULT 0,
+            result ENUM('playing', 'win', 'lose', 'draw', 'error', 'timeout', 'cancelled') DEFAULT 'playing',
+            status ENUM('playing', 'completed', 'error', 'cancelled') DEFAULT 'playing',
+            error_message TEXT DEFAULT NULL,
+            metadata JSON DEFAULT NULL,
+            started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ended_at TIMESTAMP NULL DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_session (session_id),
+            INDEX idx_api_key (api_key_id),
+            INDEX idx_user (user_id),
+            INDEX idx_machine (machine_no),
+            INDEX idx_model (model_cd),
+            INDEX idx_status (status),
+            INDEX idx_started (started_at),
+            INDEX idx_result (result)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        echo "<p class='success'>✅ テーブル作成: game_sessions</p>\n";
+        $success_count++;
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), 'already exists') !== false) {
+            echo "<p class='warning'>⚠️ 既存: game_sessions</p>\n";
+            $skip_count++;
+        } else {
+            echo "<p class='error'>❌ game_sessions エラー: " . htmlspecialchars($e->getMessage()) . "</p>\n";
+        }
+    }
+
+    // 5. Add allowed_domains column to api_keys
+    try {
+        $pdo->exec("ALTER TABLE api_keys ADD COLUMN allowed_domains JSON DEFAULT NULL COMMENT 'List of domains allowed to embed iframes (for X-Frame-Options)'");
+        echo "<p class='success'>✅ api_keys.allowed_domains カラム追加</p>\n";
+        $success_count++;
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), 'Duplicate column') !== false) {
+            echo "<p class='warning'>⚠️ カラム既存: allowed_domains</p>\n";
+            $skip_count++;
+        } else {
+            echo "<p class='error'>❌ allowed_domains エラー: " . htmlspecialchars($e->getMessage()) . "</p>\n";
+        }
+    }
+
+    // Dummy loop for removed code
+    if (false) {
+        foreach ([] as $statement) {
+            try {
+                $pdo->exec($statement);
 
             // テーブル作成かカラム追加を判定
             if (stripos($statement, 'CREATE TABLE') !== false) {
