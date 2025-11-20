@@ -66,6 +66,38 @@ $resultData = $input['resultData'] ?? null;
 try {
     $pdo = get_db_connection();
 
+    // APIキー認証（JWTまたは直接APIキー）
+    $apiKeyId = null;
+
+    if (!empty($authHeader) && strpos($authHeader, 'Bearer ') === 0) {
+        $token = substr($authHeader, 7);
+        $parts = explode('.', $token);
+
+        // JWT形式の場合（3パート: header.payload.signature）
+        if (count($parts) === 3) {
+            $payload = json_decode(base64_decode($parts[1]), true);
+            if (isset($payload['api_key_id'])) {
+                $apiKeyId = $payload['api_key_id'];
+            }
+        } else {
+            // 直接APIキーの場合（pk_demo_12345など）
+            $apiKeyStmt = $pdo->prepare("SELECT id FROM api_keys WHERE key_value = :key_value AND is_active = 1");
+            $apiKeyStmt->execute(['key_value' => $token]);
+            $apiKeyData = $apiKeyStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($apiKeyData) {
+                $apiKeyId = $apiKeyData['id'];
+            } else {
+                http_response_code(401);
+                echo json_encode([
+                    'error' => 'INVALID_API_KEY',
+                    'message' => 'Invalid API key'
+                ]);
+                exit;
+            }
+        }
+    }
+
     // ゲームセッション情報を取得
     $stmt = $pdo->prepare("
         SELECT
@@ -90,6 +122,16 @@ try {
         echo json_encode([
             'error' => 'SESSION_NOT_FOUND',
             'message' => 'Game session not found'
+        ]);
+        exit;
+    }
+
+    // APIキーIDの検証（セッションのAPIキーと一致するか）
+    if ($apiKeyId && $session['api_key_id'] != $apiKeyId) {
+        http_response_code(403);
+        echo json_encode([
+            'error' => 'API_KEY_MISMATCH',
+            'message' => 'API key does not match the session'
         ]);
         exit;
     }

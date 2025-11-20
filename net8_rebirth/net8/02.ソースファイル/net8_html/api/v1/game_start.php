@@ -65,25 +65,44 @@ $partnerUserId = $input['userId'] ?? null; // パートナー側のユーザーI
 try {
     $pdo = get_db_connection();
 
-    // 環境判定（JWTから取得または直接APIキーから判定）
+    // 環境判定（JWTまたは直接APIキーから判定）
     $environment = 'test'; // デフォルトはtest
     $apiKeyId = null;
     $userId = null;
 
-    // JWT からapi_key_idを取得して環境判定
+    // Authorizationヘッダーからトークン取得
     if (!empty($authHeader) && strpos($authHeader, 'Bearer ') === 0) {
-        $jwt = substr($authHeader, 7);
-        $parts = explode('.', $jwt);
+        $token = substr($authHeader, 7);
+        $parts = explode('.', $token);
+
+        // JWT形式の場合（3パート: header.payload.signature）
         if (count($parts) === 3) {
             $payload = json_decode(base64_decode($parts[1]), true);
             if (isset($payload['api_key_id'])) {
                 $apiKeyId = $payload['api_key_id'];
-                $envStmt = $pdo->prepare("SELECT environment FROM api_keys WHERE id = :id");
+                $envStmt = $pdo->prepare("SELECT environment FROM api_keys WHERE id = :id AND is_active = 1");
                 $envStmt->execute(['id' => $apiKeyId]);
                 $envData = $envStmt->fetch(PDO::FETCH_ASSOC);
                 if ($envData) {
                     $environment = $envData['environment'];
                 }
+            }
+        } else {
+            // 直接APIキーの場合（pk_demo_12345など）
+            $apiKeyStmt = $pdo->prepare("SELECT id, environment FROM api_keys WHERE key_value = :key_value AND is_active = 1");
+            $apiKeyStmt->execute(['key_value' => $token]);
+            $apiKeyData = $apiKeyStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($apiKeyData) {
+                $apiKeyId = $apiKeyData['id'];
+                $environment = $apiKeyData['environment'];
+            } else {
+                http_response_code(401);
+                echo json_encode([
+                    'error' => 'INVALID_API_KEY',
+                    'message' => 'Invalid API key'
+                ]);
+                exit;
             }
         }
     }
