@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注文完了 - TransFi Onramp</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✅ 注文完了</h1>
+        </header>
+
+        <main>
+            <section class="card success-card">
+                <div class="success-icon">🎉</div>
+                <h2>ご注文ありがとうございます！</h2>
+                <p>お客様の注文が正常に処理されました。</p>
+                <p>暗号資産がウォレットに送信されるまでしばらくお待ちください。</p>
+
+                <div class="order-info">
+                    <p><strong>注文ID:</strong> <span id="orderId">-</span></p>
+                    <p><strong>ステータス:</strong> <span id="orderStatus">処理中</span></p>
+                </div>
+
+                <div class="button-group">
+                    <a href="/" class="btn btn-primary">ホームに戻る</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by TransFi API</p>
+        </footer>
+    </div>
+
+    <script>
+        // Extract order info from URL params if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order_id');
+        const status = urlParams.get('status');
+
+        if (orderId) {
+            document.getElementById('orderId').textContent = orderId;
+        }
+        if (status) {
+            document.getElementById('orderStatus').textContent = status;
+        }
+    </script>
+</body>
+</html>

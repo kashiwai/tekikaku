@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransFi Onramp Widget</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .widget-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .widget-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-height: 600px;
+        }
+        .widget-frame {
+            width: 100%;
+            height: 700px;
+            border: none;
+            border-radius: 8px;
+        }
+        .widget-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .widget-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .widget-info ul {
+            margin-left: 20px;
+        }
+        .widget-info li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 TransFi Onramp Widget</h1>
+            <p>日本円から仮想通貨への変換</p>
+        </header>
+
+        <main class="widget-container">
+            <div class="widget-info">
+                <h3>ご利用方法</h3>
+                <ul>
+                    <li>購入したい暗号資産と金額を選択</li>
+                    <li>受取用のウォレットアドレスを入力</li>
+                    <li>支払い方法を選択（銀行振込など）</li>
+                    <li>TransFiの決済画面で支払いを完了</li>
+                </ul>
+            </div>
+
+            <div class="widget-wrapper">
+                <h2>TransFi購入ウィジェット</h2>
+                <iframe
+                    id="transFiWidget"
+                    class="widget-frame"
+                    src="https://buy.transfi.com/?apiKey=MSXR6W_NA_NA&defaultCrypto=USDT&defaultFiat=JPY&theme=light"
+                    allow="accelerometer; autoplay; camera; gyroscope; payment"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                    title="TransFi Onramp Widget">
+                </iframe>
+            </div>
+
+            <section class="card" style="margin-top: 30px;">
+                <h2>取引履歴</h2>
+                <div id="ordersList" class="orders-list">
+                    <p>読み込み中...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by TransFi API</p>
+        </footer>
+    </div>
+
+    <script>
+        // Load transaction history
+        async function loadOrders() {
+            try {
+                const response = await fetch('/api/orders?limit=10');
+                const data = await response.json();
+
+                const ordersListDiv = document.getElementById('ordersList');
+
+                if (!response.ok) {
+                    throw new Error('取引履歴の読み込みに失敗しました');
+                }
+
+                displayOrders(data.data);
+
+            } catch (error) {
+                console.error('Load orders error:', error);
+                document.getElementById('ordersList').innerHTML = '<p>取引履歴の読み込みに失敗しました</p>';
+            }
+        }
+
+        function displayOrders(orders) {
+            const ordersListDiv = document.getElementById('ordersList');
+
+            if (!orders || orders.length === 0) {
+                ordersListDiv.innerHTML = '<p>まだ取引履歴がありません</p>';
+                return;
+            }
+
+            ordersListDiv.innerHTML = orders.map(order => {
+                const createdAt = new Date(order.created_at).toLocaleString('ja-JP');
+                return `
+                    <div class="order-item">
+                        <p><strong>注文ID:</strong> ${order.order_id}</p>
+                        <p><strong>金額:</strong> ${order.source_amount} ${order.source_currency} → ${order.target_amount || '処理中'} ${order.target_currency}</p>
+                        <p><strong>ステータス:</strong> ${getStatusText(order.status)}</p>
+                        <p><strong>作成日時:</strong> ${createdAt}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '保留中',
+                'processing': '処理中',
+                'completed': '完了',
+                'failed': '失敗',
+                'initiated': '開始',
+                'fund_settled': '入金完了',
+                'asset_settled': '送金完了'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Listen for messages from iframe
+        window.addEventListener('message', (event) => {
+            // Verify origin for security
+            if (event.origin !== 'https://buy.transfi.com') {
+                return;
+            }
+
+            console.log('Received message from TransFi:', event.data);
+
+            // Handle widget events
+            if (event.data.type === 'TRANSFI_ORDER_CREATED') {
+                console.log('Order created:', event.data.orderId);
+                // Reload orders list
+                setTimeout(() => loadOrders(), 2000);
+            }
+        });
+
+        // Load orders on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrders();
+            // Refresh every 30 seconds
+            setInterval(loadOrders, 30000);
+        });
+    </script>
+</body>
+</html>

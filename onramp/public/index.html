@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransFi Onramp - 日本円から仮想通貨へ</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 TransFi Onramp</h1>
+            <p>日本円から仮想通貨への簡単変換</p>
+        </header>
+
+        <main>
+            <!-- Order Form -->
+            <section class="card">
+                <h2>オンランプ注文</h2>
+
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label for="sourceAmount">金額 (JPY)</label>
+                        <input
+                            type="number"
+                            id="sourceAmount"
+                            name="sourceAmount"
+                            placeholder="10000"
+                            min="1000"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sourceCurrency">送金元通貨</label>
+                        <select id="sourceCurrency" name="sourceCurrency" required>
+                            <option value="JPY" selected>JPY - 日本円</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="targetCurrency">受取暗号資産</label>
+                        <select id="targetCurrency" name="targetCurrency" required>
+                            <option value="">選択してください...</option>
+                            <option value="USDT">USDT - Tether</option>
+                            <option value="USDC">USDC - USD Coin</option>
+                            <option value="BTC">BTC - Bitcoin</option>
+                            <option value="ETH">ETH - Ethereum</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="walletAddress">ウォレットアドレス</label>
+                        <input
+                            type="text"
+                            id="walletAddress"
+                            name="walletAddress"
+                            placeholder="0x..."
+                            required
+                        >
+                    </div>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">ユーザー情報</h3>
+
+                    <div class="form-group">
+                        <label for="firstName">名</label>
+                        <input
+                            type="text"
+                            id="firstName"
+                            name="firstName"
+                            placeholder="太郎"
+                            value="Demo"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">姓</label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            placeholder="山田"
+                            value="User"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">メールアドレス</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="example@example.com"
+                            value="demo@example.com"
+                            required
+                        >
+                    </div>
+
+                    <!-- Quote Display -->
+                    <div id="quoteSection" class="quote-section" style="display: none;">
+                        <h3>見積もり</h3>
+                        <div class="quote-details">
+                            <div class="quote-item">
+                                <span>為替レート:</span>
+                                <strong id="quoteRate">-</strong>
+                            </div>
+                            <div class="quote-item">
+                                <span>受取金額:</span>
+                                <strong id="quoteAmount">-</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" id="getQuoteBtn" class="btn btn-secondary">
+                            見積もりを取得
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" disabled>
+                            注文を作成
+                        </button>
+                    </div>
+                </form>
+
+                <div id="message" class="message"></div>
+                <div id="loading" class="loading" style="display: none;">
+                    処理中...
+                </div>
+            </section>
+
+            <!-- Recent Orders -->
+            <section class="card">
+                <h2>取引履歴</h2>
+                <div id="ordersList" class="orders-list">
+                    <p>読み込み中...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by TransFi API</p>
+        </footer>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

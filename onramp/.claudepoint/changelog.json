@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-11-20T12:40:03.779Z",
+    "action": "IMPLEMENTATION",
+    "description": "TransFi Onramp Widget統合とAPI統合の両方を実装。開発ログ記録。",
+    "details": "実装内容:\n- TransFi Widget統合 (public/widget.html, public/test-widget.html)\n- API直接統合の改善 (src/controllers/orderController.js)\n- ルート更新 (src/index.js)\n- 開発ログ作成 (docs/development-log-2025-11-20.md)\n- 実装ドキュメント (IMPLEMENTATION.md)\n\n問題:\n- Widget統合: Sandbox環境で「Couldn't Find You」エラー\n- API統合: Invoice API仕様不明で未完成\n\n次のステップ: TransFi Dashboard確認、サポート問い合わせ"
+  },
+  {
+    "timestamp": "2025-11-20T12:39:33.634Z",
+    "action": "CREATE_CLAUDEPOINT",
+    "description": "Created full claudepoint: transfi-onramp-widget-implementation_2025-11-20T12-39-33",
+    "details": "TransFi Onramp Widget統合実装完了。API直接統合は Invoice API問題で未完成。Widget統合はSandbox制限あり。開発ログ作成済み。"
+  }
+]

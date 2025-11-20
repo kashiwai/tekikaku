@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransFi Widget Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-info {
+            background: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .widget-container {
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
+        }
+        iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+        }
+        .error-check {
+            background: #fff3cd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        .error-check h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h2>TransFi Widget テスト</h2>
+        <p><strong>現在使用しているURL:</strong> https://buy.transfi.com/</p>
+        <p><strong>API Key (MID):</strong> MSXR6W_NA_NA</p>
+        <p><strong>パラメータ:</strong></p>
+        <ul>
+            <li>apiKey=MSXR6W_NA_NA</li>
+            <li>defaultCrypto=USDT</li>
+            <li>defaultFiat=JPY</li>
+            <li>theme=light</li>
+        </ul>
+    </div>
+
+    <div class="widget-container">
+        <h3>TransFi Widget</h3>
+        <iframe
+            id="transFiWidget"
+            src="https://buy.transfi.com/?apiKey=MSXR6W_NA_NA&defaultCrypto=USDT&defaultFiat=JPY&theme=light"
+            allow="accelerometer; autoplay; camera; gyroscope; payment"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+            title="TransFi Onramp Widget">
+        </iframe>
+    </div>
+
+    <div class="error-check">
+        <h3>トラブルシューティング</h3>
+        <p><strong>ブラウザのコンソール（F12）を開いて、以下のエラーがないか確認してください：</strong></p>
+        <ul>
+            <li>CORS エラー</li>
+            <li>X-Frame-Options エラー</li>
+            <li>Mixed Content エラー</li>
+            <li>その他のエラーメッセージ</li>
+        </ul>
+        <p id="consoleErrors"></p>
+    </div>
+
+    <script>
+        // エラーをキャッチ
+        window.addEventListener('error', function(e) {
+            console.error('Page Error:', e);
+            const errorDiv = document.getElementById('consoleErrors');
+            errorDiv.innerHTML += `<p style="color: red;">❌ Error: ${e.message}</p>`;
+        });
+
+        // iframeの読み込みステータスを確認
+        const iframe = document.getElementById('transFiWidget');
+
+        iframe.addEventListener('load', function() {
+            console.log('✅ iFrame loaded successfully');
+            const errorDiv = document.getElementById('consoleErrors');
+            errorDiv.innerHTML += '<p style="color: green;">✅ iFrame loaded successfully</p>';
+        });
+
+        iframe.addEventListener('error', function(e) {
+            console.error('❌ iFrame failed to load:', e);
+            const errorDiv = document.getElementById('consoleErrors');
+            errorDiv.innerHTML += '<p style="color: red;">❌ iFrame failed to load</p>';
+        });
+
+        // iframeからのメッセージをリッスン
+        window.addEventListener('message', function(event) {
+            console.log('📨 Message from iframe:', event);
+            const errorDiv = document.getElementById('consoleErrors');
+            errorDiv.innerHTML += `<p style="color: blue;">📨 Message: ${JSON.stringify(event.data)}</p>`;
+        });
+    </script>
+</body>
+</html>
