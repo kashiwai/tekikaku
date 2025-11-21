@@ -210,7 +210,10 @@ try {
     $sessionId = 'gs_' . uniqid() . '_' . time();
     $onetimeId = 'ot_' . uniqid();
 
-    // トランザクション開始
+    // トランザクション開始（既存のトランザクションをクリア）
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     $pdo->beginTransaction();
 
     try {

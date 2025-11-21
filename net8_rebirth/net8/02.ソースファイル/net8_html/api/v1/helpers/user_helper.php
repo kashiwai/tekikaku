@@ -103,79 +103,72 @@ function getUserBalance($pdo, $userId) {
  * @return array 取引情報
  */
 function consumePoints($pdo, $userId, $amount, $gameSessionId = null) {
-    $pdo->beginTransaction();
+    // NOTE: トランザクション管理は呼び出し側で行う前提
+    // （game_start.php が既にトランザクションを開始している）
 
-    try {
-        // 現在の残高を取得（FOR UPDATE でロック）
-        $stmt = $pdo->prepare("
-            SELECT balance
-            FROM user_balances
-            WHERE user_id = :user_id
-            FOR UPDATE
-        ");
+    // 現在の残高を取得（FOR UPDATE でロック）
+    $stmt = $pdo->prepare("
+        SELECT balance
+        FROM user_balances
+        WHERE user_id = :user_id
+        FOR UPDATE
+    ");
 
-        $stmt->execute(['user_id' => $userId]);
-        $balance = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute(['user_id' => $userId]);
+    $balance = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$balance) {
-            throw new Exception('User balance not found');
-        }
-
-        $balanceBefore = $balance['balance'];
-
-        if ($balanceBefore < $amount) {
-            throw new Exception('Insufficient balance');
-        }
-
-        $balanceAfter = $balanceBefore - $amount;
-
-        // 残高を更新
-        $stmt = $pdo->prepare("
-            UPDATE user_balances
-            SET balance = :balance,
-                total_consumed = total_consumed + :amount,
-                last_transaction_at = NOW()
-            WHERE user_id = :user_id
-        ");
-
-        $stmt->execute([
-            'balance' => $balanceAfter,
-            'amount' => $amount,
-            'user_id' => $userId
-        ]);
-
-        // 取引履歴を記録
-        $transactionId = 'txn_' . uniqid() . '_' . time();
-
-        $stmt = $pdo->prepare("
-            INSERT INTO point_transactions
-            (user_id, transaction_id, type, amount, balance_before, balance_after, game_session_id, description)
-            VALUES
-            (:user_id, :transaction_id, 'consume', :amount, :balance_before, :balance_after, :game_session_id, 'Game start point consumption')
-        ");
-
-        $stmt->execute([
-            'user_id' => $userId,
-            'transaction_id' => $transactionId,
-            'amount' => -$amount, // 負の値で記録
-            'balance_before' => $balanceBefore,
-            'balance_after' => $balanceAfter,
-            'game_session_id' => $gameSessionId
-        ]);
-
-        $pdo->commit();
-
-        return [
-            'transaction_id' => $transactionId,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $balanceAfter,
-            'amount' => $amount
-        ];
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        throw $e;
+    if (!$balance) {
+        throw new Exception('User balance not found');
     }
+
+    $balanceBefore = $balance['balance'];
+
+    if ($balanceBefore < $amount) {
+        throw new Exception('Insufficient balance');
+    }
+
+    $balanceAfter = $balanceBefore - $amount;
+
+    // 残高を更新
+    $stmt = $pdo->prepare("
+        UPDATE user_balances
+        SET balance = :balance,
+            total_consumed = total_consumed + :amount,
+            last_transaction_at = NOW()
+        WHERE user_id = :user_id
+    ");
+
+    $stmt->execute([
+        'balance' => $balanceAfter,
+        'amount' => $amount,
+        'user_id' => $userId
+    ]);
+
+    // 取引履歴を記録
+    $transactionId = 'txn_' . uniqid() . '_' . time();
+
+    $stmt = $pdo->prepare("
+        INSERT INTO point_transactions
+        (user_id, transaction_id, type, amount, balance_before, balance_after, game_session_id, description)
+        VALUES
+        (:user_id, :transaction_id, 'consume', :amount, :balance_before, :balance_after, :game_session_id, 'Game start point consumption')
+    ");
+
+    $stmt->execute([
+        'user_id' => $userId,
+        'transaction_id' => $transactionId,
+        'amount' => -$amount, // 負の値で記録
+        'balance_before' => $balanceBefore,
+        'balance_after' => $balanceAfter,
+        'game_session_id' => $gameSessionId
+    ]);
+
+    return [
+        'transaction_id' => $transactionId,
+        'balance_before' => $balanceBefore,
+        'balance_after' => $balanceAfter,
+        'amount' => $amount
+    ];
 }
 
 /**
@@ -188,72 +181,65 @@ function consumePoints($pdo, $userId, $amount, $gameSessionId = null) {
  * @return array 取引情報
  */
 function payoutPoints($pdo, $userId, $amount, $gameSessionId = null) {
-    $pdo->beginTransaction();
+    // NOTE: トランザクション管理は呼び出し側で行う前提
+    // （game_end.php が既にトランザクションを開始している）
 
-    try {
-        // 現在の残高を取得（FOR UPDATE でロック）
-        $stmt = $pdo->prepare("
-            SELECT balance
-            FROM user_balances
-            WHERE user_id = :user_id
-            FOR UPDATE
-        ");
+    // 現在の残高を取得（FOR UPDATE でロック）
+    $stmt = $pdo->prepare("
+        SELECT balance
+        FROM user_balances
+        WHERE user_id = :user_id
+        FOR UPDATE
+    ");
 
-        $stmt->execute(['user_id' => $userId]);
-        $balance = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute(['user_id' => $userId]);
+    $balance = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$balance) {
-            throw new Exception('User balance not found');
-        }
-
-        $balanceBefore = $balance['balance'];
-        $balanceAfter = $balanceBefore + $amount;
-
-        // 残高を更新
-        $stmt = $pdo->prepare("
-            UPDATE user_balances
-            SET balance = :balance,
-                total_won = total_won + :amount,
-                last_transaction_at = NOW()
-            WHERE user_id = :user_id
-        ");
-
-        $stmt->execute([
-            'balance' => $balanceAfter,
-            'amount' => $amount,
-            'user_id' => $userId
-        ]);
-
-        // 取引履歴を記録
-        $transactionId = 'txn_' . uniqid() . '_' . time();
-
-        $stmt = $pdo->prepare("
-            INSERT INTO point_transactions
-            (user_id, transaction_id, type, amount, balance_before, balance_after, game_session_id, description)
-            VALUES
-            (:user_id, :transaction_id, 'payout', :amount, :balance_before, :balance_after, :game_session_id, 'Game win payout')
-        ");
-
-        $stmt->execute([
-            'user_id' => $userId,
-            'transaction_id' => $transactionId,
-            'amount' => $amount,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $balanceAfter,
-            'game_session_id' => $gameSessionId
-        ]);
-
-        $pdo->commit();
-
-        return [
-            'transaction_id' => $transactionId,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $balanceAfter,
-            'amount' => $amount
-        ];
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        throw $e;
+    if (!$balance) {
+        throw new Exception('User balance not found');
     }
+
+    $balanceBefore = $balance['balance'];
+    $balanceAfter = $balanceBefore + $amount;
+
+    // 残高を更新
+    $stmt = $pdo->prepare("
+        UPDATE user_balances
+        SET balance = :balance,
+            total_won = total_won + :amount,
+            last_transaction_at = NOW()
+        WHERE user_id = :user_id
+    ");
+
+    $stmt->execute([
+        'balance' => $balanceAfter,
+        'amount' => $amount,
+        'user_id' => $userId
+    ]);
+
+    // 取引履歴を記録
+    $transactionId = 'txn_' . uniqid() . '_' . time();
+
+    $stmt = $pdo->prepare("
+        INSERT INTO point_transactions
+        (user_id, transaction_id, type, amount, balance_before, balance_after, game_session_id, description)
+        VALUES
+        (:user_id, :transaction_id, 'payout', :amount, :balance_before, :balance_after, :game_session_id, 'Game win payout')
+    ");
+
+    $stmt->execute([
+        'user_id' => $userId,
+        'transaction_id' => $transactionId,
+        'amount' => $amount,
+        'balance_before' => $balanceBefore,
+        'balance_after' => $balanceAfter,
+        'game_session_id' => $gameSessionId
+    ]);
+
+    return [
+        'transaction_id' => $transactionId,
+        'balance_before' => $balanceBefore,
+        'balance_after' => $balanceAfter,
+        'amount' => $amount
+    ];
 }
