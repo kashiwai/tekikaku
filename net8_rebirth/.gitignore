@@ -93,3 +93,5 @@ backup/
 **/gcs-key.json
 *.json.key
 service-account*.json
+.claudepoint/
+data/

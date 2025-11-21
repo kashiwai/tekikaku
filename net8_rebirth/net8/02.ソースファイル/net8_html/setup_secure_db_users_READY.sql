@@ -47,3 +47,22 @@ SHOW GRANTS FOR 'net8_admin'@'%';
 -- 3. 動作確認後、古いユーザーを削除:
 --    DROP USER IF EXISTS 'net8tech001'@'%';
 -- =====================================================
+
+
+
+ data/xxxadmin/owner.php
+     data/xxxadmin/signaling.php
+	   data/xxxadmin/image_upload.php
+     data/xxxadmin/machine_control.php
+     data/xxxadmin/maker.php
+     data/xxxadmin/index.php
+     data/xxxadmin/purchase.php
+  data/xxxadmin/address.php
+     data/xxxadmin/streaming.php
+     data/xxxadmin/pointgrant.php
+	     data/xxxadmin/debug_session.php
+     data/xxxadmin/logout.php
+     data/xxxadmin/api_public/sessionAPI_admin.php
+
+
+
