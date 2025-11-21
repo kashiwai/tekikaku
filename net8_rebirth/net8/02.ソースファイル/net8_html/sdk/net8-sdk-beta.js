@@ -462,6 +462,217 @@
         }
     }
 
+    /**
+     * GameTransitionManager クラス
+     * ゲーム終了後の次ゲーム遷移を管理
+     */
+    class GameTransitionManager {
+        constructor(sdk) {
+            this.sdk = sdk;
+            this.MIN_PLAY_POINTS = 100; // 最低プレイポイント
+            this.businessHours = {
+                open: '10:00',
+                close: '24:00'
+            };
+        }
+
+        /**
+         * ゲーム終了処理のメインハンドラー
+         */
+        async handleGameEnd(endData, options = {}) {
+            console.log('[Net8 Transition] Handling game end...', endData);
+
+            try {
+                // 1. 営業時間チェック
+                if (!this.isBusinessHours()) {
+                    return this.showClosedMessage(options.onClose);
+                }
+
+                // 2. 残高チェック
+                if (endData.newBalance !== null && endData.newBalance < this.MIN_PLAY_POINTS) {
+                    return this.showInsufficientBalance(endData, options.onCharge, options.onExit);
+                }
+
+                // 3. 推奨機種を取得
+                const recommendations = await this.getRecommendations(endData.newBalance);
+
+                // 4. 結果と推奨機種を表示
+                return this.showResultWithRecommendations({
+                    result: endData,
+                    recommendations: recommendations,
+                    onSelectModel: options.onSelectModel,
+                    onViewAll: options.onViewAll,
+                    onExit: options.onExit
+                });
+
+            } catch (error) {
+                console.error('[Net8 Transition] Error handling game end:', error);
+                // エラー時はシンプルな結果表示にフォールバック
+                return this.showSimpleResult(endData, options.onViewAll);
+            }
+        }
+
+        /**
+         * 営業時間チェック
+         */
+        isBusinessHours() {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+
+            const [openHour, openMin] = this.businessHours.open.split(':').map(Number);
+            const [closeHour, closeMin] = this.businessHours.close.split(':').map(Number);
+
+            const openTime = openHour * 60 + openMin;
+            const closeTime = closeHour * 60 + closeMin;
+
+            // 営業時間が日をまたぐ場合の処理
+            if (closeTime < openTime) {
+                return currentTime >= openTime || currentTime < closeTime;
+            }
+
+            return currentTime >= openTime && currentTime < closeTime;
+        }
+
+        /**
+         * 推奨機種を取得
+         */
+        async getRecommendations(balance) {
+            try {
+                const response = await fetch(`${this.sdk.apiUrl}/api/v1/recommended_models.php?balance=${balance}&limit=3`, {
+                    headers: {
+                        'Authorization': `Bearer ${this.sdk.token || this.sdk.apiKey}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch recommendations');
+                }
+
+                const data = await response.json();
+                return data.models || [];
+
+            } catch (error) {
+                console.error('[Net8 Transition] Failed to get recommendations:', error);
+                return [];
+            }
+        }
+
+        /**
+         * 営業時間外メッセージ表示
+         */
+        showClosedMessage(onClose) {
+            return {
+                type: 'closed',
+                title: '営業時間外',
+                message: `現在は営業時間外です\n次回営業時間: ${this.businessHours.open}`,
+                actions: [
+                    {
+                        label: '閉じる',
+                        type: 'primary',
+                        onClick: onClose || (() => window.location.href = '/')
+                    }
+                ]
+            };
+        }
+
+        /**
+         * ポイント不足メッセージ表示
+         */
+        showInsufficientBalance(endData, onCharge, onExit) {
+            return {
+                type: 'insufficient_balance',
+                title: 'ポイント不足',
+                message: `プレイに必要なポイントが不足しています`,
+                balance: endData.newBalance,
+                required: this.MIN_PLAY_POINTS,
+                actions: [
+                    {
+                        label: 'チャージ',
+                        type: 'primary',
+                        onClick: onCharge || (() => window.location.href = '/charge')
+                    },
+                    {
+                        label: '終了',
+                        type: 'secondary',
+                        onClick: onExit || (() => window.location.href = '/')
+                    }
+                ]
+            };
+        }
+
+        /**
+         * 結果と推奨機種を表示
+         */
+        showResultWithRecommendations({ result, recommendations, onSelectModel, onViewAll, onExit }) {
+            return {
+                type: 'result_with_recommendations',
+                title: 'ゲーム終了',
+                result: {
+                    pointsWon: result.pointsWon,
+                    pointsConsumed: result.pointsConsumed,
+                    netProfit: result.netProfit,
+                    balance: result.newBalance
+                },
+                recommendations: recommendations,
+                actions: [
+                    {
+                        label: '推奨機種から選ぶ',
+                        type: 'model-select',
+                        models: recommendations,
+                        onClick: onSelectModel || ((modelId) => console.log('Selected:', modelId))
+                    },
+                    {
+                        label: '全機種を見る',
+                        type: 'primary',
+                        onClick: onViewAll || (() => window.location.href = '/')
+                    },
+                    {
+                        label: '終了',
+                        type: 'secondary',
+                        onClick: onExit || (() => window.location.href = '/')
+                    }
+                ]
+            };
+        }
+
+        /**
+         * シンプルな結果表示（フォールバック）
+         */
+        showSimpleResult(endData, onContinue) {
+            return {
+                type: 'simple_result',
+                title: 'ゲーム終了',
+                result: {
+                    pointsWon: endData.pointsWon,
+                    pointsConsumed: endData.pointsConsumed,
+                    netProfit: endData.netProfit,
+                    balance: endData.newBalance
+                },
+                actions: [
+                    {
+                        label: '続けてプレイ',
+                        type: 'primary',
+                        onClick: onContinue || (() => window.location.href = '/')
+                    }
+                ]
+            };
+        }
+
+        /**
+         * 営業時間を設定
+         */
+        setBusinessHours(open, close) {
+            this.businessHours = { open, close };
+        }
+
+        /**
+         * 最低プレイポイントを設定
+         */
+        setMinPlayPoints(points) {
+            this.MIN_PLAY_POINTS = points;
+        }
+    }
+
     // グローバルに公開
     const net8Instance = new Net8SDK();
 
@@ -475,6 +686,9 @@
 
         // ゲーム作成
         createGame: (config) => net8Instance.createGame(config),
+
+        // 次ゲーム遷移マネージャー作成
+        createTransitionManager: () => new GameTransitionManager(net8Instance),
 
         // バージョン情報
         version: SDK_VERSION

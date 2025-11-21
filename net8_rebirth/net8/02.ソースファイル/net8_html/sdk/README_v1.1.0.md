@@ -575,6 +575,231 @@ game.on('error', (error) => {
 
 ---
 
+## 🔄 次ゲーム遷移（Game Transition）
+
+### 概要
+
+v1.1.0では、ゲーム終了後のユーザー体験を向上させる「次ゲーム遷移」機能を提供しています。この機能により、ゲーム終了時に以下を自動で処理できます：
+
+- ✅ ゲーム結果の表示
+- ✅ 残高チェック
+- ✅ 営業時間チェック
+- ✅ 推奨機種の表示
+- ✅ 次のゲームへのスムーズな遷移
+
+---
+
+### GameTransitionManager
+
+`Net8.createTransitionManager()` を使用して、次ゲーム遷移マネージャーを作成できます。
+
+```javascript
+// 次ゲーム遷移マネージャーを作成
+const transitionManager = Net8.createTransitionManager();
+
+// ゲーム終了時の処理
+game.on('end', async (data) => {
+    const modalData = await transitionManager.handleGameEnd(data, {
+        // 推奨機種から選択したとき
+        onSelectModel: (modelId) => {
+            console.log('次のゲーム:', modelId);
+            game.destroy();
+            startNewGame(modelId);
+        },
+
+        // 全機種を見るを選択したとき
+        onViewAll: () => {
+            console.log('機種一覧を表示');
+            game.destroy();
+            showModelSelector();
+        },
+
+        // 終了を選択したとき
+        onExit: () => {
+            console.log('ゲームを終了');
+            game.destroy();
+            window.location.href = '/';
+        },
+
+        // チャージボタンをクリックしたとき
+        onCharge: () => {
+            console.log('チャージページへ');
+            window.location.href = '/charge';
+        }
+    });
+
+    // modalDataを使ってUIを表示
+    showTransitionModal(modalData);
+});
+```
+
+---
+
+### modalData の構造
+
+`handleGameEnd()` が返す `modalData` には以下の構造があります：
+
+#### 1. 結果表示（通常）
+
+```javascript
+{
+    type: 'result_with_recommendations',
+    title: 'ゲーム終了',
+    result: {
+        pointsWon: 500,
+        pointsConsumed: 100,
+        netProfit: 400,
+        balance: 10800
+    },
+    recommendations: [
+        {
+            id: 'MILLIONGOD01',
+            name: 'ミリオンゴッド',
+            category: 'slot',
+            minPoints: 100,
+            canPlay: true,
+            availability: {
+                total: 5,
+                available: 3,
+                isAvailable: true
+            },
+            recommended: true
+        },
+        // ... 最大3機種
+    ],
+    actions: [...]
+}
+```
+
+#### 2. ポイント不足
+
+```javascript
+{
+    type: 'insufficient_balance',
+    title: 'ポイント不足',
+    message: 'プレイに必要なポイントが不足しています',
+    balance: 50,
+    required: 100,
+    actions: [
+        { label: 'チャージ', type: 'primary', onClick: Function },
+        { label: '終了', type: 'secondary', onClick: Function }
+    ]
+}
+```
+
+#### 3. 営業時間外
+
+```javascript
+{
+    type: 'closed',
+    title: '営業時間外',
+    message: '現在は営業時間外です\n次回営業時間: 10:00',
+    actions: [
+        { label: '閉じる', type: 'primary', onClick: Function }
+    ]
+}
+```
+
+---
+
+### UI実装例
+
+`modalData` を使ったUIの実装例：
+
+```javascript
+function showTransitionModal(modalData) {
+    if (modalData.type === 'result_with_recommendations') {
+        // 結果と推奨機種を表示
+        const result = modalData.result;
+        const recommendations = modalData.recommendations;
+
+        const html = `
+            <div class="modal">
+                <h2>${modalData.title}</h2>
+                <div class="result">
+                    <p>獲得ポイント: ${result.pointsWon}pt</p>
+                    <p>消費ポイント: ${result.pointsConsumed}pt</p>
+                    <p>純利益: ${result.netProfit}pt</p>
+                    <p>残高: ${result.balance}pt</p>
+                </div>
+
+                <h3>おすすめの機種</h3>
+                <div class="recommendations">
+                    ${recommendations.map(model => `
+                        <div class="model-card" onclick="selectModel('${model.id}')">
+                            <h4>${model.name}</h4>
+                            <p>最低 ${model.minPoints}pt</p>
+                            <p>${model.availability.available}/${model.availability.total}台空き</p>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <button onclick="handleViewAll()">全機種を見る</button>
+                <button onclick="closeModal()">終了</button>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', html);
+    }
+}
+```
+
+完全な実装例は [demo.html](./demo.html) を参照してください。
+
+---
+
+### 設定のカスタマイズ
+
+営業時間や最低プレイポイントをカスタマイズできます：
+
+```javascript
+const transitionManager = Net8.createTransitionManager();
+
+// 営業時間を設定
+transitionManager.setBusinessHours('09:00', '23:00');
+
+// 最低プレイポイントを設定
+transitionManager.setMinPlayPoints(200);
+```
+
+---
+
+### 推奨機種API
+
+推奨機種は `GET /api/v1/recommended_models.php` から取得されます：
+
+**リクエスト例**:
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  "https://mgg-webservice-production.up.railway.app/api/v1/recommended_models.php?balance=1000&limit=3"
+```
+
+**レスポンス例**:
+```json
+{
+    "success": true,
+    "balance": 1000,
+    "count": 3,
+    "models": [
+        {
+            "id": "MILLIONGOD01",
+            "name": "ミリオンゴッド",
+            "category": "slot",
+            "minPoints": 100,
+            "canPlay": true,
+            "availability": {
+                "total": 5,
+                "available": 3,
+                "isAvailable": true
+            },
+            "recommended": true
+        }
+    ]
+}
+```
+
+---
+
 ## 🎯 デモページ
 
 完全に動作するデモページ: [https://mgg-webservice-production.up.railway.app/sdk/demo.html](https://mgg-webservice-production.up.railway.app/sdk/demo.html)
