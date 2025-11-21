@@ -35,7 +35,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 # Apacheモジュール有効化
 RUN a2enmod rewrite ssl headers
 
-# Composerインストール（Google Cloud Storage用）
+# Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # カスタムPHP設定
