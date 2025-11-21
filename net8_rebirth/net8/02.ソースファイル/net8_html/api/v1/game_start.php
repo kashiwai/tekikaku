@@ -65,6 +65,12 @@ $partnerUserId = $input['userId'] ?? null; // パートナー側のユーザーI
 try {
     $pdo = get_db_connection();
 
+    // トランザクション状態をクリア（接続直後に確認）
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+        error_log('[game_start] Warning: Transaction was active immediately after connection, rolled back');
+    }
+
     // 環境判定（JWTまたは直接APIキーから判定）
     $environment = 'test'; // デフォルトはtest
     $apiKeyId = null;
@@ -211,10 +217,14 @@ try {
     $onetimeId = 'ot_' . uniqid();
 
     // トランザクション開始（既存のトランザクションをクリア）
+    error_log('[game_start] About to start transaction, checking state...');
     if ($pdo->inTransaction()) {
+        error_log('[game_start] WARNING: Transaction already active before beginTransaction(), rolling back');
         $pdo->rollBack();
     }
+    error_log('[game_start] Starting new transaction');
     $pdo->beginTransaction();
+    error_log('[game_start] Transaction started successfully');
 
     try {
         // 4. マシンを割り当て（本番環境のみ）
