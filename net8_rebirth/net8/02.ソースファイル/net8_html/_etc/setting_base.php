@@ -492,6 +492,13 @@ if (!defined('DIR_IMG_MODEL')) {
     define('DIR_IMG_MODEL', '/data/img/model/');
 }
 
+// GCS統合: 画像表示用ベースURL
+// 注意: DBのimage_listには既に完全なGCS URLが格納されているため、空文字列を設定
+// テンプレート側で {%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%} として使用される
+if (!defined('DIR_IMG_MODEL_DIR')) {
+    define('DIR_IMG_MODEL_DIR', '');  // 完全URL対応のため空文字列
+}
+
 // 番号フォーマット設定
 define('FORMAT_NO_DIGIT', 5);        // 一般的な番号の桁数（00001形式）
 define('MEMBER_NO_DIGIT', 8);        // 会員番号の桁数（00000001形式）
