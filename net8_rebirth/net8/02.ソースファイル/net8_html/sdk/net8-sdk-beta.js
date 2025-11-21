@@ -113,6 +113,94 @@
                 throw new Error('SDK not initialized. Call Net8.init() first.');
             }
         }
+
+        /**
+         * タイムアウト付きfetch
+         * @private
+         */
+        async _fetchWithTimeout(url, options = {}, timeout = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                clearTimeout(id);
+                return response;
+            } catch (error) {
+                clearTimeout(id);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timeout. Please check your connection.');
+                }
+                throw error;
+            }
+        }
+
+        /**
+         * リトライ付きAPI呼び出し
+         * @private
+         */
+        async _apiCallWithRetry(url, options = {}, maxRetries = 3, timeout = 30000) {
+            let lastError;
+
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await this._fetchWithTimeout(url, options, timeout);
+
+                    // ネットワークエラーではなくAPI エラーの場合はリトライしない
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    return response;
+                } catch (error) {
+                    lastError = error;
+                    console.warn(`[Net8 SDK] API call attempt ${i + 1}/${maxRetries} failed:`, error.message);
+
+                    // 最後のリトライでない場合は待機
+                    if (i < maxRetries - 1) {
+                        await this._sleep(Math.pow(2, i) * 1000); // Exponential backoff
+                    }
+                }
+            }
+
+            throw new Error(`API call failed after ${maxRetries} attempts: ${lastError.message}`);
+        }
+
+        /**
+         * スリープユーティリティ
+         * @private
+         */
+        _sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /**
+         * エラーメッセージを整形
+         * @private
+         */
+        _formatErrorMessage(error) {
+            if (error.message) {
+                return error.message;
+            }
+
+            // 標準的なエラーコードをユーザーフレンドリーなメッセージに変換
+            const errorMessages = {
+                'UNAUTHORIZED': '認証に失敗しました。APIキーを確認してください。',
+                'INVALID_API_KEY': '無効なAPIキーです。',
+                'MODEL_NOT_FOUND': '指定された機種が見つかりません。',
+                'NO_AVAILABLE_MACHINE': '利用可能な台がありません。しばらくしてから再度お試しください。',
+                'INSUFFICIENT_BALANCE': 'ポイント残高が不足しています。',
+                'SESSION_NOT_FOUND': 'ゲームセッションが見つかりません。',
+                'SESSION_ALREADY_ENDED': 'このゲームは既に終了しています。',
+                'NETWORK_ERROR': 'ネットワークエラーが発生しました。接続を確認してください。'
+            };
+
+            return errorMessages[error.error] || error.toString();
+        }
     }
 
     /**
@@ -135,6 +223,18 @@
             this.pointsConsumed = 0;
             this.pointsWon = 0;
             this.gameResult = null;
+
+            // リアルタイムゲーム状態
+            this.gameState = {
+                credit: 0,
+                playpoint: 0,
+                drawpoint: 0,
+                bb_count: 0,
+                rb_count: 0,
+                total_count: 0,
+                isPlaying: false,
+                lastUpdate: null
+            };
 
             // イベントリスナー
             this.listeners = {};
@@ -267,41 +367,94 @@
 
             // メッセージハンドラーを作成
             this._messageHandler = (event) => {
-                // セキュリティチェック
-                if (event.origin !== this.sdk.apiUrl) {
+                const data = event.data;
+                if (!data || !data.type) {
                     return;
                 }
 
-                const data = event.data;
-                if (!data || !data.type) {
+                // ゲームイベントのみ処理（game:で始まる）
+                if (!data.type.startsWith('game:')) {
+                    return;
+                }
+
+                // セキュリティチェック（開発環境では緩和）
+                // 同一オリジンまたはiframe内からのメッセージを許可
+                const isSameOrigin = event.origin === window.location.origin;
+                const isFromAPI = event.origin.includes('railway.app') || event.origin.includes('vercel.app');
+
+                if (!isSameOrigin && !isFromAPI && this.sdk.apiUrl && !event.origin.includes(new URL(this.sdk.apiUrl).hostname)) {
+                    console.warn('[Net8 Game] Message from untrusted origin:', event.origin);
                     return;
                 }
 
                 // ゲームイベントを処理
                 switch (data.type) {
                     case 'game:ready':
+                        // ゲーム準備完了
+                        this.gameState.isPlaying = true;
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('ready', data.payload);
                         break;
                     case 'game:play':
+                        // プレイ開始（クレジット消費）
+                        if (data.payload.credit !== undefined) {
+                            this.gameState.credit = data.payload.credit;
+                        }
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('play', data.payload);
                         break;
                     case 'game:win':
+                        // 勝利（クレジット増加）
+                        if (data.payload.credit !== undefined) {
+                            this.gameState.credit = data.payload.credit;
+                        }
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('win', data.payload);
                         break;
                     case 'game:lose':
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('lose', data.payload);
                         break;
                     case 'game:bonus':
+                        // ボーナス当選（BB/RB）
+                        if (data.payload.type === 'BB') {
+                            this.gameState.bb_count = data.payload.count || this.gameState.bb_count;
+                        } else if (data.payload.type === 'RB') {
+                            this.gameState.rb_count = data.payload.count || this.gameState.rb_count;
+                        }
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('bonus', data.payload);
                         break;
                     case 'game:score':
+                        // スコア更新（全ステータス）
+                        if (data.payload.credit !== undefined) {
+                            this.gameState.credit = data.payload.credit;
+                        }
+                        if (data.payload.playpoint !== undefined) {
+                            this.gameState.playpoint = data.payload.playpoint;
+                        }
+                        if (data.payload.drawpoint !== undefined) {
+                            this.gameState.drawpoint = data.payload.drawpoint;
+                        }
+                        if (data.payload.bb_count !== undefined) {
+                            this.gameState.bb_count = data.payload.bb_count;
+                        }
+                        if (data.payload.rb_count !== undefined) {
+                            this.gameState.rb_count = data.payload.rb_count;
+                        }
+                        this.gameState.total_count = this.gameState.bb_count + this.gameState.rb_count;
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('score', data.payload);
                         break;
                     case 'game:end':
                         // ゲーム終了処理
+                        this.gameState.isPlaying = false;
+                        this.gameState.lastUpdate = Date.now();
                         this._handleGameEnd(data.payload);
                         break;
                     case 'game:error':
+                        this.gameState.isPlaying = false;
+                        this.gameState.lastUpdate = Date.now();
                         this._emit('error', data.payload);
                         break;
                 }
@@ -366,6 +519,20 @@
         }
 
         /**
+         * 現在のゲーム状態を取得
+         * @returns {Object} 現在のゲーム状態
+         */
+        getGameState() {
+            return {
+                ...this.gameState,
+                sessionId: this.sessionId,
+                machineNo: this.machineNo,
+                isStarted: this.isStarted,
+                pointsConsumed: this.pointsConsumed
+            };
+        }
+
+        /**
          * ゲーム終了処理
          */
         async _handleGameEnd(payload) {
@@ -410,6 +577,63 @@
             } catch (error) {
                 console.error('[Net8 Game] Error handling game end:', error);
                 this._emit('error', error);
+            }
+        }
+
+        /**
+         * ゲーム中にポイントを追加
+         * @param {number} amount - 追加するポイント数
+         * @param {string} description - 追加理由の説明（オプション）
+         * @returns {Promise<Object>} 取引情報
+         */
+        async addPoints(amount, description = 'Bonus points during gameplay') {
+            if (!this.isStarted) {
+                throw new Error('Game is not started');
+            }
+
+            if (!this.sessionId) {
+                throw new Error('No active game session');
+            }
+
+            if (typeof amount !== 'number' || amount <= 0) {
+                throw new Error('Amount must be a positive number');
+            }
+
+            try {
+                const response = await fetch(`${this.sdk.apiUrl}/api/v1/add_points.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.sdk.token}`
+                    },
+                    body: JSON.stringify({
+                        sessionId: this.sessionId,
+                        amount: amount,
+                        description: description
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to add points');
+                }
+
+                const data = await response.json();
+
+                // ポイント追加イベントを発火
+                this._emit('pointsAdded', {
+                    amount: amount,
+                    transaction: data.transaction,
+                    description: description
+                });
+
+                console.log('[Net8 Game] Points added successfully:', data);
+                return data;
+
+            } catch (error) {
+                console.error('[Net8 Game] Failed to add points:', error);
+                this._emit('error', error);
+                throw error;
             }
         }
 

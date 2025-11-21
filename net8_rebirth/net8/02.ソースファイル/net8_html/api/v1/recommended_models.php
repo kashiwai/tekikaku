@@ -106,6 +106,7 @@ try {
                 mm.category,
                 mm.image_list as thumbnail,
                 mm.maker_no,
+                mm.model_no,
                 COUNT(dm.machine_no) as total_machines,
                 SUM(CASE WHEN lm.assign_flg = 0 OR lm.assign_flg IS NULL THEN 1 ELSE 0 END) as available_machines,
                 100 as min_points
@@ -113,7 +114,7 @@ try {
             LEFT JOIN dat_machine dm ON mm.model_no = dm.model_no AND dm.del_flg = 0
             LEFT JOIN lnk_machine lm ON dm.machine_no = lm.machine_no AND lm.assign_flg = 1
             WHERE mm.del_flg = 0
-            GROUP BY mm.model_cd, mm.model_name, mm.category, mm.image_list, mm.maker_no
+            GROUP BY mm.model_no, mm.model_cd, mm.model_name, mm.category, mm.image_list, mm.maker_no
             HAVING total_machines > 0
             ORDER BY available_machines DESC, mm.model_no ASC
             LIMIT :limit";
@@ -148,7 +149,7 @@ try {
             'name' => $model['name'],
             'category' => $categoryMap[$model['category']] ?? 'unknown',
             'maker' => $makerMap[$model['maker_no']] ?? '不明',
-            'thumbnail' => $model['thumbnail'] ? DIR_IMG_MODEL_DIR . $model['thumbnail'] : null,
+            'thumbnail' => $model['thumbnail'] ? '/data/img/model/' . $model['thumbnail'] : null,
             'minPoints' => (int)$model['min_points'],
             'canPlay' => $canPlay,
             'availability' => [

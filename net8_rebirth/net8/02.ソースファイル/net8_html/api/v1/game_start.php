@@ -208,24 +208,78 @@ try {
 
     // 3. ゲームセッションIDを生成
     $sessionId = 'gs_' . uniqid() . '_' . time();
+    $onetimeId = 'ot_' . uniqid();
 
-    // 4. ゲームセッションをDBに記録
-    if ($userId) {
-        // ポイント消費
-        try {
+    // トランザクション開始
+    $pdo->beginTransaction();
+
+    try {
+        // 4. マシンを割り当て（本番環境のみ）
+        if ($environment === 'production') {
+            // lnk_machineに登録（既存システムとの統合）
+            $stmt = $pdo->prepare("
+                INSERT INTO lnk_machine (machine_no, member_no, onetime_id, assign_flg, start_dt)
+                VALUES (:machine_no, :member_no, :onetime_id, 1, NOW())
+                ON DUPLICATE KEY UPDATE
+                    member_no = :member_no,
+                    onetime_id = :onetime_id,
+                    assign_flg = 1,
+                    start_dt = NOW()
+            ");
+
+            $memberNo = 0; // SDK経由の場合は仮のmember_no
+            if ($userId) {
+                // SDKユーザーに対応する仮想member_noを取得または作成
+                $sdkUserStmt = $pdo->prepare("
+                    SELECT su.*, ak.partner_name
+                    FROM sdk_users su
+                    JOIN api_keys ak ON su.api_key_id = ak.id
+                    WHERE su.id = :user_id
+                ");
+                $sdkUserStmt->execute(['user_id' => $userId]);
+                $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($sdkUser) {
+                    $virtualEmail = 'sdk_' . $sdkUser['partner_user_id'] . '@' . $sdkUser['partner_name'] . '.net8.local';
+
+                    $memberStmt = $pdo->prepare("SELECT member_no FROM mst_member WHERE mail = :mail");
+                    $memberStmt->execute(['mail' => $virtualEmail]);
+                    $member = $memberStmt->fetch(PDO::FETCH_ASSOC);
+
+                    if (!$member) {
+                        // 仮想メンバーを作成
+                        $createMemberStmt = $pdo->prepare("
+                            INSERT INTO mst_member (mail, nickname, invite_cd, point, draw_point, member_flg, del_flg)
+                            VALUES (:mail, :nickname, :invite_cd, 0, 0, 1, 0)
+                        ");
+                        $createMemberStmt->execute([
+                            'mail' => $virtualEmail,
+                            'nickname' => $sdkUser['username'] ?? 'SDK User',
+                            'invite_cd' => 'SDK_' . $sdkUser['partner_user_id']
+                        ]);
+                        $memberNo = $pdo->lastInsertId();
+                    } else {
+                        $memberNo = $member['member_no'];
+                    }
+                }
+            }
+
+            $stmt->execute([
+                'machine_no' => $machine['machine_no'],
+                'member_no' => $memberNo,
+                'onetime_id' => $onetimeId
+            ]);
+        }
+
+        // 5. ポイント消費（userIdがある場合のみ）
+        if ($userId) {
+            // ポイント消費
             $transaction = consumePoints($pdo, $userId, $gamePrice, $sessionId);
             $pointsConsumed = $transaction['amount'];
             $userBalance = getUserBalance($pdo, $userId); // 最新残高を取得
-        } catch (Exception $e) {
-            http_response_code(402);
-            echo json_encode([
-                'error' => 'PAYMENT_FAILED',
-                'message' => $e->getMessage()
-            ]);
-            exit;
         }
 
-        // ゲームセッション記録
+        // 6. ゲームセッションをDBに記録（userIdの有無に関わらず）
         $stmt = $pdo->prepare("
             INSERT INTO game_sessions
             (session_id, user_id, api_key_id, machine_no, model_cd, model_name, points_consumed, status, ip_address, user_agent)
@@ -235,7 +289,7 @@ try {
 
         $stmt->execute([
             'session_id' => $sessionId,
-            'user_id' => $userId,
+            'user_id' => $userId, // NULLでも記録
             'api_key_id' => $apiKeyId,
             'machine_no' => $machine['machine_no'],
             'model_cd' => $model['model_cd'],
@@ -244,6 +298,21 @@ try {
             'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
         ]);
+
+        // トランザクションコミット
+        $pdo->commit();
+
+    } catch (Exception $e) {
+        // トランザクションロールバック
+        $pdo->rollBack();
+        error_log('Game Start Transaction Error: ' . $e->getMessage());
+
+        http_response_code(500);
+        echo json_encode([
+            'error' => 'GAME_START_FAILED',
+            'message' => 'Failed to start game: ' . $e->getMessage()
+        ]);
+        exit;
     }
 
     // 4. WebRTC Signaling情報（環境別）

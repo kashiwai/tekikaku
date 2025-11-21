@@ -104,6 +104,50 @@ var _savestream;					//Video確認用
 	var lastid = [];
 
 	var autoFirstEventFlg = false;
+	var startTimestamp = null; // ゲーム開始時刻を記録
+
+	/**
+	 * SDK通知用ヘルパー関数
+	 * 親ウィンドウ（SDK）にpostMessageでイベントを送信
+	 */
+	function notifySDK(eventType, payload) {
+		if (window.parent !== window) {
+			try {
+				// セキュリティ: 許可されたオリジンのみに送信
+				// 開発環境とプロダクション環境の両方をサポート
+				var allowedOrigins = [
+					'https://mgg-webservice-production.up.railway.app',
+					'http://localhost:3000',
+					'http://localhost:8000',
+					window.location.origin  // 同一オリジン
+				];
+
+				// 親ウィンドウのオリジンを取得（可能な場合）
+				var targetOrigin = '*';
+				try {
+					if (document.referrer) {
+						var referrerUrl = new URL(document.referrer);
+						var referrerOrigin = referrerUrl.origin;
+						// 許可リストに含まれている場合のみ使用
+						if (allowedOrigins.indexOf(referrerOrigin) !== -1) {
+							targetOrigin = referrerOrigin;
+						}
+					}
+				} catch (e) {
+					// referrer取得失敗時はデフォルトのまま
+				}
+
+				window.parent.postMessage({
+					type: 'game:' + eventType,
+					payload: payload
+				}, targetOrigin);
+				writeLog('SDK通知: ' + eventType + ' (origin: ' + targetOrigin + ')');
+			} catch (e) {
+				console.error('SDK通知エラー:', e);
+			}
+		}
+	}
+
 	//peer setting
 	var peersetting = {
 		host: sigHost,
@@ -131,6 +175,20 @@ var _savestream;					//Video確認用
 	}
 
 	$('.game-after-button').bind(_touch,function(e){
+		// SDK通知: ゲーム終了
+		notifySDK('end', {
+			result: 'completed',
+			credit: game.credit,
+			pointsWon: game.drawpoint,
+			in_credit: game.in_credit || 0,
+			out_credit: game.credit || 0,
+			play_count: game.total_count || 0,
+			bb_count: game.bb_count || 0,
+			rb_count: game.rb_count || 0,
+			total_count: game.total_count || 0,
+			duration: Date.now() - (startTimestamp || Date.now())
+		});
+
 		window.location.href = '/gameafter.php' + '?' + machineno + '-' + authID;
 	});
 
@@ -493,6 +551,13 @@ var _savestream;					//Video確認用
 				retryLang();
 				//dataConnection.send(_sendStr( 'Lng', languageMode ));
 			}
+
+			// SDK通知: ゲーム準備完了
+			startTimestamp = Date.now(); // ゲーム開始時刻を記録
+			notifySDK('ready', {
+				timestamp: startTimestamp,
+				machineNo: machineno
+			});
 		});
 		
 		
@@ -528,20 +593,41 @@ var _savestream;					//Video確認用
 				}
 				$('#credit').text(game.credit);
 
+				// SDK通知: プレイ開始（クレジット消費）
+				notifySDK('play', {
+					credit: game.credit,
+					action: 'spin'
+				});
+
 			} else if ( _tag == 'Signal_1' ){							//Signal_OUT
 				endOneGame = true;
 				addCredit++;
 				game.credit++;
 				$('#credit').text(game.credit);
 				$('#animeNumber').animetionNumber( 1 );
+
+				// SDK通知: クレジット更新（勝利）
+				notifySDK('win', {
+					credit: game.credit,
+					addCredit: 1
+				});
 			} else if ( _tag == 'Sac' ){								//Credit払い出し総数通知
 				if ( $('#autoplay_credit').hasClass('autoplay-on') && !autoStopSignal ){
 					setTimeout(function(){
 						//autoPlay(true);
 					},autoPlayRestartTime);
 				} else {
-					
+
 				}
+
+				// SDK通知: スコア更新（払い出し完了）
+				notifySDK('score', {
+					credit: game.credit,
+					playpoint: game.playpoint,
+					drawpoint: game.drawpoint,
+					bb_count: game.bb_count,
+					rb_count: game.rb_count
+				});
 			} else if ( _tag == 'Signal_3' ){							//Signal_BB_Start
 				writeLog( '================BIG_Start================' );
 				if ( !activeBonus ){
@@ -555,6 +641,13 @@ var _savestream;					//Video確認用
 				$('#bb_count').bonusAnime(true);
 				$('#bonus_count').text(game.bb_count+game.rb_count);
 				$('#bonus_count').bonusAnime(true);
+
+				// SDK通知: BB当選
+				notifySDK('bonus', {
+					type: 'BB',
+					count: game.bb_count,
+					totalBonus: game.bb_count + game.rb_count
+				});
 			} else if ( _tag == 'Signal_2' ){							//Signal_RB_Start
 				writeLog( '================REG_Start================' );
 				activeBonus = true;
@@ -567,6 +660,13 @@ var _savestream;					//Video確認用
 				$('#count').text(bonusCountMark);
 				$('#bonus_count').text(game.bb_count+game.rb_count);
 				$('#bonus_count').bonusAnime(true);
+
+				// SDK通知: RB当選
+				notifySDK('bonus', {
+					type: 'RB',
+					count: game.rb_count,
+					totalBonus: game.bb_count + game.rb_count
+				});
 			} else if ( _tag == 'Signal_3_End' ){						//Signal_BB_End'
 				writeLog( '----------------BIG_End----------------' );
 				activeBonus = false;

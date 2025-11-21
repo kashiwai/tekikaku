@@ -470,6 +470,23 @@ game.start();
             </div>
         </div>
 
+        <!-- 高度な機能 -->
+        <div class="demo-section" id="advanced-section" style="display: none;">
+            <h2>⚡ 高度な機能テスト</h2>
+            <div class="controls">
+                <button onclick="testAddPoints()" id="btn-add-points" disabled>
+                    ポイント追加テスト（+500pt）
+                </button>
+                <button onclick="showGameState()" id="btn-game-state" disabled>
+                    ゲーム状態を表示
+                </button>
+            </div>
+            <div id="game-state-display" style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; display: none;">
+                <h3 style="margin-bottom: 10px; color: #667eea;">現在のゲーム状態:</h3>
+                <pre id="game-state-content" style="color: #00ff88; font-size: 13px; line-height: 1.6;"></pre>
+            </div>
+        </div>
+
         <!-- 機種一覧 -->
         <div class="demo-section" id="models-section" style="display: none;">
             <h2>📋 利用可能な機種</h2>
@@ -491,6 +508,7 @@ game.start();
 
     <!-- NET8 SDK読み込み -->
     <script src="https://mgg-webservice-production.up.railway.app/sdk/net8-sdk-beta.js"></script>
+    <script src="./net8-ui-components.js"></script>
 
     <script>
         let game = null;
@@ -778,8 +796,50 @@ game.start();
                 // ゲーム開始
                 await game.start();
 
+                // 高度な機能ボタンを有効化
+                document.getElementById('advanced-section').style.display = 'block';
+                document.getElementById('btn-add-points').disabled = false;
+                document.getElementById('btn-game-state').disabled = false;
+
             } catch (error) {
                 log(`❌ ゲーム開始エラー: ${error.message}`, 'error');
+            }
+        }
+
+        // ポイント追加テスト
+        async function testAddPoints() {
+            if (!game) {
+                log('❌ ゲームが開始されていません', 'error');
+                return;
+            }
+
+            try {
+                log('💰 ポイント追加を実行中...', 'info');
+                const result = await game.addPoints(500, 'Test bonus points');
+                log(`✅ ポイント追加成功！ ${JSON.stringify(result.transaction)}`, 'success');
+            } catch (error) {
+                log(`❌ ポイント追加エラー: ${error.message}`, 'error');
+            }
+        }
+
+        // ゲーム状態を表示
+        function showGameState() {
+            if (!game) {
+                log('❌ ゲームが開始されていません', 'error');
+                return;
+            }
+
+            try {
+                const state = game.getGameState();
+                const display = document.getElementById('game-state-display');
+                const content = document.getElementById('game-state-content');
+
+                content.textContent = JSON.stringify(state, null, 2);
+                display.style.display = 'block';
+
+                log('📊 ゲーム状態を表示しました', 'info');
+            } catch (error) {
+                log(`❌ ゲーム状態取得エラー: ${error.message}`, 'error');
             }
         }
 
