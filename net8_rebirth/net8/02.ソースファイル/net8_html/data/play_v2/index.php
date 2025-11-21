@@ -34,7 +34,12 @@ require_once('../../_sys/WebRTCAPI.php');				// requireファイル
 require_once('../../_etc/webRTC_setting.php');			// webRTCセッティングファイル
 
 // X-Frame-Options と CORS セキュリティ設定（SDK対応）
-require_once(__DIR__ . '/frame_security.php');
+try {
+    @require_once(__DIR__ . '/frame_security.php');
+} catch (Exception $e) {
+    // frame_security.phpの読み込みエラーは無視（ゲーム動作を優先）
+    error_log('Frame security initialization failed: ' . $e->getMessage());
+}
 
 // 項目定義
 define("PRE_1p_HTML",  "play/index_pachi");				// テンプレートHTMLプレフィックス（パチンコ縦画面）

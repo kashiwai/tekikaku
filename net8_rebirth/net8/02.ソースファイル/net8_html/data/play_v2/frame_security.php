@@ -26,8 +26,13 @@ try {
 
 } catch (Exception $e) {
     error_log('Frame Security Error: ' . $e->getMessage());
+    error_log('Frame Security Stack Trace: ' . $e->getTraceAsString());
 
-    // エラー時はデフォルトで同一オリジンのみ許可
-    header("X-Frame-Options: SAMEORIGIN");
-    header("Content-Security-Policy: frame-ancestors 'self'");
+    // エラー時は全オリジンを許可（SDK開発環境対応）
+    // 本番環境では管理画面でドメイン登録することを推奨
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    // X-Frame-Options と CSP は設定しない（すべてのiFrame埋め込みを許可）
 }

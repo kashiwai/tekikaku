@@ -60,9 +60,13 @@ function setFrameSecurityHeaders($pdo, $apiKeyId = null) {
         }
     }
 
-    // デフォルト：同一オリジンのみ許可
-    header("X-Frame-Options: SAMEORIGIN");
-    header("Content-Security-Policy: frame-ancestors 'self'");
+    // デフォルト：全オリジン許可（SDK開発環境対応）
+    // 本番環境では管理画面でドメイン登録を推奨
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    // X-Frame-Options と CSP は設定しない（全iFrame埋め込み許可）
 }
 
 /**
