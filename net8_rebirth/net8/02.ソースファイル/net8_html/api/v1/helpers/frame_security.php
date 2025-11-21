@@ -43,17 +43,13 @@ function setFrameSecurityHeaders($pdo, $apiKeyId = null) {
                 $requestOrigin = $origin ?: extractOriginFromReferer($referer);
 
                 if ($requestOrigin && in_array($requestOrigin, $allowedDomains)) {
-                    // CSP frame-ancestors で許可
-                    $cspDomains = implode(' ', $allowedDomains);
-                    header("Content-Security-Policy: frame-ancestors {$cspDomains}");
-
-                    // CORSヘッダー
+                    // CORSヘッダー（許可ドメイン限定）
                     header("Access-Control-Allow-Origin: {$requestOrigin}");
                     header("Access-Control-Allow-Credentials: true");
                     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
                     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-                    // X-Frame-Options は CSP と競合するため設定しない
+                    // CSP と X-Frame-Options は設定しない（iFrame埋め込み許可のため）
                     return;
                 }
             }

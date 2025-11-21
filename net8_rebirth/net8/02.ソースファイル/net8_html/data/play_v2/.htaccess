@@ -8,8 +8,11 @@ Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-R
 Header always set Access-Control-Allow-Credentials "true"
 Header always set Access-Control-Max-Age "3600"
 
-# X-Frame-Options は frame_security.php で動的に設定されるため、
-# ここでは設定しない（PHPで上書きされる）
+# X-Frame-Options と Content-Security-Policy は frame_security.php で動的に設定
+# デフォルトでは設定しない（全iFrame埋め込みを許可）
+# 既存のCSPヘッダーを削除
+Header always unset Content-Security-Policy
+Header always unset X-Frame-Options
 
 # postMessage通信のため、Referrer-Policyを緩和
 Header always set Referrer-Policy "no-referrer-when-downgrade"
