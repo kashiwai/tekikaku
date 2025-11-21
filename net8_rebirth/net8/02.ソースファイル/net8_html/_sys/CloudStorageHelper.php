@@ -10,6 +10,9 @@
  * @since   2025/11/14
  */
 
+// Composer autoload
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use Google\Cloud\Storage\StorageClient;
 
 class CloudStorageHelper {

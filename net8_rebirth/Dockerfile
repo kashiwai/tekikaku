@@ -52,12 +52,7 @@ COPY composer.json composer.lock* /var/www/html/
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
-# composer.jsonが存在するか確認
-RUN ls -la composer.json && cat composer.json
-# Composerインストール実行（詳細表示）
-RUN composer install --no-dev --optimize-autoloader --no-interaction --verbose || (echo "❌ Composer install failed" && exit 1)
-# インストール結果確認
-RUN ls -la vendor/ && ls -la vendor/google/ || echo "⚠️ vendor/google/ not found"
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # 画像アップロード用ディレクトリ作成
 RUN mkdir -p /var/www/html/data/img/model \
