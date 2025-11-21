@@ -144,12 +144,24 @@ try {
         $canPlay = $balance >= $model['min_points'];
         $isAvailable = $model['available_machines'] > 0;
 
+        // 画像パス処理: GCS URLの場合はそのまま、相対パスの場合はプレフィックス追加
+        $thumbnail = null;
+        if ($model['thumbnail']) {
+            if (preg_match('/^https?:\/\//', $model['thumbnail'])) {
+                // 完全URLの場合はそのまま使用
+                $thumbnail = $model['thumbnail'];
+            } else {
+                // 相対パスの場合はプレフィックス追加
+                $thumbnail = '/data/img/model/' . $model['thumbnail'];
+            }
+        }
+
         return [
             'id' => $model['id'],
             'name' => $model['name'],
             'category' => $categoryMap[$model['category']] ?? 'unknown',
             'maker' => $makerMap[$model['maker_no']] ?? '不明',
-            'thumbnail' => $model['thumbnail'] ? '/data/img/model/' . $model['thumbnail'] : null,
+            'thumbnail' => $thumbnail,
             'minPoints' => (int)$model['min_points'],
             'canPlay' => $canPlay,
             'availability' => [

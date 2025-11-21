@@ -53,13 +53,34 @@ try {
 
     // レスポンス整形
     $response = array_map(function($model) use ($categoryMap) {
+        // 画像パス処理: GCS URLの場合はそのまま、相対パスの場合はプレフィックス追加
+        $thumbnail = null;
+        if ($model['thumbnail']) {
+            if (preg_match('/^https?:\/\//', $model['thumbnail'])) {
+                // 完全URLの場合はそのまま使用
+                $thumbnail = $model['thumbnail'];
+            } else {
+                // 相対パスの場合はプレフィックス追加
+                $thumbnail = "/data/img/model/" . $model['thumbnail'];
+            }
+        }
+
+        $detailImage = null;
+        if ($model['image_detail']) {
+            if (preg_match('/^https?:\/\//', $model['image_detail'])) {
+                $detailImage = $model['image_detail'];
+            } else {
+                $detailImage = "/data/img/model/" . $model['image_detail'];
+            }
+        }
+
         return [
             'id' => $model['code'],
             'name' => $model['name'],
             'category' => $categoryMap[$model['category']] ?? 'unknown',
             'maker' => getMakerName($model['maker_no']),
-            'thumbnail' => $model['thumbnail'] ? "/images/models/{$model['thumbnail']}" : null,
-            'detailImage' => $model['image_detail'] ? "/images/models/{$model['image_detail']}" : null,
+            'thumbnail' => $thumbnail,
+            'detailImage' => $detailImage,
             'specs' => [
                 'prizeballData' => $model['prizeball_data'],
                 'layoutData' => $model['layout_data']
