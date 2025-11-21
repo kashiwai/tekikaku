@@ -1,0 +1,24 @@
+# NET8 Play Page - X-Frame-Options and CORS Configuration
+# SDK v1.1.0対応
+
+# CORS headers - iFrame埋め込み対応
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+Header always set Access-Control-Allow-Credentials "true"
+Header always set Access-Control-Max-Age "3600"
+
+# X-Frame-Options は frame_security.php で動的に設定されるため、
+# ここでは設定しない（PHPで上書きされる）
+
+# postMessage通信のため、Referrer-Policyを緩和
+Header always set Referrer-Policy "no-referrer-when-downgrade"
+
+# Security headers
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-XSS-Protection "1; mode=block"
+
+# Handle OPTIONS pre-flight
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]

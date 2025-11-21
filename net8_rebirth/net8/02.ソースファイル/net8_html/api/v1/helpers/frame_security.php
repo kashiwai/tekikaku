@@ -112,16 +112,32 @@ function getApiKeyIdFromSession($pdo, $sessionId) {
 }
 
 /**
- * マシン番号からAPIキーIDを取得（既存のlnk_machineテーブルを利用）
+ * マシン番号からAPIキーIDを取得（game_sessionsテーブルから最新のセッションを参照）
  *
  * @param PDO $pdo
  * @param int $machineNo
  * @return int|null
  */
 function getApiKeyIdFromMachine($pdo, $machineNo) {
-    // TODO: マシンとAPIキーの紐付けロジックを実装
-    // 現状はデフォルトのAPIキーを返す
-    $stmt = $pdo->query("SELECT id FROM api_keys WHERE environment = 'production' AND is_active = 1 LIMIT 1");
+    // 最新のゲームセッションからAPIキーIDを取得
+    $stmt = $pdo->prepare("
+        SELECT api_key_id
+        FROM game_sessions
+        WHERE machine_no = :machine_no
+        AND status IN ('playing', 'pending')
+        ORDER BY started_at DESC
+        LIMIT 1
+    ");
+
+    $stmt->execute(['machine_no' => $machineNo]);
+    $session = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($session && $session['api_key_id']) {
+        return $session['api_key_id'];
+    }
+
+    // セッションが見つからない場合、デモ/テストキーを返す
+    $stmt = $pdo->query("SELECT id FROM api_keys WHERE environment IN ('test', 'demo') AND is_active = 1 LIMIT 1");
     $apiKey = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $apiKey ? $apiKey['id'] : null;
