@@ -241,7 +241,7 @@ try {
             if ($userId) {
                 // SDKユーザーに対応する仮想member_noを取得または作成
                 $sdkUserStmt = $pdo->prepare("
-                    SELECT su.*, ak.partner_name
+                    SELECT su.*, ak.name as partner_name
                     FROM sdk_users su
                     JOIN api_keys ak ON su.api_key_id = ak.id
                     WHERE su.id = :user_id
@@ -250,7 +250,8 @@ try {
                 $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($sdkUser) {
-                    $virtualEmail = 'sdk_' . $sdkUser['partner_user_id'] . '@' . $sdkUser['partner_name'] . '.net8.local';
+                    $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $sdkUser['partner_name'] ?? 'SDK');
+                    $virtualEmail = 'sdk_' . $sdkUser['partner_user_id'] . '@' . $partnerName . '.net8.local';
 
                     $memberStmt = $pdo->prepare("SELECT member_no FROM mst_member WHERE mail = :mail");
                     $memberStmt->execute(['mail' => $virtualEmail]);

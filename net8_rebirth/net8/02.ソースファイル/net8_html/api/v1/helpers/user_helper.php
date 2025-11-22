@@ -189,7 +189,7 @@ function consumePoints($pdo, $userId, $amount, $gameSessionId = null) {
  */
 function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
     // APIキー情報を取得（パートナー名を取得するため）
-    $stmt = $pdo->prepare("SELECT partner_name FROM api_keys WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT name FROM api_keys WHERE id = :id");
     $stmt->execute(['id' => $apiKeyId]);
     $apiKey = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -197,7 +197,7 @@ function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
         throw new Exception('API key not found');
     }
 
-    $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $apiKey['partner_name']); // 英数字のみ
+    $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $apiKey['name'] ?? 'SDK'); // 英数字のみ
 
     // 一意のメールアドレスを生成（sdk_{partner}_{userId}@net8.local）
     $email = 'sdk_' . strtolower($partnerName) . '_' . $partnerUserId . '@net8.local';
