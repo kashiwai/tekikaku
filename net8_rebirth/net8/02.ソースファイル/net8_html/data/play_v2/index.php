@@ -101,33 +101,34 @@ function DispTop($template) {
 
 		if ($machineNo) {
 			try {
-				// game_sessionsからmember_noを取得
-				$sdkCheckSql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-					->select()
-						->field("member_no, partner_user_id, session_id")
-						->from("game_sessions")
-						->where()
-							->and( "machine_no =", $machineNo, FD_NUM)
-							->and( "status IN", "('playing', 'pending')", FD_STR)
-						->order("started_at DESC")
-						->limit(1)
-					->createSQL("\n");
+				// PDOで直接クエリ実行（より安全）
+				$pdo = get_db_connection();
 
-				$sdkSession = $template->DB->getRow($sdkCheckSql);
+				// game_sessionsからmember_noを取得
+				$stmt = $pdo->prepare("
+					SELECT member_no, partner_user_id, session_id
+					FROM game_sessions
+					WHERE machine_no = :machine_no
+					AND status IN ('playing', 'pending')
+					ORDER BY started_at DESC
+					LIMIT 1
+				");
+
+				$stmt->execute(['machine_no' => $machineNo]);
+				$sdkSession = $stmt->fetch(PDO::FETCH_ASSOC);
 
 				if ($sdkSession && $sdkSession['member_no']) {
 					// SDK経由のセッション：mst_memberから情報を取得してセッション作成
 					$sdkMemberNo = $sdkSession['member_no'];
 
-					$memberSql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-						->select()
-							->field("member_no, nickname, mail, point")
-							->from("mst_member")
-							->where()
-								->and( "member_no =", $sdkMemberNo, FD_NUM)
-						->createSQL("\n");
+					$stmt = $pdo->prepare("
+						SELECT member_no, nickname, mail, point
+						FROM mst_member
+						WHERE member_no = :member_no
+					");
 
-					$memberInfo = $template->DB->getRow($memberSql);
+					$stmt->execute(['member_no' => $sdkMemberNo]);
+					$memberInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 
 					if ($memberInfo) {
 						// セッションを作成してログイン状態にする
@@ -145,6 +146,7 @@ function DispTop($template) {
 				}
 			} catch (Exception $e) {
 				error_log("❌ SDK session creation error: " . $e->getMessage());
+				error_log("❌ Stack trace: " . $e->getTraceAsString());
 			}
 		}
 
