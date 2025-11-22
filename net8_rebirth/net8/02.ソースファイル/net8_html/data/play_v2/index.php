@@ -101,48 +101,55 @@ function DispTop($template) {
 
 		if ($machineNo) {
 			try {
-				// PDOで直接クエリ実行（より安全）
-				$pdo = get_db_connection();
+				error_log("🔍 SDK session check: machine_no={$machineNo}");
 
-				// game_sessionsからmember_noを取得
-				$stmt = $pdo->prepare("
-					SELECT member_no, partner_user_id, session_id
-					FROM game_sessions
-					WHERE machine_no = :machine_no
-					AND status IN ('playing', 'pending')
-					ORDER BY started_at DESC
-					LIMIT 1
-				");
+				// 既存のDB接続を使用（$template->DBが使用可能なため）
+				$sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+					->select()
+						->field("member_no, partner_user_id, session_id")
+						->from("game_sessions")
+						->where()
+							->and( "machine_no =", $machineNo, FD_NUM)
+							->and( "status IN ('playing', 'pending')", "", FD_SKIP)
+						->orderBy("started_at DESC")
+						->limit(1)
+					->createSQL("\n");
 
-				$stmt->execute(['machine_no' => $machineNo]);
-				$sdkSession = $stmt->fetch(PDO::FETCH_ASSOC);
+				$sdkSession = $template->DB->getRow($sql);
+				error_log("🔍 SDK session query result: " . json_encode($sdkSession));
 
-				if ($sdkSession && $sdkSession['member_no']) {
-					// SDK経由のセッション：mst_memberから情報を取得してセッション作成
+				if ($sdkSession && isset($sdkSession['member_no']) && $sdkSession['member_no']) {
+					// SDK経由のセッション：mst_memberから情報を取得
 					$sdkMemberNo = $sdkSession['member_no'];
+					error_log("🔍 Found SDK session: member_no={$sdkMemberNo}");
 
-					$stmt = $pdo->prepare("
-						SELECT member_no, nickname, mail, point
-						FROM mst_member
-						WHERE member_no = :member_no
-					");
+					$memberSql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+						->select()
+							->field("member_no, nickname, mail, point")
+							->from("mst_member")
+							->where()
+								->and( "member_no =", $sdkMemberNo, FD_NUM)
+						->createSQL("\n");
 
-					$stmt->execute(['member_no' => $sdkMemberNo]);
-					$memberInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+					$memberInfo = $template->DB->getRow($memberSql);
+					error_log("🔍 Member info: " . json_encode($memberInfo));
 
-					if ($memberInfo) {
-						// セッションを作成してログイン状態にする
-						$template->Session->UserInfo = [
-							'member_no' => $memberInfo['member_no'],
-							'nickname' => $memberInfo['nickname'],
-							'mail' => $memberInfo['mail'],
-							'point' => $memberInfo['point'],
-							'sdk_session' => true, // SDK経由フラグ
-							'partner_user_id' => $sdkSession['partner_user_id']
-						];
+					if ($memberInfo && isset($memberInfo['member_no'])) {
+						// SmartSessionのsetUserInfo()メソッドを使用してセッションを作成
+						// 注: UserInfoは連想配列として保存される
+						$_SESSION['UserInfo'] = $memberInfo;
+						$_SESSION['UserInfo']['sdk_session'] = true;
+						$_SESSION['UserInfo']['partner_user_id'] = $sdkSession['partner_user_id'];
+
+						// $template->Session->UserInfoを再読み込み
+						$template->Session->setSession();
 
 						error_log("✅ SDK user session created: member_no={$sdkMemberNo}, partner_user_id={$sdkSession['partner_user_id']}");
+					} else {
+						error_log("❌ Member info not found for member_no={$sdkMemberNo}");
 					}
+				} else {
+					error_log("🔍 No SDK session found for machine_no={$machineNo}");
 				}
 			} catch (Exception $e) {
 				error_log("❌ SDK session creation error: " . $e->getMessage());
@@ -152,6 +159,7 @@ function DispTop($template) {
 
 		// セッションがまだ存在しない場合はエラー
 		if ( !isset($template->Session->UserInfo) ) {
+			error_log("❌ No session found, redirecting to error");
 			//ログインしていないのでどこかへ飛ばす？
 			DispError( $template, "U5001" );
 			return;
