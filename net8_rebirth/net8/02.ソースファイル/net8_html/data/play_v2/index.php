@@ -41,6 +41,11 @@ try {
     error_log('Frame security initialization failed: ' . $e->getMessage());
 }
 
+// 追加の安全策：CSPヘッダーを明示的に削除
+header_remove('Content-Security-Policy');
+header_remove('X-Frame-Options');
+error_log('✅ play_v2/index.php: CSP headers removed after frame_security.php');
+
 // 項目定義
 define("PRE_1p_HTML",  "play/index_pachi");				// テンプレートHTMLプレフィックス（パチンコ縦画面）
 define("PRE_1l_HTML",  "play/index_pachi_ls_v2");		// テンプレートHTMLプレフィックス（パチンコ横画面）

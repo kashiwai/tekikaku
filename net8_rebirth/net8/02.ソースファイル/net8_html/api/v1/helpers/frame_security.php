@@ -14,9 +14,18 @@
  * @return void
  */
 function setFrameSecurityHeaders($pdo, $apiKeyId = null) {
+    // 既存のCSPとX-Frame-Optionsヘッダーを明示的に削除
+    header_remove('Content-Security-Policy');
+    header_remove('X-Frame-Options');
+
+    // デバッグログ
+    error_log('🔍 setFrameSecurityHeaders called - apiKeyId: ' . ($apiKeyId ?? 'null'));
+
     // リファラーから呼び出し元を取得
     $referer = $_SERVER['HTTP_REFERER'] ?? null;
     $origin = $_SERVER['HTTP_ORIGIN'] ?? null;
+
+    error_log('🔍 Origin: ' . ($origin ?? 'null') . ', Referer: ' . ($referer ?? 'null'));
 
     // APIキーIDが提供されている場合、許可ドメインをチェック
     if ($apiKeyId) {
