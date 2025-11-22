@@ -71,8 +71,10 @@ try {
     }
 
     // SDK v1.1.0: SDKテーブルの自動作成・修正
+    error_log("🔧 Starting SDK tables auto-migration...");
     try {
         // 1. api_keysテーブル
+        error_log("Creating api_keys table...");
         $pdo->exec("CREATE TABLE IF NOT EXISTS `api_keys` (
           `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
           `user_id` INT(10) UNSIGNED NULL,
@@ -133,18 +135,30 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
         // 5. game_sessionsテーブルのカラム追加
+        error_log("Checking game_sessions columns...");
         $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'partner_user_id'");
         if ($stmt->rowCount() === 0) {
+            error_log("Adding partner_user_id column to game_sessions...");
             $pdo->exec("ALTER TABLE game_sessions ADD COLUMN partner_user_id VARCHAR(255) NULL");
-        }
-        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'member_no'");
-        if ($stmt->rowCount() === 0) {
-            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN member_no INT(10) UNSIGNED NULL");
+            error_log("✅ partner_user_id column added");
+        } else {
+            error_log("ℹ️  partner_user_id column already exists");
         }
 
-        error_log("✅ SDK tables auto-migration completed");
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'member_no'");
+        if ($stmt->rowCount() === 0) {
+            error_log("Adding member_no column to game_sessions...");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN member_no INT(10) UNSIGNED NULL");
+            error_log("✅ member_no column added");
+        } else {
+            error_log("ℹ️  member_no column already exists");
+        }
+
+        error_log("✅ SDK tables auto-migration completed successfully");
     } catch (PDOException $e) {
-        error_log("❌ Table migration error (non-fatal): " . $e->getMessage());
+        error_log("❌ Table migration FAILED: " . $e->getMessage());
+        error_log("❌ SQL State: " . $e->getCode());
+        error_log("❌ Stack trace: " . $e->getTraceAsString());
     }
 
     // 環境判定（JWTまたは直接APIキーから判定）
