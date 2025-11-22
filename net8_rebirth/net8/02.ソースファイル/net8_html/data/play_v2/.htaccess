@@ -2,24 +2,23 @@
 # SDK v1.1.0対応
 
 # CORS headers - iFrame埋め込み対応
-Header always set Access-Control-Allow-Origin "*"
-Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
-Header always set Access-Control-Allow-Credentials "true"
-Header always set Access-Control-Max-Age "3600"
+# 注意: Header set (alwaysなし) を使用してPHPで上書き可能にする
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Max-Age "3600"
 
-# X-Frame-Options と Content-Security-Policy は frame_security.php で動的に設定
-# デフォルトでは設定しない（全iFrame埋め込みを許可）
-# 既存のCSPヘッダーを削除
-Header always unset Content-Security-Policy
-Header always unset X-Frame-Options
+# X-Frame-Options と Content-Security-Policy は設定しない
+# frame_security.phpでPHP側から制御
+# Apache側でヘッダーを設定しないことでPHPの制御を優先
 
 # postMessage通信のため、Referrer-Policyを緩和
-Header always set Referrer-Policy "no-referrer-when-downgrade"
+Header set Referrer-Policy "no-referrer-when-downgrade"
 
 # Security headers
-Header always set X-Content-Type-Options "nosniff"
-Header always set X-XSS-Protection "1; mode=block"
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
 
 # Handle OPTIONS pre-flight
 RewriteEngine On

@@ -28,17 +28,13 @@ try {
     error_log('❌ Frame Security Error: ' . $e->getMessage());
     error_log('❌ Frame Security Stack Trace: ' . $e->getTraceAsString());
 
-    // 既存のCSPとX-Frame-Optionsヘッダーを明示的に削除
-    header_remove('Content-Security-Policy');
-    header_remove('X-Frame-Options');
-
     // エラー時は全オリジンを許可（SDK開発環境対応）
     // 本番環境では管理画面でドメイン登録することを推奨
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
-    // X-Frame-Options と CSP は設定しない（すべてのiFrame埋め込みを許可）
 
-    error_log('✅ Frame Security: CSP headers removed in error handler');
+    // X-Frame-Options と CSP は設定しない（すべてのiFrame埋め込みを許可）
+    error_log('✅ Frame Security: Error handler - no CSP/X-Frame-Options set');
 }

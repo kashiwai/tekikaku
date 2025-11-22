@@ -14,10 +14,6 @@
  * @return void
  */
 function setFrameSecurityHeaders($pdo, $apiKeyId = null) {
-    // 既存のCSPとX-Frame-Optionsヘッダーを明示的に削除
-    header_remove('Content-Security-Policy');
-    header_remove('X-Frame-Options');
-
     // デバッグログ
     error_log('🔍 setFrameSecurityHeaders called - apiKeyId: ' . ($apiKeyId ?? 'null'));
 
@@ -58,7 +54,10 @@ function setFrameSecurityHeaders($pdo, $apiKeyId = null) {
                     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
                     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-                    // CSP と X-Frame-Options は設定しない（iFrame埋め込み許可のため）
+                    // X-Frame-Options と CSP は設定しない（iFrame埋め込み許可）
+                    // ヘッダーを設定しないことで、すべてのオリジンからの埋め込みを許可
+
+                    error_log('✅ Frame Security: Allowed domain headers set (no CSP/X-Frame-Options) - Origin: ' . $requestOrigin);
                     return;
                 }
             }
@@ -71,7 +70,11 @@ function setFrameSecurityHeaders($pdo, $apiKeyId = null) {
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
     // X-Frame-Options と CSP は設定しない（全iFrame埋め込み許可）
+    // ヘッダーを設定しないことで、すべてのオリジンからの埋め込みを許可
+
+    error_log('✅ Frame Security: Default headers set (no CSP/X-Frame-Options)');
 }
 
 /**

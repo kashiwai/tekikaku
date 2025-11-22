@@ -34,17 +34,19 @@ require_once('../../_sys/WebRTCAPI.php');				// requireファイル
 require_once('../../_etc/webRTC_setting.php');			// webRTCセッティングファイル
 
 // X-Frame-Options と CORS セキュリティ設定（SDK対応）
+// frame_security.phpがCORSヘッダーを設定し、CSP/X-Frame-Optionsは設定しない
 try {
     @require_once(__DIR__ . '/frame_security.php');
 } catch (Exception $e) {
     // frame_security.phpの読み込みエラーは無視（ゲーム動作を優先）
-    error_log('Frame security initialization failed: ' . $e->getMessage());
-}
+    error_log('❌ Frame security initialization failed: ' . $e->getMessage());
 
-// 追加の安全策：CSPヘッダーを明示的に削除
-header_remove('Content-Security-Policy');
-header_remove('X-Frame-Options');
-error_log('✅ play_v2/index.php: CSP headers removed after frame_security.php');
+    // エラー時もCSP/X-Frame-Optionsは設定しない（すべてのiFrame埋め込みを許可）
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+}
 
 // 項目定義
 define("PRE_1p_HTML",  "play/index_pachi");				// テンプレートHTMLプレフィックス（パチンコ縦画面）
