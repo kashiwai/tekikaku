@@ -103,13 +103,15 @@ try {
         }
     }
 
-    // ゲームセッション情報を取得
+    // ゲームセッション情報を取得（member_noとpartner_user_idを含む）
     $stmt = $pdo->prepare("
         SELECT
             id,
             session_id,
             user_id,
             api_key_id,
+            member_no,
+            partner_user_id,
             machine_no,
             model_cd,
             points_consumed,
@@ -121,6 +123,8 @@ try {
 
     $stmt->execute(['session_id' => $sessionId]);
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    error_log("📊 Game ending: session_id={$sessionId}, member_no={$session['member_no']}, partner_user_id={$session['partner_user_id']}, result={$result}");
 
     if (!$session) {
         http_response_code(404);

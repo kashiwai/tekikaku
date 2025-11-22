@@ -15,10 +15,10 @@
  * @return array ユーザー情報
  */
 function getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData = []) {
-    // 既存ユーザーを検索
+    // 既存ユーザーを検索（member_noも取得）
     $stmt = $pdo->prepare("
-        SELECT id, partner_user_id, api_key_id, email, username, is_active
-        FROM sdk_users
+        SELECT id, partner_user_id, api_key_id, email, username, is_active, member_no
+        FROM users
         WHERE api_key_id = :api_key_id
         AND partner_user_id = :partner_user_id
     ");
@@ -35,15 +35,20 @@ function getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData = []) {
         return $user;
     }
 
-    // 新規ユーザーを作成
+    // mst_member（NET8側ユーザー）を取得または作成
+    $mstMember = getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId);
+    $memberNo = $mstMember['member_no'];
+
+    // 新規SDK usersレコードを作成（member_noと紐づけ）
     $stmt = $pdo->prepare("
-        INSERT INTO sdk_users (partner_user_id, api_key_id, email, username, metadata, is_active)
-        VALUES (:partner_user_id, :api_key_id, :email, :username, :metadata, 1)
+        INSERT INTO users (partner_user_id, api_key_id, member_no, email, username, metadata, is_active)
+        VALUES (:partner_user_id, :api_key_id, :member_no, :email, :username, :metadata, 1)
     ");
 
     $stmt->execute([
         'partner_user_id' => $partnerUserId,
         'api_key_id' => $apiKeyId,
+        'member_no' => $memberNo,
         'email' => $userData['email'] ?? null,
         'username' => $userData['username'] ?? null,
         'metadata' => isset($userData['metadata']) ? json_encode($userData['metadata']) : null
@@ -64,11 +69,14 @@ function getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData = []) {
         'initial_balance' => $initialBalance
     ]);
 
-    // ユーザー情報を返す
+    error_log("✅ Created SDK user: user_id={$userId}, member_no={$memberNo}, partner_user_id={$partnerUserId}");
+
+    // ユーザー情報を返す（member_noを含む）
     return [
         'id' => $userId,
         'partner_user_id' => $partnerUserId,
         'api_key_id' => $apiKeyId,
+        'member_no' => $memberNo,
         'email' => $userData['email'] ?? null,
         'username' => $userData['username'] ?? null,
         'is_active' => 1
@@ -168,6 +176,104 @@ function consumePoints($pdo, $userId, $amount, $gameSessionId = null) {
         'balance_before' => $balanceBefore,
         'balance_after' => $balanceAfter,
         'amount' => $amount
+    ];
+}
+
+/**
+ * パートナーユーザーに対応するNET8ユーザー（mst_member）を取得または作成
+ *
+ * @param PDO $pdo
+ * @param int $apiKeyId
+ * @param string $partnerUserId
+ * @return array mst_member情報 ['member_no' => int, 'nickname' => string, ...]
+ */
+function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
+    // APIキー情報を取得（パートナー名を取得するため）
+    $stmt = $pdo->prepare("SELECT partner_name FROM api_keys WHERE id = :id");
+    $stmt->execute(['id' => $apiKeyId]);
+    $apiKey = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$apiKey) {
+        throw new Exception('API key not found');
+    }
+
+    $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $apiKey['partner_name']); // 英数字のみ
+
+    // 一意のメールアドレスを生成（sdk_{partner}_{userId}@net8.local）
+    $email = 'sdk_' . strtolower($partnerName) . '_' . $partnerUserId . '@net8.local';
+
+    // 既存のmst_memberを検索
+    $stmt = $pdo->prepare("
+        SELECT member_no, nickname, mail, point
+        FROM mst_member
+        WHERE mail = :mail
+        AND quit_dt IS NULL
+    ");
+
+    $stmt->execute(['mail' => $email]);
+    $member = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($member) {
+        // 既存ユーザーを返す
+        return $member;
+    }
+
+    // 新規mst_memberを作成
+    $nickname = 'SDK_' . $partnerName . '_' . substr($partnerUserId, 0, 10);
+    $password = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT); // ランダムパスワード
+    $now = date('Y-m-d H:i:s');
+
+    $stmt = $pdo->prepare("
+        INSERT INTO mst_member (
+            nickname,
+            mail,
+            pass,
+            point,
+            draw_point,
+            mail_magazine,
+            tester_flg,
+            agent_flg,
+            black_flg,
+            state,
+            regist_dt,
+            join_dt,
+            add_dt
+        ) VALUES (
+            :nickname,
+            :mail,
+            :pass,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            :regist_dt,
+            :join_dt,
+            :add_dt
+        )
+    ");
+
+    $stmt->execute([
+        'nickname' => $nickname,
+        'mail' => $email,
+        'pass' => $password,
+        'regist_dt' => $now,
+        'join_dt' => $now,
+        'add_dt' => $now
+    ]);
+
+    $memberNo = $pdo->lastInsertId();
+
+    error_log("✅ Created new mst_member: member_no={$memberNo}, email={$email}, partner={$partnerName}, userId={$partnerUserId}");
+
+    // 作成したユーザー情報を返す
+    return [
+        'member_no' => $memberNo,
+        'nickname' => $nickname,
+        'mail' => $email,
+        'point' => 0
     ];
 }
 

@@ -93,11 +93,67 @@ function DispTop($template) {
 	// データ取得
 	getData($_GET, array("NO","TESTMODE"));
 
-	//ログインチェック
+	//ログインチェック（SDK連携対応）
 	if ( !isset($template->Session->UserInfo) ) {
-		//ログインしていないのでどこかへ飛ばす？
-		DispError( $template, "U5001" );
-		return;
+		// SDK経由かチェック：game_sessionsからmember_noを取得
+		$machineNo = $_GET["NO"] ?? null;
+		$sdkMemberNo = null;
+
+		if ($machineNo) {
+			try {
+				// game_sessionsからmember_noを取得
+				$sdkCheckSql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+					->select()
+						->field("member_no, partner_user_id, session_id")
+						->from("game_sessions")
+						->where()
+							->and( "machine_no =", $machineNo, FD_NUM)
+							->and( "status IN", "('playing', 'pending')", FD_STR)
+						->order("started_at DESC")
+						->limit(1)
+					->createSQL("\n");
+
+				$sdkSession = $template->DB->getRow($sdkCheckSql);
+
+				if ($sdkSession && $sdkSession['member_no']) {
+					// SDK経由のセッション：mst_memberから情報を取得してセッション作成
+					$sdkMemberNo = $sdkSession['member_no'];
+
+					$memberSql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+						->select()
+							->field("member_no, nickname, mail, point")
+							->from("mst_member")
+							->where()
+								->and( "member_no =", $sdkMemberNo, FD_NUM)
+						->createSQL("\n");
+
+					$memberInfo = $template->DB->getRow($memberSql);
+
+					if ($memberInfo) {
+						// セッションを作成してログイン状態にする
+						$template->Session->UserInfo = [
+							'member_no' => $memberInfo['member_no'],
+							'nickname' => $memberInfo['nickname'],
+							'mail' => $memberInfo['mail'],
+							'point' => $memberInfo['point'],
+							'sdk_session' => true, // SDK経由フラグ
+							'partner_user_id' => $sdkSession['partner_user_id']
+						];
+
+						error_log("✅ SDK user session created: member_no={$sdkMemberNo}, partner_user_id={$sdkSession['partner_user_id']}");
+					}
+				}
+			} catch (Exception $e) {
+				error_log("❌ SDK session creation error: " . $e->getMessage());
+			}
+		}
+
+		// セッションがまだ存在しない場合はエラー
+		if ( !isset($template->Session->UserInfo) ) {
+			//ログインしていないのでどこかへ飛ばす？
+			DispError( $template, "U5001" );
+			return;
+		}
 	}
 
 	// 2021-07-16 ここで前回アクセスからの時間をチェック

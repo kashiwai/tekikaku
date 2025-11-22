@@ -116,11 +116,13 @@ try {
     $userBalance = null;
     $pointsConsumed = 0;
     $gamePrice = 100; // デフォルトのゲーム価格（ポイント）
+    $memberNo = null; // NET8側のユーザーID（mst_member.member_no）
 
     if ($partnerUserId && $apiKeyId) {
-        // ユーザーを取得または作成
+        // ユーザーを取得または作成（mst_memberと紐づけ）
         $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId);
         $userId = $user['id'];
+        $memberNo = $user['member_no']; // mst_member.member_noを取得
 
         // 残高チェック
         $userBalance = getUserBalance($pdo, $userId);
@@ -290,15 +292,17 @@ try {
         // 6. ゲームセッションをDBに記録（userIdの有無に関わらず）
         $stmt = $pdo->prepare("
             INSERT INTO game_sessions
-            (session_id, user_id, api_key_id, machine_no, model_cd, model_name, points_consumed, status, ip_address, user_agent)
+            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, status, ip_address, user_agent)
             VALUES
-            (:session_id, :user_id, :api_key_id, :machine_no, :model_cd, :model_name, :points_consumed, 'playing', :ip, :user_agent)
+            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, 'playing', :ip, :user_agent)
         ");
 
         $stmt->execute([
             'session_id' => $sessionId,
             'user_id' => $userId, // NULLでも記録
             'api_key_id' => $apiKeyId,
+            'member_no' => $memberNo, // NET8側のユーザーID
+            'partner_user_id' => $partnerUserId, // パートナー側のユーザーID
             'machine_no' => $machine['machine_no'],
             'model_cd' => $model['model_cd'],
             'model_name' => $model['model_name'],
@@ -306,6 +310,8 @@ try {
             'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
         ]);
+
+        error_log("✅ Game session created: session_id={$sessionId}, member_no={$memberNo}, partner_user_id={$partnerUserId}");
 
         // トランザクションコミット
         $pdo->commit();
