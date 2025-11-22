@@ -6,7 +6,16 @@ header('Content-Type: text/plain; charset=utf-8');
 require_once(__DIR__ . '/../_etc/require_files.php');
 
 try {
-    $pdo = get_db_connection();
+    // 管理者権限で接続（ALTER TABLE実行のため）
+    $host = getenv('DB_HOST') ?: '136.116.70.86';
+    $port = getenv('DB_PORT') ?: '3306';
+    $dbname = getenv('DB_NAME') ?: 'net8_dev';
+
+    $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";
+    $pdo = new PDO($dsn, 'net8_admin', 'Vm3i55gqDJd21x9kkE9ahiI6', [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
 
     echo "========================================\n";
     echo "game_sessions テーブル修正開始\n";
