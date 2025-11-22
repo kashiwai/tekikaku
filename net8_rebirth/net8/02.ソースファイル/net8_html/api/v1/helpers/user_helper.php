@@ -218,10 +218,9 @@ function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
         return $member;
     }
 
-    // 新規mst_memberを作成（nicknameは最大15文字程度に制限）
-    $shortPartnerName = substr($partnerName, 0, 5); // パートナー名は最大5文字
+    // 新規mst_memberを作成（nicknameは最大10文字に制限）
     $shortUserId = substr($partnerUserId, -6); // ユーザーIDの最後6文字
-    $nickname = 'SDK_' . $shortPartnerName . '_' . $shortUserId; // 例: SDK_DemoA_st_123
+    $nickname = 'SDK' . $shortUserId; // 例: SDKer_123 (最大9文字)
     $password = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT); // ランダムパスワード
     $now = date('Y-m-d H:i:s');
 
