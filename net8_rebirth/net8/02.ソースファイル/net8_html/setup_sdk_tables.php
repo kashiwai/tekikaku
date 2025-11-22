@@ -6,7 +6,7 @@
 
 header('Content-Type: text/plain; charset=utf-8');
 
-require_once(__DIR__ . '/../_etc/require_files.php');
+require_once(__DIR__ . '/_etc/require_files.php');
 
 try {
     $pdo = get_db_connection();
