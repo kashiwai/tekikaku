@@ -277,15 +277,48 @@ try {
             $member = $memberStmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$member) {
-                // 仮想メンバーを作成
+                // 仮想メンバーを作成（user_helper.phpと同じ形式）
+                $shortUserId = substr($sdkUser['partner_user_id'], -6);
+                $nickname = 'SDK' . $shortUserId;
+                $password = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
+                $now = date('Y-m-d H:i:s');
+
                 $createMemberStmt = $pdo->prepare("
-                    INSERT INTO mst_member (mail, nickname, invite_cd, point, draw_point, member_flg, del_flg)
-                    VALUES (:mail, :nickname, :invite_cd, 0, 0, 1, 0)
+                    INSERT INTO mst_member (
+                        nickname,
+                        mail,
+                        pass,
+                        point,
+                        draw_point,
+                        mail_magazine,
+                        tester_flg,
+                        agent_flg,
+                        black_flg,
+                        state,
+                        regist_dt,
+                        join_dt,
+                        add_dt
+                    ) VALUES (
+                        :nickname,
+                        :mail,
+                        :pass,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        :now,
+                        :now,
+                        :now
+                    )
                 ");
                 $createMemberStmt->execute([
+                    'nickname' => $nickname,
                     'mail' => $virtualEmail,
-                    'nickname' => $sdkUser['username'] ?? 'SDK User',
-                    'invite_cd' => 'SDK_' . $sdkUser['partner_user_id']
+                    'pass' => $password,
+                    'now' => $now
                 ]);
                 $memberNo = $pdo->lastInsertId();
             } else {
