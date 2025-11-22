@@ -70,6 +70,30 @@ try {
         $pdo->rollBack();
     }
 
+    // SDK v1.1.0: game_sessionsテーブルの自動修正
+    try {
+        // partner_user_idカラムが存在するかチェック
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'partner_user_id'");
+        if ($stmt->rowCount() === 0) {
+            error_log("⚠️ Adding partner_user_id column to game_sessions");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN partner_user_id VARCHAR(255) NULL COMMENT 'パートナー側のユーザーID'");
+            $pdo->exec("ALTER TABLE game_sessions ADD INDEX idx_partner_user_id (partner_user_id)");
+            error_log("✅ partner_user_id column added successfully");
+        }
+
+        // member_noカラムが存在するかチェック
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'member_no'");
+        if ($stmt->rowCount() === 0) {
+            error_log("⚠️ Adding member_no column to game_sessions");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN member_no INT(10) UNSIGNED NULL COMMENT 'NET8側のmst_member.member_noとの紐づけ'");
+            $pdo->exec("ALTER TABLE game_sessions ADD INDEX idx_member_no (member_no)");
+            error_log("✅ member_no column added successfully");
+        }
+    } catch (PDOException $e) {
+        error_log("❌ Table migration error (non-fatal): " . $e->getMessage());
+        // テーブル修正エラーは致命的ではないので続行
+    }
+
     // 環境判定（JWTまたは直接APIキーから判定）
     $environment = 'test'; // デフォルトはtest
     $apiKeyId = null;
