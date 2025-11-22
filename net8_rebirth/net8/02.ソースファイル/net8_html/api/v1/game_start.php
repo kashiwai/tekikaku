@@ -150,22 +150,34 @@ try {
     }
 
     // 1. 機種情報を取得
-    $modelSql = "SELECT model_no, model_cd, model_name, category
-                 FROM mst_model
-                 WHERE model_cd = :model_id
-                 AND del_flg = 0";
+    if ($environment === 'test' || $environment === 'staging') {
+        // テスト/ステージング環境：モックモデルを使用
+        $model = [
+            'model_no' => 9999,
+            'model_cd' => $modelId,
+            'model_name' => 'Test Model - ' . $modelId,
+            'category' => 1 // 1=パチンコ, 2=スロット
+        ];
+        error_log("✅ Test environment: Using mock model for modelId={$modelId}");
+    } else {
+        // 本番環境：実際のモデルをデータベースから取得
+        $modelSql = "SELECT model_no, model_cd, model_name, category
+                     FROM mst_model
+                     WHERE model_cd = :model_id
+                     AND del_flg = 0";
 
-    $stmt = $pdo->prepare($modelSql);
-    $stmt->execute(['model_id' => $modelId]);
-    $model = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $pdo->prepare($modelSql);
+        $stmt->execute(['model_id' => $modelId]);
+        $model = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$model) {
-        http_response_code(404);
-        echo json_encode([
-            'error' => 'MODEL_NOT_FOUND',
-            'message' => 'Model not found'
-        ]);
-        exit;
+        if (!$model) {
+            http_response_code(404);
+            echo json_encode([
+                'error' => 'MODEL_NOT_FOUND',
+                'message' => 'Model not found'
+            ]);
+            exit;
+        }
     }
 
     // 2. 利用可能なマシンを検索（環境別処理）
