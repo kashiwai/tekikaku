@@ -70,28 +70,81 @@ try {
         $pdo->rollBack();
     }
 
-    // SDK v1.1.0: game_sessionsテーブルの自動修正
+    // SDK v1.1.0: SDKテーブルの自動作成・修正
     try {
-        // partner_user_idカラムが存在するかチェック
+        // 1. api_keysテーブル
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `api_keys` (
+          `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+          `user_id` INT(10) UNSIGNED NULL,
+          `key_value` VARCHAR(100) NOT NULL UNIQUE,
+          `key_type` VARCHAR(20) NOT NULL DEFAULT 'public',
+          `name` VARCHAR(100) NULL,
+          `environment` VARCHAR(20) NOT NULL DEFAULT 'test',
+          `rate_limit` INT(10) UNSIGNED NOT NULL DEFAULT 1000,
+          `is_active` TINYINT(4) NOT NULL DEFAULT 1,
+          `last_used_at` DATETIME NULL,
+          `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          `expires_at` DATETIME NULL,
+          PRIMARY KEY (`id`),
+          KEY `idx_key_value` (`key_value`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+
+        // 2. sdk_usersテーブル
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `sdk_users` (
+          `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+          `partner_user_id` VARCHAR(255) NOT NULL,
+          `api_key_id` INT(10) UNSIGNED NOT NULL,
+          `member_no` INT(10) UNSIGNED NULL,
+          `email` VARCHAR(255) NULL,
+          `username` VARCHAR(255) NULL,
+          `metadata` TEXT NULL,
+          `is_active` TINYINT(4) NOT NULL DEFAULT 1,
+          `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `idx_partner_user_api` (`partner_user_id`, `api_key_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+
+        // 3. user_balancesテーブル
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `user_balances` (
+          `user_id` INT(10) UNSIGNED NOT NULL,
+          `balance` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+          `total_deposited` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+          `total_consumed` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+          `total_won` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+          `last_transaction_at` DATETIME NULL,
+          `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (`user_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+
+        // 4. point_transactionsテーブル
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `point_transactions` (
+          `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+          `user_id` INT(10) UNSIGNED NOT NULL,
+          `transaction_id` VARCHAR(100) NOT NULL UNIQUE,
+          `type` VARCHAR(20) NOT NULL,
+          `amount` INT(11) NOT NULL,
+          `balance_before` INT(10) UNSIGNED NOT NULL,
+          `balance_after` INT(10) UNSIGNED NOT NULL,
+          `game_session_id` VARCHAR(100) NULL,
+          `description` VARCHAR(512) NULL,
+          `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+
+        // 5. game_sessionsテーブルのカラム追加
         $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'partner_user_id'");
         if ($stmt->rowCount() === 0) {
-            error_log("⚠️ Adding partner_user_id column to game_sessions");
-            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN partner_user_id VARCHAR(255) NULL COMMENT 'パートナー側のユーザーID'");
-            $pdo->exec("ALTER TABLE game_sessions ADD INDEX idx_partner_user_id (partner_user_id)");
-            error_log("✅ partner_user_id column added successfully");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN partner_user_id VARCHAR(255) NULL");
         }
-
-        // member_noカラムが存在するかチェック
         $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'member_no'");
         if ($stmt->rowCount() === 0) {
-            error_log("⚠️ Adding member_no column to game_sessions");
-            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN member_no INT(10) UNSIGNED NULL COMMENT 'NET8側のmst_member.member_noとの紐づけ'");
-            $pdo->exec("ALTER TABLE game_sessions ADD INDEX idx_member_no (member_no)");
-            error_log("✅ member_no column added successfully");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN member_no INT(10) UNSIGNED NULL");
         }
+
+        error_log("✅ SDK tables auto-migration completed");
     } catch (PDOException $e) {
         error_log("❌ Table migration error (non-fatal): " . $e->getMessage());
-        // テーブル修正エラーは致命的ではないので続行
     }
 
     // 環境判定（JWTまたは直接APIキーから判定）
