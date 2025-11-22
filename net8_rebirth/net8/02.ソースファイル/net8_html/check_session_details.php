@@ -24,8 +24,8 @@ try {
             gs.points_consumed,
             gs.status,
             gs.created_at,
-            m.member_id,
             m.nickname,
+            m.email,
             ak.name as partner_name
         FROM game_sessions gs
         LEFT JOIN mst_member m ON gs.member_no = m.member_no
@@ -42,8 +42,8 @@ try {
         echo "session_id: " . ($session['session_id'] ?? 'NULL') . "\n";
         echo "partner_user_id: " . ($session['partner_user_id'] ?? 'NULL') . "\n";
         echo "member_no: " . ($session['member_no'] ?? 'NULL') . "\n";
-        echo "member_id: " . ($session['member_id'] ?? 'NULL') . "\n";
         echo "nickname: " . ($session['nickname'] ?? 'NULL') . "\n";
+        echo "email: " . ($session['email'] ?? 'NULL') . "\n";
         echo "partner_name: " . ($session['partner_name'] ?? 'NULL') . "\n";
         echo "api_key_id: " . ($session['api_key_id'] ?? 'NULL') . "\n";
         echo "machine_no: " . ($session['machine_no'] ?? 'NULL') . "\n";
