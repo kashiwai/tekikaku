@@ -18,7 +18,7 @@ function getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData = []) {
     // 既存ユーザーを検索（member_noも取得）
     $stmt = $pdo->prepare("
         SELECT id, partner_user_id, api_key_id, email, username, is_active, member_no
-        FROM users
+        FROM sdk_users
         WHERE api_key_id = :api_key_id
         AND partner_user_id = :partner_user_id
     ");
@@ -39,9 +39,9 @@ function getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData = []) {
     $mstMember = getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId);
     $memberNo = $mstMember['member_no'];
 
-    // 新規SDK usersレコードを作成（member_noと紐づけ）
+    // 新規SDK sdk_usersレコードを作成（member_noと紐づけ）
     $stmt = $pdo->prepare("
-        INSERT INTO users (partner_user_id, api_key_id, member_no, email, username, metadata, is_active)
+        INSERT INTO sdk_users (partner_user_id, api_key_id, member_no, email, username, metadata, is_active)
         VALUES (:partner_user_id, :api_key_id, :member_no, :email, :username, :metadata, 1)
     ");
 
