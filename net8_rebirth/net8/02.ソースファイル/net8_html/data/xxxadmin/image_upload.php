@@ -531,8 +531,15 @@ try {
                         <h3><?php echo htmlspecialchars($model['model_name']); ?></h3>
                         <div class="model-cd">CD: <?php echo htmlspecialchars($model['model_cd']); ?></div>
                         <div class="image-preview">
-                            <?php if ($model['image_list']): ?>
-                                <img src="/data/<?php echo htmlspecialchars($model['image_list']); ?>" alt="<?php echo htmlspecialchars($model['model_name']); ?>">
+                            <?php if ($model['image_list']):
+                                // GCS URLか相対パスかを判定
+                                $imageSrc = $model['image_list'];
+                                if (!preg_match('/^https?:\/\//', $imageSrc)) {
+                                    // 相対パスの場合はプレフィックス追加
+                                    $imageSrc = '/data/img/model/' . $imageSrc;
+                                }
+                            ?>
+                                <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="<?php echo htmlspecialchars($model['model_name']); ?>">
                             <?php else: ?>
                                 <span class="no-image">画像未設定</span>
                             <?php endif; ?>
