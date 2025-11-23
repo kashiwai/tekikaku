@@ -13,6 +13,9 @@ set_time_limit(300); // 5分
 // 設定ファイル読み込み
 require_once('../../_etc/setting.php');
 
+// 管理画面用関数読み込み（get_db_connection含む）
+require_once('../../_etc/require_files_admin.php');
+
 // Cloud Storage Helper読み込み
 if (!file_exists(__DIR__ . '/../../_sys/CloudStorageHelper.php')) {
     die('❌ CloudStorageHelper.php が見つかりません');

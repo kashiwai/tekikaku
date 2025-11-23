@@ -460,8 +460,21 @@ class TemplateUser extends SmartTemplate {
 			
 			// 画像
 			$this->assign("DIR_IMG_MODEL_DIR", defined('DIR_IMG_MODEL_DIR') ? DIR_IMG_MODEL_DIR : (defined('DIR_IMG_MODEL') ? DIR_IMG_MODEL : ''), true);		// 機材画像表示用パス
-			$this->assign("IMAGE_LIST"       , $row["image_list"], true);
-			$this->assign("IMAGE_DETAIL"     , $row["image_detail"], true);
+
+			// 画像パス処理: GCS URLの場合はそのまま、相対パスの場合はプレフィックス追加
+			$imageList = $row["image_list"];
+			if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
+				// 相対パスの場合は絶対パスに変換
+				$imageList = '/data/img/model/' . $imageList;
+			}
+			$this->assign("IMAGE_LIST"       , $imageList, true);
+
+			// image_detail も同様に処理
+			$imageDetail = $row["image_detail"];
+			if ($imageDetail && !preg_match('/^https?:\/\//', $imageDetail)) {
+				$imageDetail = '/data/img/model/' . $imageDetail;
+			}
+			$this->assign("IMAGE_DETAIL"     , $imageDetail, true);
 			// 単位
 			$this->assign("LABEL_1"          , $GLOBALS["viewUnitList"]["1"], true);
 			$this->assign("LABEL_2"          , ($row['category']==1)? $GLOBALS["viewUnitList"]["4"]:$GLOBALS["viewUnitList"]["2"], true);
