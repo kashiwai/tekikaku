@@ -1,8 +1,9 @@
 <?php
 /**
  * NET8 Claude Code API - API Keys Management
- * Version: 1.0.0
+ * Version: 1.0.1
  * Created: 2025-12-12
+ * Updated: 2025-12-12 - PHP 7.2 compatibility fix
  *
  * GET    /api/claude/api-keys          - APIキー一覧
  * POST   /api/claude/api-keys          - 新規発行
