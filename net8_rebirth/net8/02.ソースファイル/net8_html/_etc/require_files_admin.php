@@ -42,10 +42,20 @@ if (file_exists($require_files_path)) {
     }
 }
 
-// クラスファイルの読み込み
+// クラスファイルの読み込み（_sys/TemplateAdmin.phpを優先）
+$sys_path = __DIR__ . '/../_sys/';
+$lib_path = __DIR__ . '/../_lib/';
+
+// TemplateAdmin.php を _sys/ から優先的に読み込み
+if (file_exists($sys_path . 'TemplateAdmin.php')) {
+    require_once($sys_path . 'TemplateAdmin.php');
+}
+
+// その他のクラスファイル
 $lib_paths = [
     ROOT_PATH . '/data/_lib/',
     ROOT_PATH . '/_lib/',
+    $lib_path,
 ];
 
 // 必要なクラスファイル
@@ -54,12 +64,11 @@ $required_classes = [
     'SmartDB_MySQL.class.php',
     'SqlString.class.php',
     'Session.class.php',
-    'TemplateAdmin.class.php',
 ];
 
-foreach ($lib_paths as $lib_path) {
+foreach ($lib_paths as $path) {
     foreach ($required_classes as $class_file) {
-        $file_path = $lib_path . $class_file;
+        $file_path = $path . $class_file;
         if (file_exists($file_path)) {
             require_once($file_path);
         }
