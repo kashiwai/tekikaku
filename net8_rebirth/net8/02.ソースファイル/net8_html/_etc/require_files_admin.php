@@ -2,6 +2,7 @@
 /**
  * 管理画面用require files
  * Created: 2025-12-12
+ * Updated: 2025-12-12 - 確実にrequire_files.phpを読み込むよう修正
  */
 
 // エラー表示設定
@@ -13,13 +14,18 @@ if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(dirname(__DIR__)));
 }
 
-// 基本的なrequire_filesを読み込み
-if (file_exists(__DIR__ . '/require_files.php')) {
-    require_once(__DIR__ . '/require_files.php');
+// 基本的なrequire_filesを読み込み（絶対パスで確実に）
+$require_files_path = __DIR__ . '/require_files.php';
+if (file_exists($require_files_path)) {
+    require_once($require_files_path);
 } else {
+    // フォールバック: setting.phpを直接読み込む
+    $setting_path = __DIR__ . '/setting.php';
+    if (file_exists($setting_path)) {
+        require_once($setting_path);
+    }
+
     // require_files.phpが見つからない場合、最小限の設定
-    
-    // データベース接続設定
     if (!defined('DB_HOST')) {
         define('DB_HOST', '136.116.70.86');
         define('DB_USER', 'net8tech001');
@@ -27,7 +33,7 @@ if (file_exists(__DIR__ . '/require_files.php')) {
         define('DB_NAME', 'net8_dev');
         define('DB_PORT', 3306);
     }
-    
+
     // 基本定数
     if (!defined('FD_TEXT')) {
         define('FD_TEXT', 1);
@@ -66,17 +72,18 @@ if (!class_exists('TemplateAdmin')) {
         public $DB;
         public $Session;
         public $AdminInfo;
-        
+
         public function __construct() {
-            // データベース接続
+            // データベース接続 (DB_PASSWORDとDB_PASSの両方に対応)
             $this->DB = new SmartDB_MySQL();
-            $this->DB->connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-            
+            $password = defined('DB_PASSWORD') ? DB_PASSWORD : (defined('DB_PASS') ? DB_PASS : '');
+            $this->DB->connect(DB_HOST, DB_USER, $password, DB_NAME, DB_PORT);
+
             // セッション管理
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
-            
+
             // 簡易セッション管理
             $this->Session = new stdClass();
             if (isset($_SESSION['AdminInfo'])) {
