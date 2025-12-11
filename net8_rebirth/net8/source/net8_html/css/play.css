@@ -1,0 +1,1768 @@
+@charset "UTF-8";
+@import url("../font/font_digital.css");
+
+/*表示デバイスごとの指定は一番最後にあります*/
+/*ここから初期設定*/
+
+/*ベース部分*/
+
+:root{
+	--light-gray: #f9f9f9;
+	--border: #ccc;
+	--info-border: #555;
+}
+
+html,body{
+	width: 100%;
+	height:100%;
+	box-sizing: border-box;
+	touch-action: manipulation;
+}
+
+
+/*バウンス効果を無くすための指定です*/
+html {
+	overflow: hidden;
+	background: var(--light-gray);
+}
+
+/*バウンス効果を無くすためにposition:fixed〜overflow:auto;までを入れています*/
+body {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: auto;
+	-webkit-text-size-adjust: 100%;
+	font: 15pt/30pt 'Lucida Grande', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, sans-serif;
+	color: #333;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	font-weight: normal;
+	font-style: normal;
+	box-sizing: border-box;
+    min-height: 0vw; /* Safari clamp関数対策 */
+}
+
+/*画像でリンクを貼った場合のボーダーを消去*/
+a img{
+	border-width:0;
+	display: block;
+}
+
+a:hover img{
+	opacity: 0.7;
+}
+
+/*クリア要素*/
+.clr{
+clear: both;
+}
+
+/*ここまで初期設定*/
+
+/* @group 共通指定 */
+
+main{
+	width: 1200px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+.flex{
+	display: flex;
+	justify-content:center;
+	align-items: center;
+}
+
+ul,
+li{
+	list-style: none;
+}
+
+.play-page table td,
+.play-page table tr{
+	/*padding: 0 !important;*/
+}
+
+/* @group モーダル設定 */
+
+/* @group 基本設定 */
+
+/*クローズボタン*/
+.modal-window h3{
+	margin-top: 0;
+}
+
+.modal-window .modal_close,
+.design-select-view .modal_close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: block;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	background: url(js/modal/cross.png) no-repeat 0 0;
+	z-index: 2;
+}
+
+/* @end */
+
+/* @group モーダル内のボタン設定*/
+.modal-button {
+	display: flex;
+	font-size: 0.7em;
+	justify-content:center;
+}
+
+.modal-button input.modal_close{
+	position: inherit;
+	top: 0;
+	right: 0;
+	display: block;
+	width: inherit;
+	height: auto;
+	background: none;
+	z-index: 3;
+	border: none;
+}
+
+.modal-button input,
+.modal-button a {
+	margin-right: 1em;
+	padding: 0.5em 1em;
+	cursor: pointer;
+	color: #777;
+	white-space: nowrap;
+	border: 2px solid #aaa !important;
+	border-radius:7px;
+	background: none;
+}
+
+.modal-button input:hover{
+	background: #cff;
+}
+.modal-button input:last-child{
+	margin-right: 0;
+}
+
+/* @end */
+
+
+
+/* @group キーコントロールのモーダル内 */
+#keybord.modal-window dl{
+	width: 80%;
+	margin: 0 auto;
+}
+#keybord.modal-window dt,
+#keybord.modal-window dd{
+	margin-top: 0.5em;
+}
+
+#keybord.modal-window dt:first-child,
+#keybord.modal-window dd:nth-child(2){
+	margin-top: 0;
+}
+
+#keybord.modal-window dt{
+	clear: both;
+	float: left;
+}
+
+#keybord.modal-window dd{
+	float: right;
+}
+
+#keybord.modal-window dd:before{
+	content: "..........................";
+	margin-right: 0.5em;
+	line-height: 0em;
+	vertical-align: super;
+}
+
+#keybord.modal-window dd .key{
+	display: inline-block;
+	width: 2em;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius:10px;
+}
+
+/* @end */
+
+
+
+/* @end */
+
+
+
+
+/* @end */
+
+/* @group 遊技ページ設定（<body>の「class="play-page"」を参照） */
+body.play-page{
+	font: 15pt/30pt 'Lucida Grande', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, sans-serif;
+	background: #000;
+	padding-top: 30px;
+}
+
+body.play-page a:hover,
+body.play-page a:hover img {
+	opacity: 1;
+}
+
+.play-page footer{
+	display: none;
+}
+
+
+.play-info {
+	float: left;
+	width: 385px;
+}
+
+.play-page .info-inner{
+	padding: 0 8px 8px;
+	border: 1px solid var(--info-border);
+}
+
+.play-info .info-inner{
+	border-bottom: none;
+}
+
+.play-page .information-lamp {
+@font-face {
+    font-family: "Let&#039;s go Digital Regular";
+    src:
+      url("../font/Let_s_go_Digital_Regular.eot?") format("eot"),url("../font/Let_s_go_Digital_Regular.woff") format("woff");
+  }
+}  
+
+/* @group 機種名などのヘッダー部 */
+
+.play-page .info-header{
+	height: 30px;
+	color: #000;
+	line-height: 1;
+	background: #32ADE6;
+	overflow: hidden;
+	border: 1px solid  var(--info-border);
+}
+
+.play-page .machine-number {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 3em;
+	height: 20px;
+	margin: 5px 0 5px 0.5em;
+	float: left;
+	font-size: 0.7em;
+	color: #fff;
+	background: #000;
+	border-radius:50px;
+}
+
+.play-page .machine-name {
+	float: left;
+	display: flex;
+	align-items: center;
+	width: 13em;
+	margin : 7px 0 5px 0.5em;
+	font-size: 0.7em;
+	line-height: 1.2em;
+	overflow: hidden;
+}
+
+.play-page .btn-info {
+	position: absolute;
+	margin-left: 230px;
+}
+
+.play-page .info-header a{
+	float: left;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 70px;
+	height: 20px;
+	margin: 5px 0 5px 5px;
+	padding-left: 0.5em;
+	color: #000 !important;
+	font-size: 0.5em;
+	text-decoration: none;
+	font-weight: 700;
+	background: url(../content/images/play-page/bg_play_head_bt.svg) no-repeat center;
+}
+
+.play-page .info-header a:first-child{
+	padding-left: 1.4em;
+}
+
+/* @end */
+
+/* @group 出玉プレートと実機パネル */
+
+.play-page .plate{
+	display: flex;
+	padding: 0;
+}
+
+.play-page .plate img.small-plate{
+	margin-left: -30px;
+}
+
+.play-page .machine-panel{
+	display: block;
+	margin: 0 auto;
+}
+
+/* @end */
+
+/* @group カウンター */
+
+
+.play-page .information-lamp{
+  display: flex;
+  flex-direction: column;
+}
+
+.play-page .main-counter *{
+  order: 1;
+}
+
+.play-page .bonus-graph{
+  order: 3;
+}
+
+.play-page .sub-counter {
+	order:2;
+	margin: 0 !important;
+}
+
+/* @group メインカウンター */
+
+.play-page .main-counter {
+	width: 100%;
+	margin-top: 10px;
+	font-family:"Digital";
+	font-size: 18pt;
+	line-height: 1;
+	text-align: right;
+	border-collapse: collapse;
+	overflow: hidden;
+}
+
+.play-page .main-counter td:first-child{
+	width: 60%;
+}
+
+.play-page .data-title-image.large {
+	width: 14px;
+}
+
+.play-page .data-title-image.large.smp{
+	display: none;
+}
+
+.play-page .main-counter table{
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.play-page .main-display{
+	line-height: 0.8;
+}
+
+.main-display td:first-child{
+	vertical-align: top;
+	width: 18px !important;
+}
+
+
+.play-page td.count-data.big-seg {
+	font-size: 55pt;
+	letter-spacing: 2px;
+	color: #fff;
+	background: url(../content/images/play-page/88888.svg) no-repeat 5px 3px;
+	background-size: 97%;
+}
+
+.play-page td.count-data.game {
+	font-size: 42pt;
+	color: #00FF00;
+	letter-spacing: 2px;
+	background: url(../content/images/play-page/88888.svg) no-repeat 50px 3px;
+	background-size: 75%;
+}
+
+.play-page .sub-display img.data-title-image {
+	width: 10px;
+	margin: 5px 0 0 10px;
+}
+
+.play-page .sub-display{
+	width: 40%;
+	line-height: 1.2;
+}
+
+.bb {
+	color: #f00;
+}
+
+.rb {
+	width: 1.8em;
+	color: #FFCC00;
+}
+
+.play-page .counter-seg{
+	font-size: 21pt;
+}
+
+.play-page .total{
+	padding: 0 !important;
+	color: #FF9500;
+	font-size: 30pt;
+	background: url(../content/images/play-page/88888.svg) no-repeat 0;
+	background-size: contain;
+}
+
+.play-page .sub-display td:nth-child(1){
+	vertical-align: top;
+	width: 20px;
+}
+
+.play-page .sub-display td:nth-child(2){
+	width: 50px;
+	background: url(../content/images/play-page/888.svg) no-repeat right center ;
+	background-size: 63%;
+}
+
+.play-page .sub-display td:nth-child(3){
+	width: 50px;
+	background: url(../content/images/play-page/888.svg) no-repeat right center ;
+	background-size: 63%;
+
+}
+
+.play-page .sub-display td.counter-title {
+	font-size: 0.6em;
+	text-align: center;
+	background: none;
+}
+
+/* @end */
+
+/* @group サブカウンター */
+
+.play-page .sub-counter {
+	width: 100%;
+	margin-top: 10px;
+	font-family:"Digital";
+	color: #fff;
+}
+
+.play-page .sub-counter td{
+	width: 25%;
+	padding-left: 10px;
+	font-size: 19pt;
+	text-align: right;
+	line-height: 0.8em;
+	vertical-align: baseline;
+}
+
+.play-page .sub-counter td:first-child{
+	padding: 0;
+}
+
+.play-page td.counter-seg.game,
+.play-page td.counter-seg.max,
+.play-page td.counter-seg.play-income {
+	font-size: 25pt;
+}
+
+/* @end */
+
+
+
+/* @group データバーグラフ */
+
+.play-page .bonus-graph {
+	width: 100%;
+	padding: 10px 10px 0;
+	font-family:"Digital";
+	text-align: center;
+	font-size: 0.5em;
+	color: #00FF00;
+	line-height: 1;
+	border: 1px solid  var(--info-border);
+}
+
+.play-page .bonus-graph td{
+	width: calc(100% / 12);
+	padding-right: 0.2em;
+	vertical-align: bottom;
+	border-collapse:collapse;
+}
+
+.play-page .bonus-graph tr:first-child td{
+	min-height: 100px;
+}
+
+.play-page .bonus-graph img{
+	width: 100%;
+	height: auto;
+	margin: 0;
+	padding: 0;
+}
+
+/* @end */
+
+.play-page .information-lamp img{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+
+/* @end */
+
+/* @group プレイ画面と操作ボタン */
+
+.play-page footer nav{
+	display: none;
+}
+
+/* @group プレイ動画 */
+
+.play-page .play-machine {
+	float: right;
+	width: 800px;
+	height: calc(100% - 20px);
+}
+
+.play-page .play-movie {
+	width: 800px;
+	overflow: hidden;
+}
+
+.play-page .video-wrapper{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width:100%;	
+}
+
+.play-page .play-machine video{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width:100%;
+	height: 750px;
+	object-fit: cover;
+	/*ここから下は確認用のダミーです*/
+	background: url(../content/images/dummy_machine/machine_view.jpg) no-repeat center;
+	background-size: cover;
+}
+
+
+/* @end */
+
+/* @group レバー・ストップボタン */
+
+.play-page .btn-wrapper {
+	position: relative;
+	height: 85px;
+	margin: 0;
+	padding: 0 1em;
+	background: url(../content/images/play-page/button_base.png) no-repeat center bottom;
+	background-size:100%;
+	z-index: 3;
+}
+
+.play-page .btn-wrapper ul{
+	margin: 0 auto 1em;
+}
+
+.play-page .machine-button{
+	width: 580px;
+	margin: 0 0 0 50px;
+	padding-top: 20px;
+}
+
+/* startレバー */
+.play-page .start-buttons{
+	float: left;
+	margin-top: -10px;
+}
+
+.play-page .start-buttons .bet img{
+	width: 3em;
+}
+.play-page .start-buttons .bet:active img{
+	margin-top: 1.5vw;
+}
+
+
+/* @group stopボタン */
+
+/* stopボタン */
+
+.play-page .stop-button {
+	width: 55%;
+}
+
+.play-page .stop-button li{
+	width: 33.33333%;
+	background: url(../content/images/play-page/button_on.png) no-repeat center;
+	background-size: 60%;
+	list-style: none;
+	cursor: pointer;
+}
+
+.play-page .stop-button li a{
+	display: block;
+}
+
+.play-page .stop-button li a img{
+	display: block;
+	width: 60%;
+	margin: 0 auto;
+}
+
+.play-page .stop-button li a:active img{
+	opacity: 0;
+}
+
+/* @end */
+.auto777:hover img,
+.chance:hover img,
+.chance2:hover img{
+	opacity: 1;
+}
+
+.action-buttons li a{
+	cursor: pointer;
+}
+
+.auto777:active img,
+.chance:active img,
+.chance2:active img{
+	opacity: 0.7 !important;
+}
+
+.play-page .chance-buttons {
+	display: block;
+	position: absolute;
+	margin-top: -220px;
+	width: 150px;
+	margin-left: 560px;
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid #fff;
+	border-radius: 10px;
+}
+
+.play-page .chance-buttons a{
+	display: block;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.play-page .chance-buttons img
+{
+	width: 100%;
+}
+
+/* @group 7setモーダルウィンドウ */
+.auto7-item {
+	border:none;
+}
+
+.auto7-item td{
+	width: 30%;
+	height: auto;
+	border:none;
+}
+
+.auto7-item img{
+	width: 100%;
+	height: auto;
+}
+/* @end */
+
+
+/* @end */
+
+/* @group loading画面 */
+
+.play-page .modalOpen_load {
+	display: inline-block;
+	min-height: 100px;
+  width: 60%;
+  height: 15%;
+  background-color: #808080;
+/*	background-color: #f5f5f5*/
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  padding: 0;
+  line-height: 50px;
+  text-align: center;
+	font-size: 20px;
+}
+
+/* @end */
+
+/* @group チェンジコインモーダル　*/
+
+.play-page .change-coin-md1{
+
+}
+
+.play-page .change-coin-tx{
+	text-align:center;
+}
+
+.play-page .change-coin-md2{
+	text-align:center;
+	margin-top:50px;/*上*/
+	margin-bottom:50px;/*下*/
+}
+
+.play-page .change-coin-md2 input:first-of-type{
+	width: 30%;
+  padding: 5px;
+	border-radius: 10px;
+	margin-right:auto;/*右*/
+}
+
+.play-page .change-coin-md2 input:nth-of-type(2){
+	width: 30%;
+	padding: 5px;
+	border-radius: 10px;
+}
+/* @end */
+
+/* @end */
+
+/* @group オート777・キーコントロール・サウンド */
+
+/* @group コイン情報・変換ボタン */
+
+.play-page .information-lamp-under{
+	float: left;
+	width: 385px;
+	color: #fff;
+}
+
+.play-page .information-lamp-under .info-inner{
+	padding-top: 5px;
+	font-size: 0.6em;
+	line-height: 1;
+	border-top: none;
+	overflow: hidden;
+}
+
+/* @group コイン持ち高・交換 */
+
+.play-page .now-coins-set {
+	margin: 0 0 10px;
+	padding: 7px;
+	font-size: 1.6em;
+	overflow: hidden;
+	background: url(../content/images/play-page/ex-change-bg.svg) no-repeat center;
+	background-size: cover;
+}
+
+.play-page .coins-count {
+	float: left;
+	display: flex;
+	/*justify-content: flex-end;*/
+	align-items: center;
+	width: 50%;
+	margin-top: 5px;
+	margin-right: 2%;
+	font-size: 1.4em;
+}
+
+.play-page .coins-count p{
+	width: 5em;
+	margin-left: 0.5em;
+	text-align: right;
+}
+
+.play-page .now-coins-set img{
+	display: block;
+	width: 1em;
+}
+
+.play-page .now-coins-set img.arrow-icon{
+	margin: 0 0.15em;
+}
+
+.play-page input.coin-display {
+	width: 3.5em;
+	height: 1.2em;
+	padding: 3px;
+	color: #000;
+	font-size: 0.8em;
+	text-align: right;
+	border: none;
+	background: #ccc;
+}
+
+.play-page .coin-exchange-input {
+	float: right;
+	width: 48%;
+	padding: 5px;
+	/*border: 1px solid  var(--info-border);*/
+}
+
+.play-page .coin-exchange-input form{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.play-page .coin-exchange-input form img{
+	width: 1em !important;
+	margin: 2px 0.25em -2px;
+}
+
+.play-page .coin-exchange-input form img.exchange-button{
+	width: 2em !important;
+}
+
+.play-page .auto-exchange-button {
+	display: block;
+	width: 3em;
+	font-size: 0.5em;
+	color: #aaa;
+}
+
+.play-page .coin-exchange-input label.exchange-toggl img{
+	width: 2.2em !important;
+}
+
+.play-page .coin-exchange-input form input#auto-exchange{
+	display: none;
+}
+
+.play-page .coin-exchange-input label.exchange-toggl img{
+	display: none ;
+	margin: 0 !important;
+}
+
+.play-page .coin-exchange-input input#auto-exchange[type="checkbox"] + label.exchange-toggl img.off{
+	display: block;
+ }
+ 
+.play-page .coin-exchange-input input#auto-exchange[type="checkbox"]:checked + label.exchange-toggl img.off{
+	display: none;
+}
+
+.play-page .coin-exchange-input input#auto-exchange[type="checkbox"]:checked + label.exchange-toggl img.on{
+	display: block;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group 流れるテキスト */
+
+.play-page .news-machine{
+	width:265px;
+	margin-top: 10px;
+	margin-left: 100px;
+	padding: 5px 0;
+	clear: both;
+	font-size: 1.2em;
+	line-height: 1em;
+	color: #96CC0C;
+	overflow: hidden;
+	background: #111;
+}
+
+/*animation.cssに記述あり*/
+.play-page .news-machine p{
+	display: inline-table;
+	white-space: nowrap;
+	animation: flowing 10s linear infinite;
+	transform: translateX(100%);
+}
+
+@keyframes flowing {
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* @end */
+
+/* @group 777セット・退出・ブログ・マイページボタン */
+
+.play-page .control-buttons {
+	display: flex;
+	margin: 10px 0 0 50px;
+	padding: 2px 0 2px 45px;
+	background: url(../content/images/play-page/button_base.svg) no-repeat right center;
+	background-size: contain;
+}
+
+.play-page .control-buttons a{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 25%;
+	padding: 5px 0 5px 0;
+}
+
+.play-page .control-buttons a:last-child{
+	border: none;
+}
+
+.play-page .control-buttons img{
+	display: block;
+	width: auto;
+	height: 30px;
+}
+
+/* @end */
+
+/* @group オートプレイボタン */
+
+.play-page .auto-play {
+	position: absolute;
+	margin: -25px 0 0;
+}
+
+.play-page .auto-play input{
+	display: none;
+}
+
+.play-page .auto-play label{
+   cursor: pointer;
+}
+
+.play-page .auto-play input[type="checkbox"] + label.auto-play-toggle img{
+	display: none;
+}
+
+.play-page .auto-play input[type="checkbox"] + label.auto-play-toggle img.auto-on{
+    display: block;
+ }
+ 
+.play-page .auto-play input[type="checkbox"]:checked + label.auto-play-toggle img.auto-on{
+	display: none;
+}
+
+.play-page .auto-play input[type="checkbox"]:checked + label.auto-play-toggle img.auto-off{
+	display: block;
+}
+
+/* @end */
+
+/* @group 日付・時間・名前 */
+
+.play-page .add-info {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 25px 0 10px;
+}
+
+
+.add-info p{
+	padding: 0 1em;
+}
+
+/* @end */
+
+/* @group 出勤ボタン */
+
+.play-page .info-pay {
+	float: right;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 130px;
+	padding: 3px;
+	background: url(../content/images/play-page/payment-bg.svg);
+	background-size: contain;
+}
+
+.play-page .stock-pay {
+	width: 10em;
+	margin-right: 0.25em;
+	font-size: 13pt;
+	line-height: 1;
+	text-align: right;
+}
+
+.play-page .payment {
+	overflow: hidden;
+}
+
+.play-page #payment img {
+	display: block;
+	width: 30px;
+	height: auto;
+}
+
+/* @end */
+
+/* @group サウンドボタン */
+
+.play-page .sound-button {
+	float: left;
+}
+
+.play-page .sound-button label{
+    cursor: pointer;
+	display: block;
+}
+
+.play-page .sound-button input{
+	display: none;
+}
+
+.play-page .sound-button label img{
+	display: none;
+}
+
+.play-page .sound-button input[type="checkbox"] ~ label.sound-toggle img.sound-off{
+	display: block;
+ }
+ 
+.play-page .sound-button input[type="checkbox"]:checked ~ label.sound-toggle img.sound-off{
+	display: none;
+}
+
+.play-page .sound-button input[type="checkbox"]:checked ~ label.sound-toggle img.sound-on{
+	display: block;
+}
+
+/* @end */
+
+
+/* @end */
+
+
+/* @end */
+
+.smp{
+	display: none;
+}
+
+
+
+@media screen and (max-width: 600px) {
+
+.pc{
+	display: none;
+}
+
+.smp{
+	display: inherit;
+}
+
+main{
+	width: 100%;
+}
+
+body.play-page{
+	padding: 0;
+}
+
+/* @group header */
+
+.play-page .info-header{
+	height: 6.5vw;
+	position: fixed;
+	width: 100%;
+	top: 0;
+}
+
+.play-page .btn-info {
+	padding: 0;
+	height: 5vw;
+	position: absolute;
+	margin: 0;
+	right: 1vw;
+}
+
+.play-page .machine-number {
+	width: 9vw;
+	height: 4vw;
+	margin: 1vw 0 0 1vw;
+	font-size: 2.5vw;
+	border-radius:2vw;
+}
+
+.play-page .machine-name {
+	width: 47vw;
+	margin: 1.5vw 0 0 0.5vw;
+	font-size: 3vw;
+	line-height: 1.2em;
+}
+
+.play-page .info-header a{
+
+	width: 14vw;
+	height: 5vw;
+	margin: 0.5vw 0 0 0;
+	padding: 0 0 0 1vw;
+	font-size: 2vw;
+	line-height: 0vw;
+	background-size: cover;
+}
+
+.play-page .info-header a:first-child{
+	padding-left: 2.2vw;
+}
+
+.play-page .info-header a:last-child{
+	margin-right: 0;
+}
+
+/* @end */
+
+.play-page .play-info {
+	width: 100%;
+	float: none;
+}
+
+.play-page .info-inner{
+	padding-bottom: 0;
+	border: none;
+}
+
+.play-page .information-lamp-under {
+	clear: both;
+	float: none;
+	width: 100%;
+}
+
+.play-page .plate{
+	display: none;
+}
+
+.play-page .machine-panel {
+	display: none;
+}
+
+/* @group play */
+
+.play-page .play-machine {
+	float: none;
+	width: 100%;
+}
+
+.play-page .play-machine video{
+	height: 100vw;
+	/*margin-top: -9vw;*/
+}
+
+.play-page .chance-buttons {
+	margin-top: -65vw;
+	width: 18vw;
+	right: 2vw;
+	margin-left: 0;
+}
+
+.play-page .chance-buttons a{
+	padding: 2vw 1vw;
+	cursor: pointer;
+}
+
+.play-page .btn-wrapper {
+	margin: 0;
+	height: 20vw;
+	background-position: -19vw top;
+	background-size:160vw;
+}
+
+.play-page .machine-button {
+	width: 100vw;
+	margin: 0;
+	padding-top: 3.5vw;
+}
+
+a.bet.smp img.btn-bet{
+	width: 18vw !important;
+	margin-left: -4vw;
+}
+
+start-buttons .bet:active img{
+	margin: 1vw auto 0;
+}
+
+/* @group stopボタン */
+
+/* stopボタン */
+
+.play-page .stop-button {
+	width: 75vw;
+	padding: ;
+}
+
+div.stop-buttons {
+	margin: 0 auto;
+}
+
+ul.stop-button.flex.smp {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* @end */
+
+/* @end */
+
+.play-page .information-lamp{
+  display: block;
+  padding-top: 6vw;
+}
+
+/* @group main counter */
+
+.play-page .main-counter{
+	float: left;
+	width: 50%;
+	font-size: 4vw;
+}
+
+.play-page .main-counter td:first-child{
+	padding-right: 2vw;
+}
+
+.play-page .main-counter td:first-child td:first-child{
+	padding: 0;
+}
+
+.play-page .data-title-image.large.smp{
+	display: block;
+	position: absolute;
+	margin-top: -1.5vw !important;
+	z-index: -1;
+}
+
+.play-page .data-title-image.large.pc{
+	display: none;
+}
+
+.play-page td.count-data.big-seg {
+	font-size: 17vw !important;
+}
+
+.play-page .main-counter *{
+	font-size: 4vw !important;
+}
+
+.play-page .main-display {
+	font-size: 14vw !important;
+}
+
+.play-page .sub-display{
+	line-height: 1;
+}
+
+.play-page .sub-display img.data-title-image {
+	width: 2vw;
+	margin: 0 0 0 1vw;
+}
+
+.play-page .data-title-image {
+	margin: 0 !important;
+}
+
+.play-page td.counter-title {
+	font-size: 2vw !important;
+	text-align: center;
+}
+
+.play-page .sub-display td:nth-child(1){
+	vertical-align: top;
+	width: 2vw;
+}
+
+.play-page .sub-display td:nth-child(2){
+	width: 10vw;
+	background: url(../content/images/play-page/888.svg) no-repeat right center ;
+	background-size: 85%;
+}
+
+.play-page .sub-display td:nth-child(3){
+	width: 15vw;
+	background: url(../content/images/play-page/888.svg) no-repeat right center ;
+	background-size: 90%;
+}
+
+.play-page .sub-display .total{
+	letter-spacing: 0.1vw;
+	background: url(../content/images/play-page/88888.svg) no-repeat right center !important;
+	background-size: 74.5% !important;
+}
+
+
+/* @end */
+
+.play-page .bonus-graph{
+  float: right;
+  margin-top: 1vw;
+  padding: 0;
+  width: 48%;
+  height: 14vw;
+  font-size: 1.5vw;
+  overflow: hidden;
+}
+
+/* @group sub counter */
+
+.play-page .sub-counter td{
+	display: table-cell;
+	width: 20%;
+}
+
+.play-page .counter-seg{
+	font-size: 5vw !important;
+}
+
+.play-page td.counter-seg.game,
+.play-page td.counter-seg.max,
+.play-page td.counter-seg.play-income {
+	font-size: 6vw !important;
+}
+
+.play-page td.counter-seg.game{
+	color: #00FF00;
+}
+
+/* @end */
+
+.play-page .under-buttons {
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 2vw;
+	width: 100%;
+}
+
+.play-page .now-coins-set {
+	position: absolute;
+	width: 72vw;
+	right: 2vw !important;
+	margin-top: 0vw;
+	padding: 0;
+	background: none;
+}
+
+.play-page .coins-count {
+	width: 34vw;
+	margin-left: 2vw;
+	margin-right: 0;
+}
+
+.play-page .coins-count p{
+	width: 20vw;
+	font-size: 4.5vw;
+}
+
+.play-page .now-coins-set img{
+	width: 4vw;
+}
+
+.play-page .now-coins-set img.coins-icon{
+	
+}
+.play-page .now-coins-set img.arrow-icon{
+	margin: 0 0 0 2vw;
+}
+
+.play-page input.coin-display {
+	width: 4em;
+	padding: 0 1vw;
+	height: 4vw;
+	font-size: 3vw;
+	line-height: 0;
+}
+
+.play-page .coin-exchange-input {
+	float: right;
+	width: 49%;
+	padding: 0;
+	border: 0.7pt solid  var(--info-border);
+}
+
+.play-page .coin-exchange-input form img{
+	width: 9vw !important;
+	margin: 0.3vw 1vw -0.3vw;
+}
+
+.play-page .coin-exchange-input form img.exchange-button{
+	width: 9vw !important;
+	height: auto;
+}
+
+.play-page .auto-exchange-button {
+	display: block;
+	width: 3em;
+	font-size: 0.5em;
+	color: #aaa;
+}
+
+.play-page .drawer-smp.smp {
+	position: absolute;
+	right: 0;
+}
+
+/* @group ドロワー設定 */
+
+.play-page .smp-switch.smp label {
+	position: absolute;
+	display: block;
+}
+
+.play-page .smp-switch.smp label img{
+	display: block;
+}
+
+.play-page .information-lamp{
+	margin-top: -14vw;
+}
+
+table.main-counter,
+table.bonus-graph{
+	display: none;
+ 	transition: 0.5s;
+}
+
+.play-page input#drawer-button ~ table.main-counter,
+.play-page input#drawer-button ~ table.bonus-graph{
+	display: block;
+	margin-top: 0;
+}
+
+.play-page input#drawer-button:checked ~ table.main-counter,
+.play-page input#drawer-button:checked ~ table.bonus-graph{
+	margin-top: 17.5vw;
+}
+
+.play-page input#drawer-button ~ table.sub-counter{
+	padding-top: 1vw;
+}
+
+/* @group ボタン切り替え */
+
+.play-page input#drawer-button {
+	display: none;
+}
+
+label.drawer-button{
+	display: block;
+	position: absolute;
+	width: 14vw;
+	right: 0;
+}
+
+.play-page input#drawer-button ~ label.drawer-button img.on{
+	display: none;
+}
+
+.play-page input#drawer-button ~ label.drawer-button img.off{
+	display: block;
+}
+
+.play-page input#drawer-button:checked ~ label.drawer-button img.on{
+	display: block;
+}
+
+.play-page input#drawer-button:checked ~ label.drawer-button img.off{
+	display: none;
+}
+
+/* @end */
+
+/* @end */
+
+.play-page .auto-play{
+	order:1;
+	margin-top:-2vw;
+	margin-left: -2vw;
+}
+
+.play-page .auto-play img{
+	width: 24vw;
+	height: auto;
+}
+
+.play-page .control-buttons img{
+	height: 7vw;
+	max-width: 7vw;
+}
+
+.play-page .control-buttons {
+	order: 2;
+	height: 12vw;
+	margin: 9vw 0 0 10vw;
+	padding: 1vw 0 1vw 10vw;
+	background-size: contain;
+}
+
+.play-page .control-buttons a{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 25%;
+	padding: 1vw 0 1vw 0;
+}
+
+.play-page .news-machine{
+	order:3;
+	margin-top: 0;
+	margin-left: 0;
+	width: 54vw;
+}
+
+.play-page .time-name{
+	order:4;
+	width: 55vw;
+}
+
+.play-page .add-info{
+	margin: 0;
+	font-size: 2.5vw;
+}
+
+.play-page .payment{
+	order:5;
+}
+
+.play-page .info-pay {
+	position: absolute;
+	right: 2vw;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 38vw;
+	margin-top: -6vw;
+	padding: 3px;
+	background: url(../content/images/play-page/);
+}
+
+.play-page #payment img {
+	width: 10vw;
+}
+
+.play-page .stock-pay {
+	width: 20vw;
+	margin-right: 2vw;
+	font-size: 5vw;
+	text-align: right;
+}
+
+.play-page .smp.support-button a img {
+	position: absolute;
+	margin-top: -65vw;
+	right: 5vw;
+	z-index: 100;
+}
+
+
+/* @group My Group */
+
+.play-page .sound-button label{
+	position: absolute;
+	display: block;
+	left: 3vw;
+	margin-top: -58vw;
+	z-index: 100 !important;
+}
+
+
+/* @end */
+
+/* ============================================
+   モダンローディング表示 (プレイページ用)
+   ============================================ */
+
+/* ローディングオーバーレイ */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(6, 62, 95, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ローディングコンテナ */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* スピナー */
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid #fff;
+    border-right: 6px solid #64b5f6;
+    border-bottom: 6px solid #0376C9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 30px rgba(100, 181, 246, 0.3);
+}
+
+/* 二重スピナー */
+.loading-spinner-double {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-spinner-double::before,
+.loading-spinner-double::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    animation: spin 1.2s linear infinite;
+}
+
+.loading-spinner-double::before {
+    width: 80px;
+    height: 80px;
+    border-top-color: #fff;
+    border-right-color: #64b5f6;
+}
+
+.loading-spinner-double::after {
+    width: 60px;
+    height: 60px;
+    top: 10px;
+    left: 10px;
+    border-top-color: #0376C9;
+    border-right-color: #86b7d3;
+    animation-duration: 0.8s;
+    animation-direction: reverse;
+}
+
+/* ローディングテキスト */
+.loading-text {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* プログレスバー */
+.loading-progress {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0376C9 0%, #64b5f6 50%, #86b7d3 100%);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    animation: progressMove 1.5s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+}
+
+/* アニメーション */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes progressMove {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 0%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+    .loading-spinner,
+    .loading-spinner-double {
+        width: 60px;
+        height: 60px;
+    }
+
+    .loading-spinner-double::after {
+        width: 45px;
+        height: 45px;
+        top: 7.5px;
+        left: 7.5px;
+    }
+
+    .loading-text {
+        font-size: 16px;
+    }
+
+    .loading-progress {
+        width: 150px;
+    }
+}
+
+/* @end ローディング */
+
+}

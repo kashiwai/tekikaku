@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - プレイ履歴</title>
+	</head>
+
+	<body id="play_history" class="ip-page after-login">
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/history_icon.svg" class="page-icon">プレイ履歴</h2>
+	<div class="contents">
+
+	<!-- プレイ履歴コンテンツ -->
+	<div class="history-wrapper">
+
+		<!--if:{NONE}-->
+		<div class="alert alert-info">
+			プレイ履歴がありません
+		</div>
+		<!--/if:{NONE}-->
+
+		<!--if:{LISTS}-->
+		<!-- ページング上部 -->
+		<div class="pagination-wrapper">
+			<div class="pagination-info">
+				{%P%} / {%ALLP%} ページ (全{%ALLROW%}件)
+			</div>
+			<ul class="pagination">
+				{%PAGING%}
+			</ul>
+		</div>
+
+		<!-- 履歴テーブル（PC） -->
+		<div class="history-table-pc">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>機種名</th>
+						<th>開始日時</th>
+						<th>終了日時</th>
+						<th>回転数</th>
+						<th>BIG</th>
+						<th>REG</th>
+						<th>獲得出玉</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!--loop:{LIST}-->
+					<tr>
+						<td>
+							<strong>{%MODEL_NAME%}</strong><br>
+							<small>台番号: {%MACHINE_NO%}</small>
+						</td>
+						<td>{%START_DT%}</td>
+						<td>{%END_DT%}</td>
+						<td>{%PLAY_COUNT%}</td>
+						<td class="text-danger"><strong>{%BB_COUNT%}</strong></td>
+						<td class="text-primary"><strong>{%RB_COUNT%}</strong></td>
+						<td class="text-success"><strong>{%CREDIT%}</strong></td>
+					</tr>
+					<!--/loop:{LIST}-->
+				</tbody>
+			</table>
+		</div>
+
+		<!-- 履歴カード（スマホ） -->
+		<div class="history-cards-mobile">
+			<!--loop:{LIST}-->
+			<div class="history-card">
+				<div class="card-header">
+					<h4>{%MODEL_NAME%}</h4>
+					<span class="machine-no">台番号: {%MACHINE_NO%}</span>
+				</div>
+				<div class="card-body">
+					<div class="info-row">
+						<span class="label">開始:</span>
+						<span class="value">{%START_DT%}</span>
+					</div>
+					<div class="info-row">
+						<span class="label">終了:</span>
+						<span class="value">{%END_DT%}</span>
+					</div>
+					<div class="stats-grid">
+						<div class="stat-item">
+							<div class="stat-label">回転数</div>
+							<div class="stat-value">{%PLAY_COUNT%}</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-label">BIG</div>
+							<div class="stat-value text-danger">{%BB_COUNT%}</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-label">REG</div>
+							<div class="stat-value text-primary">{%RB_COUNT%}</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-label">獲得出玉</div>
+							<div class="stat-value text-success">{%CREDIT%}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/loop:{LIST}-->
+		</div>
+
+		<!-- ページング下部 -->
+		<div class="pagination-wrapper">
+			<ul class="pagination">
+				{%PAGING%}
+			</ul>
+		</div>
+		<!--/if:{LISTS}-->
+
+		<div class="mt-4">
+			<button type="button" class="btn btn-secondary" onclick="history.back()">戻る</button>
+		</div>
+
+	</div>
+	<!-- //プレイ履歴コンテンツ -->
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	<style>
+	/* プレイ履歴スタイル */
+	.history-wrapper {
+		padding: 20px;
+	}
+
+	.pagination-wrapper {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 20px 0;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.pagination-info {
+		color: #666;
+	}
+
+	/* PC用テーブル */
+	.history-table-pc {
+		display: block;
+	}
+
+	.history-cards-mobile {
+		display: none;
+	}
+
+	/* スマホ用カード */
+	@media (max-width: 768px) {
+		.history-table-pc {
+			display: none;
+		}
+
+		.history-cards-mobile {
+			display: block;
+		}
+
+		.history-card {
+			background: white;
+			border-radius: 12px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+			margin-bottom: 15px;
+			overflow: hidden;
+		}
+
+		.history-card .card-header {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			padding: 15px;
+		}
+
+		.history-card .card-header h4 {
+			margin: 0 0 5px 0;
+			font-size: 16px;
+		}
+
+		.history-card .machine-no {
+			font-size: 12px;
+			opacity: 0.9;
+		}
+
+		.history-card .card-body {
+			padding: 15px;
+		}
+
+		.info-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 8px 0;
+			border-bottom: 1px solid #eee;
+		}
+
+		.info-row:last-child {
+			border-bottom: none;
+		}
+
+		.info-row .label {
+			color: #666;
+			font-size: 14px;
+		}
+
+		.info-row .value {
+			font-weight: bold;
+			font-size: 14px;
+		}
+
+		.stats-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-top: 15px;
+		}
+
+		.stat-item {
+			text-align: center;
+			padding: 10px;
+			background: #f8f9fa;
+			border-radius: 8px;
+		}
+
+		.stat-label {
+			font-size: 11px;
+			color: #666;
+			margin-bottom: 5px;
+		}
+
+		.stat-value {
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.text-danger {
+			color: #ef4444;
+		}
+
+		.text-primary {
+			color: #3b82f6;
+		}
+
+		.text-success {
+			color: #10b981;
+		}
+	}
+	</style>
+
+	</body>
+</html>

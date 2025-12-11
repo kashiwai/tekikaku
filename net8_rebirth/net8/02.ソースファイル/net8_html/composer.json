@@ -1,0 +1,21 @@
+{
+    "name": "net8/pachinko-system",
+    "description": "NET8 Pachinko Web System with SDK",
+    "type": "project",
+    "require": {
+        "php": ">=7.2",
+        "tecnickcom/tcpdf": "^6.4",
+        "google/cloud-storage": "~1.23.0",
+        "firebase/php-jwt": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Net8\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

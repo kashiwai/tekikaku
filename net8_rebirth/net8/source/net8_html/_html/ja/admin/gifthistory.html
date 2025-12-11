@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - ギフト履歴情報</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="M" value="">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-gift"></i> ギフト履歴情報</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">
+												<!--if:{GIFT_AGENT}-->&nbsp;
+												<div class="custom-control custom-checkbox custom-control-inline">
+													<input type="checkbox" class="custom-control-input" id="S_AGENT" name="S_AGENT" value="1" {%CHK_S_AGENT%}>
+													<label class="custom-control-label" for="S_AGENT" style="display:block!important;">{%GIFT_AGENT_DISPNAME%}</label>
+												</div>
+												<!--/if:{GIFT_AGENT}-->
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">受取会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_RECEIVE_MEMBER_NO" value="{%S_RECEIVE_MEMBER_NO%}">
+												<!--if:{GIFT_AGENT}-->&nbsp;
+												<div class="custom-control custom-checkbox custom-control-inline">
+													<input type="checkbox" class="custom-control-input" id="S_RECEIVE_AGENT" name="S_RECEIVE_AGENT" value="1" {%CHK_S_RECEIVE_AGENT%}>
+													<label class="custom-control-label" for="S_RECEIVE_AGENT" style="display:block!important;">{%GIFT_AGENT_DISPNAME%}</label>
+												</div>
+												<!--/if:{GIFT_AGENT}-->
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信・受取会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_EITHER_MEMBER_NO" value="{%S_EITHER_MEMBER_NO%}">
+												<!--if:{GIFT_AGENT}-->&nbsp;
+												<div class="custom-control custom-checkbox custom-control-inline">
+													<input type="checkbox" class="custom-control-input" id="S_EITHER_AGENT" name="S_EITHER_AGENT" value="1" {%CHK_S_EITHER_AGENT%}>
+													<label class="custom-control-label" for="S_EITHER_AGENT" style="display:block!important;">{%GIFT_AGENT_DISPNAME%}</label>
+												</div>
+												<!--/if:{GIFT_AGENT}-->
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_GIFT_DT_FROM" value="{%S_GIFT_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_GIFT_DT_TO" value="{%S_GIFT_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信{%CURRENCY_3%}</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group">
+													<input type="text" class="form-control" name="S_GIFT_POINT_FROM" value="{%S_GIFT_POINT_FROM%}">
+													<div class="input-group-append">
+														<span class="input-group-text">{%CURRENCY_3%}</span>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group">
+													<input type="text" class="form-control" name="S_GIFT_POINT_TO" value="{%S_GIFT_POINT_TO%}">
+													<div class="input-group-append">
+														<span class="input-group-text">{%CURRENCY_3%}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						<div class="row mx-0">
+							<div class="col-lg-4 p-2">
+								<table class="table table-bordered th-center-bg mt-3 mb-0">
+									<tbody>
+										<tr>
+											<th>合計送信{%CURRENCY_3%}</th>
+											<td class="text-right">{%DISP_TOTAL_GIFT_POINT%}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-lg-4 p-2">
+								<table class="table table-bordered th-center-bg mt-3 mb-0">
+									<tbody>
+										<tr>
+											<th>合計受取{%CURRENCY_3%}</th>
+											<td class="text-right">{%DISP_TOTAL_RECEIVE_POINT%}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-lg-4 p-2">
+								<table class="table table-bordered th-center-bg mt-3 mb-0">
+									<tbody>
+										<tr>
+											<th>合計手数料{%CURRENCY_3%}</th>
+											<td class="text-right">{%DISP_TOTAL_COMM_POINT%}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<!--if:{GIFTHISTORY_DOWNLOAD}-->
+								<div>
+									<a href="javascript:void(0);" class="btn btn-warning" onClick="output();">ダウンロード</a>
+								</div>
+								<!--/if:{GIFTHISTORY_DOWNLOAD}-->
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th>送信会員<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.member_no asc, hg.gift_dt desc" onClick="reSort('hg.member_no asc, hg.gift_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.member_no desc, hg.gift_dt desc" onClick="reSort('hg.member_no desc, hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>送信日時<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.gift_dt asc" onClick="reSort('hg.gift_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.gift_dt desc" onClick="reSort('hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>送信{%CURRENCY_3%}<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.gift_point asc, hg.gift_dt desc" onClick="reSort('hg.gift_point asc, hg.gift_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.gift_point desc, hg.gift_dt desc" onClick="reSort('hg.gift_point desc, hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											
+											<th>手数料負担者<br /></th>
+											
+											<th>手数料率<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.commission_rate asc, hg.gift_dt desc" onClick="reSort('hg.commission_rate asc, hg.gift_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.commission_rate desc, hg.gift_dt desc" onClick="reSort('hg.commission_rate desc, hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>手数料{%CURRENCY_3%}<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.commission_point asc, hg.gift_dt desc" onClick="reSort('hg.commission_point asc, hg.gift_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.commission_point desc, hg.gift_dt desc" onClick="reSort('hg.commission_point desc, hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											
+											<th>受取会員<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.receive_member_no asc, hg.gift_dt desc" onClick="reSort('hg.receive_member_no asc, hg.gift_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.receive_member_no desc, hg.gift_dt desc" onClick="reSort('hg.receive_member_no desc, hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>受取{%CURRENCY_3%}<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="hg.receive_point asc, hg.gift_dt desc" onClick="reSort('hg.receive_point asc, hg.gift_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="hg.receive_point desc, hg.gift_dt desc" onClick="reSort('hg.receive_point desc, hg.gift_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-left">
+												<a href="javascript:void(0);" onClick="openDetailMember('{%MEMBER_NO%}');">[{%MEMBER_NO_PAD%}]&nbsp;{%NICKNAME%}</a>
+												<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+												<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+												<!--if:{IS_AGENT}-->{%MEMBER_BADGE_AGENT%}<!--/if:{IS_AGENT}-->
+											</td>
+											<td class="text-center">{%GIFT_DT%}</td>
+											<td class="text-right">{%DISP_GIFT_POINT%}</td>
+											<td class="text-right">{%DISP_BEARER%}</td>
+											<td class="text-right">{%DISP_RATE%} %</td>
+											<td class="text-right">{%DISP_COMMISSION_POINT%}</td>
+											<td class="text-left">
+												<a href="javascript:void(0);" onClick="openDetailMember('{%RECEIVE_MEMBER_NO%}');">[{%RECEIVE_MEMBER_NO_PAD%}]&nbsp;{%RECEIVE_NICKNAME%}</a>
+												<!--if:{IS_RECEIVE_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_RECEIVE_BLACK}-->
+												<!--if:{IS_RECEIVE_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_RECEIVE_TESTER}-->
+												<!--if:{IS_RECEIVE_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RECEIVE_RETIRED}-->
+												<!--if:{IS_RECEIVE_AGENT}-->{%MEMBER_BADGE_AGENT%}<!--/if:{IS_RECEIVE_AGENT}-->
+											</td>
+											<td class="text-right">{%DISP_RECEIVE_POINT%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_number("{%A2701%}", frm["S_MEMBER_NO"].value, false)) return false;
+				if (!chk_number("{%A2702%}", frm["S_RECEIVE_MEMBER_NO"].value, false)) return false;
+				if (!chk_number("{%A2709%}", frm["S_EITHER_MEMBER_NO"].value, false)) return false;
+				if (!chk_date("{%A2703%}", frm["S_GIFT_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A2704%}", frm["S_GIFT_DT_TO"].value, false)) return false;
+				if (chk_indis("", frm["S_GIFT_DT_FROM"].value) && chk_indis("", frm["S_GIFT_DT_TO"].value)) {
+					if (!compare_date("{%A2705%}", frm["S_GIFT_DT_FROM"].value, frm["S_GIFT_DT_TO"].value, false)) return false;
+				}
+				if (!chk_number("{%A2706%}", frm["S_GIFT_POINT_FROM"].value, false)) return false;
+				if (!chk_number("{%A2707%}", frm["S_GIFT_POINT_TO"].value, false)) return false;
+				if (chk_indis("", frm["S_GIFT_POINT_FROM"].value) && chk_indis("", frm["S_GIFT_POINT_TO"].value)) {
+					if (!compare_numeric("{%A2708%}", frm["S_GIFT_POINT_FROM"].value, frm["S_GIFT_POINT_TO"].value, false)) return false;
+				}
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 会員詳細画面Open
+			function openDetailMember(key) {
+				win_open("member.php", "M=detail&NO=" + key, "member_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			<!--if:{GIFTHISTORY_DOWNLOAD}-->
+			// CSV出力
+			function output() {
+				var frm = window.document.MAINFORM;
+				frm.reset();		// フォームリセット
+				frm["M"].value = "output";
+				frm.submit();
+				frm["M"].value = "";
+			}
+			<!--/if:{GIFTHISTORY_DOWNLOAD}-->
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

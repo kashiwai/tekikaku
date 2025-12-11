@@ -1,0 +1,116 @@
+		<!-- 台一覧 -->
+		<div class="row panel-list">
+			<!--loop:{LIST}-->
+			<div class="col-6 col-lg-4">
+				<div class="card">
+					<h5 class="card-header" data-no="{%NO%}" data-id="{%MACHINE_CD%}" data-maker_no="{%MAKER_NO%}" data-maker_name="{%MAKER_NAME%}" data-assign="{%ASSIGN%}" data-play_status="{%PLAY_STATUS%}" data-tester="{%TESTER%}" data-machine_status="{%MACHINE_STATUS%}"><a href="javaScript:void(0);" data-toggle="modal" data-target=".detail-modal">{%MODEL_NAME%}</a></h5>
+					<div class="hitdata" style="display:none;">{%HITDATA%}</div>
+					<div class="card-body">
+						<div class="row m-0">
+							<div class="col-12 col-md-6 base-photo">
+								<a href="javaScript:void(0);" data-toggle="modal" data-target=".detail-modal"><img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" _src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_DETAIL%}" class="img-fluid" alt=""></a>
+							</div>
+							<div class="col-12 col-md-6 game-info">
+								<div class="d-flex w-100 justify-content-between cnt-total">
+									<div>Total Games</div>
+									<div>{%TOTAL_GAME_TIMES%}</div>
+								</div>
+								<div class="d-flex w-100 justify-content-between cnt-game">
+									<div>Games</div>
+									<div>{%GAME_TIMES%}</div>
+								</div>
+								<div class="d-flex w-100 justify-content-between cnt-big">
+									<div>BIG</div>
+									<div>{%BIG_TIMES%}</div>
+								</div>
+								<div class="d-flex w-100 justify-content-between cnt-reg">
+									<div>REG</div>
+									<div>{%REG_TIMES%}</div>
+								</div>
+								<hr class="d-none d-md-block">
+								<div class="base-no d-none d-md-block">Machine No: {%NO%}</div>
+							</div>
+						</div>
+						<div class="base-clock d-none d-md-block">
+							<i class="far fa-clock"></i> {%GLOBAL_OPEN_TIME%}～{%GLOBAL_CLOSE_TIME%}
+						</div>
+						<ul class="list-group list-group-flush base-info d-none d-md-block">
+							<li class="list-group-item medal-change d-flex w-100 justify-content-between">
+								<span>Conversion :</span>
+								<span>{%PLAYPOINT%}{%LABEL_1%} ⇒ {%CREDIT%}{%LABEL_2%}</span>
+							</li>
+							<li class="list-group-item medal-rate d-flex w-100 justify-content-between">
+								<span>Settlement :</span>
+								<span>{%CREDIT%}{%LABEL_2%} ⇒ {%DRAW_POINT%}{%LABEL_3%}</span>
+							</li>
+							<li class="list-group-item d-flex w-100 justify-content-between">
+								<span>{%GENERATION%}{%NAVEL_LABEL%}</span>
+								<span class="badge badge-pill badge-info">{%CATEGORY%} ( {%TYPELABEL%} )</span>
+							</li>
+						</ul>
+					</div>
+					<div class="card-footer">
+						<!--if:{NON_TESTER}-->
+						<!--if:{CLOSED}-->
+						<p class="closed">営業時間外</p>
+						<!--/if:{CLOSED}-->
+						<!--if:{IS_OPEN}-->
+						<!--if:{LINK_MAINTENANCE}-->
+						<p class="maintenance">Under Maintenance</p>
+						<!--/if:{LINK_MAINTENANCE}-->
+						<!--if:{MAINTENANCE}-->
+						<p class="maintenance">Under Maintenance</p>
+						<!--/if:{MAINTENANCE}-->
+						<!--if:{IS_NORMAL}-->
+						<!--if:{NOAVAIABLE}-->
+						<p class="notavailable">In Use</p>
+						<!--/if:{NOAVAIABLE}-->
+						<!--if:{AVAIABLE}-->
+						<!--if:{NON_LOGIN}-->
+						<a href="{%SITE_SSL_URL%}login.php?NO={%NO%}" class="btn btn-block btn-primary">Login and Play</a>
+						<!--/if:{NON_LOGIN}-->
+						<!--if:{LOGIN}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">Play</a>
+						<!--/if:{LOGIN}-->
+						<!--/if:{AVAIABLE}-->
+						<!--/if:{IS_NORMAL}-->
+						<!--/if:{IS_OPEN}-->
+						<!--/if:{NON_TESTER}-->
+						<!--if:{TESTER}-->
+						<!--if:{LINK_MAINTENANCE}-->
+						<p class="maintenance">Under Maintenance</p>
+						<!--/if:{LINK_MAINTENANCE}-->
+						<!--if:{NOAVAIABLE}-->
+						<p class="notavailable">In Use</p>
+						<!--/if:{NOAVAIABLE}-->
+						<!--if:{AVAIABLE}-->
+						<!--if:{IS_OPEN}-->
+						<!--if:{MAINTENANCE}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">Under Maintenance</a>
+						<!--/if:{MAINTENANCE}-->
+						<!--if:{IS_NORMAL}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">Play</a>
+						<!--/if:{IS_NORMAL}-->
+						<!--if:{IN_PREPARATION}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">In Preparation</a>
+						<!--/if:{IN_PREPARATION}-->
+						<!--/if:{IS_OPEN}-->
+						<!--if:{CLOSED}-->
+						<!--if:{MAINTENANCE}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">After Hours</a>
+						<!--/if:{MAINTENANCE}-->
+						<!--if:{IS_NORMAL}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">After Hours</a>
+						<!--/if:{IS_NORMAL}-->
+						<!--if:{IN_PREPARATION}-->
+						<a href="{%SITE_SSL_URL%}play/?NO={%NO%}" class="btn btn-block btn-primary">In Preparation</a>
+						<!--/if:{IN_PREPARATION}-->
+						<!--/if:{CLOSED}-->
+						<!--/if:{AVAIABLE}-->
+						<!--/if:{TESTER}-->
+					</div>
+				</div>
+			</div>
+			<!--/loop:{LIST}-->
+		</div>
+		<!-- /.row -->

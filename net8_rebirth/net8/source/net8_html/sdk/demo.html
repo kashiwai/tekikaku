@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET8 SDK Beta Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-section h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 800px;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        #game-container.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        #game-container.empty::before {
+            content: 'ゲームがここに表示されます';
+            color: #666;
+            font-size: 1.5rem;
+        }
+
+        .log-container {
+            background: #0a0a0a;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-left: 3px solid transparent;
+        }
+
+        .log-entry.info {
+            color: #4a9eff;
+            border-left-color: #4a9eff;
+        }
+
+        .log-entry.success {
+            color: #00ff88;
+            border-left-color: #00ff88;
+        }
+
+        .log-entry.error {
+            color: #ff4a4a;
+            border-left-color: #ff4a4a;
+        }
+
+        .log-entry.warn {
+            color: #ffaa00;
+            border-left-color: #ffaa00;
+        }
+
+        .code-block {
+            background: #0a0a0a;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .code-block code {
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.active {
+            background: #00ff88;
+        }
+
+        .status-indicator.inactive {
+            background: #666;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .model-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .model-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+
+        .model-card h3 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .model-card p {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        /* 次ゲーム遷移モーダル */
+        .transition-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transition-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-result {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #a0a0a0;
+        }
+
+        .result-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .result-value.positive {
+            color: #00ff88;
+        }
+
+        .result-value.negative {
+            color: #ff4a4a;
+        }
+
+        .recommended-section {
+            margin-bottom: 30px;
+        }
+
+        .recommended-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .recommended-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .recommended-card:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+
+        .recommended-card.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .recommended-card.unavailable:hover {
+            transform: none;
+            border-color: transparent;
+        }
+
+        .recommended-card h4 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .recommended-card .min-points {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+        }
+
+        .recommended-card .availability {
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+
+        .recommended-card .availability.available {
+            color: #00ff88;
+        }
+
+        .recommended-card .availability.full {
+            color: #ff4a4a;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .modal-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎰 NET8 SDK Beta Demo</h1>
+            <p class="subtitle">たった3行でパチスロゲームを組み込み可能</p>
+        </header>
+
+        <!-- ステータス表示 -->
+        <div class="demo-section">
+            <h2>
+                <span class="status-indicator inactive" id="status-indicator"></span>
+                SDK Status
+            </h2>
+            <p id="status-text">SDK未初期化</p>
+        </div>
+
+        <!-- モード選択 -->
+        <div class="demo-section">
+            <h2>🎛️ テストモード選択</h2>
+            <div class="controls">
+                <button onclick="setMode('mock')" id="btn-mode-mock" class="btn-secondary">
+                    🧪 モックモード（実機なしテスト）
+                </button>
+                <button onclick="setMode('real')" id="btn-mode-real">
+                    🎰 実機モード（本番API接続）
+                </button>
+            </div>
+            <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;" id="mode-description">
+                実機モードを選択してください
+            </p>
+        </div>
+
+        <!-- コントロール -->
+        <div class="demo-section" id="control-section" style="display: none;">
+            <h2>🎮 クイックスタート</h2>
+            <div class="controls">
+                <button onclick="initializeSDK()">1. SDK初期化</button>
+                <button onclick="loadModels()" id="btn-load-models" disabled>2. 機種一覧を読み込み</button>
+                <button onclick="startGame('milliongod')" id="btn-start-game" disabled>3. ゲーム開始（ミリオンゴッド）</button>
+                <button onclick="destroyGame()" class="btn-secondary" id="btn-destroy" disabled>ゲーム終了</button>
+            </div>
+
+            <div class="code-block">
+                <code>
+// たった3行でゲームを追加！<br>
+Net8.init('pk_demo_12345');<br>
+const game = Net8.createGame({ model: 'milliongod', container: '#game' });<br>
+game.start();
+                </code>
+            </div>
+        </div>
+
+        <!-- 高度な機能 -->
+        <div class="demo-section" id="advanced-section" style="display: none;">
+            <h2>⚡ 高度な機能テスト</h2>
+            <div class="controls">
+                <button onclick="testAddPoints()" id="btn-add-points" disabled>
+                    ポイント追加テスト（+500pt）
+                </button>
+                <button onclick="showGameState()" id="btn-game-state" disabled>
+                    ゲーム状態を表示
+                </button>
+            </div>
+            <div id="game-state-display" style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; display: none;">
+                <h3 style="margin-bottom: 10px; color: #667eea;">現在のゲーム状態:</h3>
+                <pre id="game-state-content" style="color: #00ff88; font-size: 13px; line-height: 1.6;"></pre>
+            </div>
+        </div>
+
+        <!-- 機種一覧 -->
+        <div class="demo-section" id="models-section" style="display: none;">
+            <h2>📋 利用可能な機種</h2>
+            <div class="model-grid" id="models-grid"></div>
+        </div>
+
+        <!-- ゲーム表示エリア -->
+        <div class="demo-section">
+            <h2>🎰 ゲーム画面</h2>
+            <div id="game-container" class="empty"></div>
+        </div>
+
+        <!-- ログ表示 -->
+        <div class="demo-section">
+            <h2>📝 コンソールログ</h2>
+            <div class="log-container" id="log-container"></div>
+        </div>
+    </div>
+
+    <!-- NET8 SDK読み込み -->
+    <script src="https://mgg-webservice-production.up.railway.app/sdk/net8-sdk-beta.js"></script>
+    <script src="./net8-ui-components.js"></script>
+
+    <script>
+        let game = null;
+        let models = [];
+        let currentMode = null; // 'mock' or 'real'
+        let mockListenerAttached = false; // モックゲームイベントリスナー登録フラグ
+
+        // モード選択
+        function setMode(mode) {
+            currentMode = mode;
+
+            if (mode === 'mock') {
+                log('🧪 モックモードを選択しました', 'info');
+                document.getElementById('mode-description').textContent =
+                    '✅ モックモード: 実機なしでSDKイベントをテストできます';
+                document.getElementById('btn-mode-mock').classList.remove('btn-secondary');
+                document.getElementById('btn-mode-real').classList.add('btn-secondary');
+
+                // モックゲームを表示
+                loadMockGame();
+
+                // コントロールセクションは非表示
+                document.getElementById('control-section').style.display = 'none';
+                document.getElementById('models-section').style.display = 'none';
+
+            } else if (mode === 'real') {
+                log('🎰 実機モードを選択しました', 'info');
+                document.getElementById('mode-description').textContent =
+                    '✅ 実機モード: 本番APIに接続してゲームを起動します';
+                document.getElementById('btn-mode-real').classList.remove('btn-secondary');
+                document.getElementById('btn-mode-mock').classList.add('btn-secondary');
+
+                // モックゲームイベントリスナーを削除
+                if (mockListenerAttached) {
+                    window.removeEventListener('message', handleMockGameEvent);
+                    mockListenerAttached = false;
+                    log('✅ モックゲームイベントリスナーを削除しました', 'info');
+                }
+
+                // コントロールセクションを表示
+                document.getElementById('control-section').style.display = 'block';
+
+                // モックゲームを削除
+                const container = document.getElementById('game-container');
+                container.innerHTML = '';
+                container.classList.add('empty');
+            }
+        }
+
+        // モックゲームを読み込み
+        function loadMockGame() {
+            log('モックゲームシミュレーターを読み込み中...', 'info');
+
+            const container = document.getElementById('game-container');
+            container.classList.remove('empty');
+            container.innerHTML = `
+                <iframe
+                    src="mock-game.html"
+                    style="width: 100%; height: 100%; border: none; border-radius: 15px;"
+                    id="mock-game-iframe"
+                ></iframe>
+            `;
+
+            // モックゲームからのPostMessageを受信（重複登録を防止）
+            if (!mockListenerAttached) {
+                window.addEventListener('message', handleMockGameEvent);
+                mockListenerAttached = true;
+                log('✅ モックゲームイベントリスナーを登録しました', 'info');
+            }
+
+            log('✅ モックゲーム読み込み完了', 'success');
+            log('💡 モックゲーム画面で各種イベントを発火してテストできます', 'info');
+        }
+
+        // モックゲームイベントハンドラー
+        function handleMockGameEvent(event) {
+            // セキュリティチェック（同一オリジンのみ）
+            if (event.origin !== window.location.origin) {
+                return;
+            }
+
+            const { type, payload } = event.data;
+            if (!type || !type.startsWith('game:')) {
+                return;
+            }
+
+            // イベントタイプを抽出（例: 'game:play' → 'play'）
+            const eventType = type.replace('game:', '');
+
+            // ログに表示
+            switch(eventType) {
+                case 'ready':
+                    log('✅ モックゲーム準備完了', 'success');
+                    break;
+                case 'play':
+                    log(`🎮 ゲームプレイ: ${JSON.stringify(payload)}`, 'info');
+                    break;
+                case 'win':
+                    log(`🎉 勝利！ スコア: ${payload.score || 'N/A'}`, 'success');
+                    break;
+                case 'lose':
+                    log(`😢 敗北... スコア: ${payload.score || 'N/A'}`, 'warn');
+                    break;
+                case 'bonus':
+                    log(`⭐ ボーナス発動！ ${JSON.stringify(payload)}`, 'success');
+                    break;
+                case 'score':
+                    log(`📊 スコア更新: ${payload.score}`, 'info');
+                    break;
+                case 'end':
+                    log(`🏁 ゲーム終了 結果: ${JSON.stringify(payload)}`, 'info');
+                    break;
+                case 'error':
+                    log(`❌ エラー: ${payload.message || JSON.stringify(payload)}`, 'error');
+                    break;
+            }
+        }
+
+        // ログ出力
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            console.log(message);
+        }
+
+        // ステータス更新
+        function updateStatus(text, active = false) {
+            document.getElementById('status-text').textContent = text;
+            document.getElementById('status-indicator').className =
+                `status-indicator ${active ? 'active' : 'inactive'}`;
+        }
+
+        // SDK初期化
+        async function initializeSDK() {
+            try {
+                log('SDK初期化開始...', 'info');
+                updateStatus('SDK初期化中...', false);
+
+                // デモ用APIキー（本番では顧客ごとに発行）
+                await Net8.init('pk_demo_12345', {
+                    apiUrl: 'https://mgg-webservice-production.up.railway.app'
+                });
+
+                log('✅ SDK初期化完了！', 'success');
+                updateStatus('SDK準備完了', true);
+
+                // ボタン有効化
+                document.getElementById('btn-load-models').disabled = false;
+                document.getElementById('btn-start-game').disabled = false;
+
+            } catch (error) {
+                log(`❌ 初期化エラー: ${error.message}`, 'error');
+                updateStatus('SDK初期化失敗', false);
+            }
+        }
+
+        // 機種一覧読み込み
+        async function loadModels() {
+            try {
+                log('機種一覧を取得中...', 'info');
+
+                models = await Net8.getModels();
+
+                log(`✅ ${models.length}機種を取得しました`, 'success');
+
+                // 機種カード表示
+                displayModels(models);
+
+            } catch (error) {
+                log(`❌ 機種取得エラー: ${error.message}`, 'error');
+            }
+        }
+
+        // 機種カード表示
+        function displayModels(models) {
+            const grid = document.getElementById('models-grid');
+            const section = document.getElementById('models-section');
+
+            grid.innerHTML = '';
+
+            models.forEach(model => {
+                const card = document.createElement('div');
+                card.className = 'model-card';
+                card.innerHTML = `
+                    <h3>${model.name}</h3>
+                    <p>${model.maker}</p>
+                    <p style="color: #667eea; margin-top: 5px;">${model.category}</p>
+                `;
+                card.onclick = () => startGame(model.id);
+                grid.appendChild(card);
+            });
+
+            section.style.display = 'block';
+        }
+
+        // ゲーム開始
+        async function startGame(modelId) {
+            try {
+                log(`🎮 ゲーム開始: ${modelId}`, 'info');
+
+                // 既存のゲームを破棄
+                if (game) {
+                    game.destroy();
+                }
+
+                // ゲーム作成
+                game = Net8.createGame({
+                    model: modelId,
+                    container: '#game-container'
+                });
+
+                // イベントリスナー登録
+                game.on('ready', () => {
+                    log('✅ ゲーム準備完了！', 'success');
+                    document.getElementById('game-container').classList.remove('empty');
+                    document.getElementById('btn-destroy').disabled = false;
+                });
+
+                game.on('error', (error) => {
+                    log(`❌ ゲームエラー: ${error.message || error}`, 'error');
+                });
+
+                // ゲームプレイイベント
+                game.on('play', (data) => {
+                    log(`🎮 ゲームプレイ: ${JSON.stringify(data)}`, 'info');
+                });
+
+                game.on('win', (data) => {
+                    log(`🎉 勝利！ スコア: ${data.score || 'N/A'}`, 'success');
+                });
+
+                game.on('lose', (data) => {
+                    log(`😢 敗北... スコア: ${data.score || 'N/A'}`, 'warn');
+                });
+
+                game.on('bonus', (data) => {
+                    log(`⭐ ボーナス発動！ ${JSON.stringify(data)}`, 'success');
+                });
+
+                game.on('score', (data) => {
+                    log(`📊 スコア更新: ${data.score}`, 'info');
+                });
+
+                game.on('end', async (data) => {
+                    log(`🏁 ゲーム終了 結果: ${JSON.stringify(data)}`, 'info');
+
+                    // 次ゲーム遷移マネージャーを使用
+                    const transitionManager = Net8.createTransitionManager();
+                    const modalData = await transitionManager.handleGameEnd(data, {
+                        onSelectModel: (modelId) => {
+                            closeTransitionModal();
+                            log(`次のゲームを開始: ${modelId}`, 'info');
+                            game.destroy();
+                            startGame(modelId);
+                        },
+                        onViewAll: () => {
+                            closeTransitionModal();
+                            log('機種一覧を表示', 'info');
+                            game.destroy();
+                            document.getElementById('game-container').classList.add('empty');
+                            document.getElementById('models-section').style.display = 'block';
+                        },
+                        onExit: () => {
+                            closeTransitionModal();
+                            log('ゲームを終了', 'info');
+                            game.destroy();
+                            document.getElementById('game-container').classList.add('empty');
+                        },
+                        onCharge: () => {
+                            closeTransitionModal();
+                            log('チャージページへ遷移（デモのため未実装）', 'warn');
+                            alert('チャージ機能はデモ版では未実装です');
+                        }
+                    });
+
+                    // モーダルを表示
+                    showTransitionModal(modalData);
+                });
+
+                // ゲーム開始
+                await game.start();
+
+                // 高度な機能ボタンを有効化
+                document.getElementById('advanced-section').style.display = 'block';
+                document.getElementById('btn-add-points').disabled = false;
+                document.getElementById('btn-game-state').disabled = false;
+
+            } catch (error) {
+                log(`❌ ゲーム開始エラー: ${error.message}`, 'error');
+            }
+        }
+
+        // ポイント追加テスト
+        async function testAddPoints() {
+            if (!game) {
+                log('❌ ゲームが開始されていません', 'error');
+                return;
+            }
+
+            try {
+                log('💰 ポイント追加を実行中...', 'info');
+                const result = await game.addPoints(500, 'Test bonus points');
+                log(`✅ ポイント追加成功！ ${JSON.stringify(result.transaction)}`, 'success');
+            } catch (error) {
+                log(`❌ ポイント追加エラー: ${error.message}`, 'error');
+            }
+        }
+
+        // ゲーム状態を表示
+        function showGameState() {
+            if (!game) {
+                log('❌ ゲームが開始されていません', 'error');
+                return;
+            }
+
+            try {
+                const state = game.getGameState();
+                const display = document.getElementById('game-state-display');
+                const content = document.getElementById('game-state-content');
+
+                content.textContent = JSON.stringify(state, null, 2);
+                display.style.display = 'block';
+
+                log('📊 ゲーム状態を表示しました', 'info');
+            } catch (error) {
+                log(`❌ ゲーム状態取得エラー: ${error.message}`, 'error');
+            }
+        }
+
+        // ゲーム終了
+        function destroyGame() {
+            if (game) {
+                game.destroy();
+                game = null;
+                document.getElementById('game-container').classList.add('empty');
+                document.getElementById('btn-destroy').disabled = true;
+                log('ゲームを終了しました', 'info');
+            }
+        }
+
+        // 次ゲーム遷移モーダル表示関数
+        function showTransitionModal(modalData) {
+            const modal = document.getElementById('transition-modal');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-body');
+
+            title.textContent = modalData.title;
+
+            if (modalData.type === 'result_with_recommendations') {
+                // 結果と推奨機種を表示
+                const result = modalData.result;
+                const recommendations = modalData.recommendations || [];
+
+                content.innerHTML = `
+                    <div class="modal-result">
+                        <div class="result-row">
+                            <span class="result-label">獲得ポイント</span>
+                            <span class="result-value positive">+${result.pointsWon}pt</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">消費ポイント</span>
+                            <span class="result-value">-${result.pointsConsumed}pt</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">純利益</span>
+                            <span class="result-value ${result.netProfit >= 0 ? 'positive' : 'negative'}">
+                                ${result.netProfit >= 0 ? '+' : ''}${result.netProfit}pt
+                            </span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">残高</span>
+                            <span class="result-value">${result.balance}pt</span>
+                        </div>
+                    </div>
+
+                    ${recommendations.length > 0 ? `
+                    <div class="recommended-section">
+                        <h3 class="recommended-title">おすすめの機種</h3>
+                        <div class="recommended-grid">
+                            ${recommendations.map(model => `
+                                <div class="recommended-card ${!model.recommended ? 'unavailable' : ''}"
+                                     onclick="${model.recommended ? `handleModelSelect('${model.id}')` : ''}">
+                                    <h4>${model.name}</h4>
+                                    <div class="min-points">最低 ${model.minPoints}pt</div>
+                                    <div class="availability ${model.availability.isAvailable ? 'available' : 'full'}">
+                                        ${model.availability.isAvailable ? '✓ 空きあり' : '✗ 満席'}
+                                        (${model.availability.available}/${model.availability.total}台)
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : '<p style="text-align: center; color: #a0a0a0;">推奨機種を取得できませんでした</p>'}
+
+                    <div class="modal-actions">
+                        <button class="modal-btn modal-btn-primary" onclick="handleViewAll()">
+                            全機種を見る
+                        </button>
+                        <button class="modal-btn modal-btn-secondary" onclick="closeTransitionModal()">
+                            終了
+                        </button>
+                    </div>
+                `;
+
+                // クリックハンドラーを設定
+                window.handleModelSelect = (modelId) => {
+                    const action = modalData.actions.find(a => a.type === 'model-select');
+                    if (action && action.onClick) {
+                        action.onClick(modelId);
+                    }
+                };
+
+                window.handleViewAll = () => {
+                    const action = modalData.actions.find(a => a.label === '全機種を見る');
+                    if (action && action.onClick) {
+                        action.onClick();
+                    }
+                };
+
+            } else if (modalData.type === 'insufficient_balance') {
+                // ポイント不足メッセージ
+                content.innerHTML = `
+                    <div class="modal-result">
+                        <p style="text-align: center; margin-bottom: 20px;">${modalData.message}</p>
+                        <div class="result-row">
+                            <span class="result-label">現在の残高</span>
+                            <span class="result-value">${modalData.balance}pt</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">必要ポイント</span>
+                            <span class="result-value">${modalData.required}pt</span>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        ${modalData.actions.map(action => `
+                            <button class="modal-btn modal-btn-${action.type}"
+                                    onclick="handleModalAction('${action.label}')">
+                                ${action.label}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+                window.handleModalAction = (label) => {
+                    const action = modalData.actions.find(a => a.label === label);
+                    if (action && action.onClick) {
+                        action.onClick();
+                    }
+                };
+
+            } else if (modalData.type === 'closed') {
+                // 営業時間外メッセージ
+                content.innerHTML = `
+                    <div class="modal-result">
+                        <p style="text-align: center; font-size: 1.1rem; white-space: pre-line;">
+                            ${modalData.message}
+                        </p>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="modal-btn modal-btn-primary" onclick="closeTransitionModal()">
+                            閉じる
+                        </button>
+                    </div>
+                `;
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeTransitionModal() {
+            document.getElementById('transition-modal').classList.remove('show');
+        }
+
+        // 初期ログ
+        log('NET8 SDK Demo起動', 'info');
+        log('まず、テストモードを選択してください', 'info');
+        log('💡 モックモード: 実機なしでイベントコールバックをテスト', 'info');
+        log('💡 実機モード: 本番APIに接続してゲームを起動', 'info');
+    </script>
+
+    <!-- 次ゲーム遷移モーダル -->
+    <div id="transition-modal" class="transition-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">ゲーム終了</h2>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+</body>
+</html>

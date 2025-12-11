@@ -1,0 +1,130 @@
+		<!-- Sidebar ================================================== -->
+		<ul class="sidebar navbar-nav">
+			<!--if:{MENU_index}-->
+			<li class="nav-item{%ACT_index%}"><a class="nav-link" href="index.php"><i class="fas fa-fw fa-tachometer-alt"></i> <span>トップ</span></a></li>
+			<!--/if:{MENU_index}-->
+
+			<!--if:{GROUP_Check}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Check</div>
+			<!--if:{MENU_search}-->
+			<li class="nav-item{%ACT_search%}"><a class="nav-link" href="search.php"><i class="fas fa-fw fa-database"></i> <span>実機管理</span></a></li>
+			<!--/if:{MENU_search}-->
+			<!--if:{MENU_playhistory}-->
+			<li class="nav-item{%ACT_playhistory%}"><a class="nav-link" href="playhistory.php"><i class="fas fa-fw fa-chart-area"></i> <span>プレイ状況</span></a></li>
+			<!--/if:{MENU_playhistory}-->
+			<!--if:{MENU_sales}-->
+			<li class="nav-item{%ACT_sales%}"><a class="nav-link" href="sales.php"><i class="fas fa-fw fa-chart-line"></i> <span>売上管理</span></a></li>
+			<!--/if:{MENU_sales}-->
+			<!--/if:{GROUP_Check}-->
+
+			<!--if:{GROUP_Member}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Member</div>
+			<!--if:{MENU_member}-->
+			<li class="nav-item{%ACT_member%}"><a class="nav-link" href="member.php"><i class="fas fa-fw fa-users"></i> <span>会員管理</span></a></li>
+			<!--/if:{MENU_member}-->
+			<!--if:{MENU_address}-->
+			<li class="nav-item{%ACT_address%}"><a class="nav-link" href="address.php"><i class="fas fa-fw fa-address-card"></i> <span>発送先管理</span></a></li>
+			<!--/if:{MENU_address}-->
+			<!--if:{MENU_memberplayhistory}-->
+			<li class="nav-item{%ACT_memberplayhistory%}"><a class="nav-link" href="memberplayhistory.php"><i class="fas fa-fw fa-history"></i> <span>プレイ履歴</span></a></li>
+			<!--/if:{MENU_memberplayhistory}-->
+			<!--if:{MENU_purchasehistory}-->
+			<li class="nav-item{%ACT_purchasehistory%}"><a class="nav-link" href="purchasehistory.php?S_STATUS=1"><i class="fas fa-fw fa-coins"></i> <span>購入履歴情報</span></a></li>
+			<!--/if:{MENU_purchasehistory}-->
+			<!--if:{MENU_gifthistory}-->
+			<li class="nav-item{%ACT_gifthistory%}"><a class="nav-link" href="gifthistory.php"><i class="fas fa-fw fa-gift"></i> <span>ギフト履歴情報</span></a></li>
+			<!--/if:{MENU_gifthistory}-->
+			<!--if:{MENU_pointhistory}-->
+			<li class="nav-item{%ACT_pointhistory%}"><a class="nav-link" href="pointhistory.php"><i class="fas fa-fw fa-history"></i> <span>{%CURRENCY_1%}履歴</span></a></li>
+			<!--/if:{MENU_pointhistory}-->
+			<!--if:{MENU_drawhistory}-->
+			<li class="nav-item{%ACT_drawhistory%}"><a class="nav-link" href="drawhistory.php"><i class="fas fa-fw fa-history"></i> <span>{%CURRENCY_3%}履歴</span></a></li>
+			<!--/if:{MENU_drawhistory}-->
+			<!--/if:{GROUP_Member}-->
+
+			<!--if:{GROUP_Goods}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Goods</div>
+			<!--if:{MENU_goods}-->
+			<li class="nav-item{%ACT_goods%}"><a class="nav-link" href="goods.php"><i class="fas fa-fw fa-gift"></i> <span>商品管理</span></a></li>
+			<!--/if:{MENU_goods}-->
+			<!--if:{MENU_goods_status}-->
+			<li class="nav-item{%ACT_goods_status%}"><a class="nav-link" href="goods_status.php"><i class="fas fa-fw fa-gift"></i> <span>申込状況</span></a></li>
+			<!--/if:{MENU_goods_status}-->
+			<!--if:{MENU_shipping}-->
+			<li class="nav-item{%ACT_shipping%}"><a class="nav-link" href="shipping.php"><i class="fas fa-fw fa-truck"></i> <span>発送管理</span></a></li>
+			<!--/if:{MENU_shipping}-->
+			<!--/if:{GROUP_Goods}-->
+
+			<!--if:{GROUP_Information}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Information</div>
+			<!--if:{MENU_notice}-->
+			<li class="nav-item{%ACT_notice%}"><a class="nav-link" href="notice.php"><i class="fas fa-fw fa-bell"></i> <span>お知らせ管理</span></a></li>
+			<!--/if:{MENU_notice}-->
+			<!--if:{MENU_coupon}-->
+			<li class="nav-item{%ACT_coupon%}"><a class="nav-link" href="coupon.php"><i class="fas fa-fw fa-ticket-alt"></i> <span>クーポン管理</span></a></li>
+			<!--/if:{MENU_coupon}-->
+			<!--if:{MENU_magazine}-->
+			<li class="nav-item{%ACT_magazine%}"><a class="nav-link" href="magazine.php"><i class="far fa-fw fa-envelope"></i> <span>メルマガ管理</span></a></li>
+			<!--/if:{MENU_magazine}-->
+			<!--/if:{GROUP_Information}-->
+
+			<!--if:{GROUP_Machines}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Machines</div>
+			<!--if:{MENU_model}-->
+			<li class="nav-item{%ACT_model%}"><a class="nav-link" href="model.php"><i class="fas fa-fw fa-wrench"></i> <span>機種管理</span></a></li>
+			<!--/if:{MENU_model}-->
+			<!--if:{MENU_maker}-->
+			<li class="nav-item{%ACT_maker%}"><a class="nav-link" href="maker.php"><i class="fas fa-fw fa-wrench"></i> <span>メーカー管理</span></a></li>
+			<!--/if:{MENU_maker}-->
+			<!--if:{MENU_corner}-->
+			<li class="nav-item{%ACT_corner%}"><a class="nav-link" href="corner.php"><i class="fas fa-fw fa-wrench"></i> <span>コーナー管理</span></a></li>
+			<!--/if:{MENU_corner}-->
+			<!--/if:{GROUP_Machines}-->
+
+			<!--if:{GROUP_Owners}-->
+			<!--if:{MENU_owner}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Owners</div>
+			<li class="nav-item{%ACT_owner%}"><a class="nav-link" href="owner.php"><i class="fab fa-fw fa-fort-awesome"></i> <span>オーナー管理</span></a></li>
+			<!--/if:{MENU_owner}-->
+			<!--/if:{GROUP_Owners}-->
+
+			<!--if:{GROUP_Setting}-->
+			<hr class="sidebar-divider">
+			<div class="sidebar-heading">Setting</div>
+			<!--if:{MENU_pointgrant}-->
+			<li class="nav-item{%ACT_pointgrant%}"><a class="nav-link" href="pointgrant.php"><i class="fab fa-fw fa-product-hunt"></i> <span>ポイント付与設定</span></a></li>
+			<!--/if:{MENU_pointgrant}-->
+			<!--if:{MENU_pointconvert}-->
+			<li class="nav-item{%ACT_pointconvert%}"><a class="nav-link" href="pointconvert.php"><i class="fas fa-fw fa-exchange-alt"></i> <span>ポイント変換設定</span></a></li>
+			<!--/if:{MENU_pointconvert}-->
+			<!--if:{MENU_purchase}-->
+			<li class="nav-item{%ACT_purchase%}"><a class="nav-link" href="purchase.php"><i class="fas fa-fw fa-yen-sign"></i> <span>ポイント購入設定</span></a></li>
+			<!--/if:{MENU_purchase}-->
+			<!--if:{MENU_gift}-->
+			<li class="nav-item{%ACT_gift%}"><a class="nav-link" href="gift.php"><i class="fas fa-fw fa-gift"></i> <span>ポイントギフト設定</span></a></li>
+			<!--/if:{MENU_gift}-->
+			<!--if:{MENU_giftlimit}-->
+			<li class="nav-item{%ACT_giftlimit%}"><a class="nav-link" href="giftlimit.php"><i class="fas fa-fw fa-gift"></i> <span>ギフト日制限設定</span></a></li>
+			<!--/if:{MENU_giftlimit}-->
+			<!--if:{MENU_giftaddset}-->
+			<li class="nav-item{%ACT_giftaddset%}"><a class="nav-link" href="giftaddset.php"><i class="fas fa-fw fa-gift"></i> <span>ギフト枠加算設定</span></a></li>
+			<!--/if:{MENU_giftaddset}-->
+			<!--if:{MENU_benefits}-->
+			<li class="nav-item{%ACT_benefits%}"><a class="nav-link" href="benefits.php"><i class="fas fa-fw fa-trophy"></i> <span>特典管理</span></a></li>
+			<!--/if:{MENU_benefits}-->
+			<!--if:{MENU_system}-->
+			<li class="nav-item{%ACT_system%}"><a class="nav-link" href="system.php"><i class="fas fa-fw fa-cog"></i> <span>システム設定</span></a></li>
+			<!--/if:{MENU_system}-->
+			<!--if:{MENU_admin}-->
+			<li class="nav-item{%ACT_admin%}"><a class="nav-link" href="admin.php"><i class="fas fa-fw fa-user-cog"></i> <span>アカウント設定</span></a></li>
+			<!--/if:{MENU_admin}-->
+			<!--/if:{GROUP_Setting}-->
+
+		</ul>
+		<br>

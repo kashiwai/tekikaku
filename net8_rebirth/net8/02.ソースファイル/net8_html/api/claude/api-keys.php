@@ -160,12 +160,17 @@ function createApiKey($pdo) {
     $rateLimit = $validator->get('rate_limit', 1000);
     $expiresAt = $validator->get('expires_at');
 
-    // キー生成
-    $prefix = match($keyType) {
-        'claude' => 'ck_claude_',
-        'secret' => 'sk_' . ($environment === 'live' ? 'live_' : 'test_'),
-        default => 'pk_' . ($environment === 'live' ? 'live_' : 'test_')
-    };
+    // キー生成 (PHP 7.4互換)
+    switch ($keyType) {
+        case 'claude':
+            $prefix = 'ck_claude_';
+            break;
+        case 'secret':
+            $prefix = 'sk_' . ($environment === 'live' ? 'live_' : 'test_');
+            break;
+        default:
+            $prefix = 'pk_' . ($environment === 'live' ? 'live_' : 'test_');
+    }
     $keyValue = $prefix . bin2hex(random_bytes(24));
 
     $sql = "INSERT INTO api_keys (key_value, key_type, name, environment, rate_limit, is_active, created_at, expires_at)
@@ -320,11 +325,16 @@ function regenerateApiKey($pdo, $id) {
     $keyType = $key['key_type'] ?? 'public';
     $environment = $key['environment'];
 
-    $prefix = match($keyType) {
-        'claude' => 'ck_claude_',
-        'secret' => 'sk_' . ($environment === 'live' ? 'live_' : 'test_'),
-        default => 'pk_' . ($environment === 'live' ? 'live_' : 'test_')
-    };
+    switch ($keyType) {
+        case 'claude':
+            $prefix = 'ck_claude_';
+            break;
+        case 'secret':
+            $prefix = 'sk_' . ($environment === 'live' ? 'live_' : 'test_');
+            break;
+        default:
+            $prefix = 'pk_' . ($environment === 'live' ? 'live_' : 'test_');
+    }
     $newKeyValue = $prefix . bin2hex(random_bytes(24));
 
     $sql = "UPDATE api_keys SET key_value = :key_value WHERE id = :id";

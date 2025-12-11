@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Contact Us confirmation</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">Contact Us confirmation</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM">
+			<input type="hidden" name="INQUIRY_TITLE" value="{%INQUIRY_TITLE%}">
+			<input type="hidden" name="MACHINENO" value="{%MACHINENO%}">
+			<input type="hidden" name="MAIL" value="{%MAIL%}">
+			<input type="hidden" name="TGDATE" value="{%TGDATE%}">
+			<input type="hidden" name="INQUIRY_BODY" value="{%INQUIRY_BODY%}">
+			
+			<div class="input-form mb-5">
+				<div class="alert alert-secondary text-center">
+					Service Hours --- 10:00-18:00 on Weekdays<br />
+					<small>We will respond on or after the next business day.</small>
+				</div>
+				<div class="alert alert-danger">
+					<p><small>* For inquiries about the machine you played, you need a machine ID. Please select the inquires from the <a href="playlist.php">Play history</a>.</small></p>
+					<p class="mb-0"><small>If the machine has been settled due to a communication failure, etc. without finishing the Play, the Point that has been settled has arrived at <a href="message.php">Contact BOX</a> in My Page. Please confirm it.</small></p>
+				</div>
+				<hr>
+				<div class="form-group">
+					<label for="inquirySubject">Your Email Address</label>
+					<div class="panel-body">
+						{%MAIL%}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inquirySubject">Type of Inquiries</label>
+					<div class="panel-body">
+						{%DISP_INQUIRY_TITLE%}
+					</div>
+				</div>
+				<!--if:{LOGIN}-->
+				<!--if:{MACHINENO_BLOCK}-->
+				<div class="form-group">
+					<label class="col-form-label" for="baseid">Machine ID</label>
+					<div class="panel-body">
+						{%MACHINENO%}
+					</div>
+				</div>
+				<!--/if:{MACHINENO_BLOCK}-->
+				<!--if:{DATE_BLOCK}-->
+				<div class="form-group">
+					<label class="col-form-label" for="targetDate">Target Date and Time</label>
+					<div class="panel-body">
+						{%TGDATE%}
+					</div>
+				</div>
+				<!--/if:{DATE_BLOCK}-->
+				<!--/if:{LOGIN}-->
+				<div class="form-group">
+					<label class="col-form-label" for="inquiryBody">Contents of Inquiries</label>
+					<div class="panel-body">
+						{%DISP_INQUIRY_BODY%}
+					</div>
+				</div>
+				<hr>
+				
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="changeInput(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i> Correct the entry.</a>
+				</div>
+				<br>
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="document.MAINFORM.submit(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i> Send</a>
+				</div>
+				
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}inquiry_conf.html"-->
+	
+	</body>
+</html>

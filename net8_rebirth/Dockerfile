@@ -44,7 +44,7 @@ COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 # Apacheカスタム設定
 COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# アプリケーションファイルをコピー（2025-11-10 SmartTemplate対応）
+# アプリケーションファイルをコピー（2025-12-12 デザインアップデート）
 COPY net8/02.ソースファイル/net8_html /var/www/html
 
 # composer.jsonとcomposer.lockをコピー

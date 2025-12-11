@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - FAQ</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container faq-list mb-5">
+		<h1 class="h3 text-center my-4">FAQ</h1>
+		<hr>
+
+		<div class="text-center">
+			<div class="row">
+				<div class="col-md-3 col-sm-6">
+					<a href="#account" class="in-link"><button type="button" class="btn btn-faq">アカウントについて</button></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<a href="#play" class="in-link"><button type="button" class="btn btn-faq">プレイについて</button></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<a href="#buy" class="in-link"><button type="button" class="btn btn-faq">購入について</button></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<a href="#lottery" class="in-link"><button type="button" class="btn btn-faq">抽選について</button></a>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="account">アカウントについて</h4>
+		<div class="accordion" id="faq-account">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse01">
+						Q. パスワードを忘れてしまったのですが、どうすればいいですか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse01" class="collapse" data-parent="#faq-account">
+					<div class="card-body">
+						<a href="login.php">ログイン画面</a> の「パスワードを忘れた方はこちら」からパスワードの再設定を行ってください。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse02">
+						Q. 会員登録のメールが届きません
+						</a>
+					</h6>
+				</div>
+				<div id="collapse02" class="collapse" data-parent="#faq-account">
+					<div class="card-body">
+						迷惑メールフォルダに自動振分けされていないか、または <strong>{%SITE_DOMAIN%}</strong>ドメインからのメールを受信する設定になっていないか再度ご確認をお願い致します。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse03">
+						Q. 退会したいのですが、どうすればいいですか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse03" class="collapse" data-parent="#faq-account">
+					<div class="card-body">
+						マイページの <a href="leave.php">退会手続き</a> から行う事ができます。<br />
+						※ログインが必要となります <br />
+						<br />
+						一度退会されたアカウントの情報はすべて削除され、復元はできません。<br />
+						また、保有されている「{%CURRENCY_1%}」や「{%CURRENCY_3%}」も削除されますので、あらかじめご検討の上、退会手続きを行ってください。<br />
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="play">プレイについて</h4>
+		<div class="accordion" id="faq-play">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse11">
+						Q. プレイするための動作環境に制約はありますか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse11" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						<a href="info.php?M=beginners">「はじめての方へ」</a>の「{%SITE_TITLE%} 推奨スペック」にてご確認ください。<br />
+						IEおよびEdgeには対応しておりません。<br />
+						動作に不具合が生じる場合は上記に記載されているブラウザをご利用いただき、動作を確認してください。<br />
+						上記に記載されているブラウザを利用しても不具合が生じる場合は、ご利用のOSとブラウザを必ず明記した上で<a href="inquiry.php">お問い合わせ</a>よりご連絡ください。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse12">
+						Q. スマホからプレイできますか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse12" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						対応ブラウザであれば iPhone、Android ともにプレイできます。<br />
+						※対応ブラウザにつきましては、<a href="info.php?M=beginners">「はじめての方へ」</a>の「{%SITE_TITLE%} 推奨スペック」にてご確認ください。<br />
+						Wi-Fiをご利用でない環境の場合は、パケットの使用量にご注意ください。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse13">
+						Q. プレイ中に営業時間が終了したら、どうなりますか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse13" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						営業時間終了時の回転が終わり次第、自動精算され退室となります。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse14">
+						Q. 音が出ないのですが、どうしたらいいですか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse14" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						プレイ画面右上にある音声ボタンをONにしてください。<br />
+						音量は端末側のスピーカーで調整してください。<br />
+						※音源を筐体から直接とっているため、音割れが発生する場合があります。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse15">
+						Q. プレイ中に映像の画質が落ちた(または止まった)のですが、どうしたらいいですか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse15" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						お手数ですが、ブラウザを再起動してください。<br />
+						所持{%CURRENCY_2%}等は引き続き使用できます。<br />
+						※ただし、プレイを再開しないまま一定時間経過すると自動精算されます<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse16">
+						Q. ボタン操作のラグ（遅延）はどうにかなりませんか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse16" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						インターネットを通じてパチンコ・パチスロの実機を映しゲームを操作しているため、回線状況や端末のスペックなどの影響でラグ（遅延）が発生してしまいます。 
+						ご承知おきの上でプレイをお楽しみ下さい。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse17">
+						Q. プレイ中にインターネット接続が切れた場合は、プレイデータはどうなりますか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse17" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						切断から3分以内であれば切断前に保有していたクレジットから再開できます。<br />
+						何らかの原因で、プレイ中にインターネット回線が遮断され再接続が困難な場合、直前まで保有していた所持クレジットは一定時間で自動精算されます。<br />
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="buy">購入について</h4>
+		<div class="accordion" id="faq-buy">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse51">
+						Q. 決済方法は何が利用できますか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse51" class="collapse" data-parent="#faq-buy">
+					<div class="card-body">
+						クレジットカードまたは、コンビニ決済をご利用ください。<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse52">
+						Q. {%CURRENCY_3%}の購入はできますか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse52" class="collapse" data-parent="#faq-buy">
+					<div class="card-body">
+						{%CURRENCY_3%}の直接購入はできません。<br />
+						※{%CURRENCY_3%}はプレイでのみ増やせます
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="lottery">抽選について</h4>
+		<div class="accordion" id="faq-lottery">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse61">
+						Q. 商品抽選に応募したいのですが、どうすればいいですか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse61" class="collapse" data-parent="#faq-lottery">
+					<div class="card-body">
+						会員メニューの「コイン交換」→「商品一覧」にて所持コインを利用して応募できます。
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse62">
+						Q. 応募に必要な{%CURRENCY_3%}を増やすには、どうすればいいですか？
+						</a>
+					</h6>
+				</div>
+				<div id="collapse62" class="collapse" data-parent="#faq-lottery">
+					<div class="card-body">
+						プレイで増やした{%CURRENCY_2%}を「精算」すると{%CURRENCY_3%}に変換されます。<br />
+						※{%CURRENCY_3%}の直接購入はできません
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}info_faq.html"-->
+	
+	</body>
+</html>
