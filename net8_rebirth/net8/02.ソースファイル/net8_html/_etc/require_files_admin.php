@@ -1,212 +1,195 @@
 <?php
 /**
- * NET8 Require Files - Admin
- *
- * 管理画面用共通インクルードファイル
- * 管理画面の全PHPファイルから読み込まれる基本設定とライブラリ
+ * 管理画面用require files
+ * Created: 2025-12-12
  */
 
-// エラー報告設定（一時的に全エラー表示を有効化）
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-ini_set('log_errors', '1');
+// エラー表示設定
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+ini_set('display_errors', '0'); // 本番環境では0に設定
 
-// セッション設定（最初に実行）
-// NOTE: SmartSessionクラスがセッション管理を行うため、ここではsession_start()を呼ばない
-// 2つのセッション管理システムの競合を防ぐためコメントアウト
-// if (session_status() === PHP_SESSION_NONE) {
-//     session_name(defined('SESSION_NAME') ? SESSION_NAME : 'NET8_ADMIN_SESSION');
-//     @session_start(); // @でエラー抑制
-// }
-
-// 設定ファイル読み込み
-require_once(__DIR__ . '/setting.php');          // データベース接続設定
-require_once(__DIR__ . '/setting_base.php');     // サイト基本設定
-require_once(__DIR__ . '/license.php');          // ライセンス設定
-require_once(__DIR__ . '/messages.php');         // メッセージ定義
-
-// アプリケーション定数定義
-// 管理画面用HTMLテンプレートディレクトリ
-if (!defined('DIR_HTML_ADMIN')) {
-    $lang = defined('FOLDER_LANG') ? FOLDER_LANG : 'ja';
-    define('DIR_HTML_ADMIN', __DIR__ . '/../_html/' . $lang . '/admin/');
-}
-if (!defined('DIR_HTML')) {
-    define('DIR_HTML', DIR_HTML_ADMIN); // 互換性のため
-}
-if (!defined('TYPE_PC')) define('TYPE_PC', 0);                            // PCアクセスタイプ
-if (!defined('TYPE_SMART_PHONE')) define('TYPE_SMART_PHONE', 1);         // スマートフォンアクセスタイプ
-if (!defined('TYPE_MOBILE')) define('TYPE_MOBILE', 2);                    // モバイルアクセスタイプ
-
-// 管理画面URL設定
-if (!defined('URL_ADMIN')) {
-    define('URL_ADMIN', defined('SITE_URL') ? SITE_URL . 'xxxadmin/' : 'https://mgg-webservice-production.up.railway.app/xxxadmin/');
+// パス設定
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', dirname(dirname(__DIR__)));
 }
 
-// 管理画面セッション設定
-if (!defined('SESSION_SEC_ADMIN')) {
-    define('SESSION_SEC_ADMIN', 1440);  // セッション継続時間（秒） = 24分
+// 基本的なrequire_filesを読み込み
+if (file_exists(__DIR__ . '/require_files.php')) {
+    require_once(__DIR__ . '/require_files.php');
+} else {
+    // require_files.phpが見つからない場合、最小限の設定
+    
+    // データベース接続設定
+    if (!defined('DB_HOST')) {
+        define('DB_HOST', '136.116.70.86');
+        define('DB_USER', 'net8tech001');
+        define('DB_PASS', 'Nene11091108!!');
+        define('DB_NAME', 'net8_dev');
+        define('DB_PORT', 3306);
+    }
+    
+    // 基本定数
+    if (!defined('FD_TEXT')) {
+        define('FD_TEXT', 1);
+        define('FD_NUM', 2);
+        define('FD_RAW', 3);
+    }
 }
-if (!defined('SESSION_SID_ADMIN')) {
-    define('SESSION_SID_ADMIN', 'ADMIN_SID');  // セッションID名
-}
 
-// 管理画面表示設定
-if (!defined('ADMIN_LIST_ROWMAX')) {
-    define('ADMIN_LIST_ROWMAX', 50);  // 管理画面リスト表示の最大行数
-}
-if (!defined('PAGE_SPAN')) {
-    define('PAGE_SPAN', 5);  // ページネーションで現在ページの前後に表示するページ数
-}
-
-// メニュー権限設定（空配列で初期化、必要に応じて設定ファイルで上書き）
-if (!isset($GLOBALS["AuthMenuID"])) {
-    $GLOBALS["AuthMenuID"] = array(
-        // メニューIDと権限レベルのマッピング
-        // 例: 'user' => 1, 'system' => 9
-    );
-}
-
-// 共通ライブラリ読み込み
-$lib_dir = __DIR__ . '/../_lib/';
-$sys_dir = __DIR__ . '/../_sys/';
-
-// Core libraries - 依存関係を考慮した順序で読み込み
-$required_libs = [
-    // 基本ライブラリ（依存なし）
-    $lib_dir . 'SmartDB.php',
-    $lib_dir . 'SmartGeneral.php',
-    $lib_dir . 'SmartSqlString.php',
-
-    // テンプレートとセッション
-    $lib_dir . 'SmartTemplate.php',
-    $lib_dir . 'SmartSession.php',
-
-    // NetDB（TemplateAdminに必要）
-    $sys_dir . 'NetDB.php',
-
-    // TemplateAdmin（管理画面用）
-    $sys_dir . 'TemplateAdmin.php',
-
-    // ポイント管理
-    $sys_dir . 'PlayPoint.php',
-
-    // その他のライブラリ
-    $lib_dir . 'SmartAutoCheck.php',
-    $lib_dir . 'SmartChecker.php',
-
-    // システム関数
-    $sys_dir . 'RefTimeFunc.php',
+// クラスファイルの読み込み
+$lib_paths = [
+    ROOT_PATH . '/data/_lib/',
+    ROOT_PATH . '/_lib/',
 ];
 
-foreach ($required_libs as $lib) {
-    if (file_exists($lib)) {
-        require_once($lib);
-    } else {
-        // ライブラリが存在しない場合はエラーログに記録
-        error_log('Required library not found: ' . $lib);
-    }
-}
+// 必要なクラスファイル
+$required_classes = [
+    'Database.class.php',
+    'SmartDB_MySQL.class.php',
+    'SqlString.class.php',
+    'Session.class.php',
+    'TemplateAdmin.class.php',
+];
 
-// Load common.php if exists
-if (file_exists($lib_dir . 'common.php')) {
-    require_once($lib_dir . 'common.php');
-}
-
-// データベース接続関数
-function get_db_connection() {
-    try {
-        $dsn = defined('DB_DSN_PDO') ? DB_DSN_PDO : 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
-        $pdo = new PDO($dsn, DB_USER, DB_PASSWORD, DB_OPTIONS);
-        return $pdo;
-    } catch (PDOException $e) {
-        error_log('Database connection error: ' . $e->getMessage());
-        if (defined('DEBUG_MODE') && DEBUG_MODE) {
-            die('Database connection failed: ' . $e->getMessage());
-        } else {
-            die('Database connection failed. Please contact administrator.');
+foreach ($lib_paths as $lib_path) {
+    foreach ($required_classes as $class_file) {
+        $file_path = $lib_path . $class_file;
+        if (file_exists($file_path)) {
+            require_once($file_path);
         }
     }
 }
 
-// 共通ヘルパー関数
-if (!function_exists('get_self')) {
-    function get_self() {
-        return $_SERVER['PHP_SELF'] ?? '';
-    }
-}
-
-if (!function_exists('h')) {
-    function h($str) {
-        return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
-    }
-}
-
-if (!function_exists('redirect')) {
-    function redirect($url) {
-        header('Location: ' . $url);
-        exit;
-    }
-}
-
-// 管理画面用：管理者ログインチェック関数
-if (!function_exists('check_admin_login')) {
-    function check_admin_login($redirect_to_login = true) {
-        if (!isset($_SESSION['admin_no']) || empty($_SESSION['admin_no'])) {
-            if ($redirect_to_login) {
-                redirect('login.php');
+// TemplateAdminクラスが存在しない場合、簡易版を定義
+if (!class_exists('TemplateAdmin')) {
+    class TemplateAdmin {
+        public $DB;
+        public $Session;
+        public $AdminInfo;
+        
+        public function __construct() {
+            // データベース接続
+            $this->DB = new SmartDB_MySQL();
+            $this->DB->connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+            
+            // セッション管理
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
             }
-            return false;
+            
+            // 簡易セッション管理
+            $this->Session = new stdClass();
+            if (isset($_SESSION['AdminInfo'])) {
+                $this->Session->AdminInfo = $_SESSION['AdminInfo'];
+                $this->AdminInfo = $_SESSION['AdminInfo'];
+            }
         }
-        return true;
     }
 }
 
-// 管理画面用：権限チェック関数
-if (!function_exists('check_admin_auth')) {
-    function check_admin_auth($required_auth = 0) {
-        if (!isset($_SESSION['admin_auth']) || $_SESSION['admin_auth'] < $required_auth) {
-            return false;
+// SmartDB_MySQLクラスが存在しない場合、簡易版を定義
+if (!class_exists('SmartDB_MySQL')) {
+    class SmartDB_MySQL {
+        private $connection;
+        
+        public function connect($host, $user, $pass, $db, $port = 3306) {
+            $this->connection = new mysqli($host, $user, $pass, $db, $port);
+            if ($this->connection->connect_error) {
+                die("Connection failed: " . $this->connection->connect_error);
+            }
+            $this->connection->set_charset("utf8mb4");
         }
-        return true;
+        
+        public function query($sql) {
+            return $this->connection->query($sql);
+        }
+        
+        public function getAll($sql) {
+            $result = $this->query($sql);
+            if (!$result) {
+                return [];
+            }
+            
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        
+        public function conv_sql($value, $type = FD_TEXT) {
+            if ($type == FD_TEXT) {
+                return "'" . $this->connection->real_escape_string($value) . "'";
+            } elseif ($type == FD_NUM) {
+                return intval($value);
+            } elseif ($type == FD_RAW) {
+                return $value;
+            }
+            return "'" . $this->connection->real_escape_string($value) . "'";
+        }
+        
+        public function getInsertId() {
+            return $this->connection->insert_id;
+        }
     }
 }
 
-// 営業時間設定をDBから読み込み（管理画面用）
-$GLOBALS['RUNTIME_CONFIG'] = [];
-try {
-    if (class_exists('NetDB')) {
-        $db = new NetDB();
-        $sql = "SELECT setting_key, setting_val
-                FROM mst_setting
-                WHERE setting_key IN ('GLOBAL_OPEN_TIME', 'GLOBAL_CLOSE_TIME', 'REFERENCE_TIME')
-                  AND del_flg = 0";
-        $result = $db->query($sql);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $GLOBALS['RUNTIME_CONFIG'][$row['setting_key']] = $row['setting_val'];
+// SqlStringクラスが存在しない場合、簡易版を定義
+if (!class_exists('SqlString')) {
+    class SqlString {
+        private $sql = '';
+        private $db = null;
+        
+        public function setAutoConvert($db_array) {
+            if (is_array($db_array) && count($db_array) >= 2) {
+                $this->db = $db_array[0];
+            }
+            return $this;
+        }
+        
+        public function insert($table) {
+            $this->sql = "INSERT INTO $table ";
+            return $this;
+        }
+        
+        public function values($data) {
+            $columns = [];
+            $values = [];
+            
+            foreach ($data as $column => $value_array) {
+                $columns[] = $column;
+                if (is_array($value_array)) {
+                    $value = $value_array[0];
+                    $type = $value_array[1] ?? FD_TEXT;
+                    
+                    if ($type == FD_RAW) {
+                        $values[] = $value;
+                    } elseif ($type == FD_NUM) {
+                        $values[] = intval($value);
+                    } else {
+                        if ($this->db) {
+                            $values[] = $this->db->conv_sql($value, FD_TEXT);
+                        } else {
+                            $values[] = "'" . addslashes($value) . "'";
+                        }
+                    }
+                } else {
+                    $values[] = "'" . addslashes($value_array) . "'";
+                }
+            }
+            
+            $this->sql .= "(" . implode(", ", $columns) . ") VALUES (" . implode(", ", $values) . ")";
+            return $this;
+        }
+        
+        public function createSQL($separator = '') {
+            return $this->sql;
         }
     }
-} catch (Exception $e) {
-    error_log('[Admin営業時間設定] DB読み込みエラー（定数定義をフォールバックとして使用）: ' . $e->getMessage());
 }
 
-// 営業時間設定取得関数（管理画面用）
-if (!function_exists('get_business_hours_config')) {
-    function get_business_hours_config($key) {
-        // 1. グローバル変数から取得（DBから読み込んだ値）
-        if (isset($GLOBALS['RUNTIME_CONFIG'][$key])) {
-            return $GLOBALS['RUNTIME_CONFIG'][$key];
-        }
-        // 2. 定数定義から取得（フォールバック）
-        if (defined($key)) {
-            return constant($key);
-        }
-        // 3. デフォルト値
-        $defaults = [
-            'GLOBAL_OPEN_TIME' => '10:00',
-            'GLOBAL_CLOSE_TIME' => '22:00',
-            'REFERENCE_TIME' => '04:00'
-        ];
-        return $defaults[$key] ?? '';
-    }
+// セッション開始（まだ開始されていない場合）
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
+?>
