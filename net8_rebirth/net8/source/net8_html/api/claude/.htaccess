@@ -1,0 +1,45 @@
+# NET8 Claude Code API - .htaccess
+# Version: 1.0.0
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /api/claude/
+
+    # プリフライトリクエスト許可
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ - [L]
+
+    # 実在するファイルとディレクトリはそのまま
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # それ以外はindex.phpにルーティング
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# CORS設定
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-API-Key"
+</IfModule>
+
+# セキュリティ設定
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# ヘルパーディレクトリへの直接アクセスを禁止
+<IfModule mod_rewrite.c>
+    RewriteRule ^helpers/ - [F,L]
+</IfModule>
+
+# PHP設定
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_value error_reporting E_ALL
+    php_flag log_errors On
+</IfModule>
