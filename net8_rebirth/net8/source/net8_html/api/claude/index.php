@@ -131,6 +131,10 @@ switch ($resource) {
         require_once __DIR__ . '/system.php';
         break;
 
+    case 'setup-api-key.php':
+        require_once __DIR__ . '/setup-api-key.php';
+        break;
+
     default:
         http_response_code(404);
         echo json_encode([
