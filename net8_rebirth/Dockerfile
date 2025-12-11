@@ -69,4 +69,4 @@ EXPOSE ${PORT:-80}
 
 # Apache起動
 CMD ["apache2-foreground"]
-# Force rebuild at 2024-12-12 07:36 JST
+# Force rebuild at 2024-12-12 08:18 JST - 検索ページダークテーマ修正
