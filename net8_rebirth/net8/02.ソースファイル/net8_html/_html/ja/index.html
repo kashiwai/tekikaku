@@ -20,85 +20,80 @@
 		/* ヒーローセクション */
 		#index-visual {
 			position: relative;
-			height: 60vh;
-			min-height: 400px;
 			overflow: hidden;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			display: flex;
-			align-items: center;
-			justify-content: center;
+			margin-bottom: 0;
 		}
 		
-		#index-visual::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: url('/content/images/index/top.jpg') center/cover;
-			opacity: 0.3;
+		#index-visual img {
+			width: 100%;
+			height: auto;
+			display: block;
 		}
 		
-		#index-visual picture {
-			display: none;
+		/* おすすめ台セクション */
+		.featured-machines {
+			padding: 40px 20px;
+			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 		}
 		
-		.hero-content {
-			position: relative;
+		.featured-title {
 			text-align: center;
-			color: white;
-			z-index: 2;
-			padding: 20px;
-		}
-		
-		.hero-title {
-			font-size: 4rem;
-			font-weight: bold;
-			margin-bottom: 20px;
-			text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-			background: linear-gradient(45deg, #fff, #f0f0f0);
+			font-size: 2.5rem;
+			margin-bottom: 30px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
-		}
-		
-		.hero-subtitle {
-			font-size: 1.5rem;
-			margin-bottom: 30px;
-			opacity: 0.95;
-		}
-		
-		.hero-stats {
-			display: flex;
-			gap: 30px;
-			justify-content: center;
-			margin-top: 40px;
-		}
-		
-		.stat-card {
-			background: rgba(255,255,255,0.2);
-			backdrop-filter: blur(10px);
-			border-radius: 15px;
-			padding: 20px 30px;
-			border: 1px solid rgba(255,255,255,0.3);
-			transition: all 0.3s ease;
-		}
-		
-		.stat-card:hover {
-			transform: translateY(-5px);
-			background: rgba(255,255,255,0.3);
-		}
-		
-		.stat-number {
-			font-size: 2.5rem;
 			font-weight: bold;
-			margin-bottom: 5px;
 		}
 		
-		.stat-label {
-			font-size: 1rem;
-			opacity: 0.9;
+		.featured-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 20px;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.featured-card {
+			background: white;
+			border-radius: 15px;
+			overflow: hidden;
+			box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+			transition: all 0.3s ease;
+			cursor: pointer;
+		}
+		
+		.featured-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+		}
+		
+		.featured-image {
+			width: 100%;
+			height: 200px;
+			object-fit: cover;
+		}
+		
+		.featured-info {
+			padding: 20px;
+		}
+		
+		.featured-name {
+			font-size: 1.3rem;
+			font-weight: bold;
+			margin-bottom: 10px;
+			color: #333;
+		}
+		
+		.featured-badge {
+			display: inline-block;
+			background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+			color: white;
+			padding: 5px 15px;
+			border-radius: 20px;
+			font-size: 0.9rem;
+			font-weight: bold;
 		}
 		
 		/* コーナータブ改良 */
@@ -191,13 +186,12 @@
 		}
 		
 		@media (max-width: 768px) {
-			.hero-title {
-				font-size: 2.5rem;
+			.featured-title {
+				font-size: 1.8rem;
 			}
 			
-			.hero-stats {
-				flex-direction: column;
-				gap: 15px;
+			.featured-grid {
+				grid-template-columns: 1fr;
 			}
 			
 			.tab-container {
@@ -244,24 +238,6 @@
 
 	<!-- Top Visual -->
 	<section id="index-visual">
-		<div class="hero-content">
-			<h1 class="hero-title">NET8 GAMES</h1>
-			<p class="hero-subtitle">最高のオンラインゲーム体験を</p>
-			<div class="hero-stats">
-				<div class="stat-card">
-					<div class="stat-number">{%TOTAL_MACHINES%}</div>
-					<div class="stat-label">総台数</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-number">{%ACTIVE_USERS%}</div>
-					<div class="stat-label">アクティブユーザー</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-number">{%TODAY_PLAYS%}</div>
-					<div class="stat-label">本日のプレイ数</div>
-				</div>
-			</div>
-		</div>
 		<picture>
 			<img src="/content/images/index/top.jpg" sizes="(max-width: 4368px) 100vw, 4368px" decoding="async" alt="MillionNet8">
 		</picture>
@@ -299,6 +275,22 @@
 				</a>
 			</div>
 			<!--/loop:{SLIDER_LIST}-->
+		</div>
+	</section>
+
+	<!-- おすすめ台セクション -->
+	<section class="featured-machines">
+		<h2 class="featured-title">🎯 本日のおすすめ台</h2>
+		<div class="featured-grid">
+			<!--loop:{FEATURED_MACHINES}-->
+			<div class="featured-card" onclick="location.href='/play_v2/?NO={%NO%}'">
+				<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}" class="featured-image">
+				<div class="featured-info">
+					<h3 class="featured-name">{%MODEL_NAME%}</h3>
+					<span class="featured-badge">HOT!</span>
+				</div>
+			</div>
+			<!--/loop:{FEATURED_MACHINES}-->
 		</div>
 	</section>
 
