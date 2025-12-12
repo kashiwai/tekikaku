@@ -310,7 +310,8 @@ function updateModel($pdo, $modelNo) {
     $updateFields = [
         'category', 'model_cd', 'model_name', 'model_roman',
         'type_no', 'unit_no', 'maker_no',
-        'renchan_games', 'tenjo_games', 'remarks'
+        'renchan_games', 'tenjo_games', 'remarks',
+        'image_list', 'image_detail', 'image_reel'
     ];
 
     foreach ($updateFields as $field) {
