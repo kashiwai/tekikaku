@@ -22,6 +22,16 @@
  * @since    2019/06/21 初版作成 片岡 充
  */
 
+// セッション開始（login.phpと同じ）
+session_name("NET8ADMIN");
+session_start();
+
+// セッション認証チェック
+if (empty($_SESSION["AdminInfo"])) {
+    header("Location: /xxxadmin/login.php");
+    exit();
+}
+
 // インクルード
 require_once('../../_etc/require_files_admin.php');			// requireファイル
 // 項目定義

@@ -1,9 +1,8 @@
 <?php
-// セッションデバッグ用ファイル
-require_once('../../_etc/require_files_admin.php');
+// セッションデバッグ用ファイル（統一セッション名使用）
 
-// セッション確認
-session_name('ADMIN_SID');
+// セッション確認（login.phpと同じ名前を使用）
+session_name('NET8ADMIN');
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -15,8 +14,8 @@ echo "<pre>" . session_id() . "</pre>";
 echo "<h2>Session Name:</h2>";
 echo "<pre>" . session_name() . "</pre>";
 
-echo "<h2>Cookie ADMIN_SID:</h2>";
-echo "<pre>" . (isset($_COOKIE['ADMIN_SID']) ? $_COOKIE['ADMIN_SID'] : 'NOT SET') . "</pre>";
+echo "<h2>Cookie NET8ADMIN:</h2>";
+echo "<pre>" . (isset($_COOKIE['NET8ADMIN']) ? $_COOKIE['NET8ADMIN'] : 'NOT SET') . "</pre>";
 
 echo "<h2>Session Data:</h2>";
 echo "<pre>";
