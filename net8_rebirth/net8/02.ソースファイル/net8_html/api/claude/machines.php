@@ -210,14 +210,17 @@ function createMachine($pdo) {
         ApiResponse::error('指定された機種が存在しません', 400, 'MODEL_NOT_FOUND');
     }
 
+    // signaling_idを自動生成（カメラIDベース）
+    $signalingId = $input['signaling_id'] ?? ('PEER-' . strtoupper(substr(md5($input['machine_cd']), 0, 8)));
+
     $sql = "INSERT INTO dat_machine (
                 model_no, machine_cd, owner_no, camera_no, signaling_id,
                 convert_no, release_date, end_date, machine_corner,
-                machine_status, assign_flg, del_flg, add_dt, upd_dt
+                machine_status, del_flg, add_dt, upd_dt
             ) VALUES (
                 :model_no, :machine_cd, :owner_no, :camera_no, :signaling_id,
                 :convert_no, :release_date, :end_date, :machine_corner,
-                :machine_status, 0, 0, NOW(), NOW()
+                :machine_status, 0, NOW(), NOW()
             )";
 
     $stmt = $pdo->prepare($sql);
@@ -226,10 +229,10 @@ function createMachine($pdo) {
         'machine_cd' => $input['machine_cd'],
         'owner_no' => $input['owner_no'] ?? null,
         'camera_no' => $input['camera_no'] ?? null,
-        'signaling_id' => $input['signaling_id'] ?? null,
-        'convert_no' => $input['convert_no'] ?? null,
-        'release_date' => $input['release_date'] ?? null,
-        'end_date' => $input['end_date'] ?? null,
+        'signaling_id' => $signalingId,
+        'convert_no' => $input['convert_no'] ?? 1,
+        'release_date' => $input['release_date'] ?? date('Y-m-d'),
+        'end_date' => $input['end_date'] ?? '2099-12-31',
         'machine_corner' => $input['machine_corner'] ?? null,
         'machine_status' => $input['machine_status'] ?? '0'
     ]);
