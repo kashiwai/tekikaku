@@ -13,6 +13,20 @@ class TemplateAdmin {
     public $AdminInfo;
 
     public function __construct($makeSession = true, $isReturn = true, $isRegenerate = false, $encode = HTML_ENCODING) {
+        // セッション管理（login.phpと統一）
+        if ($makeSession) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_name("NET8ADMIN");
+                session_start();
+            }
+            
+            // ログイン認証チェック
+            if (empty($_SESSION["AdminInfo"])) {
+                header("Location: /xxxadmin/login.php");
+                exit();
+            }
+        }
+
         // キャッシュコントロール
         header("Expires: Thu, 01 Dec 1994 16:00:00 GMT");
         header("Last-Modified: ". gmdate("D, d M Y H:i:s"). " GMT");
