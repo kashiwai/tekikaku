@@ -20,9 +20,10 @@ class TemplateAdmin {
                 session_start();
             }
             
-            // ログイン認証チェック
-            if (empty($_SESSION["AdminInfo"])) {
-                header("Location: /xxxadmin/login.php");
+            // ログイン認証チェック（login.phpのスクリプトは除外）
+            $current_script = basename($_SERVER['SCRIPT_NAME']);
+            if (empty($_SESSION["AdminInfo"]) && $current_script !== "login.php") {
+                header("Location: " . (defined("URL_ADMIN") ? URL_ADMIN : "/xxxadmin/") . "login.php");
                 exit();
             }
         }
@@ -101,16 +102,15 @@ class TemplateAdmin {
                 }
                 
                 public function check($redirect = false) {
-                    // 簡略化: セッションタイムアウトのみチェック
-                    if (isset($_SESSION["last_access"])) {
-                        $elapsed = time() - $_SESSION["last_access"];
-                        if ($elapsed > 3600) { // 1時間
-                            $this->clear($redirect);
-                            return false;
-                        }
+                    // 簡単なセッション存在チェックのみ
+                    $isValid = isset($_SESSION["AdminInfo"]) && !empty($_SESSION["AdminInfo"]);
+                    
+                    if ($isValid && isset($_SESSION["last_access"])) {
+                        // 最終アクセス時刻更新（タイムアウトチェックは無効化）
                         $_SESSION["last_access"] = time();
                     }
-                    return isset($_SESSION["AdminInfo"]);
+                    
+                    return $isValid;
                 }
                 
                 public function clear($redirect = false) {
@@ -128,13 +128,6 @@ class TemplateAdmin {
                 $this->AdminInfo = $_SESSION["AdminInfo"];
                 $this->Session->AdminInfo = $_SESSION["AdminInfo"];
                 $_SESSION["last_access"] = time();
-            } else if ($isReturn) {
-                // 未ログインの場合はログイン画面へ（login.php以外）
-                $script = basename($_SERVER["SCRIPT_NAME"]);
-                if ($script !== "login.php") {
-                    header("Location: " . (defined("URL_ADMIN") ? URL_ADMIN : "/xxxadmin/") . "login.php");
-                    exit();
-                }
             }
         }
 

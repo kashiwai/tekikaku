@@ -171,10 +171,12 @@ function ProcLogin() {
     if ($row = $result->fetch_assoc()) {
         // パスワード検証
         if (password_verify($admin_pass, $row["admin_pass"])) {
-            // ログイン成功
+            // ログイン成功 - セッションを完全にクリーンアップしてから設定
+            $_SESSION = array(); // 既存セッションデータをクリア
             $_SESSION["AdminInfo"] = $row;
             $_SESSION["login_time"] = time();
             $_SESSION["last_access"] = time();
+            $_SESSION["authenticated"] = true;
             
             // 最終ログイン更新
             $updateSql = "UPDATE mst_admin SET login_dt = NOW() WHERE admin_no = ?";
