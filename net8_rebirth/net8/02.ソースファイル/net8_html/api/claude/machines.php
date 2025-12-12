@@ -220,8 +220,8 @@ function createMachine($pdo) {
         ApiResponse::error('指定された機種が存在しません', 400, 'MODEL_NOT_FOUND');
     }
 
-    // signaling_idを自動生成（カメラIDベース）
-    $signalingId = $input['signaling_id'] ?? ('PEER-' . strtoupper(substr(md5($input['machine_cd']), 0, 8)));
+    // signaling_idを自動生成（10文字制限: P + 9文字のハッシュ）
+    $signalingId = $input['signaling_id'] ?? ('P' . strtoupper(substr(md5($input['machine_cd']), 0, 9)));
 
     $sql = "INSERT INTO dat_machine (
                 model_no, machine_cd, owner_no, camera_no, signaling_id,
