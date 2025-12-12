@@ -75,6 +75,23 @@ try {
         echo "パスワード: " . ($passMatch ? "✅ 正しい" : "❌ 不一致") . "\n";
     }
 
+    // セッション設定確認
+    echo "\n========================================\n";
+    echo "セッション設定確認\n";
+    echo "========================================\n\n";
+
+    echo "SESSION_SID: " . (defined('SESSION_SID') ? SESSION_SID : '未定義') . "\n";
+    echo "SESSION_SEC: " . (defined('SESSION_SEC') ? SESSION_SEC : '未定義') . "\n";
+    echo "DOMAIN: " . (defined('DOMAIN') ? DOMAIN : '未定義') . "\n";
+    echo "URL_SSL_SITE: " . (defined('URL_SSL_SITE') ? URL_SSL_SITE : '未定義') . "\n";
+    echo "URL_SITE: " . (defined('URL_SITE') ? URL_SITE : '未定義') . "\n";
+    echo "SERVER_NAME: " . ($_SERVER['SERVER_NAME'] ?? '不明') . "\n";
+    echo "HTTP_HOST: " . ($_SERVER['HTTP_HOST'] ?? '不明') . "\n";
+    echo "session.cookie_path: " . ini_get('session.cookie_path') . "\n";
+    echo "session.cookie_domain: " . ini_get('session.cookie_domain') . "\n";
+    echo "session.cookie_secure: " . ini_get('session.cookie_secure') . "\n";
+    echo "session.cookie_samesite: " . ini_get('session.cookie_samesite') . "\n";
+
 } catch (Exception $e) {
     echo "❌ エラー: " . $e->getMessage() . "\n";
 }
