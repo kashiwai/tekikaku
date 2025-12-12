@@ -458,8 +458,8 @@ class TemplateUser extends SmartTemplate {
 				// 2021/04/30 Add E
 			}
 			
-			// 画像
-			$this->assign("DIR_IMG_MODEL_DIR", "/data/img/model/", true);		// 機材画像表示用パス（固定）
+			// 画像 - GCS URL対応のため空文字に変更
+			$this->assign("DIR_IMG_MODEL_DIR", "", true);		// 機材画像表示用パス（GCS対応）
 
 			// 画像ファイル名のみを設定（パスはDIR_IMG_MODEL_DIRと組み合わせ）
 			$imageList = $row["image_list"];
@@ -467,6 +467,7 @@ class TemplateUser extends SmartTemplate {
 
 			// image_detail も同様に処理
 			$imageDetail = $row["image_detail"];
+			// GCS URLの場合はそのまま使用、そうでなければローカルパスを追加
 			if ($imageDetail && !preg_match('/^https?:\/\//', $imageDetail)) {
 				$imageDetail = '/data/img/model/' . $imageDetail;
 			}
