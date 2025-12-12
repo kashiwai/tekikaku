@@ -1,10 +1,8 @@
 <?php
-// ログアウト処理
-if (session_status() == PHP_SESSION_NONE) {
-    session_name("NET8ADMIN");
-    session_start();
-}
+// セッション初期化
+require_once(__DIR__ . "/session_init.php");
 
+// セッション完全破棄
 $_SESSION = array();
 session_destroy();
 
