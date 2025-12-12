@@ -41,11 +41,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # カスタムPHP設定
 COPY net8_rebirth/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-# デバッグ用：利用可能なファイルをリスト表示（COPY前に実行）- 2025-12-12 10:40:15
-RUN echo "=== DEBUG: Available files at root ===" && ls -la /
-RUN echo "=== DEBUG: Available files at current dir ===" && ls -la .  
-RUN echo "=== DEBUG: Available files at net8_rebirth ===" && ls -la net8_rebirth/ 2>/dev/null || echo "net8_rebirth not found"
-RUN echo "=== DEBUG: Available files at net8_rebirth/net8 ===" && ls -la net8_rebirth/net8/ 2>/dev/null || echo "net8_rebirth/net8 not found"
+# デバッグ用：利用可能なファイルをリスト表示（COPY前に実行）- 2025-12-12 10:55:00
+RUN echo "=========================================="
+RUN echo "DEBUGGING RAILWAY BUILD CONTEXT - START"  
+RUN echo "=========================================="
+RUN echo "Current working directory:" && pwd
+RUN echo "Root directory contents:" && ls -la / | head -20
+RUN echo "Current directory contents:" && ls -la . | head -20
+RUN echo "Searching for net8_rebirth:" && find / -maxdepth 3 -name "net8_rebirth" -type d 2>/dev/null || echo "net8_rebirth not found in first 3 levels"
+RUN echo "=========================================="
+RUN echo "DEBUGGING RAILWAY BUILD CONTEXT - END"
+RUN echo "=========================================="
 
 # Apacheカスタム設定
 COPY net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
@@ -72,4 +78,4 @@ EXPOSE ${PORT:-80}
 
 # Apache起動
 CMD ["apache2-foreground"]
-# Force rebuild at 2024-12-12 10:23 JST - 画像パス修正強制デプロイ
+# Force rebuild at 2024-12-12 10:55 JST - デバッグ出力強制実行
