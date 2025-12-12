@@ -18,10 +18,12 @@ function main() {
 		// 管理系表示コントロールのインスタンス生成（セッション管理修正版）
 		$template = new TemplateAdmin();
 		
-		// セッション確認を追加（オリジナルにない部分）
-		if (!isset($_SESSION["AdminInfo"])) {
-			// セッションが無い場合はログイン画面へ
-			header("Location: " . URL_ADMIN . "login.php");
+		// セッション確認（完全に単純化）
+		session_name("NET8ADMIN");
+		session_start();
+		
+		if (empty($_SESSION["AdminInfo"])) {
+			header("Location: /xxxadmin/login.php");
 			exit();
 		}
 		

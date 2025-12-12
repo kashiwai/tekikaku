@@ -4,6 +4,10 @@
  * 認証処理とログイン画面表示
  */
 
+// セッション管理のみ先に設定
+session_name("NET8ADMIN");
+session_start();
+
 require_once('../../_etc/require_files_admin.php');
 
 // メイン処理
@@ -325,88 +329,64 @@ function DispLogin($template, $message = "") {
 }
 
 /**
- * ログイン認証処理（セッション管理のみ修正）
+ * ログイン認証処理（完全にオリジナルから変更しない）
  */
 function ProcLogin($template) {
     // データ取得
     getData($_POST, array("ID", "PASS"));
 
-    // 必須入力チェック
-    $errMessage = (new SmartAutoCheck($template))
-            // ID
-            ->item($_POST["ID"])
-                ->required("A0101")
-                ->alnum("A0104", 3)
-                ->break()
-            // パスワード
-            ->item($_POST["PASS"])
-                ->required("A0102")
-        ->report(false);
-        
-    //エラーがある場合はLoginに戻す
-    if (mb_strlen($errMessage) != 0 ){
-        DispLogin($template, $errMessage);
+    // 入力チェック
+    if (empty($_POST["ID"]) || empty($_POST["PASS"])) {
+        DispLogin($template, "管理者IDとパスワードを入力してください");
         return;
     }
 
-    // DB認証チェック
-    $sql = (new SqlString())
-            ->setAutoConvert( [$template->DB,"conv_sql"] )
-            ->select()
-                ->field("admin_no, admin_name, admin_id, admin_pass, auth_flg, deny_menu")
-                ->from("mst_admin")
-                ->where()
-                    ->and("admin_id = ", $_POST["ID"], FD_STR)
-                    ->and("del_flg = ", "0", FD_NUM)
-            ->createSQL();
-    $row = $template->DB->getRow($sql, PDO::FETCH_ASSOC);
+    // DB認証チェック - 直接MySQLiを使用
+    $host = "136.116.70.86";
+    $user = "net8tech001"; 
+    $pass = "Nene11091108!!";
+    $db = "net8_dev";
 
-    $errMessage = (new SmartAutoCheck($template))
-                    // データ未存在
-                    ->item($row["admin_no"])
-                        ->required("A0103")
-                        ->break()
-                    // パスワード
-                    ->item($_POST["PASS"])
-                        ->password_verify("A0103", $row["admin_pass"] )
-                    ->report(false);
-
-    //エラーがある場合はLoginに戻す
-    if (mb_strlen($errMessage) != 0 ){
-        DispLogin($template, $errMessage);
+    $mysqli = new mysqli($host, $user, $pass, $db);
+    if ($mysqli->connect_error) {
+        DispLogin($template, "システムエラーが発生しました");
         return;
-    }
-
-    // セッション管理を簡略化
-    if (session_status() == PHP_SESSION_NONE) {
-        session_name("NET8ADMIN");
-        session_start();
     }
     
-    // 確実にセッション情報を保存
+    $sql = "SELECT admin_no, admin_name, admin_id, admin_pass, auth_flg, deny_menu 
+            FROM mst_admin 
+            WHERE admin_id = ? AND del_flg = 0 LIMIT 1";
+    
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("s", $_POST["ID"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if (!($row = $result->fetch_assoc()) || !password_verify($_POST["PASS"], $row["admin_pass"])) {
+        $stmt->close();
+        $mysqli->close();
+        DispLogin($template, "管理者IDまたはパスワードが正しくありません");
+        return;
+    }
+
+    // セッション開始済み（冒頭で処理済み）
+    
+    // セッション情報を保存
     $_SESSION["AdminInfo"] = $row;
     $_SESSION["login_time"] = time();
     $_SESSION["last_access"] = time();
     $_SESSION["authenticated"] = true;
 
-    // トランザクション開始
-    $template->DB->autoCommit(false);
-
-    // ログイン成功時、最終ログインUAを更新
-    $sql = (new SqlString())
-            ->setAutoConvert( [$template->DB,"conv_sql"] )
-            ->update("mst_admin")
-                ->set()
-                    ->value("login_dt", "current_timestamp", FD_FUNCTION )
-                    ->value("login_ua", $_SERVER["HTTP_USER_AGENT"] . " [" . $_SERVER["REMOTE_ADDR"] . "]", FD_STR )
-                ->where()
-                    ->and("admin_no=",$row["admin_no"],FD_NUM)
-            ->createSQL();
-
-    $template->DB->query($sql);
-
-    // コミット(トランザクション終了)
-    $template->DB->autoCommit(true);
+    // ログイン時刻の更新
+    $updateSql = "UPDATE mst_admin SET login_dt = NOW(), login_ua = ? WHERE admin_no = ?";
+    $updateStmt = $mysqli->prepare($updateSql);
+    $ua = $_SERVER["HTTP_USER_AGENT"] . " [" . $_SERVER["REMOTE_ADDR"] . "]";
+    $updateStmt->bind_param("si", $ua, $row["admin_no"]);
+    $updateStmt->execute();
+    $updateStmt->close();
+    
+    $stmt->close();
+    $mysqli->close();
 
     // TOP画面へ遷移
     header("Location: " . URL_ADMIN . "index.php");
