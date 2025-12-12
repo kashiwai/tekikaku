@@ -56,22 +56,34 @@ try {
             $u['member_no'], $u['nickname'], $u['mail'], $u['state'], $u['tester_flg']);
     }
 
-    // パスワード検証
+    // パスワードリセット
     echo "\n========================================\n";
-    echo "パスワード検証: ko.kashiwai@gmail.com\n";
+    echo "パスワードリセット: ko.kashiwai@gmail.com\n";
     echo "========================================\n\n";
 
     $testEmail = 'ko.kashiwai@gmail.com';
-    $testPass = 'nene11091108';
+    $newPass = 'nene11091108';
+    $newHash = password_hash($newPass, PASSWORD_BCRYPT);
 
-    $sql3 = "SELECT pass FROM mst_member WHERE mail = :mail";
-    $stmt3 = $pdo->prepare($sql3);
-    $stmt3->execute(['mail' => $testEmail]);
-    $row = $stmt3->fetch(PDO::FETCH_ASSOC);
+    $sqlUpdate = "UPDATE mst_member SET pass = :pass WHERE mail = :mail";
+    $stmtUpdate = $pdo->prepare($sqlUpdate);
+    $result = $stmtUpdate->execute(['pass' => $newHash, 'mail' => $testEmail]);
 
-    if ($row) {
-        $passMatch = password_verify($testPass, $row['pass']);
-        echo "パスワード '{$testPass}' 検証結果: " . ($passMatch ? "✅ 正しい" : "❌ 不一致") . "\n";
+    if ($result) {
+        echo "✅ パスワードを '{$newPass}' にリセットしました\n";
+
+        // 検証
+        $sql3 = "SELECT pass FROM mst_member WHERE mail = :mail";
+        $stmt3 = $pdo->prepare($sql3);
+        $stmt3->execute(['mail' => $testEmail]);
+        $row = $stmt3->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            $passMatch = password_verify($newPass, $row['pass']);
+            echo "検証結果: " . ($passMatch ? "✅ 正しい" : "❌ 不一致") . "\n";
+        }
+    } else {
+        echo "❌ パスワードリセット失敗\n";
     }
 
 } catch (Exception $e) {
