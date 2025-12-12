@@ -459,14 +459,10 @@ class TemplateUser extends SmartTemplate {
 			}
 			
 			// 画像
-			$this->assign("DIR_IMG_MODEL_DIR", defined('DIR_IMG_MODEL_DIR') ? DIR_IMG_MODEL_DIR : (defined('DIR_IMG_MODEL') ? DIR_IMG_MODEL : ''), true);		// 機材画像表示用パス
+			$this->assign("DIR_IMG_MODEL_DIR", "/data/img/model/", true);		// 機材画像表示用パス（固定）
 
-			// 画像パス処理: GCS URLの場合はそのまま、相対パスの場合はプレフィックス追加
+			// 画像ファイル名のみを設定（パスはDIR_IMG_MODEL_DIRと組み合わせ）
 			$imageList = $row["image_list"];
-			if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
-				// 相対パスの場合は絶対パスに変換
-				$imageList = '/data/img/model/' . $imageList;
-			}
 			$this->assign("IMAGE_LIST"       , $imageList, true);
 
 			// image_detail も同様に処理
