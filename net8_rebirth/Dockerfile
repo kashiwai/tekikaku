@@ -39,16 +39,16 @@ RUN a2enmod rewrite ssl headers deflate filter
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # カスタムPHP設定
-COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY net8_rebirth/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Apacheカスタム設定
-COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # アプリケーションファイルをコピー（2025-12-12 デザインアップデート）
-COPY net8/02.ソースファイル/net8_html /var/www/html
+COPY net8_rebirth/net8/02.ソースファイル/net8_html /var/www/html
 
 # composer.jsonとcomposer.lockをコピー
-COPY composer.json composer.lock* /var/www/html/
+COPY net8_rebirth/composer.json net8_rebirth/composer.lock* /var/www/html/
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
