@@ -1,11 +1,24 @@
-# Basic認証設定（Docker環境用に調整）
-# NOTE: PHP session-based authentication is used instead of Basic Auth
-# Basic Auth is disabled to prevent 401 errors and allow direct PHP access
-# AuthUserFile /var/www/html/.htpasswd-admin
-# AuthName "NET8 Admin Area"
-# AuthType Basic
-# Require valid-user
+# NET8 Admin Panel - Static Files Configuration
 
-# Docker環境では全IPからのアクセスを許可
-# 本番環境では以下のRequire ip行のコメントを外して制限してください
-# Require ip xxx.xxx.xxx.xxx
+# CSS and JS files MIME type fix
+<FilesMatch "\.(css)$">
+    Header set Content-Type "text/css; charset=utf-8"
+</FilesMatch>
+
+<FilesMatch "\.(js)$">
+    Header set Content-Type "application/javascript; charset=utf-8"
+</FilesMatch>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Enable compression for CSS and JS
+<IfModule mod_deflate.c>
+    <FilesMatch "\.(css|js)$">
+        SetOutputFilter DEFLATE
+    </FilesMatch>
+</IfModule>
