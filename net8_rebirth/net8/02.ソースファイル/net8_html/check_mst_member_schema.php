@@ -56,22 +56,36 @@ try {
             $u['member_no'], $u['nickname'], $u['mail'], $u['state'], $u['tester_flg']);
     }
 
-    // パスワード検証（リセット済み）
+    // ユーザーstate更新（0→1でログイン可能に）
     echo "\n========================================\n";
-    echo "パスワード検証: ko.kashiwai@gmail.com\n";
+    echo "ユーザー有効化: ko.kashiwai@gmail.com\n";
     echo "========================================\n\n";
 
     $testEmail = 'ko.kashiwai@gmail.com';
-    $testPass = 'nene11091108';
 
-    $sql3 = "SELECT pass FROM mst_member WHERE mail = :mail";
+    // 現在の状態確認
+    $sql3 = "SELECT member_no, state FROM mst_member WHERE mail = :mail";
     $stmt3 = $pdo->prepare($sql3);
     $stmt3->execute(['mail' => $testEmail]);
     $row = $stmt3->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
-        $passMatch = password_verify($testPass, $row['pass']);
-        echo "パスワード検証結果: " . ($passMatch ? "✅ 正しい" : "❌ 不一致") . "\n";
+        echo "現在のstate: {$row['state']}\n";
+
+        if ($row['state'] == 0) {
+            // state を 1 に更新
+            $sqlUpdate = "UPDATE mst_member SET state = 1 WHERE mail = :mail";
+            $stmtUpdate = $pdo->prepare($sqlUpdate);
+            $result = $stmtUpdate->execute(['mail' => $testEmail]);
+
+            if ($result) {
+                echo "✅ state を 1 に更新しました（ログイン可能）\n";
+            } else {
+                echo "❌ state 更新失敗\n";
+            }
+        } else {
+            echo "✅ すでにstate=1です（ログイン可能）\n";
+        }
     }
 
 } catch (Exception $e) {
