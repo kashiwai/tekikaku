@@ -340,7 +340,37 @@ function DispTop($template) {
         .grid { display: grid; gap: 24px; }
         .grid-2 { grid-template-columns: repeat(2, 1fr); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; pointer-events: auto !important; }
+        
+        /* クリック問題修正CSS */
+        body * {
+            pointer-events: auto !important;
+        }
+        
+        .sidebar {
+            z-index: 100 !important;
+            pointer-events: auto !important;
+        }
+        
+        .main-content {
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 全てのクリック可能要素を強制有効化 */
+        a, button, .btn, .nav-item, .stat-card, .info-card {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* オーバーレイ要素があれば無効化 */
+        .overlay, .backdrop, .modal-backdrop {
+            display: none !important;
+            pointer-events: none !important;
+        }
         @media (max-width: 1200px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .stat-grid, .grid-2 { grid-template-columns: 1fr; } }
     </style>
@@ -721,6 +751,61 @@ function DispTop($template) {
             </div>
         </div>
     </main>
+    <script>
+        // クリック問題修正スクリプト
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 管理画面クリック問題修正スクリプト開始');
+            
+            function fixClickIssues() {
+                // 1. 全ての要素のpointer-eventsを確認・修正
+                const elements = document.querySelectorAll('a, button, .btn, .nav-item, .stat-card, .info-card');
+                elements.forEach(el => {
+                    el.style.pointerEvents = 'auto';
+                    el.style.cursor = 'pointer';
+                    if (window.getComputedStyle(el).position === 'static') {
+                        el.style.position = 'relative';
+                    }
+                    el.style.zIndex = '10';
+                });
+                
+                // 2. オーバーレイ要素の検索・削除
+                const overlays = document.querySelectorAll('.overlay, .backdrop, .modal-backdrop');
+                overlays.forEach(overlay => {
+                    overlay.style.display = 'none';
+                    overlay.style.pointerEvents = 'none';
+                });
+                
+                // 3. 画面全体を覆う可能性のある要素をチェック
+                const fullScreenElements = Array.from(document.querySelectorAll('*')).filter(el => {
+                    const rect = el.getBoundingClientRect();
+                    const style = window.getComputedStyle(el);
+                    return (
+                        style.position === 'fixed' && 
+                        (rect.width >= window.innerWidth * 0.8 || rect.height >= window.innerHeight * 0.8) &&
+                        style.zIndex > 1000
+                    );
+                });
+                
+                fullScreenElements.forEach(el => {
+                    if (!el.classList.contains('sidebar')) {
+                        console.warn('⚠️ 全画面要素を発見、z-indexを調整:', el);
+                        el.style.zIndex = '1';
+                    }
+                });
+                
+                console.log('✅ クリック問題修正完了:', elements.length + '個の要素を修正');
+            }
+            
+            // 即座に実行
+            fixClickIssues();
+            
+            // アニメーション完了後に再実行
+            setTimeout(fixClickIssues, 1000);
+            
+            // 定期的に監視・修正
+            setInterval(fixClickIssues, 5000);
+        });
+    </script>
 </body>
 </html>
 <?php
