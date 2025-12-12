@@ -122,7 +122,7 @@ function listMachines($pdo) {
                 dm.machine_no, dm.machine_cd, dm.model_no, dm.owner_no,
                 dm.camera_no, dm.signaling_id, dm.convert_no,
                 dm.release_date, dm.end_date, dm.machine_corner,
-                dm.machine_status, dm.assign_flg,
+                dm.machine_status,
                 mo.model_name, mo.model_cd as model_code, mo.category,
                 ma.maker_name,
                 ow.owner_nickname
@@ -149,7 +149,7 @@ function listMachines($pdo) {
     foreach ($machines as &$machine) {
         $machine['status_name'] = $statusNames[$machine['machine_status']] ?? '不明';
         $machine['category_name'] = $categoryNames[$machine['category']] ?? '';
-        $machine['is_available'] = $machine['machine_status'] == '1' && $machine['assign_flg'] == '0';
+        $machine['is_available'] = $machine['machine_status'] == '1';
     }
 
     ApiResponse::list($machines, $total, $page, $perPage);
@@ -184,7 +184,7 @@ function getMachine($pdo, $machineNo) {
     $categoryNames = ['1' => 'パチンコ', '2' => 'スロット'];
     $machine['status_name'] = $statusNames[$machine['machine_status']] ?? '不明';
     $machine['category_name'] = $categoryNames[$machine['category']] ?? '';
-    $machine['is_available'] = $machine['machine_status'] == '1' && $machine['assign_flg'] == '0';
+    $machine['is_available'] = $machine['machine_status'] == '1';
 
     // コーナー情報取得
     $sql = "SELECT c.corner_no, c.corner_name
