@@ -44,8 +44,14 @@ COPY net8_rebirth/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 # Apacheカスタム設定
 COPY net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# アプリケーションファイルをコピー（2025-12-12 デザインアップデート）
-COPY net8_rebirth/net8/source/net8_html /var/www/html
+# デバッグ用：利用可能なファイルをリスト表示
+RUN echo "=== DEBUG: Available files at root ===" && ls -la /
+RUN echo "=== DEBUG: Available files at current dir ===" && ls -la .
+RUN echo "=== DEBUG: Available files at net8_rebirth ===" && ls -la net8_rebirth/ 2>/dev/null || echo "net8_rebirth not found"
+RUN echo "=== DEBUG: Available files at net8_rebirth/net8 ===" && ls -la net8_rebirth/net8/ 2>/dev/null || echo "net8_rebirth/net8 not found"
+
+# アプリケーションファイルをコピー（2025-12-12 デザインアップデート）  
+COPY net8_rebirth/net8/02.ソースファイル/net8_html /var/www/html
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
