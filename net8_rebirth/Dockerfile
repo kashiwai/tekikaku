@@ -67,3 +67,4 @@ EXPOSE ${PORT:-80}
 # Apache起動
 CMD ["apache2-foreground"]
 # Force rebuild at 2024-12-12 10:55 JST - デバッグ出力強制実行
+# Force rebuild at 2025-12-12 12:02 JST - Apache設定修正（静的リソース404修正）
