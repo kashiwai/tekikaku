@@ -23,38 +23,37 @@ try {
         );
     }
 
-    // ユーザー認証確認
+    // テスターユーザー一覧
     echo "\n========================================\n";
-    echo "テスターユーザー認証確認\n";
+    echo "テスターユーザー一覧 (tester_flg=1)\n";
     echo "========================================\n\n";
 
-    $testEmail = 'ko.kashiwai@gmail.com';
-    $testPass = 'kousuke0122';
+    $sql = "SELECT member_no, nickname, mail, state, tester_flg FROM mst_member WHERE tester_flg = 1 ORDER BY member_no";
+    $stmt = $pdo->query($sql);
+    $testers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $sql = "SELECT member_no, nickname, mail, pass, state, tester_flg FROM mst_member WHERE mail = :mail";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['mail' => $testEmail]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        echo "❌ ユーザーが見つかりません: {$testEmail}\n";
+    if (empty($testers)) {
+        echo "テスターユーザーが見つかりません\n";
     } else {
-        echo "✅ ユーザー情報:\n";
-        echo "  member_no: {$user['member_no']}\n";
-        echo "  nickname: {$user['nickname']}\n";
-        echo "  mail: {$user['mail']}\n";
-        echo "  state: {$user['state']}\n";
-        echo "  tester_flg: {$user['tester_flg']}\n";
-        echo "  pass_hash: " . substr($user['pass'], 0, 20) . "...\n\n";
-
-        $passMatch = password_verify($testPass, $user['pass']);
-        echo "パスワード検証結果: " . ($passMatch ? "✅ 正しい" : "❌ 不一致") . "\n";
-
-        if (!$passMatch) {
-            // プレーンテキスト比較も試す
-            $plainMatch = ($user['pass'] === $testPass);
-            echo "プレーンテキスト比較: " . ($plainMatch ? "✅ 一致" : "❌ 不一致") . "\n";
+        echo "テスター数: " . count($testers) . "件\n\n";
+        foreach ($testers as $t) {
+            echo sprintf("ID:%d | %s | %s | state:%d\n",
+                $t['member_no'], $t['nickname'], $t['mail'], $t['state']);
         }
+    }
+
+    // 全ユーザー一覧（最新10件）
+    echo "\n========================================\n";
+    echo "全ユーザー一覧（最新10件）\n";
+    echo "========================================\n\n";
+
+    $sql2 = "SELECT member_no, nickname, mail, state, tester_flg FROM mst_member ORDER BY member_no DESC LIMIT 10";
+    $stmt2 = $pdo->query($sql2);
+    $users = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($users as $u) {
+        echo sprintf("ID:%d | %s | %s | state:%d | tester:%d\n",
+            $u['member_no'], $u['nickname'], $u['mail'], $u['state'], $u['tester_flg']);
     }
 
 } catch (Exception $e) {
