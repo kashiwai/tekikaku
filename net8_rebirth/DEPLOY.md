@@ -24,22 +24,24 @@
 
 ```
 /Users/kotarokashiwai/  ← Gitルート（ホームディレクトリ全体）
-└── net8_rebirth/
+├── railway.toml  ← Railway設定ファイル（rootDirectory指定）
+└── net8_rebirth/  ← Railwayのルートディレクトリ
     ├── Dockerfile  ← Railwayが使用するDockerfile
     └── net8/
         ├── 01.サーバ構築手順/
         │   └── net8peerjs-server/  ← PeerJSサーバー
         ├── 02.ソースファイル/
         │   └── net8_html/  ← PHPアプリケーション本体
-        │       ├── Dockerfile  ← 同じ内容（予備）
         │       ├── data/api/  ← API
         │       ├── _html/  ← HTMLテンプレート
         │       └── _etc/  ← 設定ファイル
+        ├── source/
+        │   └── net8_html/  ← 02.ソースファイルのコピー（日本語パス回避用）
         └── docker/
             ├── web/
-            │   ├── Dockerfile
             │   ├── php.ini
             │   └── apache-config/
+            │       └── 000-default.conf
             └── signaling/
                 └── Dockerfile
 ```
@@ -49,9 +51,12 @@
 ### プロジェクト: `mmg2501`
 
 #### サービス1: `mgg-webservice` (PHPアプリ)
-- **ソースコード**: `/Users/kotarokashiwai` （ホームディレクトリ全体）
+- **Gitリポジトリ**: `https://github.com/mgg00123mg-prog/mgg001.git`
+- **Railway設定ファイル**: `/Users/kotarokashiwai/railway.toml`
+  - `rootDirectory = "net8_rebirth"`
+  - `dockerfilePath = "Dockerfile"`
+- **ビルドコンテキスト**: `net8_rebirth` ディレクトリ
 - **Dockerfile**: `/Users/kotarokashiwai/net8_rebirth/Dockerfile`
-- **ビルドコンテキスト**: ホームディレクトリ全体
 - **コピー対象**: `net8/02.ソースファイル/net8_html` → `/var/www/html`
 - **URL**: `mgg-webservice-production.up.railway.app`
 - **ポート**: 80 (Apache)
@@ -103,15 +108,15 @@ railway up
 - **問題**: 不要なファイルまでコミット対象になる
 - **推奨**: `net8_rebirth/` だけを独立リポジトリにする
 
-### 2. Dockerfileの重複
-以下のDockerfileは**同じ内容**で重複しています：
-- `/Users/kotarokashiwai/net8_rebirth/Dockerfile` ← Railwayが使用
-- `/Users/kotarokashiwai/net8_rebirth/net8/02.ソースファイル/net8_html/Dockerfile`
+### 2. Railway設定の重要ポイント
+- **railway.toml**: Gitルート（`/Users/kotarokashiwai/`）に配置
+- **rootDirectory**: `net8_rebirth` を指定することで、Railwayはこのディレクトリをルートとして扱う
+- **dockerfilePath**: `Dockerfile` （rootDirectoryからの相対パス）
 
 ### 3. ビルドコンテキスト
-Railwayは `/Users/kotarokashiwai` をビルドコンテキストとして使用するため：
-- `COPY net8/02.ソースファイル/net8_html /var/www/html` が正しく動く
-- ホームディレクトリ内の全ファイルがビルドコンテキストに含まれる
+- **設定前**: ホームディレクトリ全体がビルドコンテキスト（問題あり）
+- **設定後**: `net8_rebirth` ディレクトリがビルドコンテキスト（正常動作）
+- **Dockerfile内のCOPYパス**: `net8/02.ソースファイル/net8_html` （net8_rebirthからの相対パス）
 
 ## 🔧 ファイル変更時の手順
 
@@ -137,9 +142,19 @@ git push origin main
 
 ### Dockerfileを変更する場合
 
-1. **ルートのDockerfileを編集**（これだけでOK）
+1. **net8_rebirth内のDockerfileを編集**
 ```bash
 nano /Users/kotarokashiwai/net8_rebirth/Dockerfile
+```
+
+**重要**: Dockerfile内のCOPYパスは`net8/`から始める（`net8_rebirth/`は不要）
+```dockerfile
+# 正しい例
+COPY net8/02.ソースファイル/net8_html /var/www/html
+COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# 間違った例（動作しません）
+COPY net8_rebirth/net8/02.ソースファイル/net8_html /var/www/html
 ```
 
 2. **コミット＆プッシュ**
@@ -158,19 +173,35 @@ git push origin main
 | mgg-signaling | PeerJS | mgg-signaling-production.up.railway.app | WebRTC シグナリング |
 | mysql | MySQL 5.7 | (内部) | データベース |
 
-## 🎯 推奨される改善策
+## 🔑 重要な設定ファイル
 
-### 問題1: Gitリポジトリ範囲が広すぎる
-**現状**: ホームディレクトリ全体
-**推奨**: `net8_rebirth/` だけを独立リポジトリに
+### railway.toml（Gitルート: /Users/kotarokashiwai/railway.toml）
+```toml
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+rootDirectory = "net8_rebirth"
 
-### 問題2: Dockerfile重複
-**現状**: 2箇所に同じ内容
-**推奨**: ルートの1つだけ残す
+[deploy]
+runtime = "V2"
+numReplicas = 1
+sleepApplication = false
+useLegacyStacker = false
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+```
 
-### 問題3: ビルドコンテキストが巨大
-**現状**: ホームディレクトリ全体を送信
-**推奨**: .dockerignore で除外設定
+### Dockerfile内のパス設定例
+```dockerfile
+# PHP設定ファイル
+COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Apache設定
+COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# アプリケーションファイル
+COPY net8/02.ソースファイル/net8_html /var/www/html
+```
 
 ## 📝 デプロイ時のチェックリスト
 
@@ -184,4 +215,4 @@ git push origin main
 ---
 
 作成日: 2025-11-10
-最終更新: 2025-11-10
+最終更新: 2025-12-12（Railway rootDirectory設定追加、デプロイ成功確認）
