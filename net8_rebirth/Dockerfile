@@ -54,13 +54,13 @@ RUN echo "=========================================="; \
     echo "=========================================="
 
 # カスタムPHP設定
-COPY net8_rebirth/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Apacheカスタム設定
-COPY net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # アプリケーションファイルをコピー（2025-12-12 デザインアップデート）  
-COPY net8_rebirth/net8/02.ソースファイル/net8_html /var/www/html
+COPY net8/02.ソースファイル/net8_html /var/www/html
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
