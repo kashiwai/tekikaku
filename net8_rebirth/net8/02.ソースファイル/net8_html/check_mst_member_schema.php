@@ -28,7 +28,7 @@ try {
     echo "テスターユーザー認証確認\n";
     echo "========================================\n\n";
 
-    $testEmail = 'kousuke@restill.biz';
+    $testEmail = 'ko.kashiwai@gmail.com';
     $testPass = 'kousuke0122';
 
     $sql = "SELECT member_no, nickname, mail, pass, state, tester_flg FROM mst_member WHERE mail = :mail";
