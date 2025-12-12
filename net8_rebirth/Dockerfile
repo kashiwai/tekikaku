@@ -38,20 +38,23 @@ RUN a2enmod rewrite ssl headers deflate filter
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# デバッグ用：最初に実行して利用可能なファイルを確認 - 2025-12-12 10:58:00 JST
+RUN echo "=========================================="; \
+    echo "DEBUGGING RAILWAY BUILD CONTEXT - START"; \
+    echo "=========================================="; \
+    echo "Current working directory:"; pwd; \
+    echo "=========================================="; \
+    echo "Root directory first 30 items:"; ls -la / | head -30; \
+    echo "=========================================="; \
+    echo "Current directory first 30 items:"; ls -la . | head -30; \
+    echo "=========================================="; \
+    echo "Searching for any directories:"; find . -maxdepth 2 -type d | head -20; \
+    echo "=========================================="; \
+    echo "DEBUGGING RAILWAY BUILD CONTEXT - END"; \
+    echo "=========================================="
+
 # カスタムPHP設定
 COPY net8_rebirth/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
-
-# デバッグ用：利用可能なファイルをリスト表示（COPY前に実行）- 2025-12-12 10:55:00
-RUN echo "=========================================="
-RUN echo "DEBUGGING RAILWAY BUILD CONTEXT - START"  
-RUN echo "=========================================="
-RUN echo "Current working directory:" && pwd
-RUN echo "Root directory contents:" && ls -la / | head -20
-RUN echo "Current directory contents:" && ls -la . | head -20
-RUN echo "Searching for net8_rebirth:" && find / -maxdepth 3 -name "net8_rebirth" -type d 2>/dev/null || echo "net8_rebirth not found in first 3 levels"
-RUN echo "=========================================="
-RUN echo "DEBUGGING RAILWAY BUILD CONTEXT - END"
-RUN echo "=========================================="
 
 # Apacheカスタム設定
 COPY net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
