@@ -66,7 +66,17 @@ try {
 
 } catch (Exception $e) {
     error_log('Claude Machines API Error: ' . $e->getMessage());
-    ApiResponse::serverError('台処理中にエラーが発生しました');
+    // デバッグ用：詳細エラーメッセージを返す
+    echo json_encode([
+        'success' => false,
+        'error' => [
+            'message' => $e->getMessage(),
+            'code' => 'DEBUG_ERROR',
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 /**
