@@ -47,9 +47,6 @@ COPY net8_rebirth/net8/docker/web/apache-config/000-default.conf /etc/apache2/si
 # アプリケーションファイルをコピー（2025-12-12 デザインアップデート）
 COPY net8_rebirth/net8/02.ソースファイル/net8_html /var/www/html
 
-# composer.jsonとcomposer.lockをコピー
-COPY net8_rebirth/composer.json net8_rebirth/composer.lock* /var/www/html/
-
 # 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
 RUN composer install --no-dev --optimize-autoloader --no-interaction
