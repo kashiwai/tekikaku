@@ -56,6 +56,24 @@ try {
             $u['member_no'], $u['nickname'], $u['mail'], $u['state'], $u['tester_flg']);
     }
 
+    // パスワード検証
+    echo "\n========================================\n";
+    echo "パスワード検証: ko.kashiwai@gmail.com\n";
+    echo "========================================\n\n";
+
+    $testEmail = 'ko.kashiwai@gmail.com';
+    $testPass = 'nene11091108';
+
+    $sql3 = "SELECT pass FROM mst_member WHERE mail = :mail";
+    $stmt3 = $pdo->prepare($sql3);
+    $stmt3->execute(['mail' => $testEmail]);
+    $row = $stmt3->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
+        $passMatch = password_verify($testPass, $row['pass']);
+        echo "パスワード '{$testPass}' 検証結果: " . ($passMatch ? "✅ 正しい" : "❌ 不一致") . "\n";
+    }
+
 } catch (Exception $e) {
     echo "❌ エラー: " . $e->getMessage() . "\n";
 }
