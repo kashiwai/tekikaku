@@ -374,6 +374,7 @@ define('API_PLAYPOINT_UPD_NO', 9999); // システム/API更新者番号
 // RTC Signaling Servers（WebRTC用）
 // フォーマット: "host:port"
 // 環境変数からシグナリングサーバー設定を動的に取得（Railway対応）
+// 2025-12-14 正しいシグナリングサーバーURLに修正
 $signaling_host = $_SERVER['SIGNALING_HOST'] ?? $_ENV['SIGNALING_HOST'] ?? getenv('SIGNALING_HOST') ?: 'mgg-signaling-production-c1bd.up.railway.app';
 $signaling_port = $_SERVER['SIGNALING_PORT'] ?? $_ENV['SIGNALING_PORT'] ?? getenv('SIGNALING_PORT') ?: '443';
 
