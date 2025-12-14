@@ -14,7 +14,7 @@ define("DB_HOST", "136.116.70.86");
 define("DB_USER", "net8tech001");
 define("DB_PASS", "Nene11091108!!");
 define("DB_NAME", "net8_dev");
-define("URL_ADMIN", "/xxxadmin/");
+define("URL_ADMIN", "/data/xxxadmin/");
 
 // メイン処理
 main();
