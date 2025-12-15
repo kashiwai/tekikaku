@@ -32,8 +32,9 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# Apacheモジュール有効化（圧縮モジュール追加）
-RUN a2enmod rewrite headers deflate filter
+# MPM競合を確実に解消（設定ファイルを直接削除してpreforkのみ有効化）
+RUN find /etc/apache2/mods-enabled -name 'mpm_*' -delete \
+    && a2enmod mpm_prefork rewrite headers
 
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
