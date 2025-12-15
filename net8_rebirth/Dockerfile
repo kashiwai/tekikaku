@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ強制無効化（この値を変更するとRailwayのキャッシュが無効になる）
-ARG CACHE_BUST=2025-12-15-v2-stable
+ARG CACHE_BUST=2025-12-15-v3-mpm-fix
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
@@ -35,8 +35,10 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# Apacheモジュール有効化（3日前の安定版設定）
-RUN a2enmod rewrite ssl headers deflate filter
+# MPMモジュールの競合を防ぐため、まず不要なMPMを無効化
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork \
+    && a2enmod rewrite headers
 
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
