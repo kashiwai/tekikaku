@@ -32,9 +32,11 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# MPM競合を確実に解消（設定ファイルを直接削除してpreforkのみ有効化）
-RUN find /etc/apache2/mods-enabled -name 'mpm_*' -delete \
-    && a2enmod mpm_prefork rewrite headers
+# 全MPMシンボリックリンクを削除し、preforkのみ手動リンク
+RUN rm -f /etc/apache2/mods-enabled/mpm_* \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/ \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/ \
+    && a2enmod rewrite headers
 
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
