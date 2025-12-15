@@ -1,5 +1,8 @@
 FROM php:7.2-apache
 
+# キャッシュ強制無効化（この値を変更するとRailwayのキャッシュが無効になる）
+ARG CACHE_BUST=2025-12-15-v1
+
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
     && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
