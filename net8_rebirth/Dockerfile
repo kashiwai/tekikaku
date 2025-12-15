@@ -32,10 +32,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# MPMモジュールの競合を防ぐため、不要なMPMを無効化
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork \
-    && a2enmod rewrite headers
+# Apacheモジュール有効化（MPM設定は触らない）
+RUN a2enmod rewrite headers
 
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -46,7 +44,7 @@ COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
 # Apacheカスタム設定
 COPY net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# アプリケーションファイルをコピー（2025-12-12 デザインアップデート）  
+# アプリケーションファイルをコピー
 COPY net8/02.ソースファイル/net8_html /var/www/html
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
@@ -68,5 +66,3 @@ EXPOSE ${PORT:-80}
 
 # Apache起動
 CMD ["apache2-foreground"]
-# Force rebuild at 2024-12-12 10:55 JST - デバッグ出力強制実行
-# Force rebuild at 2025-12-12 12:02 JST - Apache設定修正（静的リソース404修正）
