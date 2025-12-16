@@ -208,8 +208,7 @@ if (!class_exists('SqlString')) {
     }
 }
 
-// セッション開始（まだ開始されていない場合）
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+// セッション開始は各ページのSmartSessionに任せる
+// ※ここでsession_start()を呼ぶとPHPSESSIDで開始され、
+//   SmartSessionのsession_name()設定が効かなくなる
 ?>
