@@ -564,7 +564,7 @@ $GLOBALS["AdminAllMenu"] = array(
     // Owners グループ
     "Owners" => array("owner", "partner_domains"),
     // Setting グループ
-    "Setting" => array("pointgrant", "pointconvert", "purchase", "gift", "giftlimit", "giftaddset", "benefits", "system", "admin")
+    "Setting" => array("pointgrant", "pointconvert", "purchase", "gift", "giftlimit", "giftaddset", "benefits", "system", "admin", "api_keys_manage")
 );
 
 // 管理画面メニュー権限リスト（全ページを許可）
@@ -587,7 +587,7 @@ $GLOBALS["AuthMenuID"] = array(
     "owner" => 1, "partner_domains" => 1,
     // Setting
     "pointgrant" => 1, "pointconvert" => 1, "purchase" => 1, "gift" => 1,
-    "giftlimit" => 1, "giftaddset" => 1, "benefits" => 1, "system" => 1, "admin" => 1,
+    "giftlimit" => 1, "giftaddset" => 1, "benefits" => 1, "system" => 1, "admin" => 1, "api_keys_manage" => 1,
     // 詳細ページ
     "member_detail" => 1, "address_detail" => 1, "goods_detail" => 1,
     "notice_detail" => 1, "coupon_detail" => 1, "magazine_detail" => 1,
