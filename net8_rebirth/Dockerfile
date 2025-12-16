@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ強制無効化（この値を変更するとRailwayのキャッシュが無効になる）
-ARG CACHE_BUST=2025-12-16-v4-mpm-direct-delete-fix
+ARG CACHE_BUST=2025-12-16-v5-entrypoint-mpm-fix
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
@@ -73,8 +73,12 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 777 /var/www/html/data/img/model \
     && chmod -R 777 /var/www/html/data/uploads
 
+# カスタムエントリポイントをコピー（起動時にMPMクリーンアップ）
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # ポート公開（Railwayは環境変数PORTを使用）
 EXPOSE ${PORT:-80}
 
-# Apache起動
-CMD ["apache2-foreground"]
+# カスタムエントリポイントで起動（MPM競合を起動時に解消）
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

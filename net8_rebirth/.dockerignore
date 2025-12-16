@@ -98,7 +98,7 @@ secrets/
 !net8/03.DBdump/*.sql
 
 # Scripts not needed in container
-*.sh
 *.bat
 *.command
+!docker-entrypoint.sh
 !net8/docker/**/*.sh
