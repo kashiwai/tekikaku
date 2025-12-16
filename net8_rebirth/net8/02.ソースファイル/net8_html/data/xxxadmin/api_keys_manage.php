@@ -25,15 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $keyValue = $prefix . bin2hex(random_bytes(16));
 
         $sql = (new SqlString())->setAutoConvert([$template->DB, "conv_sql"])
-            ->insert('api_keys')
-            ->values([
-                'key_value' => [$keyValue, FD_TEXT],
-                'name' => [$keyName, FD_TEXT],
-                'environment' => [$environment, FD_TEXT],
-                'rate_limit' => [1000, FD_NUM],
-                'is_active' => [1, FD_NUM],
-                'created_at' => ['NOW()', FD_RAW]
-            ])
+            ->insert()
+            ->into("api_keys")
+            ->value("key_value", $keyValue, FD_STR)
+            ->value("name", $keyName, FD_STR)
+            ->value("environment", $environment, FD_STR)
+            ->value("rate_limit", 1000, FD_NUM)
+            ->value("is_active", 1, FD_NUM)
+            ->value("created_at", "current_timestamp", FD_FUNCTION)
             ->createSQL("\n");
 
         $template->DB->query($sql);
@@ -49,19 +48,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 // APIキー一覧取得
-$sql = "SELECT * FROM api_keys ORDER BY created_at DESC";
-$apiKeys = $template->DB->getAll($sql);
+$apiKeys = array();
+$stats = array();
+$errorMessage = "";
 
-// 使用統計取得
-$statsSql = "SELECT
-    DATE(created_at) as date,
-    COUNT(*) as request_count,
-    AVG(response_time_ms) as avg_response_time
-FROM api_usage_logs
-WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-GROUP BY DATE(created_at)
-ORDER BY date DESC";
-$stats = $template->DB->getAll($statsSql);
+try {
+    $sql = "SELECT * FROM api_keys ORDER BY created_at DESC";
+    $rs = $template->DB->query($sql);
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+        $apiKeys[] = $row;
+    }
+    unset($rs);
+
+    // 使用統計取得
+    $statsSql = "SELECT
+        DATE(created_at) as date,
+        COUNT(*) as request_count,
+        AVG(response_time_ms) as avg_response_time
+    FROM api_usage_logs
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    GROUP BY DATE(created_at)
+    ORDER BY date DESC";
+    $rsStats = $template->DB->query($statsSql);
+    while ($row = $rsStats->fetch(PDO::FETCH_ASSOC)) {
+        $stats[] = $row;
+    }
+    unset($rsStats);
+} catch (Exception $e) {
+    $errorMessage = "データベースエラー: " . $e->getMessage() . "<br>api_keysテーブルが存在しない可能性があります。";
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -255,6 +270,12 @@ $stats = $template->DB->getAll($statsSql);
 
         <?php if (isset($message)): ?>
             <div class="message"><?= htmlspecialchars($message) ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($errorMessage)): ?>
+            <div class="error-message" style="background:#f8d7da;color:#721c24;padding:15px;border-radius:5px;margin-bottom:20px;">
+                <?= $errorMessage ?>
+            </div>
         <?php endif; ?>
 
         <!-- 新規APIキー生成 -->
