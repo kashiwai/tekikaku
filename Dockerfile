@@ -1,5 +1,8 @@
 FROM php:7.2-apache
 
+# キャッシュ完全無効化
+RUN echo "FORCE-REBUILD-2025-12-16-v8" > /tmp/cache-bust
+
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
     && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
@@ -32,8 +35,17 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# Apacheモジュール有効化（圧縮モジュール追加）
-RUN a2enmod rewrite ssl headers deflate filter
+# MPMモジュールの競合を完全に解決（モジュールファイル自体を削除）
+RUN rm -f /usr/lib/apache2/modules/mod_mpm_event.so \
+    && rm -f /usr/lib/apache2/modules/mod_mpm_worker.so \
+    && rm -f /etc/apache2/mods-available/mpm_event.* \
+    && rm -f /etc/apache2/mods-available/mpm_worker.* \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.load \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.conf \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
+    && a2enmod rewrite headers deflate \
+    && echo "MPM check:" && ls -la /etc/apache2/mods-enabled/mpm_* || true
 
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -66,5 +78,3 @@ EXPOSE ${PORT:-80}
 
 # Apache起動
 CMD ["apache2-foreground"]
-# Force rebuild at 2024-12-12 10:55 JST - デバッグ出力強制実行
-# Force rebuild at 2025-12-12 11:39 JST
