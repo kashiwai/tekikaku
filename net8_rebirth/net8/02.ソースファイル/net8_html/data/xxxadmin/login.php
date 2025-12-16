@@ -1,7 +1,7 @@
 <?php
 /**
- * NET8 管理画面 - ログイン（SmartSession統合版）
- * Updated: 2025-12-16 - セッション継続問題解決
+ * NET8 管理画面 - ログイン
+ * SmartSession統合版（元のTemplateAdmin.phpと互換）
  */
 
 // 基本設定ファイル読み込み
@@ -160,7 +160,7 @@ function ProcLogin() {
     }
 
     // 管理者認証
-    $sql = "SELECT admin_no, admin_id, admin_name, admin_pass, auth_flg
+    $sql = "SELECT admin_no, admin_id, admin_name, admin_pass, auth_flg, deny_menu
             FROM mst_admin
             WHERE admin_id = ? AND del_flg = 0 LIMIT 1";
 
@@ -172,7 +172,7 @@ function ProcLogin() {
     if ($row = $result->fetch_assoc()) {
         // パスワード検証
         if (password_verify($admin_pass, $row["admin_pass"])) {
-            // ログイン成功 - SmartSessionを使用してセッション作成
+            // ログイン成功 - SmartSessionを使用
             $sessionSec = defined('SESSION_SEC_ADMIN') ? SESSION_SEC_ADMIN : 3600;
             $sessionSid = defined('SESSION_SID_ADMIN') ? SESSION_SID_ADMIN : 'NET8ADMIN';
             $domain = defined('DOMAIN') ? DOMAIN : $_SERVER["SERVER_NAME"];
@@ -184,17 +184,15 @@ function ProcLogin() {
                 $sessionSec,
                 $sessionSid,
                 $domain,
-                true
+                false
             );
 
             // 新しいセッションを強制発行
             $session->start(true);
 
-            // 管理者情報をセッションに保存（SmartSessionのマジックメソッド経由）
+            // 管理者情報をセッションに保存
+            // TemplateAdmin.phpのcheckAdmin()で使用するため、admin_passも保存
             $session->AdminInfo = $row;
-            $session->login_time = time();
-            $session->last_access = time();
-            $session->authenticated = true;
 
             // 最終ログイン更新
             $updateSql = "UPDATE mst_admin SET login_dt = NOW() WHERE admin_no = ?";
