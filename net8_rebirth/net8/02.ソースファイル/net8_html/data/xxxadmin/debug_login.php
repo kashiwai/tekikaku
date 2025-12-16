@@ -5,9 +5,19 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+echo "<h1>Login Debug</h1>";
+
+echo "<h2>0. BEFORE require_files_admin</h2>";
+echo "<p>session_status(): " . session_status() . " (0=disabled, 1=none, 2=active)</p>";
+echo "<p>session_name(): " . session_name() . "</p>";
+echo "<p>session_id(): " . session_id() . "</p>";
+
 require_once('../../_etc/require_files_admin.php');
 
-echo "<h1>Login Debug</h1>";
+echo "<h2>0.5 AFTER require_files_admin</h2>";
+echo "<p>session_status(): " . session_status() . " (0=disabled, 1=none, 2=active)</p>";
+echo "<p>session_name(): " . session_name() . "</p>";
+echo "<p>session_id(): " . session_id() . "</p>";
 
 $admin_id = 'admin';
 $admin_pass = 'admin123';
