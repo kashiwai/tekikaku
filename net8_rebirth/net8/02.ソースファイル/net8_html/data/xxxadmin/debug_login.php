@@ -64,10 +64,23 @@ if ($row = $result->fetch_assoc()) {
 
         echo "<p>session_name() AFTER SmartSession construct: " . session_name() . "</p>";
 
-        $startResult = $session->start(true);
-        echo "<p>start(true) result: " . ($startResult ? 'true' : 'false') . "</p>";
-        echo "<p>session_name() AFTER start: " . session_name() . "</p>";
-        echo "<p>session_id(): " . session_id() . "</p>";
+        // 手動でセッション開始をテスト
+        echo "<h3>Manual Session Test:</h3>";
+        echo "<p>session_status() BEFORE manual start: " . session_status() . "</p>";
+        session_name($sessionSid);
+        echo "<p>session_name() AFTER setting: " . session_name() . "</p>";
+        session_start();
+        echo "<p>session_status() AFTER session_start: " . session_status() . "</p>";
+        echo "<p>session_name() AFTER session_start: " . session_name() . "</p>";
+        echo "<p>session_id() AFTER session_start: " . session_id() . "</p>";
+
+        // AdminInfoを保存
+        $_SESSION['session_initial'] = true;
+        $_SESSION['session_start_time'] = time();
+        $_SESSION['session_reload_time'] = time();
+        $_SESSION['session_domain'] = $domain;
+        $_SESSION['AdminInfo'] = new ArrayObject($row, ArrayObject::ARRAY_AS_PROPS);
+        echo "<p style='color:green;'>AdminInfo saved directly to \$_SESSION</p>";
 
         $session->AdminInfo = $row;
         echo "<p style='color:green;'>AdminInfo saved</p>";
