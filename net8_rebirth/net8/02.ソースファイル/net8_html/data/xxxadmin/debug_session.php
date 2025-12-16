@@ -17,7 +17,7 @@ echo "<tr><td>DOMAIN</td><td>" . (defined('DOMAIN') ? DOMAIN : 'NOT DEFINED') . 
 echo "<tr><td>SESSION_SID_ADMIN</td><td>" . (defined('SESSION_SID_ADMIN') ? SESSION_SID_ADMIN : 'NOT DEFINED') . "</td></tr>";
 echo "<tr><td>SESSION_SEC_ADMIN</td><td>" . (defined('SESSION_SEC_ADMIN') ? SESSION_SEC_ADMIN : 'NOT DEFINED') . "</td></tr>";
 echo "<tr><td>URL_ADMIN</td><td>" . (defined('URL_ADMIN') ? URL_ADMIN : 'NOT DEFINED') . "</td></tr>";
-echo "<tr><td>$_SERVER['SERVER_NAME']</td><td>" . htmlspecialchars($_SERVER['SERVER_NAME']) . "</td></tr>";
+echo '<tr><td>$_SERVER[SERVER_NAME]</td><td>' . htmlspecialchars($_SERVER['SERVER_NAME']) . '</td></tr>';
 echo "</table>";
 
 echo "<h2>2. クッキー確認</h2>";
