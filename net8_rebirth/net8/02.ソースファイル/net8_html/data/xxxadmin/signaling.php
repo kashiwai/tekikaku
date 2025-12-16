@@ -89,7 +89,10 @@ function DispList($template) {
 	$template->assign('turn_server', $settings['turn_server']);
 	$template->assign('turn_username', $settings['turn_username']);
 	$template->assign('turn_credential', $settings['turn_credential']);
-	$template->assign('connection_status', $connection_status);
+	// connection_statusは配列なので個別にアサイン
+	$template->assign('connection_status', $connection_status['status'] ?? 'unknown');
+	$template->assign('connection_message', $connection_status['message'] ?? '');
+	$template->assign('connection_timestamp', $connection_status['timestamp'] ?? '');
 
 	$template->flush();
 }

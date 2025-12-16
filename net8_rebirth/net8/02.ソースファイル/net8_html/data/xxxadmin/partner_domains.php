@@ -10,6 +10,25 @@
 // インクルード
 require_once('../../_etc/require_files_admin.php');
 
+// PDO接続を初期化
+$pdo = null;
+function getDbConnection() {
+    global $pdo;
+    if ($pdo === null) {
+        $host = defined("DB_HOST") ? DB_HOST : "136.116.70.86";
+        $user = defined("DB_USER") ? DB_USER : "net8tech001";
+        $pass = defined("DB_PASS") ? DB_PASS : "Nene11091108!!";
+        $name = defined("DB_NAME") ? DB_NAME : "net8_dev";
+
+        $dsn = "mysql:host={$host};dbname={$name};charset=utf8mb4";
+        $pdo = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
+    }
+    return $pdo;
+}
+
 // メイン処理
 main();
 
@@ -63,7 +82,7 @@ function main() {
  * APIキー一覧とドメイン情報を取得
  */
 function getApiKeysWithDomains() {
-    global $pdo;
+    $pdo = getDbConnection();
 
     $sql = "SELECT
                 id,
@@ -95,7 +114,7 @@ function getApiKeysWithDomains() {
  * ドメイン追加
  */
 function addDomain() {
-    global $pdo;
+    $pdo = getDbConnection();
 
     $apiKeyId = $_POST['api_key_id'] ?? null;
     $domain = $_POST['domain'] ?? '';
@@ -153,7 +172,7 @@ function addDomain() {
  * ドメイン削除
  */
 function removeDomain() {
-    global $pdo;
+    $pdo = getDbConnection();
 
     $apiKeyId = $_POST['api_key_id'] ?? null;
     $domain = $_POST['domain'] ?? '';
@@ -216,10 +235,4 @@ function isValidDomain($domain) {
     return true;
 }
 
-/**
- * データ取得（既存システム互換）
- */
-function getData($get, $modes) {
-    // 既存システムの getData 関数との互換性
-    return true;
-}
+// getData関数はSmartGeneral.phpで定義済みのため、ここでは定義しない
