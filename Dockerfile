@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ完全無効化
-RUN echo "FORCE-REBUILD-2025-12-16-v8" > /tmp/cache-bust
+RUN echo "FORCE-REBUILD-2025-12-16-v9-entrypoint" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
@@ -76,5 +76,9 @@ RUN chown -R www-data:www-data /var/www/html \
 # ポート公開（Railwayは環境変数PORTを使用）
 EXPOSE ${PORT:-80}
 
-# Apache起動
-CMD ["apache2-foreground"]
+# カスタムエントリポイント（起動時にMPMを再度クリーンアップ）
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# エントリポイントで起動
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
