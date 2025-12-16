@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
-# キャッシュ強制無効化（この値を変更するとRailwayのキャッシュが無効になる）
-ARG CACHE_BUST=2025-12-16-v6-force-delete-mpm-modules
+# キャッシュ完全無効化（この行を実行することでキャッシュが破棄される）
+RUN echo "FORCE-REBUILD-2025-12-16-v7-$(date +%s)" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
