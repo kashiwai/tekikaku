@@ -9,6 +9,13 @@
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 ini_set('display_errors', '0'); // 本番環境では0に設定
 
+// セッション保存パスの設定（Railway環境対応）
+// session.save_pathが未設定または書き込み不可の場合、/tmpを使用
+$sessionPath = ini_get('session.save_path');
+if (empty($sessionPath) || !is_writable($sessionPath)) {
+    ini_set('session.save_path', '/tmp');
+}
+
 // パス設定
 if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(dirname(__DIR__)));
