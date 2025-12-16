@@ -1,5 +1,8 @@
 FROM php:7.2-apache
 
+# キャッシュ強制無効化
+ARG CACHE_BUST=2025-12-16-v6-mpm-fix
+
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
     && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
@@ -30,8 +33,17 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# Apacheモジュール有効化
-RUN a2enmod rewrite ssl headers
+# MPMモジュールの競合を完全に解決（モジュールファイル自体を削除）
+RUN rm -f /usr/lib/apache2/modules/mod_mpm_event.so \
+    && rm -f /usr/lib/apache2/modules/mod_mpm_worker.so \
+    && rm -f /etc/apache2/mods-available/mpm_event.* \
+    && rm -f /etc/apache2/mods-available/mpm_worker.* \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.load \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.conf \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
+    && a2enmod rewrite headers \
+    && echo "MPM check:" && ls -la /etc/apache2/mods-enabled/mpm_* || true
 
 # カスタムPHP設定
 COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
