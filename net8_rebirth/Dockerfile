@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ強制無効化（この値を変更するとRailwayのキャッシュが無効になる）
-ARG CACHE_BUST=2025-12-15-v3-mpm-fix
+ARG CACHE_BUST=2025-12-16-v4-mpm-direct-delete-fix
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
@@ -35,13 +35,20 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     gd \
     zip
 
-# MPMモジュールの競合を防ぐため、まず不要なMPMを無効化
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork \
+# MPMモジュールの競合を完全に解決（直接ファイル削除方式）
+# a2dismod/a2enmodは信頼性が低いため、直接シンボリックリンクを操作
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.load \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.conf \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
     && a2enmod rewrite headers
 
 # Composerインストール（Google Cloud Storage用） - GCS SDK v1.23
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# MPM設定ファイルをコピー
+COPY apache-mpm-fix.conf /etc/apache2/conf-available/mpm-fix.conf
+RUN a2enconf mpm-fix
 
 # カスタムPHP設定
 COPY net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
