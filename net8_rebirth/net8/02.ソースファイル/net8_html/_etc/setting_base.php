@@ -542,15 +542,55 @@ $GLOBALS["AgentMember"] = array(
     "1" => "エージェント"
 );
 
-// 管理画面メニュー構造（空配列で初期化、必要に応じて設定）
-if (!isset($GLOBALS["AdminAllMenu"])) {
-    $GLOBALS["AdminAllMenu"] = array();
-}
+// 管理画面メニュー構造（全42ページ）
+$GLOBALS["AdminAllMenu"] = array(
+    // Check グループ
+    "Check" => array("search", "playhistory", "sales", "moniter"),
+    // Member グループ
+    "Member" => array("member", "address", "memberplayhistory", "purchasehistory", "gifthistory", "pointhistory", "drawhistory"),
+    // Goods グループ
+    "Goods" => array("goods", "goods_status", "shipping"),
+    // Information グループ
+    "Information" => array("notice", "coupon", "magazine"),
+    // Machines グループ
+    "Machines" => array("model", "maker", "corner", "machines", "camera", "camera_settings", "signaling", "streaming"),
+    // Owners グループ
+    "Owners" => array("owner", "owner_sales", "partner_domains"),
+    // Setting グループ
+    "Setting" => array("pointgrant", "pointconvert", "purchase", "gift", "giftlimit", "giftaddset", "benefits", "system", "admin")
+);
 
-// 管理画面メニュー権限リスト（空配列で初期化）
-if (!isset($GLOBALS["AuthMenuID"])) {
-    $GLOBALS["AuthMenuID"] = array();
-}
+// 管理画面メニュー権限リスト（全ページを許可）
+$GLOBALS["AuthMenuID"] = array(
+    // トップ
+    "index" => 1,
+    // Check
+    "search" => 1, "playhistory" => 1, "sales" => 1, "moniter" => 1,
+    // Member
+    "member" => 1, "address" => 1, "memberplayhistory" => 1, "purchasehistory" => 1,
+    "gifthistory" => 1, "pointhistory" => 1, "drawhistory" => 1,
+    // Goods
+    "goods" => 1, "goods_status" => 1, "shipping" => 1, "goods_drawpick" => 1,
+    // Information
+    "notice" => 1, "coupon" => 1, "magazine" => 1,
+    // Machines
+    "model" => 1, "maker" => 1, "corner" => 1, "machines" => 1,
+    "camera" => 1, "camera_settings" => 1, "signaling" => 1, "streaming" => 1,
+    // Owners
+    "owner" => 1, "owner_sales" => 1, "partner_domains" => 1,
+    // Setting
+    "pointgrant" => 1, "pointconvert" => 1, "purchase" => 1, "gift" => 1,
+    "giftlimit" => 1, "giftaddset" => 1, "benefits" => 1, "system" => 1, "admin" => 1,
+    // 詳細ページ
+    "member_detail" => 1, "address_detail" => 1, "goods_detail" => 1,
+    "notice_detail" => 1, "coupon_detail" => 1, "magazine_detail" => 1,
+    "model_detail" => 1, "maker_detail" => 1, "corner_detail" => 1,
+    "camera_detail" => 1, "owner_detail" => 1, "shipping_detail" => 1,
+    "pointgrant_detail" => 1, "pointconvert_detail" => 1, "purchase_detail" => 1,
+    "gift_detail" => 1, "giftlimit_detail" => 1, "giftaddset_detail" => 1,
+    "benefits_detail" => 1, "system_detail" => 1, "admin_detail" => 1,
+    "search_detail" => 1
+);
 
 // ポイント履歴処理コード
 $GLOBALS["pointHistoryProcessCode"] = array(

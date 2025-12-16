@@ -16,6 +16,9 @@
 			<!--if:{MENU_sales}-->
 			<li class="nav-item{%ACT_sales%}"><a class="nav-link" href="sales.php"><i class="fas fa-fw fa-chart-line"></i> <span>売上管理</span></a></li>
 			<!--/if:{MENU_sales}-->
+			<!--if:{MENU_moniter}-->
+			<li class="nav-item{%ACT_moniter%}"><a class="nav-link" href="moniter.php"><i class="fas fa-fw fa-desktop"></i> <span>モニター</span></a></li>
+			<!--/if:{MENU_moniter}-->
 			<!--/if:{GROUP_Check}-->
 
 			<!--if:{GROUP_Member}-->
@@ -84,14 +87,35 @@
 			<!--if:{MENU_corner}-->
 			<li class="nav-item{%ACT_corner%}"><a class="nav-link" href="corner.php"><i class="fas fa-fw fa-wrench"></i> <span>コーナー管理</span></a></li>
 			<!--/if:{MENU_corner}-->
+			<!--if:{MENU_machines}-->
+			<li class="nav-item{%ACT_machines%}"><a class="nav-link" href="machines.php"><i class="fas fa-fw fa-gamepad"></i> <span>実機設定</span></a></li>
+			<!--/if:{MENU_machines}-->
+			<!--if:{MENU_camera}-->
+			<li class="nav-item{%ACT_camera%}"><a class="nav-link" href="camera.php"><i class="fas fa-fw fa-video"></i> <span>カメラ管理</span></a></li>
+			<!--/if:{MENU_camera}-->
+			<!--if:{MENU_camera_settings}-->
+			<li class="nav-item{%ACT_camera_settings%}"><a class="nav-link" href="camera_settings.php"><i class="fas fa-fw fa-sliders-h"></i> <span>カメラ設定</span></a></li>
+			<!--/if:{MENU_camera_settings}-->
+			<!--if:{MENU_signaling}-->
+			<li class="nav-item{%ACT_signaling%}"><a class="nav-link" href="signaling.php"><i class="fas fa-fw fa-satellite-dish"></i> <span>シグナリング</span></a></li>
+			<!--/if:{MENU_signaling}-->
+			<!--if:{MENU_streaming}-->
+			<li class="nav-item{%ACT_streaming%}"><a class="nav-link" href="streaming.php"><i class="fas fa-fw fa-broadcast-tower"></i> <span>ストリーミング</span></a></li>
+			<!--/if:{MENU_streaming}-->
 			<!--/if:{GROUP_Machines}-->
 
 			<!--if:{GROUP_Owners}-->
-			<!--if:{MENU_owner}-->
 			<hr class="sidebar-divider">
 			<div class="sidebar-heading">Owners</div>
+			<!--if:{MENU_owner}-->
 			<li class="nav-item{%ACT_owner%}"><a class="nav-link" href="owner.php"><i class="fab fa-fw fa-fort-awesome"></i> <span>オーナー管理</span></a></li>
 			<!--/if:{MENU_owner}-->
+			<!--if:{MENU_owner_sales}-->
+			<li class="nav-item{%ACT_owner_sales%}"><a class="nav-link" href="owner_sales.php"><i class="fas fa-fw fa-chart-bar"></i> <span>オーナー売上</span></a></li>
+			<!--/if:{MENU_owner_sales}-->
+			<!--if:{MENU_partner_domains}-->
+			<li class="nav-item{%ACT_partner_domains%}"><a class="nav-link" href="partner_domains.php"><i class="fas fa-fw fa-globe"></i> <span>パートナードメイン</span></a></li>
+			<!--/if:{MENU_partner_domains}-->
 			<!--/if:{GROUP_Owners}-->
 
 			<!--if:{GROUP_Setting}-->
