@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パチンコプラットフォーム - デモ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0066cc',
+                        secondary: '#f8f9fa',
+                        accent: '#ff6b35',
+                        success: '#28a745',
+                        danger: '#dc3545'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary">🎰 パチンコプラザ</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-600">こんにちは！</span>
+                        <span class="text-primary font-semibold ml-1" id="username">テストユーザー</span>
+                    </div>
+                    <button class="bg-danger text-white px-4 py-2 rounded-lg hover:bg-red-600" onclick="logout()">
+                        ログアウト
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">ダッシュボード</h2>
+            <p class="mt-2 text-gray-600">パチンコゲームとウォレット管理の統合プラットフォーム</p>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm font-bold">¥</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">現在残高</dt>
+                                <dd class="text-lg font-medium text-gray-900" id="balance">¥125,000</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">🎮</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">ゲームセッション</dt>
+                                <dd class="text-lg font-medium text-gray-900">アクティブ</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">🏆</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">本日の勝利</dt>
+                                <dd class="text-lg font-medium text-gray-900">3回</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">⭐</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">レベル</dt>
+                                <dd class="text-lg font-medium text-gray-900">ゴールド 3</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2">
+                <!-- Quick Actions -->
+                <div class="bg-white shadow rounded-lg mb-8">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">クイックアクション</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="goToGames()" class="bg-primary text-white p-4 rounded-lg hover:bg-blue-600 transition-colors">
+                                <div class="text-2xl mb-2">🎰</div>
+                                <div class="text-sm">ゲーム開始</div>
+                            </button>
+                            <button onclick="goToDeposit()" class="bg-success text-white p-4 rounded-lg hover:bg-green-600 transition-colors">
+                                <div class="text-2xl mb-2">💰</div>
+                                <div class="text-sm">入金</div>
+                            </button>
+                            <button onclick="goToWithdraw()" class="bg-accent text-white p-4 rounded-lg hover:bg-orange-600 transition-colors">
+                                <div class="text-2xl mb-2">💸</div>
+                                <div class="text-sm">出金</div>
+                            </button>
+                            <button onclick="goToTransactions()" class="bg-purple-500 text-white p-4 rounded-lg hover:bg-purple-600 transition-colors">
+                                <div class="text-2xl mb-2">📊</div>
+                                <div class="text-sm">取引履歴</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Status -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">ゲーム状況</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-center py-8">
+                            <div class="text-6xl mb-4">🎮</div>
+                            <h4 class="text-xl font-semibold text-gray-900 mb-2">NET8連携準備完了</h4>
+                            <p class="text-gray-600 mb-4">パチンコゲームを開始できます</p>
+                            <button onclick="startGame()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                                ゲームを開始する
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="lg:col-span-1">
+                <!-- Account Summary -->
+                <div class="bg-white shadow rounded-lg mb-8">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">アカウント概要</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">ユーザーID</span>
+                                <span class="font-medium">user_001</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">登録日</span>
+                                <span class="font-medium">2024-12-01</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">レベル</span>
+                                <span class="font-medium">ゴールド 3</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">総ゲーム数</span>
+                                <span class="font-medium">147回</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">最近のアクティビティ</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-success rounded-full"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-900">ゲーム勝利 +¥15,000</p>
+                                    <p class="text-xs text-gray-500">5分前</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-primary rounded-full"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-900">ゲーム開始</p>
+                                    <p class="text-xs text-gray-500">15分前</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-success rounded-full"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-900">入金完了 +¥50,000</p>
+                                    <p class="text-xs text-gray-500">1時間前</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Pages -->
+        <div class="mt-8 bg-white shadow rounded-lg">
+            <div class="px-6 py-4 border-b">
+                <h3 class="text-lg font-medium text-gray-900">利用可能なページ</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="/ja/account/balance" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">💰</div>
+                        <div class="text-sm font-medium">残高管理</div>
+                    </a>
+                    <a href="/ja/account/transactions" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">📊</div>
+                        <div class="text-sm font-medium">取引履歴</div>
+                    </a>
+                    <a href="/ja/account/deposit" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">⬇️</div>
+                        <div class="text-sm font-medium">入金</div>
+                    </a>
+                    <a href="/ja/account/withdraw" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">⬆️</div>
+                        <div class="text-sm font-medium">出金</div>
+                    </a>
+                    <a href="/ja/test-auth" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">🔐</div>
+                        <div class="text-sm font-medium">認証テスト</div>
+                    </a>
+                    <a href="/ja/settings/general" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">⚙️</div>
+                        <div class="text-sm font-medium">設定</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Session check and user management
+        let sessionCheck = null;
+        
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/test/session-check');
+                const data = await response.json();
+                
+                if (data.success && data.user) {
+                    document.getElementById('username').textContent = data.user.realname || data.user.loginId;
+                    // Update balance if available
+                    if (data.user.balance !== undefined) {
+                        document.getElementById('balance').textContent = `¥${data.user.balance.toLocaleString()}`;
+                    }
+                } else {
+                    // No session, redirect to login
+                    window.location.href = '/auto-login-test.html';
+                }
+            } catch (error) {
+                console.error('Session check failed:', error);
+            }
+        }
+
+        // Quick action functions
+        function goToGames() {
+            window.location.href = '/ja/games';
+        }
+
+        function goToDeposit() {
+            window.location.href = '/ja/account/deposit';
+        }
+
+        function goToWithdraw() {
+            window.location.href = '/ja/account/withdraw';
+        }
+
+        function goToTransactions() {
+            window.location.href = '/ja/account/transactions';
+        }
+
+        function startGame() {
+            alert('NET8ゲーム開始機能は実装中です！\n現在はモックシステムとして動作します。');
+        }
+
+        function logout() {
+            // Clear any session data
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Redirect to login
+            alert('ログアウトしました。');
+            window.location.href = '/auto-login-test.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSession();
+            
+            // Check session every 30 seconds
+            sessionCheck = setInterval(checkSession, 30000);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (sessionCheck) {
+                clearInterval(sessionCheck);
+            }
+        });
+    </script>
+</body>
+</html>

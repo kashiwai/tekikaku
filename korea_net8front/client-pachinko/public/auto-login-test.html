@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自動ログインテスト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full mx-4">
+        <h1 class="text-3xl font-bold text-center mb-8">自動ログインテスト</h1>
+        
+        <!-- 韓国側ログインセクション -->
+        <div class="mb-8 p-6 bg-blue-50 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4">1. 韓国側ログイン</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">ログインID</label>
+                    <input type="text" id="loginId" value="testuser1" 
+                           class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">パスワード</label>
+                    <input type="password" id="password" value="password123" 
+                           class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                        id="loginBtn">
+                    韓国側ログイン実行
+                </button>
+            </form>
+            <div id="loginResult" class="mt-4"></div>
+        </div>
+
+        <!-- セッション確認セクション -->
+        <div class="mb-8 p-6 bg-green-50 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4">2. セッション確認</h2>
+            <button onclick="checkSession()" 
+                    class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
+                セッション状態確認
+            </button>
+            <div id="sessionResult" class="mt-4"></div>
+        </div>
+
+        <!-- テスト用ユーザー情報 -->
+        <div class="p-6 bg-gray-50 rounded-lg">
+            <h3 class="font-semibold mb-2">テスト用アカウント:</h3>
+            <ul class="text-sm space-y-1">
+                <li>• testuser1 / password123</li>
+                <li>• demouser / demo123</li>
+                <li>• admin / admin123</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4865/api';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loginBtn = document.getElementById('loginBtn');
+            const resultDiv = document.getElementById('loginResult');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'ログイン中...';
+            
+            try {
+                const loginId = document.getElementById('loginId').value;
+                const password = document.getElementById('password').value;
+                
+                const response = await fetch(`${API_BASE}/test/korea-only`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ loginId, password }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="p-3 bg-green-100 text-green-800 rounded">
+                            <strong>✅ ログイン成功!</strong>
+                            <div class="mt-2 text-sm">
+                                <p>ユーザー: ${result.korea.user.name} (${result.korea.user.loginId})</p>
+                                <p>セッションID: ${result.korea.user.sessionId}</p>
+                                <p>時刻: ${result.timestamp}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="p-3 bg-red-100 text-red-800 rounded">
+                            <strong>❌ ログイン失敗</strong>
+                            <div class="mt-1 text-sm">${result.message}</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="p-3 bg-red-100 text-red-800 rounded">
+                        <strong>❌ エラー</strong>
+                        <div class="mt-1 text-sm">${error.message}</div>
+                    </div>
+                `;
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = '韓国側ログイン実行';
+            }
+        });
+
+        async function checkSession() {
+            const resultDiv = document.getElementById('sessionResult');
+            
+            try {
+                const response = await fetch(`${API_BASE}/test/session-check`, {
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.authenticated) {
+                    resultDiv.innerHTML = `
+                        <div class="p-3 bg-green-100 text-green-800 rounded">
+                            <strong>✅ セッション有効</strong>
+                            <div class="mt-2 text-sm">
+                                <p>ユーザー: ${result.user.name} (${result.user.loginId})</p>
+                                <p>セッションID: ${result.user.sessionId}</p>
+                                <p>作成時刻: ${new Date(result.sessionInfo.createdAt).toLocaleString()}</p>
+                                <p>有効期限: ${new Date(result.sessionInfo.expiresAt).toLocaleString()}</p>
+                                <p>状態: ${result.sessionInfo.isValid ? '有効' : '期限切れ'}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="p-3 bg-orange-100 text-orange-800 rounded">
+                            <strong>⚠️ セッション無効</strong>
+                            <div class="mt-1 text-sm">${result.message}</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="p-3 bg-red-100 text-red-800 rounded">
+                        <strong>❌ エラー</strong>
+                        <div class="mt-1 text-sm">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ページ読み込み時にセッション確認
+        window.addEventListener('load', () => {
+            checkSession();
+        });
+    </script>
+</body>
+</html>

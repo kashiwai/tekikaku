@@ -1,20 +1,16 @@
 <?php
 /**
- * NET8 管理画面 - ログイン（完全修正版）
+ * NET8 管理画面 - ログイン（SmartSession統合版）
+ * Updated: 2025-12-16 - セッション継続問題解決
  */
 
-// セッション開始（最優先）
-if (session_status() == PHP_SESSION_NONE) {
-    session_name("NET8ADMIN");
-    session_start();
-}
+// 基本設定ファイル読み込み
+require_once('../../_etc/require_files_admin.php');
 
-// DB接続情報
-define("DB_HOST", "136.116.70.86");
-define("DB_USER", "net8tech001");
-define("DB_PASS", "Nene11091108!!");
-define("DB_NAME", "net8_dev");
-define("URL_ADMIN", "/xxxadmin/");
+// 定数設定（未定義の場合のみ）
+if (!defined("URL_ADMIN")) {
+    define("URL_ADMIN", "/xxxadmin/");
+}
 
 // メイン処理
 main();
@@ -22,7 +18,7 @@ main();
 function main() {
     // POST処理
     $action = $_POST["M"] ?? "";
-    
+
     if ($action === "proc") {
         // ログイン処理
         ProcLogin();
@@ -102,7 +98,7 @@ function DispLogin($message = "") {
             <div class="logo-text">NET8 Admin</div>
         </div>
         <h1 class="login-title">管理画面ログイン</h1>
-        
+
         <?php if (!empty($message)): ?>
         <div class="error-message">
             <span>⚠️</span>
@@ -112,7 +108,7 @@ function DispLogin($message = "") {
 
         <form method="POST" action="login.php">
             <input type="hidden" name="M" value="proc">
-            
+
             <div class="form-group">
                 <label class="form-label" for="admin_id">管理者ID</label>
                 <div class="input-wrapper">
@@ -144,59 +140,81 @@ function DispLogin($message = "") {
 function ProcLogin() {
     $admin_id = $_POST["ID"] ?? "";
     $admin_pass = $_POST["PASS"] ?? "";
-    
+
     // 入力チェック
     if (empty($admin_id) || empty($admin_pass)) {
         DispLogin("IDとパスワードを入力してください");
         return;
     }
-    
+
     // DB接続
-    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $host = defined("DB_HOST") ? DB_HOST : "136.116.70.86";
+    $user = defined("DB_USER") ? DB_USER : "net8tech001";
+    $pass = defined("DB_PASS") ? DB_PASS : "Nene11091108!!";
+    $name = defined("DB_NAME") ? DB_NAME : "net8_dev";
+
+    $mysqli = new mysqli($host, $user, $pass, $name);
     if ($mysqli->connect_error) {
         DispLogin("システムエラーが発生しました");
         return;
     }
-    
+
     // 管理者認証
-    $sql = "SELECT admin_no, admin_id, admin_name, admin_pass, auth_flg 
-            FROM mst_admin 
+    $sql = "SELECT admin_no, admin_id, admin_name, admin_pass, auth_flg
+            FROM mst_admin
             WHERE admin_id = ? AND del_flg = 0 LIMIT 1";
-    
+
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("s", $admin_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($row = $result->fetch_assoc()) {
         // パスワード検証
         if (password_verify($admin_pass, $row["admin_pass"])) {
-            // ログイン成功 - セッションを完全にクリーンアップしてから設定
-            $_SESSION = array(); // 既存セッションデータをクリア
-            $_SESSION["AdminInfo"] = $row;
-            $_SESSION["login_time"] = time();
-            $_SESSION["last_access"] = time();
-            $_SESSION["authenticated"] = true;
-            
+            // ログイン成功 - SmartSessionを使用してセッション作成
+            $sessionSec = defined('SESSION_SEC_ADMIN') ? SESSION_SEC_ADMIN : 3600;
+            $sessionSid = defined('SESSION_SID_ADMIN') ? SESSION_SID_ADMIN : 'NET8ADMIN';
+            $domain = defined('DOMAIN') ? DOMAIN : $_SERVER["SERVER_NAME"];
+            $loginUrl = URL_ADMIN . 'login.php';
+
+            // SmartSessionインスタンス作成
+            $session = new SmartSession(
+                $loginUrl,
+                $sessionSec,
+                $sessionSid,
+                $domain,
+                true
+            );
+
+            // 新しいセッションを強制発行
+            $session->start(true);
+
+            // 管理者情報をセッションに保存（SmartSessionのマジックメソッド経由）
+            $session->AdminInfo = $row;
+            $session->login_time = time();
+            $session->last_access = time();
+            $session->authenticated = true;
+
             // 最終ログイン更新
             $updateSql = "UPDATE mst_admin SET login_dt = NOW() WHERE admin_no = ?";
             $updateStmt = $mysqli->prepare($updateSql);
             $updateStmt->bind_param("i", $row["admin_no"]);
             $updateStmt->execute();
             $updateStmt->close();
-            
+
             $stmt->close();
             $mysqli->close();
-            
-            // ダッシュボードへ
+
+            // ダッシュボードへリダイレクト
             header("Location: " . URL_ADMIN . "index.php");
             exit();
         }
     }
-    
+
     $stmt->close();
     $mysqli->close();
-    
+
     DispLogin("ログインIDまたはパスワードが正しくありません");
 }
 ?>

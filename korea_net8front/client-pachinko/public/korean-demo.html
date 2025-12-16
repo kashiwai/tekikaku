@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국 패치인코 플랫폼 - 데모</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0066cc',
+                        secondary: '#f8f9fa',
+                        accent: '#ff6b35',
+                        success: '#28a745',
+                        danger: '#dc3545'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary">🎰 패치인코</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-600">환영합니다!</span>
+                        <span class="text-primary font-semibold ml-1" id="username">테스트유저</span>
+                    </div>
+                    <button class="bg-danger text-white px-4 py-2 rounded-lg hover:bg-red-600" onclick="logout()">
+                        로그아웃
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">대시보드</h2>
+            <p class="mt-2 text-gray-600">패치인코 게임과 지갑 관리를 위한 통합 플랫폼</p>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm font-bold">₩</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">현재 잔액</dt>
+                                <dd class="text-lg font-medium text-gray-900" id="balance">₩125,000</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">🎮</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">게임 세션</dt>
+                                <dd class="text-lg font-medium text-gray-900">활성 중</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">🏆</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">오늘 승리</dt>
+                                <dd class="text-lg font-medium text-gray-900">3회</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">⭐</span>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">레벨</dt>
+                                <dd class="text-lg font-medium text-gray-900">골드 3</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2">
+                <!-- Quick Actions -->
+                <div class="bg-white shadow rounded-lg mb-8">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">빠른 액션</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="goToGames()" class="bg-primary text-white p-4 rounded-lg hover:bg-blue-600 transition-colors">
+                                <div class="text-2xl mb-2">🎰</div>
+                                <div class="text-sm">게임 시작</div>
+                            </button>
+                            <button onclick="goToDeposit()" class="bg-success text-white p-4 rounded-lg hover:bg-green-600 transition-colors">
+                                <div class="text-2xl mb-2">💰</div>
+                                <div class="text-sm">입금하기</div>
+                            </button>
+                            <button onclick="goToWithdraw()" class="bg-accent text-white p-4 rounded-lg hover:bg-orange-600 transition-colors">
+                                <div class="text-2xl mb-2">💸</div>
+                                <div class="text-sm">출금하기</div>
+                            </button>
+                            <button onclick="goToTransactions()" class="bg-purple-500 text-white p-4 rounded-lg hover:bg-purple-600 transition-colors">
+                                <div class="text-2xl mb-2">📊</div>
+                                <div class="text-sm">거래내역</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Status -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">게임 상태</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-center py-8">
+                            <div class="text-6xl mb-4">🎮</div>
+                            <h4 class="text-xl font-semibold text-gray-900 mb-2">NET8 연동 준비 완료</h4>
+                            <p class="text-gray-600 mb-4">패치인코 게임을 시작할 수 있습니다</p>
+                            <button onclick="startGame()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                                게임 시작하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="lg:col-span-1">
+                <!-- Account Summary -->
+                <div class="bg-white shadow rounded-lg mb-8">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">계정 요약</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">사용자 ID</span>
+                                <span class="font-medium">user_001</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">가입일</span>
+                                <span class="font-medium">2024-12-01</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">레벨</span>
+                                <span class="font-medium">골드 3</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">총 게임수</span>
+                                <span class="font-medium">147회</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">최근 활동</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-success rounded-full"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-900">게임 승리 +₩15,000</p>
+                                    <p class="text-xs text-gray-500">5분 전</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-primary rounded-full"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-900">게임 시작</p>
+                                    <p class="text-xs text-gray-500">15분 전</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-success rounded-full"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-900">입금 완료 +₩50,000</p>
+                                    <p class="text-xs text-gray-500">1시간 전</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Pages -->
+        <div class="mt-8 bg-white shadow rounded-lg">
+            <div class="px-6 py-4 border-b">
+                <h3 class="text-lg font-medium text-gray-900">이용 가능한 페이지</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="/ko/account/balance" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">💰</div>
+                        <div class="text-sm font-medium">잔액 관리</div>
+                    </a>
+                    <a href="/ko/account/transactions" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">📊</div>
+                        <div class="text-sm font-medium">거래 내역</div>
+                    </a>
+                    <a href="/ko/account/deposit" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">⬇️</div>
+                        <div class="text-sm font-medium">입금</div>
+                    </a>
+                    <a href="/ko/account/withdraw" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">⬆️</div>
+                        <div class="text-sm font-medium">출금</div>
+                    </a>
+                    <a href="/ko/test-auth" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">🔐</div>
+                        <div class="text-sm font-medium">인증 테스트</div>
+                    </a>
+                    <a href="/ko/settings/general" class="block p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition-all">
+                        <div class="text-lg mb-2">⚙️</div>
+                        <div class="text-sm font-medium">설정</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Session check and user management
+        let sessionCheck = null;
+        
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/test/session-check');
+                const data = await response.json();
+                
+                if (data.success && data.user) {
+                    document.getElementById('username').textContent = data.user.realname || data.user.loginId;
+                    // Update balance if available
+                    if (data.user.balance !== undefined) {
+                        document.getElementById('balance').textContent = `₩${data.user.balance.toLocaleString()}`;
+                    }
+                } else {
+                    // No session, redirect to login
+                    window.location.href = '/auto-login-test.html';
+                }
+            } catch (error) {
+                console.error('Session check failed:', error);
+            }
+        }
+
+        // Quick action functions
+        function goToGames() {
+            window.location.href = '/ko/games';
+        }
+
+        function goToDeposit() {
+            window.location.href = '/ko/account/deposit';
+        }
+
+        function goToWithdraw() {
+            window.location.href = '/ko/account/withdraw';
+        }
+
+        function goToTransactions() {
+            window.location.href = '/ko/account/transactions';
+        }
+
+        function startGame() {
+            alert('NET8 게임 시작 기능은 구현 중입니다!\n현재는 모의 시스템으로 동작합니다.');
+        }
+
+        function logout() {
+            // Clear any session data
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Redirect to login
+            alert('로그아웃 되었습니다.');
+            window.location.href = '/auto-login-test.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSession();
+            
+            // Check session every 30 seconds
+            sessionCheck = setInterval(checkSession, 30000);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (sessionCheck) {
+                clearInterval(sessionCheck);
+            }
+        });
+    </script>
+</body>
+</html>

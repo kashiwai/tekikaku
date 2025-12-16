@@ -2,7 +2,7 @@
 /**
  * 管理画面用require files
  * Created: 2025-12-12
- * Updated: 2025-12-12 - 確実にrequire_files.phpを読み込むよう修正
+ * Updated: 2025-12-16 - SmartSession統合版（セッション継続問題解決）
  */
 
 // エラー表示設定
@@ -42,11 +42,16 @@ if (file_exists($require_files_path)) {
     }
 }
 
-// クラスファイルの読み込み（_sys/TemplateAdmin.phpを優先）
+// クラスファイルの読み込み
 $sys_path = __DIR__ . '/../_sys/';
 $lib_path = __DIR__ . '/../_lib/';
 
-// TemplateAdmin.php を _sys/ から優先的に読み込み
+// SmartSessionを最優先で読み込み（セッション統合のため必須）
+if (file_exists($lib_path . 'SmartSession.php')) {
+    require_once($lib_path . 'SmartSession.php');
+}
+
+// TemplateAdmin.php を _sys/ から読み込み
 if (file_exists($sys_path . 'TemplateAdmin.php')) {
     require_once($sys_path . 'TemplateAdmin.php');
 }
@@ -63,7 +68,6 @@ $required_classes = [
     'Database.class.php',
     'SmartDB_MySQL.class.php',
     'SqlString.class.php',
-    'Session.class.php',
 ];
 
 foreach ($lib_paths as $path) {
