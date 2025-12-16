@@ -376,6 +376,50 @@ function DispTop($template) {
 	$template->assign("DT_TO_L"  , $last_month_last, true);
 	$template->assign("DT_NOW"   , $now, true);
 	
+	// === 追加: 日付・利益計算 ===
+	// 今日の日付（わかりやすく表示）
+	$template->assign("DISP_TODAY_DATE", date("Y年m月d日", $tdTimestamp), true);
+	$template->assign("DISP_TODAY_WEEKDAY", $GLOBALS["weekList"][date('w', $tdTimestamp)], true);
+	$template->assign("DISP_YESTERDAY_DATE", date("Y年m月d日", $ydTimestamp), true);
+	$template->assign("DISP_YESTERDAY_WEEKDAY", $GLOBALS["weekList"][date('w', $ydTimestamp)], true);
+
+	// 利益計算（売上金額 - ユーザーへの払い出し相当）
+	// クレジット差分がマイナス = ユーザーが勝った = 運営の支出
+	// クレジット差分がプラス = ユーザーが負けた = 運営の収入
+	$creditY = intval($creditCounts["credit_y"]);
+	$creditM = intval($creditCounts["credit_m"]);
+	$creditL = intval($creditCounts["credit_l"]);
+	$salesY = intval($amountCounts["amount_value_y"]);
+	$salesM = intval($amountCounts["amount_value_m"]);
+	$salesL = intval($amountCounts["amount_value_l"]);
+
+	// ゲーム収支（クレジット差分を金額換算：1クレジット = 設定値円）
+	// CREDIT_RATE が定義されていない場合は 1円とする
+	$creditRate = defined('CREDIT_RATE') ? CREDIT_RATE : 1;
+	$gameIncomeY = $creditY * $creditRate;
+	$gameIncomeM = $creditM * $creditRate;
+	$gameIncomeL = $creditL * $creditRate;
+
+	// 総利益 = 売上 + ゲーム収支
+	$profitY = $salesY + $gameIncomeY;
+	$profitM = $salesM + $gameIncomeM;
+	$profitL = $salesL + $gameIncomeL;
+
+	$template->assign("DISP_GAME_INCOME_Y", ($gameIncomeY >= 0 ? "+" : "") . number_format($gameIncomeY), true);
+	$template->assign("DISP_GAME_INCOME_M", ($gameIncomeM >= 0 ? "+" : "") . number_format($gameIncomeM), true);
+	$template->assign("DISP_GAME_INCOME_L", ($gameIncomeL >= 0 ? "+" : "") . number_format($gameIncomeL), true);
+	$template->assign("DISP_PROFIT_Y", number_format($profitY), true);
+	$template->assign("DISP_PROFIT_M", number_format($profitM), true);
+	$template->assign("DISP_PROFIT_L", number_format($profitL), true);
+
+	// 利益の正負判定用
+	$template->if_enable("PROFIT_Y_POSITIVE", $profitY >= 0);
+	$template->if_enable("PROFIT_M_POSITIVE", $profitM >= 0);
+	$template->if_enable("PROFIT_L_POSITIVE", $profitL >= 0);
+	$template->if_enable("PROFIT_Y_NEGATIVE", $profitY < 0);
+	$template->if_enable("PROFIT_M_NEGATIVE", $profitM < 0);
+	$template->if_enable("PROFIT_L_NEGATIVE", $profitL < 0);
+
 	// 表示
 	$template->flush();
 }
