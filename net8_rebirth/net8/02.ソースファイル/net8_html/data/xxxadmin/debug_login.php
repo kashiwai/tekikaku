@@ -7,10 +7,23 @@ ini_set('display_errors', 1);
 
 echo "<h1>Login Debug</h1>";
 
-echo "<h2>0. BEFORE require_files_admin</h2>";
+echo "<h2>0. PHP Session Settings</h2>";
+echo "<p>session.save_handler: " . ini_get('session.save_handler') . "</p>";
+echo "<p>session.save_path: " . ini_get('session.save_path') . "</p>";
+echo "<p>session.auto_start: " . ini_get('session.auto_start') . "</p>";
+echo "<p>session.use_cookies: " . ini_get('session.use_cookies') . "</p>";
+echo "<p>session.cookie_path: " . ini_get('session.cookie_path') . "</p>";
+
+// セッション開始テスト（require前）
+echo "<h2>0.1 Session Start Test (before require)</h2>";
+$result = @session_start();
+echo "<p>session_start() result: " . ($result ? 'true' : 'false') . "</p>";
 echo "<p>session_status(): " . session_status() . " (0=disabled, 1=none, 2=active)</p>";
 echo "<p>session_name(): " . session_name() . "</p>";
 echo "<p>session_id(): " . session_id() . "</p>";
+if (!$result) {
+    echo "<p style='color:red;'>ERROR: " . error_get_last()['message'] . "</p>";
+}
 
 require_once('../../_etc/require_files_admin.php');
 
