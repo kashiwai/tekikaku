@@ -242,9 +242,11 @@ class TemplateAdmin extends SmartTemplate {
 		foreach ($array as $match) {
 			$file = file_get_contents($this->_basedir . $match[2]);		// ファイル内容取得
 			// テンプレート記述文字エンコードがPHP処理エンコードと違う場合は文字エンコードを変換
-			if ($this->_enc != ini_get("mbstring.internal_encoding")) {
+			// PHP 8対応: ini_get("mbstring.internal_encoding")は非推奨、mb_internal_encoding()を使用
+			$internalEnc = mb_internal_encoding() ?: 'UTF-8';
+			if ($this->_enc != $internalEnc) {
 				// 記述エンコード→PHP処理エンコード
-				$file = mb_convert_encoding($file, ini_get("mbstring.internal_encoding"), $this->_enc);
+				$file = mb_convert_encoding($file, $internalEnc, $this->_enc);
 			}
 			$str = preg_replace("/(<!--#include file=\"".preg_quote($match[2], "/")."\"-->)/", $file ,$str);
 		}

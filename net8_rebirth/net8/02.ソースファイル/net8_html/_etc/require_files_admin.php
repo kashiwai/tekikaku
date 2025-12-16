@@ -5,6 +5,9 @@
  * Updated: 2025-12-16 - SmartSession統合版（セッション継続問題解決）
  */
 
+// 出力バッファリング開始（headers already sentエラー防止）
+ob_start();
+
 // エラー表示設定
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 ini_set('display_errors', '0'); // 本番環境では0に設定
