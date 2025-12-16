@@ -79,14 +79,28 @@ try {
 echo "<h2>5. TemplateAdmin 読み込みテスト</h2>";
 try {
     echo "<p>Attempting to load TemplateAdmin...</p>";
-    ob_start();
-    $template = new TemplateAdmin(true, false, false);
-    $output = ob_get_clean();
-    echo "<p style='color:green;'>TemplateAdmin loaded successfully!</p>";
+
+    // 必要な定数を確認
+    echo "<p>DIR_HTML_ADMIN: " . (defined('DIR_HTML_ADMIN') ? DIR_HTML_ADMIN : 'NOT DEFINED') . "</p>";
+    echo "<p>TYPE_PC: " . (defined('TYPE_PC') ? TYPE_PC : 'NOT DEFINED') . "</p>";
+
+    // セッションを使わないモードでテスト
+    echo "<p>Creating TemplateAdmin with makeSession=false...</p>";
+    $template = new TemplateAdmin(false);
+    echo "<p style='color:green;'>TemplateAdmin loaded successfully (no session)!</p>";
+
+    // セッション有効でテスト
+    echo "<p>Creating TemplateAdmin with makeSession=true...</p>";
+    $template2 = new TemplateAdmin(true, false, false);
+    echo "<p style='color:green;'>TemplateAdmin loaded successfully (with session)!</p>";
+
 } catch (Error $e) {
     echo "<p style='color:red;'>PHP Error: " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p>File: " . $e->getFile() . " Line: " . $e->getLine() . "</p>";
     echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
 } catch (Exception $e) {
     echo "<p style='color:red;'>Exception: " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p>File: " . $e->getFile() . " Line: " . $e->getLine() . "</p>";
+    echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
 }
 ?>
