@@ -44,39 +44,41 @@ while ($row = $result->fetch_assoc()) {
 }
 echo "</table>";
 
-// テスト用：パスワード「admin」のハッシュを生成
-echo "<h2>テスト用ハッシュ生成</h2>";
-$test_passwords = ['admin', 'password', '123456', 'sradmin', 'spadmin'];
+echo "<h2>パスワード検証テスト（admin123）</h2>";
+
+$sql = "SELECT admin_no, admin_id, admin_pass FROM mst_admin WHERE del_flg = 0";
+$result = $mysqli->query($sql);
+
 echo "<table border='1' style='border-collapse: collapse;'>";
-echo "<tr><th>平文</th><th>Bcryptハッシュ</th></tr>";
-foreach ($test_passwords as $tp) {
-    $hash = password_hash($tp, PASSWORD_BCRYPT);
+echo "<tr><th>admin_id</th><th>平文一致(admin123)</th><th>Bcrypt検証(admin123)</th></tr>";
+
+while ($row = $result->fetch_assoc()) {
+    $stored_pass = $row['admin_pass'];
+
+    // 平文比較
+    $plain_match = ($stored_pass === 'admin123') ? 'YES' : 'NO';
+
+    // Bcrypt検証
+    $bcrypt_match = password_verify('admin123', $stored_pass) ? 'YES' : 'NO';
+
     echo "<tr>";
-    echo "<td>" . htmlspecialchars($tp) . "</td>";
-    echo "<td style='font-size:11px;'>" . htmlspecialchars($hash) . "</td>";
+    echo "<td>" . htmlspecialchars($row['admin_id']) . "</td>";
+    echo "<td style='color:" . ($plain_match === 'YES' ? 'green' : 'red') . ";'>" . $plain_match . "</td>";
+    echo "<td style='color:" . ($bcrypt_match === 'YES' ? 'green' : 'red') . ";'>" . $bcrypt_match . "</td>";
     echo "</tr>";
 }
 echo "</table>";
 
-echo "<h2>パスワード検証テスト</h2>";
-echo "<p>admin_id「admin」のパスワードが「admin」かテスト:</p>";
+// パスワードリセット用ハッシュ生成
+echo "<h2>パスワードリセット用</h2>";
+echo "<p>「admin123」のBcryptハッシュ:</p>";
+$new_hash = password_hash('admin123', PASSWORD_BCRYPT);
+echo "<code style='background:#eee;padding:10px;display:block;word-break:break-all;'>" . htmlspecialchars($new_hash) . "</code>";
 
-$sql = "SELECT admin_pass FROM mst_admin WHERE admin_id = 'admin' AND del_flg = 0";
-$result = $mysqli->query($sql);
-if ($row = $result->fetch_assoc()) {
-    $stored_pass = $row['admin_pass'];
-
-    // 平文比較
-    $plain_match = ($stored_pass === 'admin') ? 'YES' : 'NO';
-
-    // Bcrypt検証
-    $bcrypt_match = password_verify('admin', $stored_pass) ? 'YES' : 'NO';
-
-    echo "<p>平文一致: <strong style='color:" . ($plain_match === 'YES' ? 'green' : 'red') . ";'>" . $plain_match . "</strong></p>";
-    echo "<p>Bcrypt検証: <strong style='color:" . ($bcrypt_match === 'YES' ? 'green' : 'red') . ";'>" . $bcrypt_match . "</strong></p>";
-} else {
-    echo "<p>admin_id='admin' のレコードが見つかりません</p>";
-}
+echo "<h3>リセットSQL（実行する場合はコピー）</h3>";
+echo "<code style='background:#ffe0e0;padding:10px;display:block;word-break:break-all;'>";
+echo "UPDATE mst_admin SET admin_pass = '" . $mysqli->real_escape_string($new_hash) . "' WHERE admin_id = 'admin';";
+echo "</code>";
 
 $mysqli->close();
 ?>
