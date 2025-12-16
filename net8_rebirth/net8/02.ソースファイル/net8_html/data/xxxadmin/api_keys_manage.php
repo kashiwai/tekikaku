@@ -5,6 +5,11 @@
  * Created: 2025-11-06
  */
 
+// デバッグ用エラー表示
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once('../../_etc/require_files_admin.php');
 
 // TemplateAdminインスタンスを生成（セッション管理含む）
