@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ完全無効化
-RUN echo "FORCE-REBUILD-2025-12-16-v9-entrypoint" > /tmp/cache-bust
+RUN echo "FORCE-REBUILD-2025-12-17-v1-play_embed_fix" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
