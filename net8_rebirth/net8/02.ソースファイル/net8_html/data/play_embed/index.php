@@ -64,7 +64,6 @@ try {
             mm.layout_data,
             mm.image_reel,
             mc.camera_name,
-            mc.camera_url,
             cp.credit as convcredit,
             cp.point as convplaypoint
         FROM game_sessions gs
