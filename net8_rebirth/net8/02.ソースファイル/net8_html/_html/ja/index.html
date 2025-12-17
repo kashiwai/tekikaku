@@ -70,40 +70,49 @@
 		}
 
 		/* ================================================
-		   Hero Section
+		   Hero Section - 大きな画像だけ
 		   ================================================ */
 		#index-visual {
 			position: relative;
 			text-align: center;
-			padding: 20px 20px 40px;
-			background: radial-gradient(ellipse at center top, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+			padding: 0;
+			background: transparent;
 		}
 
 		#index-visual img {
-			max-width: 100%;
+			width: 100%;
 			height: auto;
-			border-radius: 20px;
+			display: block;
 		}
 
-		.hero-title {
-			margin-top: 30px;
+		/* ================================================
+		   Service Introduction - 画像の下のセクション
+		   ================================================ */
+		.service-intro {
+			padding: 30px 20px 40px;
+			background: var(--gradient-cosmic);
+			text-align: center;
 		}
 
-		.hero-title h1 {
-			font-size: 1.8rem;
+		.intro-content {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.intro-title {
+			font-size: 1.5rem;
 			font-weight: 900;
 			background: linear-gradient(135deg, var(--accent-gold), #fff5cc, var(--accent-gold));
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
-			text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-			letter-spacing: 0.1em;
+			margin-bottom: 15px;
+			letter-spacing: 0.05em;
 		}
 
-		.hero-subtitle {
+		.intro-text {
 			font-size: 0.9rem;
 			color: var(--text-gray);
-			margin-top: 15px;
 			line-height: 1.8;
 		}
 
@@ -671,12 +680,16 @@
 		   Responsive - Tablet
 		   ================================================ */
 		@media (min-width: 768px) {
-			.hero-title h1 {
-				font-size: 2.5rem;
+			.intro-title {
+				font-size: 2rem;
 			}
 
-			.hero-subtitle {
+			.intro-text {
 				font-size: 1rem;
+			}
+
+			.service-intro {
+				padding: 40px 30px 50px;
 			}
 
 			.machine-grid,
@@ -717,11 +730,11 @@
 				margin: 0 auto;
 			}
 
-			#index-visual {
-				padding: 40px 40px 60px;
+			.intro-title {
+				font-size: 2.2rem;
 			}
 
-			#index-visual img {
+			.intro-content {
 				max-width: 800px;
 			}
 
@@ -854,18 +867,22 @@
 		<!--/loop:{SLIDER_LIST}-->
 	</div>
 
-	<!-- Hero Section -->
+	<!-- Hero Section - 大きな画像のみ -->
 	<section id="index-visual">
 		<picture>
 			<img src="/content/images/index/top.jpg" alt="MillionNet8">
 		</picture>
-		<div class="hero-title">
-			<h1>オンラインパチスロ・パチンコ</h1>
+	</section>
+
+	<!-- Service Introduction -->
+	<section class="service-intro">
+		<div class="intro-content">
+			<h1 class="intro-title">オンラインパチスロ・パチンコ</h1>
+			<p class="intro-text">
+				オンラインパチスロ・パチンコ「Milliongodonline&Millionnet」のサービスで、<br>
+				遠隔で遊戯をお楽しみいただけます。
+			</p>
 		</div>
-		<p class="hero-subtitle">
-			オンラインパチスロ・パチンコ「Milliongodonline&Millionnet」のサービスで、<br>
-			遠隔で遊戯をお楽しみいただけます。
-		</p>
 	</section>
 
 	<!-- Corner Tabs -->
