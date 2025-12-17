@@ -266,6 +266,39 @@
 			color: white;
 		}
 
+		/* 機体状態バッジ（3状態: 空き台・使用中・準備中） */
+		.machine-status-badge {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			padding: 6px 12px;
+			border-radius: 20px;
+			font-size: 0.75rem;
+			font-weight: 700;
+			z-index: 6;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.status-available {
+			background: linear-gradient(135deg, #22c55e, #16a34a);
+			color: white;
+			box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+		}
+
+		.status-inuse {
+			background: linear-gradient(135deg, #ef4444, #dc2626);
+			color: white;
+			box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+		}
+
+		.status-preparing {
+			background: linear-gradient(135deg, #f59e0b, #d97706);
+			color: white;
+			box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+		}
+
 		.machine-card-image {
 			width: 100%;
 			aspect-ratio: 1;
@@ -795,8 +828,16 @@
 		<div class="machine-grid">
 			<!--loop:{LIST}-->
 			<a href="model_detail.php?NO={%NO%}" class="machine-card" style="text-decoration: none; color: inherit;">
-				<!-- Badge -->
-				<span class="machine-card-badge badge-popular">人気</span>
+				<!-- Status Badge (3状態: 空き台・使用中・準備中) -->
+				<!--if:{STATUS_AVAILABLE}-->
+				<span class="machine-status-badge status-available">🟢 空き台</span>
+				<!--/if:{STATUS_AVAILABLE}-->
+				<!--if:{STATUS_INUSE}-->
+				<span class="machine-status-badge status-inuse">🔴 使用中</span>
+				<!--/if:{STATUS_INUSE}-->
+				<!--if:{STATUS_PREPARING}-->
+				<span class="machine-status-badge status-preparing">🟡 準備中</span>
+				<!--/if:{STATUS_PREPARING}-->
 
 				<!-- Image -->
 				<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}" class="machine-card-image">

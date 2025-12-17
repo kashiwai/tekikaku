@@ -148,16 +148,43 @@ function DispDetail($template) {
 
 	while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		$totalMachines++;
-		// 空き台判定
-		$isAvailable = ($row["assign_flg"] == "0" ||
-			($row["assign_flg"] == "1" && $_login_flg && $row["member_no"] == $template->Session->UserInfo["member_no"]));
+
+		$assignFlg = $row["assign_flg"];
+		$machineStatus = $row["machine_status"];
+		$isLinkMainte = ($assignFlg == 9);
+
+		// 自身への割当は未割り当て扱い
+		if ($_login_flg && $assignFlg == 1 && $row["member_no"] == $template->Session->UserInfo["member_no"]) {
+			$assignFlg = 0;
+		}
+
+		// 3状態判定（空き台・使用中・準備中）
+		$isInUse = ($assignFlg == 1);
+		$isAvailable = ($assignFlg == 0 && $machineStatus == 1 && $open && !$isLinkMainte);
+		$isPreparing = !$isInUse && !$isAvailable;
+
 		if ($isAvailable) {
 			$availableMachines++;
 		}
+
+		// 状態テキストとクラス
+		if ($isAvailable) {
+			$statusClass = "available";
+			$statusText = "🟢 空き";
+		} elseif ($isInUse) {
+			$statusClass = "in-use";
+			$statusText = "🔴 使用中";
+		} else {
+			$statusClass = "preparing";
+			$statusText = "🟡 準備中";
+		}
+
 		$machineList[] = [
 			'machine_no' => $row["machine_no"],
 			'is_available' => $isAvailable,
-			'assign_flg' => $row["assign_flg"]
+			'status_class' => $statusClass,
+			'status_text' => $statusText,
+			'assign_flg' => $assignFlg
 		];
 	}
 
@@ -216,8 +243,8 @@ function DispDetail($template) {
 	$template->loop_start("MACHINE_LIST");
 	foreach ($machineList as $machine) {
 		$template->assign("M_MACHINE_NO", $machine['machine_no'], true);
-		$template->assign("M_STATUS_CLASS", $machine['is_available'] ? "available" : "in-use", true);
-		$template->assign("M_STATUS_TEXT", $machine['is_available'] ? "空き" : "使用中", true);
+		$template->assign("M_STATUS_CLASS", $machine['status_class'], true);
+		$template->assign("M_STATUS_TEXT", $machine['status_text'], true);
 		$template->loop_next();
 	}
 	$template->loop_end("MACHINE_LIST");

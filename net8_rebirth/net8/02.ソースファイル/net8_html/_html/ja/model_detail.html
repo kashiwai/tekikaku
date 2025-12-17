@@ -358,6 +358,13 @@
 			cursor: not-allowed;
 		}
 
+		.machine-slot.preparing {
+			background: rgba(245, 158, 11, 0.2);
+			border: 2px solid rgba(245, 158, 11, 0.5);
+			color: rgba(245, 158, 11, 0.9);
+			cursor: not-allowed;
+		}
+
 		/* ================================================
 		   Description Section
 		   ================================================ */
@@ -835,8 +842,8 @@
 
 	// 台を選択
 	function selectMachine(machineNo, status) {
-		if (status === 'in-use') {
-			return; // 使用中の台は選択不可
+		if (status === 'in-use' || status === 'preparing') {
+			return; // 使用中・準備中の台は選択不可
 		}
 
 		// 前の選択を解除

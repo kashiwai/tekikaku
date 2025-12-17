@@ -259,8 +259,23 @@ function DispTop($template) {
 		$template->assign("IMAGE_LIST"       , $row["image_list"], true);
 		$template->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);
 
-		// AssignMachineListの残りの処理をここに含める必要があるかもしれませんが、
-		// とりあえず基本的な変数だけを割り当てます
+		// ユーザー向け3状態判定（空き台・使用中・準備中）
+		$assignFlg = $row["assign_flg"];
+		$machineStatus = $row["machine_status"];
+
+		// 使用中: 誰かが割り当てられている
+		$isInUse = ($assignFlg == 1);
+
+		// 空き台: 未割当 かつ 通常稼働 かつ 営業時間内
+		$isAvailable = ($assignFlg == 0 && $machineStatus == 1 && $open);
+
+		// 準備中: それ以外（メンテ、カメラ待機、営業時間外など）
+		$isPreparing = !$isInUse && !$isAvailable;
+
+		$template->if_enable("STATUS_AVAILABLE", $isAvailable);   // 🟢 空き台
+		$template->if_enable("STATUS_INUSE", $isInUse);           // 🔴 使用中
+		$template->if_enable("STATUS_PREPARING", $isPreparing);   // 🟡 準備中
+
 		$template->loop_next();
 	}
 	$template->loop_end("LIST");

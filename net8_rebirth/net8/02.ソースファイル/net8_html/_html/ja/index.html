@@ -948,30 +948,6 @@
 					<!-- Machine Type Badge -->
 					<span class="machine-card-badge badge-slot">{%GENERATION%}</span>
 
-					<!-- Status Badge -->
-					<!--if:{CLOSED}-->
-					<span class="machine-status status-maintenance">営業時間外</span>
-					<!--/if:{CLOSED}-->
-					<!--if:{LINK_MAINTENANCE}-->
-					<span class="machine-status status-maintenance">メンテナンス</span>
-					<!--/if:{LINK_MAINTENANCE}-->
-					<!--if:{MAINTENANCE}-->
-					<span class="machine-status status-maintenance">メンテナンス</span>
-					<!--/if:{MAINTENANCE}-->
-					<!--if:{IN_PREPARATION}-->
-					<span class="machine-status status-playing">準備中</span>
-					<!--/if:{IN_PREPARATION}-->
-					<!--if:{IS_OPEN}-->
-						<!--if:{IS_NORMAL}-->
-							<!--if:{AVAILABLE}-->
-							<span class="machine-status status-available">空き台</span>
-							<!--/if:{AVAILABLE}-->
-							<!--if:{NOAVAIABLE}-->
-							<span class="machine-status status-playing">稼働中</span>
-							<!--/if:{NOAVAIABLE}-->
-						<!--/if:{IS_NORMAL}-->
-					<!--/if:{IS_OPEN}-->
-
 					<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}" class="machine-card-image">
 					<div class="machine-card-info">
 						<div class="machine-card-type">{%MAKER_NAME%}</div>

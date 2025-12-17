@@ -562,6 +562,14 @@ class TemplateUser extends SmartTemplate {
 			$this->assign("MACHINE_STATUS", $row["machine_status"], true);	// 実機状態
 			$this->assign("TESTER"        , ($isTester) ? 1 : 0, true);	// テスター
 
+			// ユーザー向け簡略3状態（空き台・使用中・準備中）
+			$isInUse = ($assignFlg == 1);
+			$isAvailable = ($assignFlg == 0 && $row["machine_status"] == 1 && $isOpen && !$isLinkMainte);
+			$isPreparing = !$isInUse && !$isAvailable;
+			$this->if_enable("STATUS_AVAILABLE", $isAvailable);   // 🟢 空き台
+			$this->if_enable("STATUS_INUSE", $isInUse);           // 🔴 使用中
+			$this->if_enable("STATUS_PREPARING", $isPreparing);   // 🟡 準備中
+
 			//
 			$this->loop_next();
 		}
