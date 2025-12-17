@@ -404,7 +404,8 @@ if (!defined('CHROME_RESTART_TIME')) define('CHROME_RESTART_TIME', 28800);  // C
 
 // お知らせ画面関連の定数
 if (!defined('ADMIN_PATH')) define('ADMIN_PATH', '/xxxadmin/');  // 管理画面パス
-if (!defined('DIR_IMG_NOTICE_DIR')) define('DIR_IMG_NOTICE_DIR', '/content/images/notice/');  // お知らせ画像ディレクトリ
+if (!defined('DIR_IMG_NOTICE_DIR')) define('DIR_IMG_NOTICE_DIR', '/content/images/notice/');  // お知らせ画像ディレクトリ（URL用）
+if (!defined('DIR_IMG_NOTICE')) define('DIR_IMG_NOTICE', __DIR__ . '/../content/images/notice/');  // お知らせ画像ディレクトリ（実パス）
 if (!defined('NOTICE_TITLE_MAX')) define('NOTICE_TITLE_MAX', 100);  // お知らせタイトル最大文字数
 if (!defined('NOTICE_SUB_TITLE_MAX')) define('NOTICE_SUB_TITLE_MAX', 200);  // お知らせサブタイトル最大文字数
 if (!defined('NOTICE_LIST_TITLE_MAX')) define('NOTICE_LIST_TITLE_MAX', 50);  // お知らせ一覧タイトル最大文字数

@@ -70,13 +70,15 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # 画像アップロード用ディレクトリ作成
 RUN mkdir -p /var/www/html/data/img/model \
-    && mkdir -p /var/www/html/data/uploads
+    && mkdir -p /var/www/html/data/uploads \
+    && mkdir -p /var/www/html/content/images/notice
 
 # 権限設定
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 777 /var/www/html/data/img/model \
-    && chmod -R 777 /var/www/html/data/uploads
+    && chmod -R 777 /var/www/html/data/uploads \
+    && chmod -R 777 /var/www/html/content/images/notice
 
 # カスタムエントリポイントをコピー（起動時にMPMクリーンアップ）
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
