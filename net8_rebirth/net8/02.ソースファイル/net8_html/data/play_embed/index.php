@@ -109,19 +109,10 @@ try {
     // シグナリングID取得
     $signalingId = $session['signaling_id'] ?? 1;
 
-    // シグナリングサーバーへ認証ID登録（重要：これがないとカメラが接続を拒否する）
-    if (!$webRTC->addKeySignaling($oneTimeAuthID, $signalingId)) {
-        error_log("❌ play_embed: Failed to register auth key with signaling server");
-        http_response_code(500);
-        outputError('シグナリングサーバーへの登録に失敗しました: ' . $webRTC->errorMessage());
-        exit;
-    }
-    error_log("✅ play_embed: Auth key registered with signaling server - authId={$oneTimeAuthID}, signalingId={$signalingId}");
-
     // メンバー番号をハッシュ化
     $memberNo = sha1(sprintf("%06d", $session['member_no']));
 
-    // シグナリングサーバー情報（$signalingIdは上で取得済み）
+    // シグナリングサーバー情報
     $sigServers = $GLOBALS["RTC_Signaling_Servers"] ?? [];
     $sigInfo = isset($sigServers[$signalingId]) ? explode(":", $sigServers[$signalingId]) : ['mgg-signaling-production-c1bd.up.railway.app', '443'];
     $sigHost = $sigInfo[0];
@@ -144,21 +135,66 @@ try {
         $layoutData["hide"][] = "nonepushorder";
     }
 
-    // lnk_machine を更新（台の使用状況）
-    $linkStmt = $pdo->prepare("
-        UPDATE lnk_machine
-        SET assign_flg = 1,
-            exit_flg = 0,
-            member_no = :member_no,
-            onetime_id = :onetime_id,
-            start_dt = NOW()
-        WHERE machine_no = :machine_no
-    ");
-    $linkStmt->execute([
-        'member_no' => $session['member_no'],
-        'onetime_id' => $oneTimeAuthID,
-        'machine_no' => $machineNo
-    ]);
+    // ★重要: play_v2と同じ順序で処理する（lnk_machine更新 → addKeySignaling）
+    // トランザクション開始
+    $pdo->beginTransaction();
+
+    try {
+        // lnk_machine を更新（台の使用状況）- FOR UPDATE で排他ロック
+        $linkStmt = $pdo->prepare("
+            SELECT machine_no, assign_flg, member_no
+            FROM lnk_machine
+            WHERE machine_no = :machine_no
+            FOR UPDATE
+        ");
+        $linkStmt->execute(['machine_no' => $machineNo]);
+        $linkRow = $linkStmt->fetch(PDO::FETCH_ASSOC);
+
+        // 既にアサインされているか確認（他のユーザーが使用中の場合）
+        if ($linkRow && $linkRow['assign_flg'] == '1' && $linkRow['member_no'] != $session['member_no']) {
+            $pdo->rollBack();
+            error_log("❌ play_embed: Machine already assigned to another user");
+            http_response_code(409);
+            outputError('この台は他のユーザーが使用中です');
+            exit;
+        }
+
+        // lnk_machine を更新
+        $updateStmt = $pdo->prepare("
+            UPDATE lnk_machine
+            SET assign_flg = 1,
+                exit_flg = 0,
+                member_no = :member_no,
+                onetime_id = :onetime_id,
+                start_dt = NOW()
+            WHERE machine_no = :machine_no
+        ");
+        $updateStmt->execute([
+            'member_no' => $session['member_no'],
+            'onetime_id' => $oneTimeAuthID,
+            'machine_no' => $machineNo
+        ]);
+
+        // コミット
+        $pdo->commit();
+        error_log("✅ play_embed: lnk_machine updated - machineNo={$machineNo}, member_no={$session['member_no']}, onetime_id={$oneTimeAuthID}");
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        error_log("❌ play_embed: Failed to update lnk_machine - " . $e->getMessage());
+        http_response_code(500);
+        outputError('台の確保に失敗しました');
+        exit;
+    }
+
+    // シグナリングサーバーへ認証ID登録（lnk_machine更新後に実行 - play_v2と同じ順序）
+    if (!$webRTC->addKeySignaling($oneTimeAuthID, $signalingId)) {
+        error_log("❌ play_embed: Failed to register auth key with signaling server");
+        http_response_code(500);
+        outputError('シグナリングサーバーへの登録に失敗しました: ' . $webRTC->errorMessage());
+        exit;
+    }
+    error_log("✅ play_embed: Auth key registered with signaling server - authId={$oneTimeAuthID}, signalingId={$signalingId}");
 
     // エラーメッセージ定義
     $errorMessages = [
