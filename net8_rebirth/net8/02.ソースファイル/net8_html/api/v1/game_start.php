@@ -61,6 +61,7 @@ if (!isset($input['modelId'])) {
 
 $modelId = $input['modelId'];
 $partnerUserId = $input['userId'] ?? null; // パートナー側のユーザーID（オプション）
+$requestedMachineNo = $input['machineNo'] ?? null; // 直接台番号を指定（オプション）
 
 try {
     $pdo = get_db_connection();
@@ -282,8 +283,34 @@ try {
             'camera_no' => null,
             'machine_status' => 0
         ];
+    } else if ($requestedMachineNo) {
+        // 台番号が直接指定された場合：その台を使用
+        error_log("📌 Using requested machine_no: {$requestedMachineNo}");
+        $machineSql = "SELECT
+                        m.machine_no,
+                        m.signaling_id,
+                        m.camera_no,
+                        m.machine_status
+                    FROM dat_machine m
+                    WHERE m.machine_no = :machine_no
+                    AND m.del_flg = 0
+                    LIMIT 1";
+
+        $stmt = $pdo->prepare($machineSql);
+        $stmt->execute(['machine_no' => $requestedMachineNo]);
+        $machine = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$machine) {
+            http_response_code(404);
+            echo json_encode([
+                'error' => 'MACHINE_NOT_FOUND',
+                'message' => 'Specified machine not found',
+                'machineNo' => $requestedMachineNo
+            ]);
+            exit;
+        }
     } else {
-        // 本番環境：実機を検索
+        // 本番環境：実機を検索（modelIdベース）
         $machineSql = "SELECT
                         m.machine_no,
                         m.signaling_id,
