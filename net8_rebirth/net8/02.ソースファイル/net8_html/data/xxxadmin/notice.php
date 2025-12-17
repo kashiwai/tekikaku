@@ -25,7 +25,16 @@
 
 // インクルード
 require_once('../../_etc/require_files_admin.php');			// requireファイル
-require_once('../../_sys/CloudStorageHelper.php');			// GCSヘルパー
+
+// GCSヘルパー読み込み（エラーハンドリング付き）
+$gcsHelperPath = '../../_sys/CloudStorageHelper.php';
+if (file_exists($gcsHelperPath)) {
+	try {
+		require_once($gcsHelperPath);
+	} catch (Exception $e) {
+		error_log('CloudStorageHelper読み込みエラー: ' . $e->getMessage());
+	}
+}
 // 項目定義
 define("PRE_HTML", basename(get_self(), ".php"));			// テンプレートHTMLプレフィックス
 
@@ -395,8 +404,15 @@ function RegistData($template) {
 	// トランザクション開始
 	$template->DB->autoCommit(false);
 	$mode = "";
-	// GCSヘルパー初期化
-	$gcs = new CloudStorageHelper();
+	// GCSヘルパー初期化（クラスが存在する場合のみ）
+	$gcs = null;
+	if (class_exists('CloudStorageHelper')) {
+		try {
+			$gcs = new CloudStorageHelper();
+		} catch (Exception $e) {
+			error_log('CloudStorageHelper初期化エラー: ' . $e->getMessage());
+		}
+	}
 
 	if ($_GET["ACT"] == "del") {
 		// 削除
@@ -416,7 +432,7 @@ function RegistData($template) {
 			if (mb_strlen($row["top_image"]) > 0) {
 				// GCS URLの場合はGCSから削除
 				if (strpos($row["top_image"], 'https://storage.googleapis.com/') === 0) {
-					$gcs->delete($row["top_image"]);
+					if ($gcs) $gcs->delete($row["top_image"]);
 				} else {
 					// ローカルファイルの場合
 					$delimage = DIR_IMG_NOTICE . $row["top_image"];
@@ -499,7 +515,7 @@ function RegistData($template) {
 					$filename = $upfile . "." . $ext;
 					$tmpPath = $_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name'];
 
-					if ($gcs->isEnabled()) {
+					if ($gcs && $gcs->isEnabled()) {
 						// GCSにアップロード
 						$gcsUrl = $gcs->upload($tmpPath, 'notice', $filename);
 						if ($gcsUrl) {
@@ -509,10 +525,14 @@ function RegistData($template) {
 								$oldFile[] = $_POST['TOP_IMAGE_'.$lang["lang"]];
 							}
 						} else {
-							throw new RuntimeException("画像のアップロードに失敗しました。");
+							throw new RuntimeException("画像のアップロードに失敗しました。（GCSエラー）");
 						}
 					} else {
 						// ローカルに保存（フォールバック）
+						// ディレクトリが存在しない場合は作成
+						if (!is_dir(DIR_IMG_NOTICE)) {
+							@mkdir(DIR_IMG_NOTICE, 0777, true);
+						}
 						if (move_uploaded_file($tmpPath, sprintf(DIR_IMG_NOTICE . '%s', $filename))) {
 							$topImage[$lang["lang"]] = $filename;
 							if (mb_strlen($_POST['TOP_IMAGE_'.$lang["lang"]]) > 0) {
@@ -522,7 +542,7 @@ function RegistData($template) {
 							}
 						} else {
 							$upfile = "";
-							throw new RuntimeException("画像のアップロードに失敗しました。");
+							throw new RuntimeException("画像のアップロードに失敗しました。（ローカル保存エラー: " . DIR_IMG_NOTICE . "）");
 						}
 					}
 				} catch (RuntimeException $e) {
@@ -536,7 +556,7 @@ function RegistData($template) {
 		foreach($oldFile as $file) {
 			// GCS URLの場合はGCSから削除
 			if (strpos($file, 'https://storage.googleapis.com/') === 0) {
-				$gcs->delete($file);
+				if ($gcs) $gcs->delete($file);
 			} else if (file_exists($file)) {
 				// ローカルファイルの場合
 				chmod($file, 0755);

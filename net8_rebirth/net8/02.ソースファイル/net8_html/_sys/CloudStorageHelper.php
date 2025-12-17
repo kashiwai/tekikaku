@@ -10,8 +10,43 @@
  * @since   2025/11/14
  */
 
-// Composer autoload
-require_once __DIR__ . '/../vendor/autoload.php';
+// Composer autoloadの安全な読み込み
+$autoloadPath = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+} else {
+    // autoloadが存在しない場合はダミークラスを定義
+    error_log('CloudStorageHelper: vendor/autoload.php not found at ' . $autoloadPath);
+    if (!class_exists('CloudStorageHelper')) {
+        class CloudStorageHelper {
+            public function __construct() {}
+            public function isEnabled() { return false; }
+            public function upload($localPath, $folder, $filename) { return false; }
+            public function delete($url) { return false; }
+            public function exists($url) { return false; }
+            public function listFiles($folder = '') { return []; }
+            public function uploadThumbnail($sourcePath, $folder, $filename, $maxWidth = 300) { return false; }
+        }
+    }
+    return; // autoloadがない場合は以降のクラス定義をスキップ
+}
+
+// Google Cloud Storage SDKクラスの存在確認
+if (!class_exists('Google\Cloud\Storage\StorageClient')) {
+    error_log('CloudStorageHelper: Google Cloud Storage SDK not installed');
+    if (!class_exists('CloudStorageHelper')) {
+        class CloudStorageHelper {
+            public function __construct() {}
+            public function isEnabled() { return false; }
+            public function upload($localPath, $folder, $filename) { return false; }
+            public function delete($url) { return false; }
+            public function exists($url) { return false; }
+            public function listFiles($folder = '') { return []; }
+            public function uploadThumbnail($sourcePath, $folder, $filename, $maxWidth = 300) { return false; }
+        }
+    }
+    return;
+}
 
 use Google\Cloud\Storage\StorageClient;
 
