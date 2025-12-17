@@ -392,28 +392,61 @@ function outputPlayerHTML($data) {
             <div id="video_overlay" class="video-overlay"></div>
         </div>
 
-        <!-- コントロールパネル -->
-        <div id="control_panel" class="control-panel" style="display:none;">
-            <div class="control-buttons">
-                <button id="btn_start" class="btn btn-game btn-start">START</button>
-                <button id="btn_stop" class="btn btn-game btn-stop" disabled>STOP</button>
+        <!-- play_v2互換コントロールパネル -->
+        <div id="control_panel" class="playing-controls" style="display:none;">
+            <!-- クレジットボックス -->
+            <div id="creditbox" class="creditbox">
+                <div class="credit-display">
+                    <span class="credit-label">CREDIT</span>
+                    <span id="credit" nextnumber="0">0</span>
+                </div>
+                <div id="animeField"><span id="animeNumber"></span></div>
             </div>
-            <div class="bet-controls">
-                <button id="btn_bet_down" class="btn btn-bet">-</button>
-                <span id="bet_amount">1</span>
-                <button id="btn_bet_up" class="btn btn-bet">+</button>
+
+            <!-- スロット用コントロール -->
+            <?php if ($isSlot): ?>
+            <div class="slot-controls">
+                <!-- MAXベット + スタート -->
+                <div class="control-row">
+                    <button class="btn-pressable maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false">MAX BET</button>
+                    <button id="sendBtnss" class="btn-pressable reel-start sendBtn" oncontextmenu="return false">START</button>
+                </div>
+                <!-- リールストップボタン -->
+                <div class="control-row reel-stops">
+                    <button class="btn-pressable reel-stop sendBtn" id="sendBtns1" oncontextmenu="return false">1</button>
+                    <button class="btn-pressable reel-stop sendBtn" id="sendBtns2" oncontextmenu="return false">2</button>
+                    <button class="btn-pressable reel-stop sendBtn" id="sendBtns3" oncontextmenu="return false">3</button>
+                </div>
+                <!-- オートプレイ -->
+                <div class="control-row">
+                    <button id="autoplay_credit" class="btn-pressable reel-start autoplay-off" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- パチンコ用コントロール -->
+            <div class="pachi-controls">
+                <div class="control-row">
+                    <button class="btn-pressable sendBtn" id="sendBtnph" oncontextmenu="return false">ハンドル</button>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- 精算・変換ボタン -->
+            <div class="control-row action-buttons">
+                <button class="btn-pressable" id="pay-button">精算</button>
+                <button class="btn-pressable" id="convcr-button">変換</button>
             </div>
         </div>
 
-        <!-- ステータスバー -->
+        <!-- ステータスバー（play_v2互換） -->
         <div id="status_bar" class="status-bar" style="display:none;">
             <div class="status-item">
-                <span class="status-label">CREDIT</span>
-                <span id="credit" class="status-value">0</span>
+                <span class="status-label">POINT</span>
+                <span id="playpoint" class="status-value">0</span>
             </div>
             <div class="status-item">
-                <span class="status-label">WIN</span>
-                <span id="win" class="status-value">0</span>
+                <span class="status-label">TOTAL</span>
+                <span id="total_count" class="status-value">0</span>
             </div>
         </div>
 

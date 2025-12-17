@@ -387,3 +387,213 @@ body.embed-mode {
 .parent-message.show {
     display: block;
 }
+
+/* ========================================
+   play_v2互換コントロールスタイル
+   ======================================== */
+
+/* コントロールパネル（play_v2互換） */
+.playing-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+    padding: 15px;
+    z-index: 100;
+}
+
+/* クレジットボックス */
+.creditbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+}
+
+.credit-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.credit-label {
+    font-size: 12px;
+    color: #888;
+}
+
+#credit {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffd700;
+    font-family: 'Chakra Petch', monospace;
+}
+
+#animeField {
+    position: relative;
+}
+
+#animeNumber {
+    position: absolute;
+    color: #00ff00;
+    font-size: 28px;
+    font-weight: bold;
+    opacity: 0;
+}
+
+/* スロットコントロール */
+.slot-controls, .pachi-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.control-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.control-row.reel-stops {
+    gap: 10px;
+}
+
+/* btn-pressable（play_v2互換） */
+.btn-pressable {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: linear-gradient(145deg, #444, #333);
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.btn-pressable:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+}
+
+/* MAXベットボタン */
+.btn-pressable.maxbet {
+    background: linear-gradient(145deg, #ff9800, #e65100);
+    color: #fff;
+    min-width: 100px;
+}
+
+.btn-pressable.maxbet:active {
+    background: linear-gradient(145deg, #e65100, #ff9800);
+}
+
+/* スタートボタン */
+.btn-pressable.reel-start {
+    background: linear-gradient(145deg, #4caf50, #2e7d32);
+    color: #fff;
+    min-width: 120px;
+    font-size: 18px;
+}
+
+.btn-pressable.reel-start:active {
+    background: linear-gradient(145deg, #2e7d32, #4caf50);
+}
+
+/* オートプレイ */
+.btn-pressable.autoplay-off {
+    background: linear-gradient(145deg, #607d8b, #455a64);
+}
+
+.btn-pressable.autoplay-on {
+    background: linear-gradient(145deg, #f44336, #c62828);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* リールストップボタン */
+.btn-pressable.reel-stop {
+    width: 70px;
+    height: 60px;
+    background: linear-gradient(145deg, #2196f3, #1565c0);
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.btn-pressable.reel-stop:active {
+    background: linear-gradient(145deg, #1565c0, #2196f3);
+}
+
+/* 精算・変換ボタン */
+.action-buttons {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+#pay-button {
+    background: linear-gradient(145deg, #9c27b0, #6a1b9a);
+}
+
+#convcr-button {
+    background: linear-gradient(145deg, #00bcd4, #00838f);
+}
+
+/* sendBtnクラス共通 */
+.sendBtn {
+    position: relative;
+    overflow: hidden;
+}
+
+.sendBtn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.sendBtn:active::after {
+    width: 200px;
+    height: 200px;
+}
+
+/* レスポンシブ（モバイル対応） */
+@media (max-width: 480px) {
+    .btn-pressable {
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+
+    .btn-pressable.reel-stop {
+        width: 55px;
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .btn-pressable.reel-start {
+        min-width: 90px;
+        font-size: 14px;
+    }
+
+    #credit {
+        font-size: 22px;
+    }
+}
