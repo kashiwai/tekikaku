@@ -272,20 +272,12 @@ try {
         }
     }
 
-    // 2. 利用可能なマシンを検索（環境別処理）
+    // 2. 利用可能なマシンを検索（machineNo指定優先）
     $machine = null;
 
-    if ($environment === 'test' || $environment === 'staging') {
-        // テスト/ステージング環境：モックマシンを生成
-        $machine = [
-            'machine_no' => 9999,  // モックマシン番号
-            'signaling_id' => 'mock_sig_' . substr(md5($modelId), 0, 8),
-            'camera_no' => null,
-            'machine_status' => 0
-        ];
-    } else if ($requestedMachineNo) {
-        // 台番号が直接指定された場合：その台を使用
-        error_log("📌 Using requested machine_no: {$requestedMachineNo}");
+    if ($requestedMachineNo) {
+        // 台番号が直接指定された場合：環境に関係なくその台を使用（最優先）
+        error_log("📌 Using requested machine_no: {$requestedMachineNo} (overrides environment: {$environment})");
         $machineSql = "SELECT
                         m.machine_no,
                         m.signaling_id,
@@ -309,6 +301,16 @@ try {
             ]);
             exit;
         }
+        // machineNoが指定された場合は本番モードとして扱う
+        $environment = 'production';
+    } else if ($environment === 'test' || $environment === 'staging') {
+        // テスト/ステージング環境（machineNo未指定時）：モックマシンを生成
+        $machine = [
+            'machine_no' => 9999,  // モックマシン番号
+            'signaling_id' => 'mock_sig_' . substr(md5($modelId), 0, 8),
+            'camera_no' => null,
+            'machine_status' => 0
+        ];
     } else {
         // 本番環境：実機を検索（modelIdベース）
         $machineSql = "SELECT
