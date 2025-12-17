@@ -232,15 +232,23 @@
         isConnected: function() {
             var video = document.getElementById('video');
 
-            // デバッグ情報をコンソールに出力
-            console.log('🔍 isConnected check:', {
+            // デバッグ情報を親フレームに送信
+            var debugInfo = {
                 _sconnect_exists: typeof _sconnect !== 'undefined',
                 _sconnect_open: typeof _sconnect !== 'undefined' && _sconnect ? _sconnect.open : 'N/A',
                 video_exists: !!video,
                 video_srcObject: video ? !!video.srcObject : false,
                 video_paused: video ? video.paused : 'N/A',
                 video_readyState: video ? video.readyState : 'N/A'
-            });
+            };
+
+            // 親フレームにデバッグ情報を送信
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'NET8_DEBUG',
+                    debug: debugInfo
+                }, '*');
+            }
 
             // _sconnect (view_auth.jsのグローバル変数) をチェック
             if (typeof _sconnect !== 'undefined' && _sconnect && _sconnect.open === true) {
