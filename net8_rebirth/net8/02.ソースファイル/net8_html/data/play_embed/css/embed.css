@@ -628,11 +628,21 @@ body.embed-mode {
    映像とコントロールが被らない構成
    ======================================== */
 
-/* play_embed独自のコントロールパネルは非表示（play_v2のコントロールを使用） */
-.embed-mode #control_panel.playing-controls,
+/* play_embedのコントロールパネルを表示（ステータスバーと終了ボタンのみ非表示） */
 .embed-mode #status_bar,
 .embed-mode #exit_area {
     display: none !important;
+}
+
+/* コントロールパネルは表示する */
+.embed-mode #control_panel.playing-controls {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 280px !important;
+    background: linear-gradient(to top, #0a0a0f, #151520) !important;
+    padding: 15px !important;
+    border-top: 2px solid #333 !important;
 }
 
 /* メインコンテンツエリア - 580px (映像300px + コントロール280px) */
