@@ -288,6 +288,12 @@ function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
  * @return array 取引情報
  */
 function depositPoints($pdo, $userId, $amount, $description = 'Korea point deposit') {
+    // sdk_usersからmember_noを取得（mst_memberと紐づけ）
+    $stmt = $pdo->prepare("SELECT member_no FROM sdk_users WHERE id = :user_id");
+    $stmt->execute(['user_id' => $userId]);
+    $sdkUser = $stmt->fetch(PDO::FETCH_ASSOC);
+    $memberNo = $sdkUser ? $sdkUser['member_no'] : null;
+
     // 現在の残高を取得（FOR UPDATE でロック）
     $stmt = $pdo->prepare("
         SELECT balance
@@ -332,6 +338,20 @@ function depositPoints($pdo, $userId, $amount, $description = 'Korea point depos
         ]);
     }
 
+    // ★ mst_member.point にもポイントを追加（カメラ側が参照するため）
+    if ($memberNo) {
+        $stmt = $pdo->prepare("
+            UPDATE mst_member
+            SET point = point + :amount
+            WHERE member_no = :member_no
+        ");
+        $stmt->execute([
+            'amount' => $amount,
+            'member_no' => $memberNo
+        ]);
+        error_log("💰 Also updated mst_member.point: member_no={$memberNo}, added={$amount}");
+    }
+
     // 取引履歴を記録
     $transactionId = 'txn_deposit_' . uniqid() . '_' . time();
 
@@ -351,13 +371,14 @@ function depositPoints($pdo, $userId, $amount, $description = 'Korea point depos
         'description' => $description
     ]);
 
-    error_log("💰 Deposited {$amount} points: user_id={$userId}, balance={$balanceBefore} -> {$balanceAfter}");
+    error_log("💰 Deposited {$amount} points: user_id={$userId}, member_no={$memberNo}, balance={$balanceBefore} -> {$balanceAfter}");
 
     return [
         'transaction_id' => $transactionId,
         'balance_before' => $balanceBefore,
         'balance_after' => $balanceAfter,
-        'amount' => $amount
+        'amount' => $amount,
+        'member_no' => $memberNo
     ];
 }
 
