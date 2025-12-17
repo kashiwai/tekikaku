@@ -534,9 +534,9 @@ try {
             'mock' => true
         ];
     } else {
-        // 本番環境：実際のカメラ情報（camera_name = PeerID も取得）
+        // 本番環境：実際のカメラ情報（camera_name = PeerID）
         if ($machine['camera_no']) {
-            $cameraSql = "SELECT camera_url, camera_name FROM mst_camera
+            $cameraSql = "SELECT camera_no, camera_name, camera_mac FROM mst_camera
                           WHERE camera_no = :camera_no AND del_flg = 0";
             $stmt = $pdo->prepare($cameraSql);
             $stmt->execute(['camera_no' => $machine['camera_no']]);
@@ -544,11 +544,11 @@ try {
             if ($camera) {
                 $cameraInfo = [
                     'cameraNo' => $machine['camera_no'],
-                    'streamUrl' => $camera['camera_url'],
-                    'peerId' => $camera['camera_name'],      // WebRTC PeerID
-                    'cameraName' => $camera['camera_name']   // 互換性のため両方
+                    'peerId' => $camera['camera_name'],      // WebRTC PeerID（カメラのPeer名）
+                    'cameraName' => $camera['camera_name'],  // 互換性のため両方
+                    'cameraMac' => $camera['camera_mac']     // MACアドレス
                 ];
-                error_log("✅ Camera info: camera_no={$machine['camera_no']}, peerId={$camera['camera_name']}");
+                error_log("✅ Camera info: camera_no={$machine['camera_no']}, peerId={$camera['camera_name']}, mac={$camera['camera_mac']}");
             }
         }
     }
