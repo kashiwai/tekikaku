@@ -12,6 +12,8 @@ body.embed-mode {
     background: #000;
     width: 100%;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ローディング画面 */
@@ -73,25 +75,25 @@ body.embed-mode {
     transition: all 0.3s ease;
 }
 
-/* ビデオコンテナ - 映像エリア（上部60%） */
+/* ビデオコンテナ - 映像エリア（フレキシブル、コントロールと被らない） */
 .video-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 55vh;
+    flex: 1;
+    min-height: 0;
     background: #000;
     overflow: hidden;
-    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* playing-screen（play_v2互換 - setVideoWidth()が参照） */
 .playing-screen {
-    position: relative;
     width: 100%;
     height: 100%;
     background: #000;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .playing-screen.landscape {
@@ -99,27 +101,13 @@ body.embed-mode {
 }
 
 #video {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
     background: #000;
     display: block;
-}
-
-/* コントロールエリア（下部45%） */
-.embed-mode .controls-area,
-.embed-mode #panel-play,
-.embed-mode .playing-controls {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    height: 45vh !important;
-    background: linear-gradient(to top, rgba(0,0,0,0.98), rgba(20,20,30,0.95)) !important;
-    overflow-y: auto !important;
-    padding: 10px !important;
-    z-index: 10 !important;
 }
 
 .video-overlay {
@@ -639,6 +627,7 @@ body.embed-mode {
 
 /* ========================================
    埋め込みモード専用レイアウト調整
+   映像とコントロールが被らない構成
    ======================================== */
 
 /* play_embed独自のコントロールパネルは非表示（play_v2のコントロールを使用） */
@@ -648,49 +637,84 @@ body.embed-mode {
     display: none !important;
 }
 
-/* play_v2のメインコントロール（#panel-play）を下部に固定 */
-.embed-mode #panel-play {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: auto !important;
-    max-height: 45vh !important;
-    background: linear-gradient(to top, #0a0a0f, #151520) !important;
-    padding: 15px !important;
-    z-index: 100 !important;
-    overflow-y: auto !important;
-    border-top: 1px solid #333 !important;
+/* メインコンテンツエリア */
+.embed-mode main.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
-/* ローディング画面を映像エリアに合わせる */
+/* play_v2のメインコントロール（#panel-play）を下部に配置（被らない） */
+.embed-mode #panel-play,
+.embed-mode .controls-area {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    width: 100% !important;
+    max-height: 280px !important;
+    min-height: 200px !important;
+    background: linear-gradient(to top, #0a0a0f, #151520) !important;
+    padding: 12px 15px !important;
+    overflow-y: auto !important;
+    border-top: 2px solid #333 !important;
+}
+
+/* ローディング画面 */
 .embed-mode #loading {
-    height: 55vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
 }
 
 /* play_v2のクレジットボックスをコンパクトに */
 .embed-mode #creditbox {
-    padding: 8px 15px !important;
-    margin-bottom: 10px !important;
+    padding: 6px 12px !important;
+    margin-bottom: 8px !important;
+}
+
+.embed-mode #creditbox .num-value {
+    font-size: 20px !important;
 }
 
 /* play_v2のボタンをコンパクトに */
 .embed-mode .playing-btn {
-    gap: 8px !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
 }
 
 .embed-mode .btn-pressable {
-    padding: 12px 20px !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
 }
 
 .embed-mode .reel-stop {
-    width: 60px !important;
-    height: 50px !important;
+    width: 55px !important;
+    height: 45px !important;
+    font-size: 16px !important;
+}
+
+.embed-mode .reel-start {
+    min-width: 80px !important;
+    padding: 10px 20px !important;
+}
+
+.embed-mode .maxbet {
+    min-width: 80px !important;
 }
 
 /* オートプレイパネル */
 .embed-mode #play-auto {
-    padding: 10px !important;
+    padding: 8px !important;
+}
+
+.embed-mode #play-auto .form-control {
+    height: 32px !important;
+    font-size: 12px !important;
 }
 
 /* コンテナのRowレイアウト調整 */
@@ -702,4 +726,16 @@ body.embed-mode {
     max-width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+    flex: none !important;
+}
+
+/* play_v2の余白調整 */
+.embed-mode .mx-2 {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+.embed-mode .my-3 {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
 }
