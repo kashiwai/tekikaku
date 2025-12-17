@@ -5,19 +5,11 @@
  * SDK API経由のsessionId認証のみで動作（通常ログイン不要）
  * 外部サイトからのiFrame埋め込み用
  *
- * Version: 1.0.0
+ * Version: 1.0.1
  * Created: 2025-12-17
  */
 
-// セッション開始
-session_start();
-
-// エラー表示設定
-error_reporting(E_ALL);
-ini_set('display_errors', '0');
-ini_set('log_errors', '1');
-
-// CORS設定（外部サイトからの埋め込みを許可）
+// CORS設定（外部サイトからの埋め込みを許可）- 最初に設定
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -29,9 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// 必要なファイルの読み込み
-require_once('../../_etc/setting_base.php');
-require_once('../../_lib/SmartDB.php');
+// 既存のrequire_filesを使用
+require_once('../../_etc/require_files.php');
 require_once('../../_sys/WebRTCAPI.php');
 require_once('../../_etc/webRTC_setting.php');
 
@@ -50,9 +41,8 @@ if (!$machineNo || !$sessionId) {
 error_log("🎮 play_embed: Validating session - machineNo={$machineNo}, sessionId={$sessionId}");
 
 try {
-    // DB接続
-    $db = new SmartDB(DB_DSN);
-    $pdo = $db->getInstance();
+    // DB接続（既存の方法を使用）
+    $pdo = get_db_connection();
 
     // sessionIdを検証（game_sessionsテーブル）
     $stmt = $pdo->prepare("
@@ -121,7 +111,8 @@ try {
 
     // シグナリングサーバー情報
     $signalingId = $session['signaling_id'] ?? 1;
-    $sigInfo = explode(":", $GLOBALS["RTC_Signaling_Servers"][$signalingId] ?? $GLOBALS["RTC_Signaling_Servers"][1]);
+    $sigServers = $GLOBALS["RTC_Signaling_Servers"] ?? [];
+    $sigInfo = isset($sigServers[$signalingId]) ? explode(":", $sigServers[$signalingId]) : ['mgg-signaling-production-c1bd.up.railway.app', '443'];
     $sigHost = $sigInfo[0];
     $sigPort = $sigInfo[1] ?? '443';
 
@@ -156,9 +147,6 @@ try {
         'onetime_id' => $oneTimeAuthID,
         'machine_no' => $machineNo
     ]);
-
-    // シグナリングサーバーへの登録（必要に応じて）
-    // $webRTC->addKeySignaling($oneTimeAuthID, $signalingId);
 
     // エラーメッセージ定義
     $errorMessages = [
@@ -202,10 +190,14 @@ try {
         'username' => 'Player'
     ]);
 
+} catch (PDOException $e) {
+    error_log("❌ play_embed DB error: " . $e->getMessage());
+    http_response_code(500);
+    outputError('データベースエラー: ' . $e->getMessage());
 } catch (Exception $e) {
     error_log("❌ play_embed error: " . $e->getMessage());
     http_response_code(500);
-    outputError('サーバーエラーが発生しました: ' . $e->getMessage());
+    outputError('サーバーエラー: ' . $e->getMessage());
 }
 
 /**
@@ -256,6 +248,16 @@ function outputError($message) {
         <div class="error-message"><?= htmlspecialchars($message) ?></div>
         <div class="error-detail">セッションが無効か、接続に問題があります。</div>
     </div>
+    <script>
+        // 親ウィンドウにエラー通知
+        if (window.parent !== window) {
+            window.parent.postMessage({
+                type: 'NET8_ERROR',
+                error: 'initialization_failed',
+                message: '<?= addslashes($message) ?>'
+            }, '*');
+        }
+    </script>
 </body>
 </html>
     <?php
@@ -285,7 +287,7 @@ function outputPlayerHTML($data) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Chakra+Petch" rel="stylesheet">
 
-    <!-- Play CSS (play_v2のCSSを使用) -->
+    <!-- Play CSS -->
     <link href="/css/play.css?ts=<?= $timestamp ?>" rel="stylesheet">
     <link href="/data/play_embed/css/embed.css?ts=<?= $timestamp ?>" rel="stylesheet">
 </head>
@@ -304,8 +306,8 @@ function outputPlayerHTML($data) {
     var purchase       = [];
     var errorMessages  = <?= $errorMessagesJson ?>;
     var layoutOption   = <?= $layoutJson ?>;
-    var convCredit     = <?= $data['convCredit'] ?>;
-    var convPlaypoint  = <?= $data['convPlaypoint'] ?>;
+    var convCredit     = <?= (int)$data['convCredit'] ?>;
+    var convPlaypoint  = <?= (int)$data['convPlaypoint'] ?>;
     var browserVersion = 'embed/1.0';
     var username       = '<?= htmlspecialchars($data['username']) ?>';
     var closeTime      = '06:00';
@@ -314,6 +316,13 @@ function outputPlayerHTML($data) {
 
     // 埋め込みモードフラグ
     var isEmbedMode    = true;
+
+    console.log('🎮 NET8 Embed Player Config:', {
+        machineNo: machineno,
+        cameraId: cameraid,
+        sigHost: sigHost,
+        sigPort: sigPort
+    });
 </script>
 <script>
     // ダブルタップによる拡大を禁止
@@ -413,13 +422,6 @@ function outputPlayerHTML($data) {
         </div>
     </main>
 
-    <!-- フッター -->
-    <footer class="embed-footer" style="display:none;">
-        <div class="model-info">
-            <span class="model-name"><?= htmlspecialchars($data['modelName']) ?></span>
-        </div>
-    </footer>
-
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
@@ -437,7 +439,7 @@ function outputPlayerHTML($data) {
     <script src="/data/play_embed/js/embed_player.js?ts=<?= $timestamp ?>"></script>
 
     <script>
-        // 初期化
+        // 初期化 - 親ウィンドウに準備完了を通知
         $(document).ready(function() {
             console.log('🎮 NET8 Embed Player initialized');
             console.log('📹 Camera ID:', cameraid);
@@ -448,7 +450,8 @@ function outputPlayerHTML($data) {
                 window.parent.postMessage({
                     type: 'NET8_PLAYER_READY',
                     machineNo: machineno,
-                    sessionId: sessionId
+                    sessionId: sessionId,
+                    cameraId: cameraid
                 }, '*');
             }
         });
