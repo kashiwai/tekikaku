@@ -373,12 +373,30 @@ function outputPlayerHTML($data) {
     // 埋め込みモードフラグ
     var isEmbedMode    = true;
 
+    // ★重要: view_auth.jsより先にgameオブジェクトを定義
+    // 韓国側からのポイントを初期残高として設定
+    var game = {
+        'credit'      : initialCredit,
+        'playpoint'   : initialPoints,  // 韓国側のポイント残高
+        'drawpoint'   : 0,
+        'total_count' : 0,
+        'bb_count'    : 0,
+        'rb_count'    : 0,
+        'count'       : 0,
+        'min_credit'  : 2,
+        'ccc_status'  : '',
+        'in_credit'   : 0
+    };
+
     console.log('🎮 NET8 Embed Player Config:', {
         machineNo: machineno,
         cameraId: cameraid,
         sigHost: sigHost,
-        sigPort: sigPort
+        sigPort: sigPort,
+        initialPoints: initialPoints,
+        initialCredit: initialCredit
     });
+    console.log('💰 Game object initialized with Korean points:', game.playpoint);
 </script>
 <script>
     // ダブルタップによる拡大を禁止
@@ -452,11 +470,19 @@ function outputPlayerHTML($data) {
 
         <!-- play_v2互換コントロールパネル -->
         <div id="control_panel" class="playing-controls">
+            <!-- ポイント残高（韓国側から渡される） -->
+            <div id="pointbox" class="pointbox">
+                <div class="point-display">
+                    <span class="point-label">残高 (PT)</span>
+                    <span id="playpoint" class="playpoint-value"><?= (int)$data['initialPoints'] ?></span>
+                </div>
+            </div>
+
             <!-- クレジットボックス -->
             <div id="creditbox" class="creditbox">
                 <div class="credit-display">
                     <span class="credit-label">CREDIT</span>
-                    <span id="credit" nextnumber="0">0</span>
+                    <span id="credit" nextnumber="0"><?= (int)$data['initialCredit'] ?></span>
                 </div>
                 <div id="animeField"><span id="animeNumber"></span></div>
             </div>
@@ -669,26 +695,19 @@ function outputPlayerHTML($data) {
             console.log('🎮 NET8 Embed Player initialized');
             console.log('📹 Camera ID:', cameraid);
             console.log('🔌 Signaling:', sigHost + ':' + sigPort);
-            console.log('💰 Initial Points:', initialPoints, 'Credit:', initialCredit);
+            console.log('💰 Korean Points (Balance):', initialPoints, 'Credit:', initialCredit);
 
-            // 初期ポイント・クレジットの表示
-            if (initialPoints > 0) {
-                $('#point').text(initialPoints);
-                $('#playpoint').text(initialPoints);
-                $('#modal-playpoint').text(initialPoints);
-                // view_auth.jsのgame.playpointを初期化
-                if (typeof game !== 'undefined') {
-                    game.playpoint = initialPoints;
-                }
-            }
-            if (initialCredit > 0) {
-                $('#credit').text(initialCredit);
-                $('#modal-credit').text(initialCredit);
-                // view_auth.jsのgame.creditを初期化
-                if (typeof game !== 'undefined') {
-                    game.credit = initialCredit;
-                }
-            }
+            // 韓国側からのポイントを残高として表示
+            // game.playpoint はすでに設定済み（headセクションで初期化）
+            $('#point').text(game.playpoint);
+            $('#playpoint').text(game.playpoint);
+            $('#modal-playpoint').text(game.playpoint);
+
+            // クレジットの表示
+            $('#credit').text(game.credit);
+            $('#modal-credit').text(game.credit);
+
+            console.log('💰 Balance initialized - Playpoint:', game.playpoint, 'Credit:', game.credit);
 
             // 親ウィンドウにready通知
             if (window.parent !== window) {
@@ -697,11 +716,20 @@ function outputPlayerHTML($data) {
                     machineNo: machineno,
                     sessionId: sessionId,
                     cameraId: cameraid,
-                    points: initialPoints,
-                    credit: initialCredit
+                    points: game.playpoint,
+                    credit: game.credit
                 }, '*');
             }
         });
+
+        // ポイント表示を定期的に更新（game.playpointの変更を反映）
+        setInterval(function() {
+            if (typeof game !== 'undefined') {
+                $('#point').text(game.playpoint);
+                $('#playpoint').text(game.playpoint);
+                $('#credit').text(game.credit);
+            }
+        }, 500);
     </script>
 </body>
 </html>
