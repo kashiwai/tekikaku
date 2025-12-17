@@ -73,13 +73,16 @@ body.embed-mode {
     transition: all 0.3s ease;
 }
 
-/* ビデオコンテナ */
+/* ビデオコンテナ - 映像エリア（上部60%） */
 .video-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55vh;
     background: #000;
     overflow: hidden;
+    z-index: 1;
 }
 
 /* playing-screen（play_v2互換 - setVideoWidth()が参照） */
@@ -97,11 +100,26 @@ body.embed-mode {
 
 #video {
     width: 100%;
-    height: auto;
-    max-height: 100%;
+    height: 100%;
     object-fit: contain;
     background: #000;
     display: block;
+}
+
+/* コントロールエリア（下部45%） */
+.embed-mode .controls-area,
+.embed-mode #panel-play,
+.embed-mode .playing-controls {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    height: 45vh !important;
+    background: linear-gradient(to top, rgba(0,0,0,0.98), rgba(20,20,30,0.95)) !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+    z-index: 10 !important;
 }
 
 .video-overlay {
@@ -113,7 +131,13 @@ body.embed-mode {
     pointer-events: none;
 }
 
-/* ナビゲーションバー */
+/* ナビゲーションバー - 埋め込みモードでは非表示（korea_net8frontが表示） */
+.embed-mode .navbar.fixed-top,
+.embed-mode nav.navbar {
+    display: none !important;
+}
+
+/* play_v2のナビをコンパクトに表示する場合 */
 .navbar.fixed-top {
     background: rgba(0, 0, 0, 0.85) !important;
     padding: 8px 15px;
@@ -611,4 +635,71 @@ body.embed-mode {
     #credit {
         font-size: 22px;
     }
+}
+
+/* ========================================
+   埋め込みモード専用レイアウト調整
+   ======================================== */
+
+/* play_embed独自のコントロールパネルは非表示（play_v2のコントロールを使用） */
+.embed-mode #control_panel.playing-controls,
+.embed-mode #status_bar,
+.embed-mode #exit_area {
+    display: none !important;
+}
+
+/* play_v2のメインコントロール（#panel-play）を下部に固定 */
+.embed-mode #panel-play {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: auto !important;
+    max-height: 45vh !important;
+    background: linear-gradient(to top, #0a0a0f, #151520) !important;
+    padding: 15px !important;
+    z-index: 100 !important;
+    overflow-y: auto !important;
+    border-top: 1px solid #333 !important;
+}
+
+/* ローディング画面を映像エリアに合わせる */
+.embed-mode #loading {
+    height: 55vh !important;
+}
+
+/* play_v2のクレジットボックスをコンパクトに */
+.embed-mode #creditbox {
+    padding: 8px 15px !important;
+    margin-bottom: 10px !important;
+}
+
+/* play_v2のボタンをコンパクトに */
+.embed-mode .playing-btn {
+    gap: 8px !important;
+}
+
+.embed-mode .btn-pressable {
+    padding: 12px 20px !important;
+}
+
+.embed-mode .reel-stop {
+    width: 60px !important;
+    height: 50px !important;
+}
+
+/* オートプレイパネル */
+.embed-mode #play-auto {
+    padding: 10px !important;
+}
+
+/* コンテナのRowレイアウト調整 */
+.embed-mode .container,
+.embed-mode .row,
+.embed-mode .col-lg-4,
+.embed-mode .col-lg-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
