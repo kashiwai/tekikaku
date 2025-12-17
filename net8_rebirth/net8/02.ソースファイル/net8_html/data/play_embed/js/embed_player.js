@@ -228,10 +228,22 @@
         },
 
         // 接続状態確認
+        // view_auth.jsでは_sconnectがグローバル変数（dataConnectionはローカル）
         isConnected: function() {
-            return typeof dataConnection !== 'undefined' &&
-                   dataConnection &&
-                   dataConnection.open === true;
+            // _sconnect (view_auth.jsのグローバル変数) をチェック
+            if (typeof _sconnect !== 'undefined' && _sconnect && _sconnect.open === true) {
+                return true;
+            }
+            // dataConnection もフォールバックとしてチェック
+            if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open === true) {
+                return true;
+            }
+            // 映像が流れているかもチェック（ビデオ要素の再生状態）
+            var video = document.getElementById('video');
+            if (video && video.srcObject && !video.paused && video.readyState >= 2) {
+                return true;
+            }
+            return false;
         }
     };
 
