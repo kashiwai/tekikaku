@@ -491,8 +491,71 @@ function outputPlayerHTML($data) {
 
             <!-- 精算・変換ボタン -->
             <div class="control-row action-buttons">
-                <button class="btn-pressable" id="pay-button">精算</button>
-                <button class="btn-pressable" id="convcr-button">変換</button>
+                <button class="btn-pressable" id="pay-button" onclick="showPayModal()">精算</button>
+                <button class="btn-pressable" id="convcr-button" onclick="showConvModal()">変換</button>
+            </div>
+        </div>
+
+        <!-- クレジット変換モーダル -->
+        <div id="convcr-modal" class="embed-modal" style="display:none;">
+            <div class="embed-modal-content">
+                <div class="embed-modal-header">
+                    <h3>クレジット変換</h3>
+                    <button class="embed-modal-close" onclick="hideConvModal()">&times;</button>
+                </div>
+                <div class="embed-modal-body">
+                    <p>変換金額を選択してください</p>
+                    <p class="current-points">現在のポイント: <span id="modal-playpoint">0</span> pt</p>
+                    <div class="conv-buttons">
+                        <button class="conv-amount-btn" data-amount="500" onclick="convertCredit(500)">
+                            500 クレジット (2,500pt)
+                        </button>
+                        <button class="conv-amount-btn" data-amount="1000" onclick="convertCredit(1000)">
+                            1,000 クレジット (5,000pt)
+                        </button>
+                        <button class="conv-amount-btn" data-amount="3000" onclick="convertCredit(3000)">
+                            3,000 クレジット (15,000pt)
+                        </button>
+                        <button class="conv-amount-btn" data-amount="5000" onclick="convertCredit(5000)">
+                            5,000 クレジット (25,000pt)
+                        </button>
+                    </div>
+                    <button class="conv-all-btn" onclick="convertAllCredit()">
+                        全額変換
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 精算モーダル -->
+        <div id="pay-modal" class="embed-modal" style="display:none;">
+            <div class="embed-modal-content">
+                <div class="embed-modal-header">
+                    <h3>精算確認</h3>
+                    <button class="embed-modal-close" onclick="hidePayModal()">&times;</button>
+                </div>
+                <div class="embed-modal-body">
+                    <p>現在のクレジットを精算してゲームを終了しますか？</p>
+                    <p class="current-credit">現在のクレジット: <span id="modal-credit">0</span></p>
+                    <div class="pay-buttons">
+                        <button class="pay-confirm-btn" onclick="confirmPay()">精算する</button>
+                        <button class="pay-cancel-btn" onclick="hidePayModal()">キャンセル</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- エラーモーダル -->
+        <div id="error-modal" class="embed-modal" style="display:none;">
+            <div class="embed-modal-content">
+                <div class="embed-modal-header">
+                    <h3 id="error-modal_title">エラー</h3>
+                    <button class="embed-modal-close" onclick="hideErrorModal()">&times;</button>
+                </div>
+                <div class="embed-modal-body">
+                    <p id="error-modal_message"></p>
+                    <button class="pay-cancel-btn" onclick="hideErrorModal()">OK</button>
+                </div>
             </div>
         </div>
 
@@ -532,6 +595,75 @@ function outputPlayerHTML($data) {
     <script src="/data/play_embed/js/embed_player.js?ts=<?= $timestamp ?>"></script>
 
     <script>
+        // モーダル表示関数
+        function showConvModal() {
+            $('#modal-playpoint').text(game.playpoint || 0);
+            $('#convcr-modal').fadeIn(200);
+        }
+        function hideConvModal() {
+            $('#convcr-modal').fadeOut(200);
+        }
+        function showPayModal() {
+            $('#modal-credit').text(game.credit || 0);
+            $('#pay-modal').fadeIn(200);
+        }
+        function hidePayModal() {
+            $('#pay-modal').fadeOut(200);
+        }
+        function hideErrorModal() {
+            $('#error-modal').fadeOut(200);
+        }
+
+        // クレジット変換（金額指定）
+        function convertCredit(amount) {
+            console.log('💰 Converting credit:', amount);
+            hideConvModal();
+            if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
+                // cca コマンド: Convert Credit Amount
+                dataConnection.send(_sendStr('cca', amount));
+            } else {
+                console.error('DataConnection not available');
+                showError('接続エラー', '台との接続が確立されていません');
+            }
+        }
+
+        // 全額変換
+        function convertAllCredit() {
+            console.log('💰 Converting all credit');
+            hideConvModal();
+            if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
+                // ccc コマンド: Convert Credit (全額)
+                dataConnection.send(_sendStr('ccc', ''));
+            } else {
+                console.error('DataConnection not available');
+                showError('接続エラー', '台との接続が確立されていません');
+            }
+        }
+
+        // 精算実行
+        function confirmPay() {
+            console.log('💳 Confirming payment');
+            hidePayModal();
+            if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
+                dataConnection.send(_sendStr('pay', ''));
+            } else {
+                console.error('DataConnection not available');
+                showError('接続エラー', '台との接続が確立されていません');
+            }
+        }
+
+        // エラー表示
+        function showError(title, message) {
+            $('#error-modal_title').text(title);
+            $('#error-modal_message').text(message);
+            $('#error-modal').fadeIn(200);
+        }
+
+        // view_auth.jsのerrorAlert関数をオーバーライド
+        function errorAlert(message, title) {
+            showError(title || 'エラー', message);
+        }
+
         // 初期化 - 親ウィンドウに準備完了を通知
         $(document).ready(function() {
             console.log('🎮 NET8 Embed Player initialized');
@@ -543,6 +675,7 @@ function outputPlayerHTML($data) {
             if (initialPoints > 0) {
                 $('#point').text(initialPoints);
                 $('#playpoint').text(initialPoints);
+                $('#modal-playpoint').text(initialPoints);
                 // view_auth.jsのgame.playpointを初期化
                 if (typeof game !== 'undefined') {
                     game.playpoint = initialPoints;
@@ -550,6 +683,7 @@ function outputPlayerHTML($data) {
             }
             if (initialCredit > 0) {
                 $('#credit').text(initialCredit);
+                $('#modal-credit').text(initialCredit);
                 // view_auth.jsのgame.creditを初期化
                 if (typeof game !== 'undefined') {
                     game.credit = initialCredit;
