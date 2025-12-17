@@ -25,6 +25,7 @@
 
 // インクルード
 require_once('../../_etc/require_files_admin.php');			// requireファイル
+require_once('../../_sys/CloudStorageHelper.php');			// GCSヘルパー
 // 項目定義
 define("PRE_HTML", basename(get_self(), ".php"));			// テンプレートHTMLプレフィックス
 
@@ -323,6 +324,13 @@ function DispDetail($template, $message = "") {
 		$template->assign("LANG_ACT"   , ($lang["lang"] == FOLDER_LANG) ? "active" : "", true);
 		$topImage = (isset($row["top_image"][$lang["lang"]]) ? $row["top_image"][$lang["lang"]] : "");
 		$template->assign("TOP_IMAGE"  , $topImage, true);
+		// 画像URL生成（GCS URLはそのまま、ローカルはパス付加）
+		if (strpos($topImage, 'https://') === 0) {
+			$topImageUrl = $topImage;  // GCS URL
+		} else {
+			$topImageUrl = DIR_IMG_NOTICE_DIR . $topImage;  // ローカルパス
+		}
+		$template->assign("TOP_IMAGE_URL", $topImageUrl, true);
 		$template->assign("TITLE"      , isset($row["title"][$lang["lang"]]) ? $row["title"][$lang["lang"]] : "", true);
 		$template->assign("SUB_TITLE"  , isset($row["sub_title"][$lang["lang"]]) ? $row["sub_title"][$lang["lang"]] : "", true);
 		//--- 2023/11/01 Add by S.Okamoto 一覧タイトル追加
@@ -387,6 +395,9 @@ function RegistData($template) {
 	// トランザクション開始
 	$template->DB->autoCommit(false);
 	$mode = "";
+	// GCSヘルパー初期化
+	$gcs = new CloudStorageHelper();
+
 	if ($_GET["ACT"] == "del") {
 		// 削除
 		$mode = "del";
@@ -402,10 +413,18 @@ function RegistData($template) {
 			->createSQL("\n");
 		$rs = $template->DB->query($sql);
 		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
-			$delimage = DIR_IMG_NOTICE . $row["top_image"];
-			if (mb_strlen($row["top_image"]) > 0 && file_exists($delimage)) {
-				chmod($delimage, 0755);
-				unlink($delimage);
+			if (mb_strlen($row["top_image"]) > 0) {
+				// GCS URLの場合はGCSから削除
+				if (strpos($row["top_image"], 'https://storage.googleapis.com/') === 0) {
+					$gcs->delete($row["top_image"]);
+				} else {
+					// ローカルファイルの場合
+					$delimage = DIR_IMG_NOTICE . $row["top_image"];
+					if (file_exists($delimage)) {
+						chmod($delimage, 0755);
+						unlink($delimage);
+					}
+				}
 			}
 		}
 		unset($rs);
@@ -474,19 +493,37 @@ function RegistData($template) {
 					if (!$ext = array_search(mime_content_type($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name']), $chkMime, true)) {
 						throw new RuntimeException("画像ファイルの形式が不正です。");
 					}
-					
-					// 保存
+
+					// 保存（GCS優先）
 					$upfile = sha1(mt_rand() . time());
-					if (move_uploaded_file($_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name'], sprintf(DIR_IMG_NOTICE . '%s.%s', $upfile, $ext))) {
-						$topImage[$lang["lang"]] = $upfile . "." . $ext;
-						if (mb_strlen($_POST['TOP_IMAGE_'.$lang["lang"]]) > 0) {
-							if (file_exists(DIR_IMG_NOTICE . $_POST['TOP_IMAGE_'.$lang["lang"]])) {
-								$oldFile[] = DIR_IMG_NOTICE . $_POST['TOP_IMAGE_'.$lang["lang"]];
+					$filename = $upfile . "." . $ext;
+					$tmpPath = $_FILES['TOP_IMAGE_'.$lang["lang"].'_NEW']['tmp_name'];
+
+					if ($gcs->isEnabled()) {
+						// GCSにアップロード
+						$gcsUrl = $gcs->upload($tmpPath, 'notice', $filename);
+						if ($gcsUrl) {
+							$topImage[$lang["lang"]] = $gcsUrl;  // GCS URLを保存
+							// 旧画像削除用にGCS URLを保存
+							if (mb_strlen($_POST['TOP_IMAGE_'.$lang["lang"]]) > 0) {
+								$oldFile[] = $_POST['TOP_IMAGE_'.$lang["lang"]];
 							}
+						} else {
+							throw new RuntimeException("画像のアップロードに失敗しました。");
 						}
 					} else {
-						$upfile = "";
-						throw new RuntimeException("画像のアップロードに失敗しました。");
+						// ローカルに保存（フォールバック）
+						if (move_uploaded_file($tmpPath, sprintf(DIR_IMG_NOTICE . '%s', $filename))) {
+							$topImage[$lang["lang"]] = $filename;
+							if (mb_strlen($_POST['TOP_IMAGE_'.$lang["lang"]]) > 0) {
+								if (file_exists(DIR_IMG_NOTICE . $_POST['TOP_IMAGE_'.$lang["lang"]])) {
+									$oldFile[] = DIR_IMG_NOTICE . $_POST['TOP_IMAGE_'.$lang["lang"]];
+								}
+							}
+						} else {
+							$upfile = "";
+							throw new RuntimeException("画像のアップロードに失敗しました。");
+						}
 					}
 				} catch (RuntimeException $e) {
 					DispDetail($template, $e->getMessage());
@@ -497,7 +534,11 @@ function RegistData($template) {
 
 		// 画像以外のエラーが発生しないと信じて旧画像削除
 		foreach($oldFile as $file) {
-			if (file_exists($file)) {
+			// GCS URLの場合はGCSから削除
+			if (strpos($file, 'https://storage.googleapis.com/') === 0) {
+				$gcs->delete($file);
+			} else if (file_exists($file)) {
+				// ローカルファイルの場合
 				chmod($file, 0755);
 				unlink($file);
 			}
