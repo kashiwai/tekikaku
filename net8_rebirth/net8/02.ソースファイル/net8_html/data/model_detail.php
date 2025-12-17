@@ -216,12 +216,21 @@ function DispDetail($template) {
 	$template->assign("UNIT_NAME", (FOLDER_LANG == DEFAULT_LANG) ? $modelData["unit_name"] : $modelData["unit_roman"], true);
 	$template->assign("CATEGORY_NAME", $categoryName, true);
 
-	// 画像
+	// 画像 - GCS URL対応
 	$imageList = $modelData["image_list"] ?: "noimage.png";
 	$imageDetail = $modelData["image_detail"] ?: $imageList;
+
+	// GCS URLでなければローカルパスを追加
+	if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
+		$imageList = '/data/img/model/' . $imageList;
+	}
+	if ($imageDetail && !preg_match('/^https?:\/\//', $imageDetail)) {
+		$imageDetail = '/data/img/model/' . $imageDetail;
+	}
+
 	$template->assign("IMAGE_LIST", $imageList, true);
 	$template->assign("IMAGE_DETAIL", $imageDetail, true);
-	$template->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);
+	$template->assign("DIR_IMG_MODEL_DIR", "", true);  // GCS対応のため空
 
 	// ゲーム情報（prizeball_dataから）
 	$template->assign("MAX_PAYOUT", $prizeballData["MAX"] ?? "---", true);
