@@ -30,6 +30,7 @@ require_once('../../_etc/webRTC_setting.php');
 $machineNo = $_GET['NO'] ?? null;
 $sessionId = $_GET['sessionId'] ?? null;
 $userId = $_GET['userId'] ?? null;
+$cameraIdParam = $_GET['cameraId'] ?? null; // URLから直接カメラID（PeerID）を受け取る
 
 // 必須パラメータチェック
 if (!$machineNo || !$sessionId) {
@@ -115,8 +116,9 @@ try {
     $sigHost = $sigInfo[0];
     $sigPort = $sigInfo[1] ?? '443';
 
-    // カメラ情報
-    $cameraId = $session['camera_name'] ?? '';
+    // カメラ情報（URLパラメータを優先、なければDBから取得）
+    $cameraId = $cameraIdParam ?: ($session['camera_name'] ?? '');
+    error_log("📹 play_embed: cameraId={$cameraId} (from param={$cameraIdParam}, from DB={$session['camera_name']})");
 
     // ICE Servers設定
     $iceServers = $webRTC->getIceServers($cameraId);
