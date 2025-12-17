@@ -468,58 +468,39 @@ function outputPlayerHTML($data) {
             <div id="consolelog" style="display:none;"></div>
         </div>
 
-        <!-- play_v2互換コントロールパネル -->
-        <div id="control_panel" class="playing-controls">
-            <!-- ポイント残高（韓国側から渡される） -->
-            <div id="pointbox" class="pointbox">
-                <div class="point-display">
-                    <span class="point-label">残高 (PT)</span>
-                    <span id="playpoint" class="playpoint-value"><?= (int)$data['initialPoints'] ?></span>
+        <!-- play_v2互換コントロールパネル（2列レイアウト） -->
+        <div id="control_panel" class="playing-controls compact-2row">
+            <!-- 1列目: 残高・クレジット・変換・精算 -->
+            <div class="control-row-1">
+                <div class="info-box">
+                    <span class="info-label">残高</span>
+                    <span id="playpoint" class="info-value"><?= (int)$data['initialPoints'] ?></span>
                 </div>
+                <div class="info-box credit-box">
+                    <span class="info-label">CR</span>
+                    <span id="credit" class="info-value" nextnumber="0"><?= (int)$data['initialCredit'] ?></span>
+                </div>
+                <button class="btn-compact btn-convert" id="convcr-button" onclick="showConvModal()">変換</button>
+                <button class="btn-compact btn-pay" id="pay-button" onclick="showPayModal()">精算</button>
             </div>
 
-            <!-- クレジットボックス -->
-            <div id="creditbox" class="creditbox">
-                <div class="credit-display">
-                    <span class="credit-label">CREDIT</span>
-                    <span id="credit" nextnumber="0"><?= (int)$data['initialCredit'] ?></span>
-                </div>
-                <div id="animeField"><span id="animeNumber"></span></div>
-            </div>
-
-            <!-- スロット用コントロール -->
+            <!-- 2列目: ゲームコントロール -->
             <?php if ($isSlot): ?>
-            <div class="slot-controls">
-                <!-- MAXベット + スタート -->
-                <div class="control-row">
-                    <button class="btn-pressable maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false">MAX BET</button>
-                    <button id="sendBtnss" class="btn-pressable reel-start sendBtn" oncontextmenu="return false">START</button>
-                </div>
-                <!-- リールストップボタン -->
-                <div class="control-row reel-stops">
-                    <button class="btn-pressable reel-stop sendBtn" id="sendBtns1" oncontextmenu="return false">1</button>
-                    <button class="btn-pressable reel-stop sendBtn" id="sendBtns2" oncontextmenu="return false">2</button>
-                    <button class="btn-pressable reel-stop sendBtn" id="sendBtns3" oncontextmenu="return false">3</button>
-                </div>
-                <!-- オートプレイ -->
-                <div class="control-row">
-                    <button id="autoplay_credit" class="btn-pressable reel-start autoplay-off" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
-                </div>
+            <div class="control-row-2">
+                <button class="btn-game maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false">BET</button>
+                <button class="btn-game start sendBtn" id="sendBtnss" oncontextmenu="return false">START</button>
+                <button class="btn-game stop sendBtn" id="sendBtns1" oncontextmenu="return false">1</button>
+                <button class="btn-game stop sendBtn" id="sendBtns2" oncontextmenu="return false">2</button>
+                <button class="btn-game stop sendBtn" id="sendBtns3" oncontextmenu="return false">3</button>
+                <button class="btn-game auto" id="autoplay_credit" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
             </div>
             <?php else: ?>
-            <!-- パチンコ用コントロール -->
-            <div class="pachi-controls">
-                <div class="control-row">
-                    <button class="btn-pressable sendBtn" id="sendBtnph" oncontextmenu="return false">ハンドル</button>
-                </div>
+            <div class="control-row-2">
+                <button class="btn-game sendBtn" id="sendBtnph" oncontextmenu="return false">ハンドル</button>
+                <button class="btn-game start sendBtn" id="sendBtnpstart" oncontextmenu="return false">START</button>
             </div>
             <?php endif; ?>
-
-            <!-- 精算・変換ボタン -->
-            <div class="control-row action-buttons">
-                <button class="btn-pressable" id="pay-button" onclick="showPayModal()">精算</button>
-                <button class="btn-pressable" id="convcr-button" onclick="showConvModal()">変換</button>
-            </div>
+            <div id="animeField" style="display:none;"><span id="animeNumber"></span></div>
         </div>
 
         <!-- クレジット変換モーダル -->
