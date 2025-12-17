@@ -592,14 +592,19 @@ var _savestream;					//Video確認用
 			console.log( 'dataConnection open');
 			notifyParent('data_channel_ready', { ready: true });
 
-			// ICE接続が安定するまで少し待ってから送信を開始
-			// iframe環境ではICEネゴシエーションに時間がかかる場合がある
-			setTimeout(function() {
-				if ( !recvLang && dataConnection && dataConnection.open ){
-					console.log( 'retry:lang (after delay)');
-					retryLang();
+			// 即座にLngメッセージを送信（カメラがメッセージを待っている可能性）
+			if ( !recvLang && dataConnection && dataConnection.open ){
+				console.log('📤 Sending initial Lng message immediately');
+				notifyParent('sending_lng', { immediate: true });
+				try {
+					dataConnection.send(_sendStr( 'Lng', languageMode ));
+				} catch(e) {
+					console.error('Failed to send Lng:', e);
+					notifyParent('lng_send_error', { error: e.toString() });
 				}
-			}, 500);
+				// 応答がなければリトライ
+				retryLang();
+			}
 
 			// SDK通知: ゲーム準備完了
 			startTimestamp = Date.now(); // ゲーム開始時刻を記録
@@ -614,6 +619,9 @@ var _savestream;					//Video確認用
 		dataConnection.on('data', function(data){
 			//放置時間計測用
 			lastTimestamp = (new Date()).getTime();
+
+			// カメラからのデータを親フレームに通知（デバッグ用）
+			notifyParent('camera_data', { data: data.substring(0, 100), timestamp: lastTimestamp });
 
 			writeLog( 'recieve:'+data+' '+lastTimestamp);
 			var _darry = data.trim().split(',');
