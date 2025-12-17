@@ -95,6 +95,22 @@ try {
 
     error_log("✅ play_embed: Session validated - member_no={$session['member_no']}, camera_name={$session['camera_name']}");
 
+    // ★重要: mst_member.point からポイント残高を取得（URLパラメータより優先）
+    $memberPoints = 0;
+    if ($session['member_no']) {
+        $pointStmt = $pdo->prepare("SELECT point FROM mst_member WHERE member_no = :member_no");
+        $pointStmt->execute(['member_no' => $session['member_no']]);
+        $memberData = $pointStmt->fetch(PDO::FETCH_ASSOC);
+        if ($memberData) {
+            $memberPoints = (int)$memberData['point'];
+            error_log("💰 play_embed: Retrieved member points from mst_member - member_no={$session['member_no']}, points={$memberPoints}");
+        }
+    }
+    // URLパラメータのpointsより、mst_member.pointを優先
+    if ($memberPoints > 0) {
+        $initialPoints = $memberPoints;
+    }
+
     // セッションステータスを 'playing' に更新
     $updateStmt = $pdo->prepare("
         UPDATE game_sessions
