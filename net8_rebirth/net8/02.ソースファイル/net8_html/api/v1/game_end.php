@@ -189,9 +189,10 @@ try {
             'session_id' => $sessionId
         ]);
 
-        // ポイント払い出し（勝利時）
+        // ポイント払い出し（勝利時・精算時）
         $newBalance = null;
         $transaction = null;
+        $memberNo = $session['member_no']; // セッションからmember_noを取得
 
         if ($session['user_id'] && $pointsWon > 0) {
             // 残高を取得（FOR UPDATE でロック）
@@ -208,7 +209,7 @@ try {
             $balanceBefore = $balance['balance'];
             $balanceAfter = $balanceBefore + $pointsWon;
 
-            // 残高を更新
+            // 残高を更新（user_balances）
             $stmt = $pdo->prepare("
                 UPDATE user_balances
                 SET balance = :balance,
@@ -221,6 +222,20 @@ try {
                 'amount' => $pointsWon,
                 'user_id' => $session['user_id']
             ]);
+
+            // ★ mst_member.point にもポイントを追加（精算時にカメラ側と同期するため）
+            if ($memberNo) {
+                $stmt = $pdo->prepare("
+                    UPDATE mst_member
+                    SET point = point + :amount
+                    WHERE member_no = :member_no
+                ");
+                $stmt->execute([
+                    'amount' => $pointsWon,
+                    'member_no' => $memberNo
+                ]);
+                error_log("💰 Game end payout to mst_member: member_no={$memberNo}, amount={$pointsWon}");
+            }
 
             // 取引履歴を記録
             $transactionId = 'txn_' . uniqid() . '_' . time();
