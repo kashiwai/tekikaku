@@ -194,6 +194,25 @@ try {
         $transaction = null;
         $memberNo = $session['member_no']; // セッションからmember_noを取得
 
+        // member_noがNULLの場合、sdk_usersから取得
+        if (!$memberNo && $session['user_id']) {
+            $sdkUserStmt = $pdo->prepare("SELECT member_no, api_key_id, partner_user_id FROM sdk_users WHERE id = :user_id");
+            $sdkUserStmt->execute(['user_id' => $session['user_id']]);
+            $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
+            if ($sdkUser && $sdkUser['member_no']) {
+                $memberNo = $sdkUser['member_no'];
+                error_log("✅ Retrieved member_no from sdk_users: {$memberNo}");
+            } elseif ($sdkUser) {
+                // member_noがNULLの場合、作成
+                $mstMember = getOrCreateMstMember($pdo, $sdkUser['api_key_id'], $sdkUser['partner_user_id']);
+                $memberNo = $mstMember['member_no'];
+                // sdk_usersも更新
+                $updateStmt = $pdo->prepare("UPDATE sdk_users SET member_no = :member_no WHERE id = :user_id");
+                $updateStmt->execute(['member_no' => $memberNo, 'user_id' => $session['user_id']]);
+                error_log("✅ Created and updated member_no: {$memberNo}");
+            }
+        }
+
         if ($session['user_id'] && $pointsWon > 0) {
             // 残高を取得（FOR UPDATE でロック）
             $stmt = $pdo->prepare("
@@ -431,6 +450,7 @@ try {
         $response = [
             'success' => true,
             'sessionId' => $sessionId,
+            'memberNo' => $memberNo,
             'result' => $result,
             'pointsConsumed' => $session['points_consumed'],
             'pointsWon' => $pointsWon,

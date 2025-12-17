@@ -220,7 +220,12 @@ try {
         // 韓国側からのポイントをデポジット（初期ポイントがある場合）
         if ($initialPoints > 0) {
             error_log("💰 Depositing Korea points: user_id={$userId}, amount={$initialPoints}");
-            depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
+            $depositResult = depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
+            // depositPointsでmember_noが作成/更新された場合、それを使用
+            if ($depositResult['member_no']) {
+                $memberNo = $depositResult['member_no'];
+                error_log("✅ Using member_no from deposit: {$memberNo}");
+            }
         }
 
         // 残高チェック
@@ -377,8 +382,8 @@ try {
                     start_dt = NOW()
             ");
 
-            $memberNo = 0; // SDK経由の場合は仮のmember_no
-            if ($userId) {
+            // memberNoが未設定の場合のみ検索（getOrCreateUserで既に取得済みの場合はそれを使用）
+            if (!$memberNo && $userId) {
                 // SDKユーザーに対応する仮想member_noを取得または作成
                 $sdkUserStmt = $pdo->prepare("
                     SELECT su.*, ak.name as partner_name
@@ -567,6 +572,7 @@ try {
         'environment' => $environment,
         'sessionId' => $sessionId,
         'machineNo' => $machine['machine_no'],
+        'memberNo' => $memberNo, // play_embed用のmember_no
         'signalingId' => $machine['signaling_id'],
         'model' => [
             'id' => $model['model_cd'],
@@ -576,6 +582,7 @@ try {
         'signaling' => $signalingInfo,
         'camera' => $cameraInfo,
         'playUrl' => "/data/play_v2/index.php?NO={$machine['machine_no']}",
+        'playEmbedUrl' => "/play_embed/?session_id={$sessionId}&member_no={$memberNo}", // iframe埋め込み用URL
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 

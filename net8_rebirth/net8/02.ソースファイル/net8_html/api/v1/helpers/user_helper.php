@@ -288,11 +288,23 @@ function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
  * @return array 取引情報
  */
 function depositPoints($pdo, $userId, $amount, $description = 'Korea point deposit') {
-    // sdk_usersからmember_noを取得（mst_memberと紐づけ）
-    $stmt = $pdo->prepare("SELECT member_no FROM sdk_users WHERE id = :user_id");
+    // sdk_usersからmember_noとapi_key_id、partner_user_idを取得
+    $stmt = $pdo->prepare("SELECT member_no, api_key_id, partner_user_id FROM sdk_users WHERE id = :user_id");
     $stmt->execute(['user_id' => $userId]);
     $sdkUser = $stmt->fetch(PDO::FETCH_ASSOC);
     $memberNo = $sdkUser ? $sdkUser['member_no'] : null;
+
+    // member_noがNULLの場合、mst_memberを作成してsdk_usersを更新
+    if (!$memberNo && $sdkUser) {
+        error_log("⚠️ member_no is NULL for user_id={$userId}, creating mst_member...");
+        $mstMember = getOrCreateMstMember($pdo, $sdkUser['api_key_id'], $sdkUser['partner_user_id']);
+        $memberNo = $mstMember['member_no'];
+
+        // sdk_usersのmember_noを更新
+        $updateStmt = $pdo->prepare("UPDATE sdk_users SET member_no = :member_no WHERE id = :user_id");
+        $updateStmt->execute(['member_no' => $memberNo, 'user_id' => $userId]);
+        error_log("✅ Updated sdk_users.member_no: user_id={$userId}, member_no={$memberNo}");
+    }
 
     // 現在の残高を取得（FOR UPDATE でロック）
     $stmt = $pdo->prepare("
