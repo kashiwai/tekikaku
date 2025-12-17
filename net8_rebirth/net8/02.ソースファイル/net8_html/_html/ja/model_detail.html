@@ -32,11 +32,18 @@
 		}
 
 		body#model-detail-page {
-			background: var(--gradient-cosmic);
+			background: var(--gradient-cosmic) !important;
 			min-height: 100vh;
+			min-width: auto !important;
 			font-family: 'Noto Sans JP', sans-serif;
 			color: var(--text-white);
 			overflow-x: hidden;
+		}
+
+		/* Override ip.css restrictions */
+		body#model-detail-page #content {
+			max-width: 100% !important;
+			width: 100%;
 		}
 
 		body#model-detail-page::before {
@@ -491,6 +498,165 @@
 		@media (min-width: 1024px) {
 			.detail-content {
 				max-width: 700px;
+			}
+		}
+
+		/* Large Desktop - 1400px+ */
+		@media (min-width: 1400px) {
+			.detail-content {
+				max-width: 800px;
+				padding: 30px 40px 200px;
+			}
+
+			.detail-page-header {
+				padding: 20px 50px;
+			}
+
+			.header-title {
+				font-size: 1.5rem;
+			}
+
+			.machine-image-container {
+				padding: 40px 30px;
+				border-radius: 25px;
+			}
+
+			.machine-image {
+				max-width: 350px;
+			}
+
+			.machine-name {
+				font-size: 2.2rem;
+			}
+
+			.section-title {
+				font-size: 1.3rem;
+			}
+
+			.game-info-grid {
+				grid-template-columns: repeat(3, 1fr);
+				gap: 15px;
+			}
+
+			.game-info-item {
+				padding: 18px;
+			}
+
+			.game-info-value {
+				font-size: 1.1rem;
+			}
+
+			.features-grid {
+				grid-template-columns: repeat(4, 1fr);
+			}
+
+			.machine-slot {
+				width: 55px;
+				height: 55px;
+				font-size: 0.9rem;
+			}
+
+			.play-btn {
+				max-width: 500px;
+				padding: 20px 40px;
+				font-size: 1.2rem;
+			}
+		}
+
+		/* Extra Large Desktop - 1800px+ */
+		@media (min-width: 1800px) {
+			.detail-content {
+				max-width: 900px;
+				padding: 40px 50px 220px;
+			}
+
+			.detail-page-header {
+				padding: 25px 80px;
+			}
+
+			.header-title {
+				font-size: 1.6rem;
+			}
+
+			.header-back,
+			.header-share {
+				width: 45px;
+				height: 45px;
+			}
+
+			.machine-image-container {
+				padding: 50px 40px;
+				border-radius: 30px;
+			}
+
+			.machine-image {
+				max-width: 400px;
+				border-radius: 20px;
+			}
+
+			.machine-name {
+				font-size: 2.5rem;
+			}
+
+			.machine-type-badge {
+				padding: 10px 25px;
+				font-size: 1rem;
+			}
+
+			.section-title {
+				font-size: 1.4rem;
+			}
+
+			.game-info-grid {
+				gap: 18px;
+			}
+
+			.game-info-item {
+				padding: 20px;
+				border-radius: 18px;
+			}
+
+			.game-info-icon {
+				font-size: 1.6rem;
+			}
+
+			.game-info-value {
+				font-size: 1.2rem;
+			}
+
+			.feature-item {
+				padding: 18px;
+				border-radius: 18px;
+				font-size: 1rem;
+			}
+
+			.availability-section {
+				padding: 25px;
+				border-radius: 20px;
+			}
+
+			.machine-slot {
+				width: 60px;
+				height: 60px;
+				border-radius: 15px;
+				font-size: 1rem;
+			}
+
+			.description-box {
+				padding: 25px;
+				font-size: 1rem;
+				border-radius: 18px;
+			}
+
+			.play-btn {
+				max-width: 550px;
+				padding: 22px 50px;
+				font-size: 1.3rem;
+				border-radius: 35px;
+			}
+
+			.detail-footer {
+				padding: 25px;
 			}
 		}
 		</style>

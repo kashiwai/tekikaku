@@ -30,8 +30,9 @@
 		}
 
 		body#search-page {
-			background: var(--gradient-cosmic);
+			background: var(--gradient-cosmic) !important;
 			min-height: 100vh;
+			min-width: auto !important;
 			font-family: 'Noto Sans JP', sans-serif;
 			color: var(--text-white);
 			overflow-x: hidden;
@@ -52,10 +53,16 @@
 		}
 
 		#wrapper {
-			background: transparent;
+			background: transparent !important;
 			min-height: 100vh;
 			position: relative;
 			z-index: 1;
+		}
+
+		/* Override ip.css restrictions */
+		body#search-page #content {
+			max-width: 100% !important;
+			width: 100%;
 		}
 
 		/* ================================================
@@ -640,6 +647,79 @@
 			.filter-section {
 				max-width: 800px;
 				margin: 0 auto;
+			}
+		}
+
+		/* Large Desktop - 1400px+ */
+		@media (min-width: 1400px) {
+			.machine-grid {
+				grid-template-columns: repeat(5, 1fr);
+				max-width: 1600px;
+				gap: 25px;
+			}
+
+			.machine-grid-container {
+				padding: 0 40px 100px;
+			}
+
+			.search-bar-container,
+			.filter-section {
+				max-width: 1000px;
+			}
+
+			.search-page-header {
+				padding: 20px 40px;
+			}
+
+			.header-title {
+				font-size: 1.5rem;
+			}
+
+			.machine-card-name {
+				font-size: 1.1rem;
+			}
+
+			.machine-card-stats {
+				font-size: 0.8rem;
+			}
+		}
+
+		/* Extra Large Desktop - 1800px+ */
+		@media (min-width: 1800px) {
+			.machine-grid {
+				grid-template-columns: repeat(6, 1fr);
+				max-width: 2000px;
+				gap: 30px;
+			}
+
+			.machine-grid-container {
+				padding: 0 60px 100px;
+			}
+
+			.search-bar-container,
+			.filter-section {
+				max-width: 1200px;
+			}
+
+			.search-page-header {
+				padding: 25px 60px;
+			}
+
+			.header-title {
+				font-size: 1.6rem;
+			}
+
+			.machine-card {
+				border-radius: 24px;
+			}
+
+			.machine-card-info {
+				padding: 20px;
+			}
+
+			.machine-card-name {
+				font-size: 1.2rem;
+				margin-bottom: 15px;
 			}
 		}
 

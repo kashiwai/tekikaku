@@ -27,17 +27,24 @@
 		}
 
 		body#index {
-			background: var(--gradient-cosmic);
+			background: var(--gradient-cosmic) !important;
 			min-height: 100vh;
+			min-width: auto !important;
 			font-family: 'Noto Sans JP', sans-serif;
 			color: var(--text-white);
 			overflow-x: hidden;
 		}
 
 		#wrapper {
-			background: transparent;
+			background: transparent !important;
 			min-height: 100vh;
 			position: relative;
+		}
+
+		/* Override ip.css restrictions */
+		body#index #content {
+			max-width: 100% !important;
+			width: 100%;
 		}
 
 		/* 背景エフェクト - コイン */
@@ -702,10 +709,11 @@
 				grid-template-columns: repeat(4, 1fr);
 				max-width: 1200px;
 				margin: 0 auto;
+				padding: 0 40px;
 			}
 
 			.category-grid {
-				max-width: 800px;
+				max-width: 1000px;
 				margin: 0 auto;
 			}
 
@@ -715,6 +723,54 @@
 
 			#index-visual img {
 				max-width: 800px;
+			}
+
+			.news-scroll-container {
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.section-header {
+				max-width: 1200px;
+				margin: 0 auto 20px;
+			}
+		}
+
+		/* ================================================
+		   Responsive - Large Desktop
+		   ================================================ */
+		@media (min-width: 1400px) {
+			.machine-grid,
+			.rec-list ul {
+				grid-template-columns: repeat(5, 1fr);
+				max-width: 1400px;
+				gap: 25px;
+			}
+
+			.news-scroll-container,
+			.section-header {
+				max-width: 1400px;
+			}
+
+			.machine-card-name {
+				font-size: 1rem;
+			}
+		}
+
+		/* ================================================
+		   Responsive - Extra Large Desktop
+		   ================================================ */
+		@media (min-width: 1800px) {
+			.machine-grid,
+			.rec-list ul {
+				grid-template-columns: repeat(6, 1fr);
+				max-width: 1700px;
+				gap: 30px;
+			}
+
+			.news-scroll-container,
+			.section-header {
+				max-width: 1700px;
 			}
 		}
 
