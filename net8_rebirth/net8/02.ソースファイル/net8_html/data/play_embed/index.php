@@ -106,11 +106,22 @@ try {
     $webRTC = new WebRTCAPI();
     $oneTimeAuthID = $webRTC->getOneTimeAuthID();
 
+    // シグナリングID取得
+    $signalingId = $session['signaling_id'] ?? 1;
+
+    // シグナリングサーバーへ認証ID登録（重要：これがないとカメラが接続を拒否する）
+    if (!$webRTC->addKeySignaling($oneTimeAuthID, $signalingId)) {
+        error_log("❌ play_embed: Failed to register auth key with signaling server");
+        http_response_code(500);
+        outputError('シグナリングサーバーへの登録に失敗しました: ' . $webRTC->errorMessage());
+        exit;
+    }
+    error_log("✅ play_embed: Auth key registered with signaling server - authId={$oneTimeAuthID}, signalingId={$signalingId}");
+
     // メンバー番号をハッシュ化
     $memberNo = sha1(sprintf("%06d", $session['member_no']));
 
-    // シグナリングサーバー情報
-    $signalingId = $session['signaling_id'] ?? 1;
+    // シグナリングサーバー情報（$signalingIdは上で取得済み）
     $sigServers = $GLOBALS["RTC_Signaling_Servers"] ?? [];
     $sigInfo = isset($sigServers[$signalingId]) ? explode(":", $sigServers[$signalingId]) : ['mgg-signaling-production-c1bd.up.railway.app', '443'];
     $sigHost = $sigInfo[0];
