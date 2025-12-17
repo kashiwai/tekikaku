@@ -218,13 +218,24 @@ function DispDetail($template) {
 
 	// 画像 - GCS URL対応
 	$imageList = $modelData["image_list"] ?: "noimage.png";
-	$imageDetail = $modelData["image_detail"] ?: $imageList;
+	$imageDetail = $modelData["image_detail"];
 
-	// GCS URLでなければローカルパスを追加
-	if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
+	// GCS URLかどうかチェック
+	$isImageListGCS = preg_match('/^https?:\/\//', $imageList);
+	$isImageDetailGCS = preg_match('/^https?:\/\//', $imageDetail);
+
+	// image_detailがローカルパス（または空）の場合、image_listを使用
+	// Railway環境ではローカルファイルが存在しないため
+	if (!$isImageDetailGCS) {
+		$imageDetail = $imageList;
+		$isImageDetailGCS = $isImageListGCS;
+	}
+
+	// GCS URLでなければローカルパスを追加（ローカル環境用）
+	if ($imageList && !$isImageListGCS) {
 		$imageList = '/data/img/model/' . $imageList;
 	}
-	if ($imageDetail && !preg_match('/^https?:\/\//', $imageDetail)) {
+	if ($imageDetail && !$isImageDetailGCS) {
 		$imageDetail = '/data/img/model/' . $imageDetail;
 	}
 
