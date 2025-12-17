@@ -153,6 +153,7 @@ var _savestream;					//Video確認用
 		host: sigHost,
 		//2020-09-18 Port変更可能に修正
 		port: sigPort,
+		secure: true,  // HTTPS/WSS使用（iframe対応）
 		key:peerjskey,
 		token:authID,
 		config: {
