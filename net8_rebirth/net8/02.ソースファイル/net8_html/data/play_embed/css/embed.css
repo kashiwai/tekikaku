@@ -82,11 +82,26 @@ body.embed-mode {
     overflow: hidden;
 }
 
-#video {
+/* playing-screen（play_v2互換 - setVideoWidth()が参照） */
+.playing-screen {
+    position: relative;
     width: 100%;
     height: 100%;
+    background: #000;
+    overflow: hidden;
+}
+
+.playing-screen.landscape {
+    /* 横向き用 */
+}
+
+#video {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
     object-fit: contain;
     background: #000;
+    display: block;
 }
 
 .video-overlay {

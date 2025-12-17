@@ -1132,7 +1132,9 @@ var _savestream;					//Video確認用
 		call.on('stream', function(stream) {
 			showPhase('stream');
 			notifyParent('stream_received', { streamId: stream.id, tracks: stream.getTracks().length });
-			_savestream = URL.createObjectURL(stream);
+			// URL.createObjectURL(stream) は最新ブラウザでは非推奨・削除済み
+			// MediaStreamは直接srcObjectに設定するのが正しい方法
+			_savestream = stream; // デバッグ用にstreamオブジェクトを保存
 			console.log( stream.id )
 			try {
 				var videoElement = document.getElementById('video');
@@ -1150,28 +1152,33 @@ var _savestream;					//Video確認用
 					}, { once: true });
 				});
 			} catch (error) {
-				$('#video').attr('src', URL.createObjectURL(stream));
+				// srcObject が利用できない場合のフォールバック
+				// 注意: URL.createObjectURL(MediaStream) は最新ブラウザで非推奨
+				console.error('Video srcObject failed:', error);
 			}
 
 			//
 			var audio = document.querySelector('audio');
 			try {
 				var audioElement = document.getElementById('audio');
-				audioElement.srcObject = stream;
+				if (audioElement) {
+					audioElement.srcObject = stream;
 
-				// モバイルブラウザ対応: 明示的にplay()を呼ぶ
-				audioElement.play().catch(function(error) {
-					console.log('Audio autoplay failed:', error);
-					// ユーザーインタラクション後に再試行
-					document.addEventListener('click', function playAudioOnClick() {
-						audioElement.play().catch(function(e) {
-							console.log('Audio play on click failed:', e);
-						});
-						document.removeEventListener('click', playAudioOnClick);
-					}, { once: true });
-				});
+					// モバイルブラウザ対応: 明示的にplay()を呼ぶ
+					audioElement.play().catch(function(error) {
+						console.log('Audio autoplay failed:', error);
+						// ユーザーインタラクション後に再試行
+						document.addEventListener('click', function playAudioOnClick() {
+							audioElement.play().catch(function(e) {
+								console.log('Audio play on click failed:', e);
+							});
+							document.removeEventListener('click', playAudioOnClick);
+						}, { once: true });
+					});
+				}
 			} catch (error) {
-				audio.src = window.URL.createObjectURL(stream);
+				// srcObject が利用できない場合のフォールバック
+				console.error('Audio srcObject failed:', error);
 			}
 
 			console.log( 'browserVersion:'+browserVersion );

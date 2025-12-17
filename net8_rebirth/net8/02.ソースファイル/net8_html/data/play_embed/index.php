@@ -433,10 +433,13 @@ function outputPlayerHTML($data) {
 
     <!-- メインコンテンツ -->
     <main class="main-content">
-        <!-- ビデオコンテナ -->
-        <div id="videocontainer" class="video-container">
-            <video id="video" autoplay playsinline muted></video>
+        <!-- ビデオコンテナ（play_v2互換） -->
+        <div id="videocontainer" class="video-container playing-screen landscape">
+            <div class="marquee-container"></div>
+            <video id="video" muted="muted" autoplay="autoplay" playsinline style="display:none;"></video>
+            <audio id="audio"></audio>
             <div id="video_overlay" class="video-overlay"></div>
+            <div id="consolelog" style="display:none;"></div>
         </div>
 
         <!-- play_v2互換コントロールパネル -->
