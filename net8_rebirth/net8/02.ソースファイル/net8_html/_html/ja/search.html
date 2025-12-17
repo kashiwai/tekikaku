@@ -714,7 +714,7 @@
 	<div class="machine-grid-container">
 		<div class="machine-grid">
 			<!--loop:{LIST}-->
-			<div class="machine-card" onclick="openMachineDetail({%NO%})">
+			<a href="model_detail.php?NO={%NO%}" class="machine-card" style="text-decoration: none; color: inherit;">
 				<!-- Badge -->
 				<span class="machine-card-badge badge-popular">人気</span>
 
@@ -746,18 +746,7 @@
 					</div>
 				</div>
 
-				<!-- Hidden data for modal -->
-				<input type="hidden" class="machine-data"
-					data-no="{%NO%}"
-					data-name="{%MODEL_NAME%}"
-					data-image="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}"
-					data-maker="{%MAKER_NAME%}"
-					data-generation="{%GENERATION%}"
-					data-bb="{%BIG_TIMES%}"
-					data-rb="{%REG_TIMES%}"
-					data-total="{%TOTAL_GAME_TIMES%}"
-					data-available="<!--if:{AVAILABLE}-->1<!--/if:{AVAILABLE}--><!--if:{NOAVAIABLE}-->0<!--/if:{NOAVAIABLE}-->">
-			</div>
+			</a>
 			<!--/loop:{LIST}-->
 		</div>
 	</div>
