@@ -451,7 +451,7 @@ function outputPlayerHTML($data) {
         </div>
 
         <!-- play_v2互換コントロールパネル -->
-        <div id="control_panel" class="playing-controls" style="display:none;">
+        <div id="control_panel" class="playing-controls">
             <!-- クレジットボックス -->
             <div id="creditbox" class="creditbox">
                 <div class="credit-display">
