@@ -201,9 +201,39 @@ var _savestream;					//Video確認用
 	
 	var peer = new Peer( peersetting );
 
+	// iframe親フレームへのデバッグ通知関数
+	function notifyParent(eventType, data) {
+		if (window.parent !== window) {
+			window.parent.postMessage({
+				type: 'NET8_PEER_EVENT',
+				event: eventType,
+				data: data,
+				timestamp: Date.now()
+			}, '*');
+		}
+		console.log('🔌 PeerJS Event:', eventType, data);
+	}
+
+	// PeerJSエラーハンドリング
+	peer.on('error', function(err) {
+		console.error('❌ PeerJS Error:', err.type, err.message);
+		notifyParent('peer_error', { type: err.type, message: err.message });
+	});
+
+	peer.on('disconnected', function() {
+		console.warn('⚠️ PeerJS Disconnected from signaling server');
+		notifyParent('peer_disconnected', {});
+	});
+
+	peer.on('close', function() {
+		console.warn('🔒 PeerJS Connection closed');
+		notifyParent('peer_closed', {});
+	});
+
 	peer.on('open', function(){
 		//id
 		$('#my-id').text(peer.id);
+		notifyParent('peer_open', { peerId: peer.id, cameraId: cameraid });
 
 		showPhase('open');
 
@@ -212,11 +242,24 @@ var _savestream;					//Video確認用
 			'metadata': memberno+':'+authID
 		});
 		showPhase('connect');
+		notifyParent('data_connecting', { cameraId: cameraid });
 
 		dataConnection.maxRetransmits = 1;
 
+		// データ接続のエラーハンドリング
+		dataConnection.on('error', function(err) {
+			console.error('❌ DataConnection Error:', err);
+			notifyParent('data_error', { error: err.toString() });
+		});
+
+		dataConnection.on('open', function() {
+			console.log('✅ DataConnection opened');
+			notifyParent('data_open', { cameraId: cameraid });
+		});
+
 		dataConnection.on('close', function(){
 			console.log( 'connect lost' );
+			notifyParent('data_close', {});
 			setTimeout(function(){
 				if ( !endPlayFlg ){
 					ShowConnectError('connect lost');
@@ -1055,12 +1098,27 @@ var _savestream;					//Video確認用
 		// カメラ側からStreamが送られてきた場合に呼ばれます
 		// 閲覧側のカメラは利用しないので、何も指定しないでanswerをします
 		showPhase('call');
-		
+		notifyParent('call_received', { callId: call.peer });
+
 		call.answer();
 		showPhase('answer');
+		notifyParent('call_answered', {});
+
+		// callエラーハンドリング
+		call.on('error', function(err) {
+			console.error('❌ Call Error:', err);
+			notifyParent('call_error', { error: err.toString() });
+		});
+
+		call.on('close', function() {
+			console.warn('📞 Call closed');
+			notifyParent('call_close', {});
+		});
+
 		// カメラからのStreamをvideoタグに追加します
 		call.on('stream', function(stream) {
 			showPhase('stream');
+			notifyParent('stream_received', { streamId: stream.id, tracks: stream.getTracks().length });
 			_savestream = URL.createObjectURL(stream);
 			console.log( stream.id )
 			try {
