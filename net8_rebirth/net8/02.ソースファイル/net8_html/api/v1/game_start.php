@@ -62,6 +62,7 @@ if (!isset($input['modelId'])) {
 $modelId = $input['modelId'];
 $partnerUserId = $input['userId'] ?? null; // パートナー側のユーザーID（オプション）
 $requestedMachineNo = $input['machineNo'] ?? null; // 直接台番号を指定（オプション）
+$initialPoints = isset($input['initialPoints']) ? (int)$input['initialPoints'] : 0; // 韓国側からのポイント
 
 try {
     $pdo = get_db_connection();
@@ -216,6 +217,12 @@ try {
         $userId = $user['id'];
         $memberNo = $user['member_no']; // mst_member.member_noを取得
 
+        // 韓国側からのポイントをデポジット（初期ポイントがある場合）
+        if ($initialPoints > 0) {
+            error_log("💰 Depositing Korea points: user_id={$userId}, amount={$initialPoints}");
+            depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
+        }
+
         // 残高チェック
         $userBalance = getUserBalance($pdo, $userId);
 
@@ -228,14 +235,15 @@ try {
             exit;
         }
 
-        // 残高不足チェック
+        // 残高不足チェック（ゲーム開始に必要なポイント）
         if ($userBalance['balance'] < $gamePrice) {
             http_response_code(402);
             echo json_encode([
                 'error' => 'INSUFFICIENT_BALANCE',
                 'message' => 'Insufficient points',
                 'balance' => $userBalance['balance'],
-                'required' => $gamePrice
+                'required' => $gamePrice,
+                'initialPointsReceived' => $initialPoints
             ]);
             exit;
         }

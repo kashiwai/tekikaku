@@ -588,6 +588,34 @@ function outputPlayerHTML($data) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 
+    <!-- Bootstrap モーダル ポリフィル（play_embed用） -->
+    <script>
+        // Bootstrap の .modal() メソッドが存在しない場合のポリフィル
+        (function($) {
+            if (!$.fn.modal) {
+                $.fn.modal = function(options) {
+                    var $this = $(this);
+
+                    if (options === 'hide') {
+                        $this.fadeOut(200);
+                        return this;
+                    }
+
+                    if (options === 'show' || typeof options === 'object' || typeof options === 'undefined') {
+                        $this.fadeIn(200);
+                        return this;
+                    }
+
+                    return this;
+                };
+            }
+        })(jQuery);
+
+        // popstate モーダル対応（ブラウザバック防止）
+        history.pushState = function() {};
+        history.replaceState = function() {};
+    </script>
+
     <!-- play_v2のJSを使用 - view_functionsを先に読み込む（_touch等の変数定義が必要） -->
     <script src="/data/play_v2/js/view_functions.js?ts=<?= $timestamp ?>"></script>
     <?php if ($isSlot): ?>

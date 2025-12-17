@@ -250,7 +250,7 @@
 	//cssサポート（video widthにplaying-screenの幅に合わせる
 	function setVideoWidth(){
 		videoWidth = parseInt($('.playing-screen').width());
-		
+
 		setTimeout(function(){
 			saveHeight = parseInt($('.playing-screen').height());
 		},1000);
@@ -259,32 +259,41 @@
 		if ( !noConsole ){
 			$('#consolelog').height($('#video').height());
 		}
-		
-		startTop  = $('#creditbox').offset().top;
-		startLeft = $('#creditbox').offset().left;
-		var w = $('#creditbox').width();
-		var h = $('#creditbox').height();
-		var buttonwidth = $('#convcr-button').width()
-				+parseInt($('#convcr-button').css('padding-left'))+parseInt($('#convcr-button').css('padding-right'));
-		w -= buttonwidth;
-		$('#animeField')
-			.offset({top: startTop, left: startLeft})
-			.css( 'width', w+'px' )
-			.css( 'height', h+'px' )
-		;
-		startTop  = $('#credit').get( 0 ).offsetTop;
-		startLeft = $('#credit').get( 0 ).offsetLeft;
-		$('#animeNumber')
-			.css('top', startTop+'px')
-			.css('left', startLeft+'px')
-			.css('font-size', $('#credit').css('font-size') )
-		;
+
+		// play_embed モード対応: #creditbox が存在しない場合はスキップ
+		var creditbox = $('#creditbox');
+		if (creditbox.length > 0 && creditbox.offset()) {
+			startTop  = creditbox.offset().top;
+			startLeft = creditbox.offset().left;
+			var w = creditbox.width();
+			var h = creditbox.height();
+			var buttonwidth = $('#convcr-button').width()
+					+parseInt($('#convcr-button').css('padding-left'))+parseInt($('#convcr-button').css('padding-right'));
+			w -= buttonwidth;
+			$('#animeField')
+				.offset({top: startTop, left: startLeft})
+				.css( 'width', w+'px' )
+				.css( 'height', h+'px' )
+			;
+			var creditElem = $('#credit').get(0);
+			if (creditElem) {
+				startTop  = creditElem.offsetTop;
+				startLeft = creditElem.offsetLeft;
+				$('#animeNumber')
+					.css('top', startTop+'px')
+					.css('left', startLeft+'px')
+					.css('font-size', $('#credit').css('font-size') )
+				;
+			}
+		}
 
 		//レイアウト設定
-		layoutOption['hide'].forEach( function(name, idx){
-			//$('#'+name).hide();
-			$('[id^='+name+']').hide();
-		});
+		if (typeof layoutOption !== 'undefined' && layoutOption['hide']) {
+			layoutOption['hide'].forEach( function(name, idx){
+				//$('#'+name).hide();
+				$('[id^='+name+']').hide();
+			});
+		}
 	}
 
 	//html内メッセージ入れ替え

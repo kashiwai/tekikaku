@@ -279,6 +279,89 @@ function getOrCreateMstMember($pdo, $apiKeyId, $partnerUserId) {
 }
 
 /**
+ * ポイント入金（韓国側からのポイント追加）
+ *
+ * @param PDO $pdo
+ * @param int $userId
+ * @param int $amount
+ * @param string $description
+ * @return array 取引情報
+ */
+function depositPoints($pdo, $userId, $amount, $description = 'Korea point deposit') {
+    // 現在の残高を取得（FOR UPDATE でロック）
+    $stmt = $pdo->prepare("
+        SELECT balance
+        FROM user_balances
+        WHERE user_id = :user_id
+        FOR UPDATE
+    ");
+
+    $stmt->execute(['user_id' => $userId]);
+    $balance = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$balance) {
+        // user_balancesが存在しない場合は作成
+        $stmt = $pdo->prepare("
+            INSERT INTO user_balances (user_id, balance, total_deposited)
+            VALUES (:user_id, :amount, :amount)
+        ");
+        $stmt->execute([
+            'user_id' => $userId,
+            'amount' => $amount
+        ]);
+
+        $balanceBefore = 0;
+        $balanceAfter = $amount;
+    } else {
+        $balanceBefore = $balance['balance'];
+        $balanceAfter = $balanceBefore + $amount;
+
+        // 残高を更新
+        $stmt = $pdo->prepare("
+            UPDATE user_balances
+            SET balance = :balance,
+                total_deposited = total_deposited + :amount,
+                last_transaction_at = NOW()
+            WHERE user_id = :user_id
+        ");
+
+        $stmt->execute([
+            'balance' => $balanceAfter,
+            'amount' => $amount,
+            'user_id' => $userId
+        ]);
+    }
+
+    // 取引履歴を記録
+    $transactionId = 'txn_deposit_' . uniqid() . '_' . time();
+
+    $stmt = $pdo->prepare("
+        INSERT INTO point_transactions
+        (user_id, transaction_id, type, amount, balance_before, balance_after, description)
+        VALUES
+        (:user_id, :transaction_id, 'deposit', :amount, :balance_before, :balance_after, :description)
+    ");
+
+    $stmt->execute([
+        'user_id' => $userId,
+        'transaction_id' => $transactionId,
+        'amount' => $amount,
+        'balance_before' => $balanceBefore,
+        'balance_after' => $balanceAfter,
+        'description' => $description
+    ]);
+
+    error_log("💰 Deposited {$amount} points: user_id={$userId}, balance={$balanceBefore} -> {$balanceAfter}");
+
+    return [
+        'transaction_id' => $transactionId,
+        'balance_before' => $balanceBefore,
+        'balance_after' => $balanceAfter,
+        'amount' => $amount
+    ];
+}
+
+/**
  * ポイント払い出し
  *
  * @param PDO $pdo
