@@ -31,6 +31,8 @@ $machineNo = $_GET['NO'] ?? null;
 $sessionId = $_GET['sessionId'] ?? null;
 $userId = $_GET['userId'] ?? null;
 $cameraIdParam = $_GET['cameraId'] ?? null; // URLから直接カメラID（PeerID）を受け取る
+$initialPoints = intval($_GET['points'] ?? 0); // 初期ポイント（korea_net8frontから渡される）
+$initialCredit = intval($_GET['credit'] ?? 0); // 初期クレジット
 
 // 必須パラメータチェック
 if (!$machineNo || !$sessionId) {
@@ -235,7 +237,9 @@ try {
         'convPlaypoint' => $session['convplaypoint'] ?? 1,
         'errorMessages' => $errorMessages,
         'imageReel' => $session['image_reel'] ?? '',
-        'username' => 'Player'
+        'username' => 'Player',
+        'initialPoints' => $initialPoints,
+        'initialCredit' => $initialCredit
     ]);
 
 } catch (PDOException $e) {
@@ -361,6 +365,10 @@ function outputPlayerHTML($data) {
     var closeTime      = '06:00';
     var pachi_rate     = '0';
     var sessionId      = '<?= $data['sessionId'] ?>';
+
+    // 初期ポイント・クレジット（korea_net8frontから渡される）
+    var initialPoints  = <?= (int)$data['initialPoints'] ?>;
+    var initialCredit  = <?= (int)$data['initialCredit'] ?>;
 
     // 埋め込みモードフラグ
     var isEmbedMode    = true;
@@ -529,6 +537,24 @@ function outputPlayerHTML($data) {
             console.log('🎮 NET8 Embed Player initialized');
             console.log('📹 Camera ID:', cameraid);
             console.log('🔌 Signaling:', sigHost + ':' + sigPort);
+            console.log('💰 Initial Points:', initialPoints, 'Credit:', initialCredit);
+
+            // 初期ポイント・クレジットの表示
+            if (initialPoints > 0) {
+                $('#point').text(initialPoints);
+                $('#playpoint').text(initialPoints);
+                // view_auth.jsのgame.playpointを初期化
+                if (typeof game !== 'undefined') {
+                    game.playpoint = initialPoints;
+                }
+            }
+            if (initialCredit > 0) {
+                $('#credit').text(initialCredit);
+                // view_auth.jsのgame.creditを初期化
+                if (typeof game !== 'undefined') {
+                    game.credit = initialCredit;
+                }
+            }
 
             // 親ウィンドウにready通知
             if (window.parent !== window) {
@@ -536,7 +562,9 @@ function outputPlayerHTML($data) {
                     type: 'NET8_PLAYER_READY',
                     machineNo: machineno,
                     sessionId: sessionId,
-                    cameraId: cameraid
+                    cameraId: cameraid,
+                    points: initialPoints,
+                    credit: initialCredit
                 }, '*');
             }
         });
