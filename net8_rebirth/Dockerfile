@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ完全無効化（この行を実行することでキャッシュが破棄される）
-RUN echo "FORCE-REBUILD-2025-12-17-v7-peerjs-debug" > /tmp/cache-bust
+RUN echo "FORCE-REBUILD-2025-12-17-v8-delay-send" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \

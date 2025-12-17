@@ -590,11 +590,16 @@ var _savestream;					//Video確認用
 		dataConnection.on('open', function(data){
 			showPhase('dataConnection open');
 			console.log( 'dataConnection open');
-			if ( !recvLang ){
-				console.log( 'retry:lang');
-				retryLang();
-				//dataConnection.send(_sendStr( 'Lng', languageMode ));
-			}
+			notifyParent('data_channel_ready', { ready: true });
+
+			// ICE接続が安定するまで少し待ってから送信を開始
+			// iframe環境ではICEネゴシエーションに時間がかかる場合がある
+			setTimeout(function() {
+				if ( !recvLang && dataConnection && dataConnection.open ){
+					console.log( 'retry:lang (after delay)');
+					retryLang();
+				}
+			}, 500);
 
 			// SDK通知: ゲーム準備完了
 			startTimestamp = Date.now(); // ゲーム開始時刻を記録
