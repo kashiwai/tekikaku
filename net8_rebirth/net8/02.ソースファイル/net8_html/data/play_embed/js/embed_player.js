@@ -230,6 +230,18 @@
         // 接続状態確認
         // view_auth.jsでは_sconnectがグローバル変数（dataConnectionはローカル）
         isConnected: function() {
+            var video = document.getElementById('video');
+
+            // デバッグ情報をコンソールに出力
+            console.log('🔍 isConnected check:', {
+                _sconnect_exists: typeof _sconnect !== 'undefined',
+                _sconnect_open: typeof _sconnect !== 'undefined' && _sconnect ? _sconnect.open : 'N/A',
+                video_exists: !!video,
+                video_srcObject: video ? !!video.srcObject : false,
+                video_paused: video ? video.paused : 'N/A',
+                video_readyState: video ? video.readyState : 'N/A'
+            });
+
             // _sconnect (view_auth.jsのグローバル変数) をチェック
             if (typeof _sconnect !== 'undefined' && _sconnect && _sconnect.open === true) {
                 return true;
@@ -239,7 +251,6 @@
                 return true;
             }
             // 映像が流れているかもチェック（ビデオ要素の再生状態）
-            var video = document.getElementById('video');
             if (video && video.srcObject && !video.paused && video.readyState >= 2) {
                 return true;
             }
