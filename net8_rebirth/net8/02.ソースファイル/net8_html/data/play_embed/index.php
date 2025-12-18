@@ -665,109 +665,52 @@ function outputPlayerHTML($data) {
             $('#error-modal').fadeOut(200);
         }
 
-        // クレジット変換（金額指定）- Net8 API経由
+        // クレジット変換（金額指定）- カメラ直接方式
+        // カメラがplaypoint管理を一元化（DBとの同期もカメラが行う）
         function convertCredit(amount) {
-            console.log('💰 Converting credit via API:', amount);
+            console.log('💰 Converting credit via camera:', amount);
             hideConvModal();
 
-            // Net8 API を呼び出してポイント→クレジット変換
-            fetch('/api/v1/convert_credit.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    sessionId: sessionId,
-                    amount: amount,
-                    convertAll: false
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('✅ Credit conversion success:', data);
-                    // ゲーム状態を更新
-                    game.playpoint = data.newBalance;
-                    game.credit = (game.credit || 0) + data.creditAdded;
+            // カメラ側にクレジット変換を依頼（ccaコマンド）
+            // カメラがplaypointを減らしてcreditを追加する
+            if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
+                dataConnection.send(_sendStr('cca', amount));
+                console.log('📤 Sent cca command to camera:', amount);
 
-                    // UI更新
-                    $('#point').text(game.playpoint);
-                    $('#playpoint').text(game.playpoint);
-                    $('#credit').text(game.credit);
-
-                    // カメラ側にクレジット追加を通知（DataConnection経由）
-                    if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
-                        dataConnection.send(_sendStr('cca', data.creditAdded));
-                    }
-
-                    // 親ウィンドウに通知
-                    if (window.parent !== window) {
-                        window.parent.postMessage({
-                            type: 'NET8_CREDIT_CONVERTED',
-                            creditAdded: data.creditAdded,
-                            newBalance: data.newBalance,
-                            currentCredit: game.credit
-                        }, '*');
-                    }
-                } else {
-                    console.error('❌ Credit conversion failed:', data);
-                    showError('変換エラー', data.message || 'クレジット変換に失敗しました');
+                // 親ウィンドウに通知（変換リクエスト送信）
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'NET8_CREDIT_CONVERSION_REQUESTED',
+                        amount: amount
+                    }, '*');
                 }
-            })
-            .catch(error => {
-                console.error('❌ Credit conversion error:', error);
-                showError('通信エラー', 'サーバーとの通信に失敗しました');
-            });
+            } else {
+                console.error('DataConnection not available');
+                showError('接続エラー', '台との接続が確立されていません');
+            }
         }
 
-        // 全額変換 - Net8 API経由
+        // 全額変換 - カメラ直接方式
         function convertAllCredit() {
-            console.log('💰 Converting all credit via API');
+            console.log('💰 Converting all credit via camera');
             hideConvModal();
 
-            // Net8 API を呼び出して全額変換
-            fetch('/api/v1/convert_credit.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    sessionId: sessionId,
-                    convertAll: true
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('✅ All credit conversion success:', data);
-                    // ゲーム状態を更新
-                    game.playpoint = data.newBalance;
-                    game.credit = (game.credit || 0) + data.creditAdded;
+            // カメラ側に全額変換を依頼（cccコマンド）
+            if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
+                dataConnection.send(_sendStr('ccc', ''));
+                console.log('📤 Sent ccc command to camera (convert all)');
 
-                    // UI更新
-                    $('#point').text(game.playpoint);
-                    $('#playpoint').text(game.playpoint);
-                    $('#credit').text(game.credit);
-
-                    // カメラ側にクレジット追加を通知（DataConnection経由）
-                    if (typeof dataConnection !== 'undefined' && dataConnection && dataConnection.open) {
-                        dataConnection.send(_sendStr('ccc', data.creditAdded));
-                    }
-
-                    // 親ウィンドウに通知
-                    if (window.parent !== window) {
-                        window.parent.postMessage({
-                            type: 'NET8_CREDIT_CONVERTED',
-                            creditAdded: data.creditAdded,
-                            newBalance: data.newBalance,
-                            currentCredit: game.credit
-                        }, '*');
-                    }
-                } else {
-                    console.error('❌ Credit conversion failed:', data);
-                    showError('変換エラー', data.message || 'クレジット変換に失敗しました');
+                // 親ウィンドウに通知
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'NET8_CREDIT_CONVERSION_REQUESTED',
+                        convertAll: true
+                    }, '*');
                 }
-            })
-            .catch(error => {
-                console.error('❌ Credit conversion error:', error);
-                showError('通信エラー', 'サーバーとの通信に失敗しました');
-            });
+            } else {
+                console.error('DataConnection not available');
+                showError('接続エラー', '台との接続が確立されていません');
+            }
         }
 
         // 精算実行
