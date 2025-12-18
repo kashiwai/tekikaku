@@ -1637,16 +1637,33 @@ var _savestream;					//Video確認用
 				writeLog( '[autoBet] exec' );
 				//クレジット変換を自動実行
 				game.ccc_status = "";
+				var waitCount = 0;
+				var maxWait = 100; // 5秒タイムアウト (50ms * 100)
 				dataConnection.send(_sendStr( 'ccc', ''));
 				intid = setInterval(function(){
-					if ( game.ccc_status == "ok" ){
-						writeLog( '[autoBet] ok' );
+					waitCount++;
+					if ( game.ccc_status == "ok" && game.credit > 0 ){
+						// ccc成功 かつ クレジットが更新された
+						writeLog( '[autoBet] ok, credit=' + game.credit );
 						clearInterval( intid );
 						resolve(true);
+					} else if ( game.ccc_status == "ok" && waitCount < maxWait ){
+						// ccc成功したがクレジット更新待ち
+						console.log( '[autoBet] waiting for credit update...', game.credit );
 					} else if ( game.ccc_status == "ng" ){
 						console.log( '[autoBet] ng' );
 						writeLog( intid );
+						clearInterval( intid );
 						reject();
+					} else if ( waitCount >= maxWait ){
+						// タイムアウト - ccc_statusがokならクレジット更新を待たずに続行
+						console.log( '[autoBet] timeout, ccc_status=' + game.ccc_status + ', credit=' + game.credit );
+						clearInterval( intid );
+						if ( game.ccc_status == "ok" ) {
+							resolve(true);
+						} else {
+							reject();
+						}
 					}
 				},50);
 			} else {

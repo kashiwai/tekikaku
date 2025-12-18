@@ -1140,10 +1140,24 @@
 								console.log('💰 [Korea] Setting playpoint from client:', newPlaypoint);
 								game.playpoint = newPlaypoint;
 								game.koreaMode = true;  // 韓国モードを有効化（gameオブジェクトに直接設定）
-								console.log('💰 [Korea] Mode enabled: game.koreaMode =', game.koreaMode);
+								// 韓国モード用デフォルト値を設定（未定義の場合）
+								if (!game.conv_point || game.conv_point <= 0) {
+									game.conv_point = 100;  // デフォルト: 100ポイント = 50クレジット
+									console.log('💰 [Korea] Set default conv_point:', game.conv_point);
+								}
+								if (!game.conv_credit || game.conv_credit <= 0) {
+									game.conv_credit = 50;  // デフォルト: 50クレジット
+									console.log('💰 [Korea] Set default conv_credit:', game.conv_credit);
+								}
+								if (!game.tester_flg) {
+									game.tester_flg = 0;  // 通常ユーザーとして扱う
+								}
+								console.log('💰 [Korea] Mode enabled: game.koreaMode =', game.koreaMode, 'conv_point:', game.conv_point, 'conv_credit:', game.conv_credit);
 								keysocket.send('@SETPOINT_'+newPlaypoint);
 								keysocket.send('@KOREA_MODE_ENABLED');
 								dataConnection.send( _sendStr('Apt',  game.playpoint) );
+								dataConnection.send( _sendStr('Acp',  game.conv_point) );  // クライアントにも送信
+								dataConnection.send( _sendStr('Acc',  game.conv_credit) ); // クライアントにも送信
 								showGame();
 							} else {
 								console.log('❌ [Korea] Invalid playpoint value:', _msg);
