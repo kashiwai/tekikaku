@@ -283,13 +283,6 @@ var _savestream;					//Video確認用
 				console.log( '## bad push!!');
 				return;
 			}
-			// 韓国モード: AUTO準備状態ならautoPlayを開始
-			if ( autoModePrep && koreaMode ) {
-				console.log('🎰 [Korea] MAX+START押下 - AUTO開始');
-				autoModePrep = false;
-				autoPlay(true);
-				return;
-			}
 			maxstartFlg = true;
 			dataConnection.send(_sendStr( 'bsbd', "setdown"));
 			setTimeout(function(){
@@ -1338,17 +1331,11 @@ var _savestream;					//Video確認用
 				$('#maxpoint').attr('readonly', true );
 				usePoint = 0;
 
-				// 韓国モード: STARTボタンを押すまで待機
-				if ( koreaMode ) {
-					autoModePrep = true;
-					console.log('🎰 [Korea] AUTO準備完了 - STARTボタンで開始');
-				} else {
-					autoPlay(true);
-				}
+				// AUTOモード開始（韓国モードでも同じ動作）
+				autoPlay(true);
 			}
 		} else {
 			autoPlay_Off();
-			autoModePrep = false;
 			_sconnect.send(_sendStr( 'bae', 'autostop' ));
 		}
 	});
@@ -1423,19 +1410,13 @@ var _savestream;					//Video確認用
 				$('#maxpoint').attr('readonly', true );
 				usePoint = 0;
 
-				// 韓国モード: STARTボタンを押すまで待機
-				if ( koreaMode ) {
-					autoModePrep = true;
-					console.log('🎰 [Korea] pushAutoPlay - AUTO準備完了');
-				} else {
-					autoPlay(true);
-				}
+				// AUTOモード開始（韓国モードでも同じ動作）
+				autoPlay(true);
 				//目押し操作不可に変更
 				setBonusMode(false);
 			}
 		} else {
 			autoPlay_Off();
-			autoModePrep = false;
 			_sconnect.send(_sendStr( 'bae', 'autostop' ));
 		}
 		return true;
@@ -1729,13 +1710,6 @@ var _savestream;					//Video確認用
 				return false;
 			}
 			if ( id == 'sendBtnss' ){
-				// 韓国モード: AUTO準備状態ならautoPlayを開始
-				if ( autoModePrep && koreaMode ) {
-					console.log('🎰 [Korea] START押下 - AUTO開始');
-					autoModePrep = false;
-					autoPlay(true);
-					return false;
-				}
 				dataConnection.send(_sendStr( 'b'+id.split('sendBtn')[1], "down"));
 				maxstartFlg = true;
 				return false;
