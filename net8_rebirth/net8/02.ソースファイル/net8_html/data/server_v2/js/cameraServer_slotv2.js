@@ -1195,8 +1195,8 @@
 						}
 						
 						
-						//営業時間外処理
-						if ( !closeGameFlg ){
+						//営業時間外処理（🇰🇷 Koreaモードはバイパス）
+						if ( !closeGameFlg || game.koreaMode === true ){
 							keysocketSend(_t);
 							//keysocket.send(_t);
 						} else {

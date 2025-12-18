@@ -294,7 +294,14 @@
 			closeGameFlg = false;
 			return;
 		}
-		
+
+		// 🇰🇷 Koreaモードは営業時間チェックをバイパス
+		if ( game.koreaMode === true ){
+			console.log('🇰🇷 Korea mode - bypassing business hours check');
+			closeGameFlg = false;
+			return;
+		}
+
 		if ( gameStopTime != '' ){
 			var ssp = gameStopTime.split(' ')[1].split(':');
 			closeTime = ''+ssp[0]+':'+ssp[1];
