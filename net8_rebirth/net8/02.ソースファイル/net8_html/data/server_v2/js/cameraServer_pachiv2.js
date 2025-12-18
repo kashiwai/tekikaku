@@ -1114,8 +1114,18 @@
 								autoModeFlg = false;
 							}
 						}
-						
-						
+
+						// 🇰🇷 bas/bae コマンドでもautoModeFlgを制御（Koreaモード対応）
+						if ( _t == 'bas' ){
+							console.log('🎮 [AUTO] bas command received - setting autoModeFlg = true');
+							autoModeFlg = true;
+						}
+						if ( _t == 'bae' ){
+							console.log('🎮 [AUTO] bae command received - setting autoModeFlg = false');
+							autoModeFlg = false;
+						}
+
+
 						//営業時間外処理（🇰🇷 Koreaモードはバイパス）
 						if ( !closeGameFlg || game.koreaMode === true ){
 							keysocketSend(_t);

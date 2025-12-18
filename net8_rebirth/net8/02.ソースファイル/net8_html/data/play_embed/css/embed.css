@@ -1104,3 +1104,47 @@ body.embed-mode {
 .pay-cancel-btn:hover {
     background: rgba(255, 255, 255, 0.1);
 }
+
+/* ========================================
+   音ボタン（embed-mode専用）
+   ======================================== */
+
+/* 音ボタンを映像エリアの右上に配置 */
+.embed-mode .btn-pressable.sound-tr,
+.embed-mode #audiostart {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    border: 2px solid #666 !important;
+}
+
+.embed-mode .btn-pressable.sound-off::before {
+    content: "\f6a9" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    color: #888 !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+}
+
+.embed-mode .btn-pressable.sound-on::before {
+    content: "\f028" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    color: #4caf50 !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+}
+
+.embed-mode .btn-pressable.sound-on {
+    border-color: #4caf50 !important;
+    background: rgba(76, 175, 80, 0.2) !important;
+}
