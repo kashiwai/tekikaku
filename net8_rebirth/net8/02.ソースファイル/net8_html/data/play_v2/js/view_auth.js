@@ -90,6 +90,7 @@ var _savestream;					//Video確認用
 	var autoStopSendFlg = false;				//autoモードの停止信号送信フラグ
 	var autoStopSignal = false;					//autoモード停止フラグ
 	var autoMode = false;						//autoモード設定
+	var koreaMode = false;						//韓国統合モード（Spt送信時にtrue）
 	var videoWidth;								//videoサイズ
 	var recvLang = false;						//recv 'Lng'
 
@@ -986,6 +987,8 @@ var _savestream;					//Video確認用
 				if (game.playpoint > 0 && _sconnect && _sconnect.open) {
 					console.log('💰 [Korea] Syncing playpoint to camera:', game.playpoint);
 					_sconnect.send(_sendStr('Spt', game.playpoint));
+					koreaMode = true;  // 韓国モードを有効化
+					console.log('💰 [Korea] Korea mode enabled for AUTO');
 				}
 				
 			//終了予告
@@ -1280,6 +1283,13 @@ var _savestream;					//Video確認用
 			}
 			targetUsePoint = parseInt($('#maxpoint').val());
 			if ( !targetUsePoint ) targetUsePoint = 0;
+
+			// 韓国モード: targetUsePointが0の場合、全playpointを使用可能に設定
+			if ( koreaMode && targetUsePoint == 0 && game.playpoint > 0 ) {
+				targetUsePoint = game.playpoint;
+				console.log('💰 [Korea] AUTO: targetUsePoint auto-set to', targetUsePoint);
+			}
+
 			//指定なし、クレジットなし
 			console.log( targetUsePoint,game.credit );
 			if ( targetUsePoint == 0 && game.credit <= 0 ){
@@ -1350,6 +1360,13 @@ var _savestream;					//Video確認用
 			*/
 			targetUsePoint = parseInt($('#maxpoint').val());
 			if ( !targetUsePoint ) targetUsePoint = 0;
+
+			// 韓国モード: targetUsePointが0の場合、全playpointを使用可能に設定
+			if ( koreaMode && targetUsePoint == 0 && game.playpoint > 0 ) {
+				targetUsePoint = game.playpoint;
+				console.log('💰 [Korea] AUTO (push): targetUsePoint auto-set to', targetUsePoint);
+			}
+
 			//指定なし、クレジットなし
 			console.log( targetUsePoint,game.credit );
 			if ( targetUsePoint == 0 && game.credit <= 0 ){
