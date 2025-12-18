@@ -757,6 +757,25 @@
 					reject({status: 'ng'});
 					return;
 				}
+
+				// 韓国統合モード: APIを呼ばずにローカルで処理
+				if ( koreaMode ) {
+					console.log('💰 [Korea] Local conversion (ccc) - no API call');
+					game.playpoint    -= game.conv_point;
+					game.credit       += game.conv_credit;
+					game.in_point     += game.conv_point;
+					console.log('✅ [Korea] ccc Convert success:', game.conv_point, 'points ->', game.conv_credit, 'credits');
+					keysocket.send('@KOREA_CONV_'+game.conv_point+'_'+game.conv_credit);
+					playLog()
+					.then(function(data){
+						resolve(data)
+					},
+					function(data){
+						resolve(data)
+					});
+					return;
+				}
+
 				usePlayPoint(game.conv_point)
 				.then(function(data){
 					//変換
@@ -799,6 +818,9 @@
 		});
 	}
 
+	// 韓国統合モードフラグ（Sptコマンドで設定）
+	var koreaMode = false;
+
 	/*
 	 * プレイポイント→クレジット変換処理（金額指定）
 	 * @access	public
@@ -813,7 +835,7 @@
 			// X = (amount / game.conv_credit) * game.conv_point
 			var needPoint = Math.floor((amount / game.conv_credit) * game.conv_point);
 
-			console.log('🔍 Convert credit amount:', amount, 'Need point:', needPoint);
+			console.log('🔍 Convert credit amount:', amount, 'Need point:', needPoint, 'koreaMode:', koreaMode);
 
 			//会員の種別を判別
 			if ( game.tester_flg == 0 ){
@@ -822,6 +844,25 @@
 					reject({status: 'ng', message: 'ポイント不足'});
 					return;
 				}
+
+				// 韓国統合モード: APIを呼ばずにローカルで処理
+				if ( koreaMode ) {
+					console.log('💰 [Korea] Local conversion - no API call');
+					game.playpoint    -= needPoint;
+					game.credit       += amount;
+					game.in_point     += needPoint;
+					console.log('✅ [Korea] Convert success:', needPoint, 'points ->', amount, 'credits');
+					keysocket.send('@KOREA_CONV_'+needPoint+'_'+amount);
+					playLog()
+					.then(function(data){
+						resolve(data)
+					},
+					function(data){
+						resolve(data)
+					});
+					return;
+				}
+
 				usePlayPoint(needPoint)
 				.then(function(data){
 					//変換
@@ -864,6 +905,12 @@
 				});
 			}
 		});
+	}
+
+	// 韓国統合モードを設定
+	function setKoreaMode(enabled) {
+		koreaMode = enabled;
+		console.log('💰 [Korea] Mode set to:', enabled);
 	}
 
 	/*
