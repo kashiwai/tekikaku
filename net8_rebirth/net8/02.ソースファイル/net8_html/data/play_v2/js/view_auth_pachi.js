@@ -91,6 +91,7 @@ var _savestream;					//Video確認用
 	var autoStopSignal = false;					//autoモード停止フラグ
 	var autoMode = false;						//autoモード設定
 	var koreaMode = false;						//韓国統合モード（Spt送信時にtrue）
+	var autoModePrep = false;					//韓国用: AUTO待機状態（STARTで開始）
 	var disableAuto = false;					//auto連打禁止用フラグ 2021-05-15
 	var activeGame = false;						//回転中
 	var videoWidth;								//videoサイズ
@@ -280,6 +281,13 @@ var _savestream;					//Video確認用
 			}
 			if ( singlePushMode || autoMode ){
 				console.log( '## bad push!!');
+				return;
+			}
+			// 韓国モード: AUTO準備状態ならautoPlayを開始
+			if ( autoModePrep && koreaMode ) {
+				console.log('🎰 [Korea] MAX+START押下 - AUTO開始');
+				autoModePrep = false;
+				autoPlay(true);
 				return;
 			}
 			maxstartFlg = true;
@@ -1017,6 +1025,26 @@ var _savestream;					//Video確認用
 			} else if ( _tag == 'EXT' ){
 				//2020-06-03 終了フラグをセット
 				endPlayFlg = true
+
+				// 韓国モード: 親フレームに精算完了を通知
+				if ( koreaMode && window.parent !== window ) {
+					console.log('💰 [Korea] Settlement complete - notifying parent');
+					try {
+						window.parent.postMessage({
+							type: 'game:settlement',
+							payload: {
+								playPoint: parseInt($('#pay_play_point').text().replace(/,/g, '') || '0'),
+								credit: parseInt($('#pay_credit').text().replace(/,/g, '') || '0'),
+								drawPoint: parseInt($('#pay_draw_point').text().replace(/,/g, '') || '0'),
+								totalDrawPoint: parseInt($('#pay_total_draw_point').text().replace(/,/g, '') || '0'),
+								result: 'completed'
+							}
+						}, '*');
+					} catch (e) {
+						console.error('💰 [Korea] Settlement notify error:', e);
+					}
+				}
+
 				$('#loading_connect').hide();
 				$('#loadinglost').hide();
 				$('#loading_pay').show();
@@ -1030,6 +1058,13 @@ var _savestream;					//Video確認用
 				}
 				//精算結果モーダル表示
 				setTimeout(function(){
+					// 韓国モード: モーダル表示せずに通知のみ
+					if ( koreaMode ) {
+						console.log('💰 [Korea] Settlement modal skipped - parent will handle');
+						clearInterval( aliveInterval );
+						clearInterval( pingInterval );
+						return;
+					}
 					$('#end-modal')
 						.css('z-index', 6000)
 						.modal({
@@ -1295,18 +1330,25 @@ var _savestream;					//Video確認用
 			} else {
 				$(this)
 					.addClass('auto-on');
-				
+
 				//#bonus_countが存在しない時はラベルを変更
 				if(!($('#bonus_count').length)){
 					$(this).text( $(this).attr('stoplabel') );
 				}
 				$('#maxpoint').attr('readonly', true );
 				usePoint = 0;
-				
-				autoPlay(true);
+
+				// 韓国モード: STARTボタンを押すまで待機
+				if ( koreaMode ) {
+					autoModePrep = true;
+					console.log('🎰 [Korea] AUTO準備完了 - STARTボタンで開始');
+				} else {
+					autoPlay(true);
+				}
 			}
 		} else {
 			autoPlay_Off();
+			autoModePrep = false;
 			_sconnect.send(_sendStr( 'bae', 'autostop' ));
 		}
 	});
@@ -1373,20 +1415,27 @@ var _savestream;					//Video確認用
 				$('#autoplay_credit')
 					.addClass('auto-on');
 				$('#autoplay_credit').text( $('#autoplay_credit').attr('stoplabel') );
-				
+
 				//#bonus_countが存在しない時はラベルを変更
 				if(!($('#bonus_count').length)){
 					$(this).text( $(this).attr('stoplabel') );
 				}
 				$('#maxpoint').attr('readonly', true );
 				usePoint = 0;
-				
-				autoPlay(true);
+
+				// 韓国モード: STARTボタンを押すまで待機
+				if ( koreaMode ) {
+					autoModePrep = true;
+					console.log('🎰 [Korea] pushAutoPlay - AUTO準備完了');
+				} else {
+					autoPlay(true);
+				}
 				//目押し操作不可に変更
 				setBonusMode(false);
 			}
 		} else {
 			autoPlay_Off();
+			autoModePrep = false;
 			_sconnect.send(_sendStr( 'bae', 'autostop' ));
 		}
 		return true;
@@ -1499,6 +1548,7 @@ var _savestream;					//Video確認用
 			$('#autoplay_credit').text( $('#autoplay_credit').attr('waitlabel') );
 		}
 		autoMode = false;
+		autoModePrep = false;
 	}
 
 
@@ -1509,6 +1559,7 @@ var _savestream;					//Video確認用
 			.removeClass('auto-on');
 		$('#maxpoint').attr('readonly', false );
 		autoMode = false;
+		autoModePrep = false;
 		//#bonus_countが存在しない時はラベルを変更
 		if( !($('#bonus_count').length)){
 			$('#autoplay_credit').text( $('#autoplay_credit').attr('startlabel') );
@@ -1516,7 +1567,7 @@ var _savestream;					//Video確認用
 		//目押し操作可能に変更
 		$('#menu_select').removeClass('disabled');
 		$('#menu2_select').removeClass('disabled');
-		
+
 		$('.link-credit').hide();
 
 		//連打禁止
@@ -1678,6 +1729,13 @@ var _savestream;					//Video確認用
 				return false;
 			}
 			if ( id == 'sendBtnss' ){
+				// 韓国モード: AUTO準備状態ならautoPlayを開始
+				if ( autoModePrep && koreaMode ) {
+					console.log('🎰 [Korea] START押下 - AUTO開始');
+					autoModePrep = false;
+					autoPlay(true);
+					return false;
+				}
 				dataConnection.send(_sendStr( 'b'+id.split('sendBtn')[1], "down"));
 				maxstartFlg = true;
 				return false;
