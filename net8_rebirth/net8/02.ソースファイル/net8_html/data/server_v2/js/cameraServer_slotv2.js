@@ -1139,8 +1139,10 @@
 							if (!isNaN(newPlaypoint) && newPlaypoint >= 0) {
 								console.log('💰 [Korea] Setting playpoint from client:', newPlaypoint);
 								game.playpoint = newPlaypoint;
-								setKoreaMode(true);  // 韓国モードを有効化
+								game.koreaMode = true;  // 韓国モードを有効化（gameオブジェクトに直接設定）
+								console.log('💰 [Korea] Mode enabled: game.koreaMode =', game.koreaMode);
 								keysocket.send('@SETPOINT_'+newPlaypoint);
+								keysocket.send('@KOREA_MODE_ENABLED');
 								dataConnection.send( _sendStr('Apt',  game.playpoint) );
 								showGame();
 							} else {
