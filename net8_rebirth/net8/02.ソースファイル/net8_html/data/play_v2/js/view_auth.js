@@ -825,7 +825,11 @@ var _savestream;					//Video確認用
 			//新auto停止
 			} else if ( _tag == 'Tae' ){								//右
 				console.log( game.credit, targetUsePoint );
-				if ( game.credit == 0 && targetUsePoint - usePoint < convPlaypoint ){
+				// convPlaypointが未定義の場合はgame.conv_pointを使用
+				var taeConvPoint = (typeof convPlaypoint !== 'undefined' && convPlaypoint > 0)
+					? convPlaypoint
+					: (game.conv_point || 100);
+				if ( game.credit == 0 && targetUsePoint - usePoint < taeConvPoint ){
 					writeLog( "---------no credit!!" );
 					autoPlay_Off();
 					errorAlert( errorMessages['U5051'] );
@@ -1615,8 +1619,13 @@ var _savestream;					//Video確認用
 			}
 			//目標ポイント数を使い切った
 			if ( game.credit <= 0 ){
-				console.log( targetUsePoint,usePoint,convPlaypoint );
-				if ( targetUsePoint - usePoint < convPlaypoint){
+				// convPlaypointが未定義の場合はgame.conv_pointを使用
+				var convPointValue = (typeof convPlaypoint !== 'undefined' && convPlaypoint > 0)
+					? convPlaypoint
+					: (game.conv_point || 100);
+				console.log( 'autoBet check:', targetUsePoint, usePoint, convPointValue, 'koreaMode:', koreaMode );
+				if ( targetUsePoint - usePoint < convPointValue ){
+					console.log( 'autoBet: not enough points for conversion' );
 					resolve(false);
 					return;
 				}
