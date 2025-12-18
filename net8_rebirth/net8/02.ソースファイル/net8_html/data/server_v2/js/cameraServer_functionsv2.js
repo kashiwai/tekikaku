@@ -1004,6 +1004,55 @@
 	 */
 	function execPay(paymode="", exitCode="11"){
 		return new Promise(function(resolve, reject) {
+			// 韓国統合モード: APIを呼ばずにローカルで精算処理
+			if ( game.koreaMode === true ) {
+				console.log('💰 [Korea] Local settlement - no API call');
+
+				// クレジットをポイントに変換して返却
+				// game.conv_point : game.conv_credit = X : game.credit
+				// X = (game.credit / game.conv_credit) * game.conv_point
+				var returnPoint = Math.floor((game.credit / game.conv_credit) * game.conv_point);
+				var totalReturnPoint = game.playpoint + returnPoint;
+
+				console.log('💰 [Korea] Settlement: credit=' + game.credit + ' -> returnPoint=' + returnPoint);
+				console.log('💰 [Korea] Total return: playpoint=' + game.playpoint + ' + return=' + returnPoint + ' = ' + totalReturnPoint);
+
+				// 精算データを構築
+				var payData = {
+					status: 'ok',
+					pay: {
+						play_point: totalReturnPoint,
+						credit: game.credit,
+						draw_point: game.out_credit || 0,
+						autodraw: game.autodraw || 0,
+						total_draw_point: (game.out_credit || 0) + (game.autodraw || 0),
+						deduction_credit: 0
+					}
+				};
+
+				keysocket.send('@KOREA_PAY_' + totalReturnPoint + '_' + game.credit);
+
+				// ゲーム状態をリセット
+				noPayFlg = false;
+				game = $.extend(true, {}, resetGame() );
+				showGame();
+
+				// 10秒後にリロード
+				clearInterval( restartInt );
+				setCameraStatus("end");
+				setTimeout(function(){
+					if ( $('#mentebutton').hasClass('deactive') ) return;
+					setCameraStatus("reset")
+					.then(function(data){
+						keysocket.send('@RESET');
+						location.reload();
+					},function(){});
+				}, 10000);
+
+				resolve(payData);
+				return;
+			}
+
 			var postgame = $.extend(true, {
 				paymode: paymode,
 				exitcode: exitCode
