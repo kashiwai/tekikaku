@@ -1299,9 +1299,23 @@ var _savestream;					//Video確認用
 	});
 
 	$('#autoplay_credit').click(function(){
+		// 🔍 完全デバッグログ
+		console.log('========== AUTO BUTTON CLICKED ==========');
+		console.log('🔍 Button classes:', $(this).attr('class'));
+		console.log('🔍 koreaMode:', koreaMode);
+		console.log('🔍 game.playpoint:', game.playpoint);
+		console.log('🔍 game.credit:', game.credit);
+		console.log('🔍 game.conv_point:', game.conv_point);
+		console.log('🔍 game.conv_credit:', game.conv_credit);
+		console.log('🔍 readyFlg:', readyFlg);
+		console.log('🔍 autoMode:', autoMode);
+		console.log('🔍 autoStopSignal:', autoStopSignal);
+		console.log('==========================================');
+
 		//2020-06-10 ROMとの共通化
 		//Wait中の場合はボタン操作不可
 		if ( $(this).hasClass('autoplay-wait') ){
+			console.log('⚠️ AUTO button in wait state - returning');
 			return;
 		}
 		/*
@@ -1310,11 +1324,12 @@ var _savestream;					//Video確認用
 			return;
 		}
 		*/
-	
+
 		if( $(this).hasClass('autoplay-off') ) {
+			console.log('▶️ Starting AUTO mode (button has autoplay-off class)');
 			//リール動作中はautoへの変更不可
 			if ( reelMoveFlg == true ) {
-				console.log('reel moveing');
+				console.log('⚠️ reel moving - returning');
 				return;
 			}
 			targetUsePoint = parseInt($('#maxpoint').val());
@@ -1327,15 +1342,18 @@ var _savestream;					//Video確認用
 			}
 
 			//指定なし、クレジットなし
-			console.log( targetUsePoint,game.credit );
+			console.log('🔍 targetUsePoint:', targetUsePoint, 'game.credit:', game.credit);
 			if ( targetUsePoint == 0 && game.credit <= 0 ){
+				console.log('❌ No points and no credit - showing error');
 				errorAlert( errorMessages['U5051'] );
 				return;
 			}
 			if ( targetUsePoint > game.playpoint ){
+				console.log('❌ targetUsePoint > playpoint - showing error');
 				errorAlert( errorMessages['U5053'] );
 				return;
 			} else {
+				console.log('✅ Conditions passed - starting autoPlay');
 				$(this)
 					.removeClass('autoplay-off')
 					.addClass('autoplay-on');
@@ -1353,6 +1371,8 @@ var _savestream;					//Video確認用
 				setBonusMode(false);
 			}
 		} else {
+			console.log('⏹️ Stopping AUTO mode (button does NOT have autoplay-off class)');
+			console.log('⚠️ Sending bae command to stop AUTO');
 			autoPlay_Wait();
 			autoModePrep = false;
 			_sconnect.send(_sendStr( 'bae', 'autostop' ));
