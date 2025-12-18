@@ -482,6 +482,8 @@ function outputPlayerHTML($data) {
             <audio id="audio"></audio>
             <div id="video_overlay" class="video-overlay"></div>
             <div id="consolelog" style="display:none;"></div>
+            <!-- 音ボタン（embed-mode用） -->
+            <a class="btn-pressable sound-off sound-tr" id="audiostart"></a>
         </div>
 
         <!-- play_v2互換コントロールパネル（2列レイアウト） -->
@@ -508,7 +510,7 @@ function outputPlayerHTML($data) {
                 <button class="btn-game stop sendBtn" id="sendBtns1" oncontextmenu="return false">STOP1</button>
                 <button class="btn-game stop sendBtn" id="sendBtns2" oncontextmenu="return false">STOP2</button>
                 <button class="btn-game stop sendBtn" id="sendBtns3" oncontextmenu="return false">STOP3</button>
-                <button class="btn-game auto" id="autoplay_credit" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
+                <button class="btn-game auto autoplay-off" id="autoplay_credit" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
             </div>
             <?php else: ?>
             <div class="control-row-2" data-label="パチンコ操作">
