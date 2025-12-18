@@ -502,16 +502,16 @@ function outputPlayerHTML($data) {
 
             <!-- 2列目: ゲームコントロール -->
             <?php if ($isSlot): ?>
-            <div class="control-row-2">
-                <button class="btn-game maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false">BET</button>
+            <div class="control-row-2" data-label="スロット操作">
+                <button class="btn-game maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false">MAX BET</button>
                 <button class="btn-game start sendBtn" id="sendBtnss" oncontextmenu="return false">START</button>
-                <button class="btn-game stop sendBtn" id="sendBtns1" oncontextmenu="return false">1</button>
-                <button class="btn-game stop sendBtn" id="sendBtns2" oncontextmenu="return false">2</button>
-                <button class="btn-game stop sendBtn" id="sendBtns3" oncontextmenu="return false">3</button>
+                <button class="btn-game stop sendBtn" id="sendBtns1" oncontextmenu="return false">STOP1</button>
+                <button class="btn-game stop sendBtn" id="sendBtns2" oncontextmenu="return false">STOP2</button>
+                <button class="btn-game stop sendBtn" id="sendBtns3" oncontextmenu="return false">STOP3</button>
                 <button class="btn-game auto" id="autoplay_credit" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
             </div>
             <?php else: ?>
-            <div class="control-row-2">
+            <div class="control-row-2" data-label="パチンコ操作">
                 <button class="btn-game sendBtn" id="sendBtnph" oncontextmenu="return false">ハンドル</button>
                 <button class="btn-game start sendBtn" id="sendBtnpstart" oncontextmenu="return false">START</button>
             </div>
