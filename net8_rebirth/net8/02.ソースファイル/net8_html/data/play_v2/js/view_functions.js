@@ -665,6 +665,7 @@
 	//audio設定
 	function setAudio(){
 		var audio = document.querySelector('audio');
+		var video = document.getElementById('video');
 		if( $('#audiostart').hasClass('playing')){
 			$('#audiostart,#audiostart_auto')
 				.removeClass('sound-on')
@@ -673,7 +674,9 @@
 					.removeClass('fa-volume-up')
 					.addClass('fa-volume-mute');
 			$('#audiostart,#audiostart_auto').removeClass('playing')
-			audio.pause();
+			if (audio) audio.pause();
+			// video要素もミュート
+			if (video) video.muted = true;
 		} else {
 			$('#audiostart,#audiostart_auto')
 				.removeClass('sound-off')
@@ -682,8 +685,24 @@
 					.removeClass('fa-volume-mute')
 					.addClass('fa-volume-up');
 			$('#audiostart,#audiostart_auto').addClass('playing')
-			audio.play()
-			.then(function(){},function(){});
+			// audio要素で再生を試みる
+			if (audio) {
+				audio.play()
+				.then(function(){
+					console.log('🔊 Audio element playing');
+				},function(e){
+					console.log('🔇 Audio play failed, trying video unmute:', e);
+					// audio失敗時はvideo要素をunmute
+					if (video) {
+						video.muted = false;
+						console.log('🔊 Video unmuted as fallback');
+					}
+				});
+			}
+			// video要素も同時にunmute（フォールバック）
+			if (video) {
+				video.muted = false;
+			}
 		}
 	}
 

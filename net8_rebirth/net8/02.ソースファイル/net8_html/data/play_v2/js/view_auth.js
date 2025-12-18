@@ -1248,9 +1248,20 @@ var _savestream;					//Video確認用
 				}
 				setVideoWidth();
 
-				//PCでもワンアクションがないと音がでない時があるので最初は音をださないほうがいい？
-				if ( getDevice() == "other" ){
+				//PCまたは韓国モード(play_embed)では自動で音声を有効化
+				if ( getDevice() == "other" || koreaMode ){
 					setAudio();
+				}
+
+				// 韓国モード: 最初のクリックで音声有効化（ブラウザポリシー対策）
+				if ( koreaMode && !$('#audiostart').hasClass('playing') ) {
+					document.addEventListener('click', function enableAudioOnFirstClick() {
+						if (!$('#audiostart').hasClass('playing')) {
+							setAudio();
+							console.log('🔊 [Korea] Audio enabled on first click');
+						}
+						document.removeEventListener('click', enableAudioOnFirstClick);
+					}, { once: true });
 				}
 
 				//言語設定の送信
