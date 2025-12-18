@@ -474,18 +474,47 @@
 	 */
 	function pay(paymode='', exitCode="11"){
 		return new Promise(function(resolve, reject) {
+			console.log('💰 [pay] Starting settlement - activeFlg:', activeFlg, 'koreaMode:', game.koreaMode);
+
 			//2重精算防止
 			if ( runPayFlg ){
-				console.log( 'pay reject' );
+				console.log( 'pay reject - runPayFlg' );
 				reject();
 				return;
 			}
 			runPayFlg = true;
+
+			// 韓国モード: activeFlgに関係なく精算処理を実行
+			if ( game.koreaMode === true ) {
+				console.log('💰 [Korea] Forcing settlement regardless of activeFlg');
+				// 精算処理を実行
+				execPay(paymode, exitCode)
+				.then(function(data){
+					console.log('💰 [Korea] Settlement data:', data);
+					_sconnect.send( _sendStr('Ppp',  data.pay.play_point) );
+					_sconnect.send( _sendStr('Pcr',  data.pay.credit) );
+					_sconnect.send( _sendStr('Pdr',  data.pay.draw_point) );
+					_sconnect.send( _sendStr('Pda',  data.pay.autodraw) );
+					_sconnect.send( _sendStr('Ptd',  data.pay.total_draw_point) );
+					_sconnect.send( _sendStr('Pdd',  data.pay.deduction_credit) );
+					_sconnect.send( _sendStr('EXT',  '') );
+					runPayFlg = false;
+					resetMachine();
+					resolve();
+				},function(){
+					console.log('💰 [Korea] Settlement failed');
+					_sconnect.send( _sendStr('ERP',  'pay') );
+					runPayFlg = false;
+					resolve();
+				});
+				return;
+			}
+
 			if ( !activeFlg ){
 				//2020-08-17 フラグリセット追加
 				runPayFlg = false;
 				if ( game.member_no <= 0 ){
-					console.log( 'pay reject' );
+					console.log( 'pay reject - not active, no member' );
 					reject();
 				} else {
 					resolve();
