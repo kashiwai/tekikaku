@@ -1575,11 +1575,21 @@ var _savestream;					//Video確認用
 	function autoPlay(cremode){
 		var endInt = null
 
+		console.log('🎮 [autoPlay] Starting with cremode:', cremode, 'credit:', game.credit, 'koreaMode:', koreaMode);
+
 		autoBet(cremode)
 		.then(function(ret){
+			console.log('🎮 [autoPlay] autoBet result:', ret, 'credit:', game.credit);
+
 			if ( !ret || game.credit <= 0 ){
+				console.log('❌ [autoPlay] Cannot start AUTO: ret=' + ret + ', credit=' + game.credit);
 				autoPlay_Off();
-				_sconnect.send(_sendStr( 'bae', 'autostart' ));
+				// baeコマンドは送信しない（AUTOがまだ開始されていないため）
+				// ユーザーにエラーメッセージを表示
+				if ( koreaMode ) {
+					console.log('❌ [Korea] AUTO start failed - showing error');
+					errorAlert( errorMessages['U5052'] || 'ポイントが不足しています' );
+				}
 				//bonus設定を戻す
 				resetBonusSelect()
 				return;
@@ -1588,24 +1598,33 @@ var _savestream;					//Video確認用
 			if ( $('#autoplay_credit').hasClass('autoplay-on') && !autoStopSignal ){
 				if ( autoFirstEventFlg ){
 					//autoplayの初回のみ
+					console.log('🎮 [autoPlay] First auto event - sending bsb then bas');
 					dataConnection.send(_sendStr( 'bsb', "auto"));				//Signal5が保留になっているかもしれないので先に消化
 					//自動でbsyが発行されるのでディレイしてbstを送信する
 					setTimeout(function(){
+						console.log('✅ [autoPlay] Sending bas command to start AUTO');
 						_sconnect.send(_sendStr( 'bas', 'autostart' ));
 						autoMode = true;
 					}, 800 );
 					autoFirstEventFlg = false;
 				} else {
 					//通常
+					console.log('✅ [autoPlay] Sending bas command to start AUTO (normal)');
 					_sconnect.send(_sendStr( 'bas', 'autostart' ));
 					autoMode = true;
 				}
 			} else {
+				console.log('⚠️ [autoPlay] AUTO button not in autoplay-on state or autoStopSignal');
 				autoPlay_Off();
 			}
 		},function(){
 			//credit変換できなかった時
+			console.log('❌ [autoPlay] autoBet rejected - credit conversion failed');
 			autoPlay_Off();
+			// ユーザーにエラーメッセージを表示
+			if ( koreaMode ) {
+				errorAlert( errorMessages['U5052'] || 'ポイントが不足しています' );
+			}
 		});
 	}
 	
@@ -1651,12 +1670,16 @@ var _savestream;					//Video確認用
 						clearInterval( intid );
 						reject();
 					} else if ( waitCount >= maxWait ){
-						// タイムアウト - ccc_statusがokならクレジット更新を待たずに続行
-						console.log( '[autoBet] timeout, ccc_status=' + game.ccc_status + ', credit=' + game.credit );
+						// タイムアウト - creditが更新されていなければ失敗とする
+						console.log( '❌ [autoBet] timeout, ccc_status=' + game.ccc_status + ', credit=' + game.credit );
 						clearInterval( intid );
-						if ( game.ccc_status == "ok" ) {
+						if ( game.ccc_status == "ok" && game.credit > 0 ) {
+							// ccc成功かつクレジット更新済み → 成功
+							console.log( '✅ [autoBet] timeout but credit updated, continuing' );
 							resolve(true);
 						} else {
+							// ccc失敗またはクレジット未更新 → 失敗
+							console.log( '❌ [autoBet] timeout: ccc_status=' + game.ccc_status + ', credit=' + game.credit );
 							reject();
 						}
 					}
