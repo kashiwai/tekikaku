@@ -1152,12 +1152,13 @@
 								if (!game.tester_flg) {
 									game.tester_flg = 0;  // 通常ユーザーとして扱う
 								}
-								console.log('💰 [Korea] Mode enabled: game.koreaMode =', game.koreaMode, 'conv_point:', game.conv_point, 'conv_credit:', game.conv_credit);
+								console.log('💰 [Korea] Mode enabled: game.koreaMode =', game.koreaMode, 'conv_point:', game.conv_point, 'conv_credit:', game.conv_credit, 'credit:', game.credit);
 								keysocket.send('@SETPOINT_'+newPlaypoint);
 								keysocket.send('@KOREA_MODE_ENABLED');
 								dataConnection.send( _sendStr('Apt',  game.playpoint) );
-								dataConnection.send( _sendStr('Acp',  game.conv_point) );  // クライアントにも送信
-								dataConnection.send( _sendStr('Acc',  game.conv_credit) ); // クライアントにも送信
+								dataConnection.send( _sendStr('Acre', game.credit) );     // クレジットを送信（重要！）
+								dataConnection.send( _sendStr('Acp',  game.conv_point) );  // 変換ポイントを送信
+								dataConnection.send( _sendStr('Acc',  game.conv_credit) ); // 変換クレジットを送信
 								showGame();
 							} else {
 								console.log('❌ [Korea] Invalid playpoint value:', _msg);
