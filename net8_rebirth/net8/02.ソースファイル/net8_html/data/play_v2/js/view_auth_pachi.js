@@ -916,7 +916,14 @@ var _savestream;					//Video確認用
 				$('#menu2_select').removeClass('disabled');
 //				//言語設定の送信
 //				_sconnect.send(_sendStr( 'Lng', languageMode ));
-				
+
+				// 韓国統合用：クライアント側のplaypointをカメラに同期
+				// play_embedで事前に設定されたポイントがある場合、カメラに送信
+				if (game.playpoint > 0 && _sconnect && _sconnect.open) {
+					console.log('💰 [Korea] Syncing playpoint to camera:', game.playpoint);
+					_sconnect.send(_sendStr('Spt', game.playpoint));
+				}
+
 			//終了予告
 			} else if ( _tag == 'Dnt' ){
 				$('#time-modal').modal();

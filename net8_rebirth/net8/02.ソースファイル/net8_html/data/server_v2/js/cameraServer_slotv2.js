@@ -1133,6 +1133,20 @@
 							});
 							return;
 						}
+						// 韓国統合用：クライアントからplaypointを設定
+						if ( _t == 'Spt' ){
+							var newPlaypoint = parseInt(_msg);
+							if (!isNaN(newPlaypoint) && newPlaypoint >= 0) {
+								console.log('💰 [Korea] Setting playpoint from client:', newPlaypoint);
+								game.playpoint = newPlaypoint;
+								keysocket.send('@SETPOINT_'+newPlaypoint);
+								dataConnection.send( _sendStr('Apt',  game.playpoint) );
+								showGame();
+							} else {
+								console.log('❌ [Korea] Invalid playpoint value:', _msg);
+							}
+							return;
+						}
 						if ( _t == 'pay' ){
 							//精算処理
 							pay('', '11')

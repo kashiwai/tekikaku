@@ -1032,6 +1032,37 @@
 							});
 							return;
 						}
+						// 韓国統合用：金額指定でクレジット変換
+						if ( _t == 'cca' ){
+							var amount = parseInt(_msg);
+							console.log('📝 Convert credit amount request:', amount);
+							execConvCreditAmount(amount)
+							.then(function(data){
+								keysocket.send('@CREDIT_'+game.credit);
+								dataConnection.send( _sendStr('Acre', game.credit) );
+								dataConnection.send( _sendStr('Apt',  game.playpoint) );
+								dataConnection.send( _sendStr('Cst',  'ok') );
+								console.log('✅ Convert credit amount success');
+							},function(data){
+								console.log('❌ Convert credit amount failed:', data);
+								dataConnection.send( _sendStr('Cst',  data.status) );
+							});
+							return;
+						}
+						// 韓国統合用：クライアントからplaypointを設定
+						if ( _t == 'Spt' ){
+							var newPlaypoint = parseInt(_msg);
+							if (!isNaN(newPlaypoint) && newPlaypoint >= 0) {
+								console.log('💰 [Korea] Setting playpoint from client:', newPlaypoint);
+								game.playpoint = newPlaypoint;
+								keysocket.send('@SETPOINT_'+newPlaypoint);
+								dataConnection.send( _sendStr('Apt',  game.playpoint) );
+								showGame();
+							} else {
+								console.log('❌ [Korea] Invalid playpoint value:', _msg);
+							}
+							return;
+						}
 						if ( _t == 'pay' ){
 							//精算処理
 							pay('', '11')
