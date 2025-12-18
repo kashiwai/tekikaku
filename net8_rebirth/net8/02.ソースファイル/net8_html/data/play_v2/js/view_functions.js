@@ -529,6 +529,12 @@
 		if ( !document.hasFocus() ) return;
 		$('#credit').text(toNumber);
 
+		// velocityライブラリがない場合はスキップ
+		if (typeof $.fn.velocity !== 'function') {
+			console.log('⚠️ velocity not available, skipping animation');
+			return;
+		}
+
 		startTop  = $('#credit').get( 0 ).offsetTop;
 		startLeft = $('#credit').get( 0 ).offsetLeft;
 
@@ -560,6 +566,13 @@
 	function animeNumber_dec(toNumber) {
 		if ( !document.hasFocus() ) return;
 		$('#credit').text(toNumber);
+
+		// velocityライブラリがない場合はスキップ
+		if (typeof $.fn.velocity !== 'function') {
+			console.log('⚠️ velocity not available, skipping animation');
+			return;
+		}
+
 		startTop  = $('#credit').get( 0 ).offsetTop;
 		startLeft = $('#credit').get( 0 ).offsetLeft;
 		$('#animeNumber')
@@ -589,6 +602,11 @@
 
 	//bonusアニメーション
 	$.fn.bonusAnime = function( flg = false ){
+		// velocityライブラリがない場合はスキップ
+		if (typeof $.fn.velocity !== 'function') {
+			return this;
+		}
+
 		if ( flg ){
 			if ( $(this).attr('basecolor') != "" ){
 			} else {
