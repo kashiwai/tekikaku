@@ -72,7 +72,7 @@ function main() {
  * マシン一覧表示（統合管理画面）
  */
 function DispMachineList($template, $message = "") {
-    // マシン一覧取得（全項目）
+    // マシン一覧取得（全項目 + ゲーム機状態）
     $sql = "SELECT
                 dm.machine_no,
                 dm.name,
@@ -82,17 +82,21 @@ function DispMachineList($template, $message = "") {
                 dm.mac_address,
                 dm.chrome_rd_session_id,
                 dm.token,
-                dm.status,
+                dm.status as pc_status,
                 dm.last_heartbeat,
                 dm.model_no,
                 dm.machine_status,
                 mm.model_name,
                 mm.category,
                 mc.camera_mac,
-                mc.camera_name
+                mc.camera_name,
+                lm.assign_flg,
+                lm.member_no as playing_member,
+                lm.start_dt as game_start_time
             FROM dat_machine dm
             LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
             LEFT JOIN mst_camera mc ON dm.camera_no = mc.camera_no
+            LEFT JOIN lnk_machine lm ON dm.machine_no = lm.machine_no
             ORDER BY dm.machine_no ASC";
 
     $machines = $template->DB->getAll($sql, PDO::FETCH_ASSOC);
@@ -103,19 +107,38 @@ function DispMachineList($template, $message = "") {
         PDO::FETCH_ASSOC
     );
 
-    // 統計情報
+    // 統計情報（PC状態 / ゲーム機状態）
     $total = count($machines);
-    $online = 0;
-    $offline = 0;
-    $error = 0;
+    $pc_online = 0;
+    $pc_offline = 0;
+    $game_playing = 0;
+    $game_standby = 0;
 
-    foreach ($machines as $m) {
-        switch ($m['status']) {
-            case 'online': $online++; break;
-            case 'error': $error++; break;
-            default: $offline++; break;
+    foreach ($machines as &$m) {
+        // PC状態（Chrome起動）
+        if ($m['pc_status'] == 'online') {
+            $pc_online++;
+        } else {
+            $pc_offline++;
+        }
+
+        // ゲーム機状態を判定
+        // assign_flg: 0=空き, 1=プレイ中, 9=待機
+        // member_noがあればプレイ中
+        if (!empty($m['playing_member']) && $m['playing_member'] > 0) {
+            $m['game_status'] = 'playing';
+            $game_playing++;
+        } elseif ($m['assign_flg'] == 1) {
+            $m['game_status'] = 'playing';
+            $game_playing++;
+        } elseif ($m['pc_status'] == 'online') {
+            $m['game_status'] = 'standby';
+            $game_standby++;
+        } else {
+            $m['game_status'] = 'offline';
         }
     }
+    unset($m); // 参照を解除
 
     // 次のマシン番号を計算
     $next_machine_no = 1;
@@ -229,6 +252,8 @@ function DispMachineList($template, $message = "") {
         .stat-icon.online { background: linear-gradient(135deg, #10b981, #34d399); }
         .stat-icon.offline { background: linear-gradient(135deg, #64748b, #94a3b8); }
         .stat-icon.error { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .stat-icon.playing { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+        .stat-icon.standby { background: linear-gradient(135deg, #059669, #34d399); }
 
         .stat-content h3 { font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
         .stat-content p { font-size: 28px; font-weight: 700; }
@@ -299,6 +324,8 @@ function DispMachineList($template, $message = "") {
         .status-online { background: #064e3b; color: #34d399; }
         .status-offline { background: #1e293b; color: #94a3b8; }
         .status-error { background: #7f1d1d; color: #fca5a5; }
+        .status-playing { background: #7c3aed; color: #e9d5ff; }
+        .status-standby { background: #065f46; color: #6ee7b7; }
 
         /* 入力フィールド */
         input[type="text"], input[type="number"], select {
@@ -484,24 +511,31 @@ function DispMachineList($template, $message = "") {
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon online">✅</div>
+                <div class="stat-icon online">💻</div>
                 <div class="stat-content">
-                    <h3>オンライン</h3>
-                    <p><?= $online ?></p>
+                    <h3>PC起動中</h3>
+                    <p><?= $pc_online ?></p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon offline">⏸️</div>
                 <div class="stat-content">
-                    <h3>オフライン</h3>
-                    <p><?= $offline ?></p>
+                    <h3>PC停止</h3>
+                    <p><?= $pc_offline ?></p>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon error">⚠️</div>
+                <div class="stat-icon playing">🎮</div>
                 <div class="stat-content">
-                    <h3>エラー</h3>
-                    <p><?= $error ?></p>
+                    <h3>プレイ中</h3>
+                    <p><?= $game_playing ?></p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon standby">🟢</div>
+                <div class="stat-content">
+                    <h3>待機中</h3>
+                    <p><?= $game_standby ?></p>
                 </div>
             </div>
         </div>
@@ -542,7 +576,8 @@ function DispMachineList($template, $message = "") {
                                 <th>MACアドレス</th>
                                 <th>IPアドレス</th>
                                 <th>Signaling</th>
-                                <th>ステータス</th>
+                                <th>PC状態</th>
+                                <th>ゲーム機</th>
                                 <th>最終接続</th>
                                 <th>操作</th>
                             </tr>
@@ -594,9 +629,24 @@ function DispMachineList($template, $message = "") {
                                                class="input-md">
                                     </td>
                                     <td>
-                                        <span class="status-badge status-<?= $m['status'] ?: 'offline' ?>">
-                                            <?= strtoupper($m['status'] ?: 'offline') ?>
+                                        <span class="status-badge status-<?= $m['pc_status'] ?: 'offline' ?>">
+                                            <?= $m['pc_status'] == 'online' ? '💻 ON' : '⏸️ OFF' ?>
                                         </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($m['game_status'] == 'playing'): ?>
+                                        <span class="status-badge status-playing">
+                                            🎮 プレイ中
+                                        </span>
+                                        <?php elseif ($m['game_status'] == 'standby'): ?>
+                                        <span class="status-badge status-standby">
+                                            🟢 待機
+                                        </span>
+                                        <?php else: ?>
+                                        <span class="status-badge status-offline">
+                                            ⚫ 停止
+                                        </span>
+                                        <?php endif; ?>
                                     </td>
                                     <td style="font-size: 11px; color: #64748b;">
                                         <?= $m['last_heartbeat'] ? date('m/d H:i', strtotime($m['last_heartbeat'])) : '-' ?>
@@ -611,7 +661,7 @@ function DispMachineList($template, $message = "") {
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="11" style="text-align: center; padding: 40px; color: #64748b;">
+                                    <td colspan="12" style="text-align: center; padding: 40px; color: #64748b;">
                                         マシンが登録されていません。「マシン追加」ボタンで追加してください。
                                     </td>
                                 </tr>
