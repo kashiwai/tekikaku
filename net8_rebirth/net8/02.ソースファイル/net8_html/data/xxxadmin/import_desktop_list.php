@@ -135,14 +135,11 @@ try {
         $machine_no = $row['no'];
         $model_name = $row['model'];
 
-        // 「無」はスキップ
-        if ($model_name === '無' || empty($model_name)) {
-            echo "  SKIP: No.{$machine_no} (空きスロット)\n";
-            $skipped++;
-            continue;
-        }
+        // 「無」の場合は機種未設定（model_no = NULL）
+        $is_empty = ($model_name === '無' || empty($model_name));
+        $model_no = $is_empty ? 'NULL' : ($model_mapping[$model_name] ?? 1);
+        $model_no_display = $is_empty ? 'NULL（未設定）' : $model_no;
 
-        $model_no = $model_mapping[$model_name] ?? 1;
         $name = "MACHINE-" . str_pad($machine_no, 2, '0', STR_PAD_LEFT);
         $camera_no = $machine_no;
         $signaling_id = 'PEER' . str_pad($machine_no, 3, '0', STR_PAD_LEFT);
@@ -155,22 +152,32 @@ try {
             // 更新（機種のみ）
             $sql = "UPDATE dat_machine SET model_no = $model_no WHERE machine_no = $machine_no";
             $db->query($sql);
-            echo "  UPDATE: No.{$machine_no} => {$model_name} (model_no={$model_no})\n";
-            $updated++;
+            if ($is_empty) {
+                echo "  UPDATE: No.{$machine_no} => 機種未設定\n";
+                $skipped++;
+            } else {
+                echo "  UPDATE: No.{$machine_no} => {$model_name} (model_no={$model_no})\n";
+                $updated++;
+            }
         } else {
             // 新規登録
             $sql = "INSERT INTO dat_machine (machine_no, name, model_no, camera_no, signaling_id, token, status, machine_status, del_flg, release_date, convert_no)
                     VALUES ($machine_no, " . $db->quote($name) . ", $model_no, $camera_no, " . $db->quote($signaling_id) . ", " . $db->quote($token) . ", 'offline', 0, 0, CURDATE(), 0)";
             $db->query($sql);
-            echo "  INSERT: No.{$machine_no} => {$model_name} (model_no={$model_no})\n";
-            $registered++;
+            if ($is_empty) {
+                echo "  INSERT: No.{$machine_no} => 機種未設定（空きスロット）\n";
+                $skipped++;
+            } else {
+                echo "  INSERT: No.{$machine_no} => {$model_name} (model_no={$model_no})\n";
+                $registered++;
+            }
         }
     }
 
     echo "\n=== 完了 ===\n";
-    echo "新規登録: {$registered}台\n";
-    echo "更新: {$updated}台\n";
-    echo "スキップ（空き）: {$skipped}台\n";
+    echo "機種設定済み（新規）: {$registered}台\n";
+    echo "機種設定済み（更新）: {$updated}台\n";
+    echo "機種未設定（空きスロット）: {$skipped}台\n";
     echo "</pre>";
 
     echo "<p><a href='machine_control_v2.php'>マシン管理画面へ</a></p>";
