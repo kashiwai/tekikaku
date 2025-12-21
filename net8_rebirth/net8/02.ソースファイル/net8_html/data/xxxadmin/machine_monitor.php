@@ -3,9 +3,9 @@
  * マシンモニター - 全台状態一覧
  * 各PCから報告された状態をリアルタイム表示
  */
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/../../_etc/require_files.php';
 
-$pdo = getDbConnection();
+$pdo = get_db_connection();
 
 // 全マシン取得
 $sql = "SELECT dm.*, mm.model_name,

@@ -3,9 +3,9 @@
  * マシンセットアップ用コマンド一覧
  * 各PCで実行するワンライナーを表示
  */
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/../../_etc/require_files.php';
 
-$pdo = getDbConnection();
+$pdo = get_db_connection();
 
 // 稼働中マシン取得
 $sql = "SELECT dm.machine_no, mm.model_name, dm.mac_address, dm.ip_address, dm.last_report
