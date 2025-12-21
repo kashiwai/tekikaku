@@ -115,9 +115,9 @@ try {
 
     foreach (array_keys($unique_models) as $model_name) {
         if (!isset($model_mapping[$model_name])) {
-            // 新規登録
-            $sql = "INSERT INTO mst_model (model_no, model_name, model_cd, category, del_flg, add_no, add_dt)
-                    VALUES ($next_model_no, " . $db->quote($model_name) . ", " . $db->quote('SLOT-' . $next_model_no) . ", 2, 0, 1, NOW())";
+            // 新規登録（maker_no=1 はデフォルトメーカー）
+            $sql = "INSERT INTO mst_model (model_no, model_name, model_cd, category, maker_no, del_flg, add_no, add_dt)
+                    VALUES ($next_model_no, " . $db->quote($model_name) . ", " . $db->quote('SLOT-' . $next_model_no) . ", 2, 1, 0, 1, NOW())";
             $db->query($sql);
             $model_mapping[$model_name] = $next_model_no;
             echo "  新規登録: {$model_name} => model_no={$next_model_no}\n";
