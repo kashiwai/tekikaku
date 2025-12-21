@@ -158,9 +158,9 @@ function DispMachineList($template, $message = "") {
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+            background: #f5f7fa;
+            color: #333;
             min-height: 100vh;
         }
 
@@ -168,31 +168,34 @@ function DispMachineList($template, $message = "") {
 
         /* ヘッダー */
         .header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 16px;
+            background: #fff;
+            border-radius: 12px;
             padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid #475569;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .header h1 {
-            font-size: 28px;
-            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            font-size: 24px;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .header-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
         }
 
         .header-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 16px;
         }
 
         /* ボタン */
         .btn {
-            padding: 10px 20px;
+            padding: 10px 18px;
             border: none;
             border-radius: 8px;
             font-size: 13px;
@@ -205,8 +208,8 @@ function DispMachineList($template, $message = "") {
             gap: 6px;
         }
 
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+        .btn-primary { background: #4361ee; color: white; }
+        .btn-primary:hover { background: #3a56d4; box-shadow: 0 4px 12px rgba(67,97,238,0.3); }
 
         .btn-success { background: #10b981; color: white; }
         .btn-success:hover { background: #059669; }
@@ -217,75 +220,292 @@ function DispMachineList($template, $message = "") {
         .btn-danger { background: #ef4444; color: white; }
         .btn-danger:hover { background: #dc2626; }
 
-        .btn-secondary { background: #475569; color: white; }
-        .btn-secondary:hover { background: #64748b; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+
+        .btn-outline { background: #fff; color: #4361ee; border: 2px solid #4361ee; }
+        .btn-outline:hover { background: #4361ee; color: #fff; }
 
         /* 統計カード */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .stat-card {
-            background: #1e293b;
+            background: #fff;
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid #334155;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
         .stat-icon {
-            font-size: 32px;
-            width: 56px;
-            height: 56px;
+            font-size: 28px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 12px;
         }
 
-        .stat-icon.total { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
-        .stat-icon.online { background: linear-gradient(135deg, #10b981, #34d399); }
-        .stat-icon.offline { background: linear-gradient(135deg, #64748b, #94a3b8); }
-        .stat-icon.error { background: linear-gradient(135deg, #ef4444, #f87171); }
-        .stat-icon.playing { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
-        .stat-icon.standby { background: linear-gradient(135deg, #059669, #34d399); }
+        .stat-icon.total { background: #e8edff; }
+        .stat-icon.online { background: #d1fae5; }
+        .stat-icon.offline { background: #f1f5f9; }
+        .stat-icon.playing { background: #ede9fe; }
+        .stat-icon.standby { background: #d1fae5; }
 
-        .stat-content h3 { font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
-        .stat-content p { font-size: 28px; font-weight: 700; }
+        .stat-content h3 { font-size: 12px; color: #888; margin-bottom: 4px; font-weight: 500; }
+        .stat-content p { font-size: 28px; font-weight: 700; color: #1a1a2e; }
 
         /* メッセージ */
         .message {
-            padding: 16px;
+            padding: 16px 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 4px solid;
+            font-weight: 500;
         }
-        .message.success { background: #064e3b; border-color: #10b981; color: #34d399; }
-        .message.error { background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
+        .message.success { background: #d1fae5; color: #065f46; }
+        .message.error { background: #fee2e2; color: #991b1b; }
 
-        /* テーブル */
-        .table-container {
-            background: #1e293b;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            overflow: hidden;
+        /* マシンカードグリッド */
+        .machines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
+
+        .machine-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .machine-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .machine-card.online {
+            border-color: #10b981;
+        }
+
+        .machine-card.playing {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
+        }
+
+        .machine-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .machine-no {
+            font-size: 32px;
+            font-weight: 800;
+            color: #4361ee;
+        }
+
+        .machine-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .machine-model {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .machine-info {
+            font-size: 12px;
+            color: #666;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 12px;
+        }
+
+        .machine-info dt {
+            color: #999;
+        }
+
+        .machine-info dd {
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        .machine-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .machine-actions .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        /* ステータスバッジ */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-online { background: #d1fae5; color: #065f46; }
+        .status-offline { background: #f1f5f9; color: #64748b; }
+        .status-playing { background: #ede9fe; color: #6d28d9; }
+        .status-standby { background: #d1fae5; color: #047857; }
+
+        /* 入力フィールド */
+        input[type="text"], input[type="number"], select {
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67,97,238,0.15);
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: #1a1a2e;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover { color: #333; }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+        }
+
+        /* コマンドパネル */
+        .command-panel {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .command-panel h4 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        .command-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* テーブルモード */
+        .table-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+            display: none;
+        }
+
+        .table-container.active { display: block; }
 
         .table-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px 20px;
-            border-bottom: 1px solid #334155;
-            background: #0f172a;
+            border-bottom: 1px solid #eee;
+            background: #fafbfc;
         }
 
-        .table-header h2 { font-size: 16px; }
+        .table-header h2 {
+            font-size: 16px;
+            color: #333;
+        }
 
         .table-scroll { overflow-x: auto; }
 
@@ -296,184 +516,76 @@ function DispMachineList($template, $message = "") {
         }
 
         th, td {
-            padding: 12px 16px;
+            padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid #334155;
-            white-space: nowrap;
+            border-bottom: 1px solid #eee;
         }
 
         th {
-            background: #0f172a;
+            background: #fafbfc;
             font-weight: 600;
-            color: #94a3b8;
-            position: sticky;
-            top: 0;
+            color: #666;
         }
 
-        tr:hover { background: #334155; }
+        tr:hover { background: #f8fafc; }
 
-        /* ステータスバッジ */
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-online { background: #064e3b; color: #34d399; }
-        .status-offline { background: #1e293b; color: #94a3b8; }
-        .status-error { background: #7f1d1d; color: #fca5a5; }
-        .status-playing { background: #7c3aed; color: #e9d5ff; }
-        .status-standby { background: #065f46; color: #6ee7b7; }
-
-        /* 入力フィールド */
-        input[type="text"], input[type="number"], select {
-            padding: 8px 12px;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            background: #0f172a;
-            color: #e2e8f0;
-            font-size: 12px;
-            font-family: 'Courier New', monospace;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-        }
-
-        .input-sm { width: 80px; }
-        .input-md { width: 140px; }
-        .input-lg { width: 200px; }
-
-        /* アクションボタン（テーブル内） */
-        .action-btn {
-            padding: 4px 8px;
-            border: none;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .action-btn.edit { background: #3b82f6; color: white; }
-        .action-btn.delete { background: #ef4444; color: white; }
-        .action-btn.command { background: #8b5cf6; color: white; }
-
-        /* モーダル */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active { display: flex; }
-
-        .modal-content {
-            background: #1e293b;
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid #475569;
-        }
-
-        .modal-header {
+        /* ビュー切り替え */
+        .view-toggle {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #94a3b8;
-            cursor: pointer;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #94a3b8;
-            margin-bottom: 6px;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-        }
-
-        /* 一括編集モード */
-        .bulk-edit-row input, .bulk-edit-row select {
-            background: transparent;
-            border: 1px solid transparent;
-        }
-
-        .bulk-edit-row input:hover, .bulk-edit-row select:hover {
-            border-color: #475569;
-        }
-
-        .bulk-edit-row input:focus, .bulk-edit-row select:focus {
-            background: #0f172a;
-            border-color: #3b82f6;
-        }
-
-        /* コマンドパネル */
-        .command-panel {
-            background: #0f172a;
+            gap: 4px;
+            background: #f1f5f9;
+            padding: 4px;
             border-radius: 8px;
-            padding: 16px;
-            margin-top: 16px;
-            border: 1px solid #334155;
         }
 
-        .command-panel h4 {
-            font-size: 14px;
-            margin-bottom: 12px;
-            color: #94a3b8;
+        .view-toggle button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
         }
 
-        .command-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+        .view-toggle button.active {
+            background: #fff;
+            color: #4361ee;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* チェックボックス */
-        .checkbox-cell {
-            width: 40px;
-            text-align: center;
+        /* 選択チェックボックス */
+        .select-checkbox {
+            position: absolute;
+            top: 12px;
+            right: 12px;
         }
 
         input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
+            accent-color: #4361ee;
         }
 
         /* レスポンシブ */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .header-actions { flex-direction: column; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .machines-grid { grid-template-columns: 1fr; }
+        }
+
+        /* 空状態 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
         }
     </style>
 </head>
@@ -481,17 +593,19 @@ function DispMachineList($template, $message = "") {
     <div class="container">
         <!-- ヘッダー -->
         <div class="header">
-            <h1>NET8 マシン統合管理 V2</h1>
-            <p style="color: #94a3b8;">全マシンの設定・状態・コマンドを一元管理</p>
+            <h1>NET8 マシン統合管理</h1>
+            <p class="header-subtitle">全マシンの設定・状態・コマンドを一元管理</p>
 
             <div class="header-actions">
                 <a href="index.php" class="btn btn-secondary">← ダッシュボード</a>
+                <div class="view-toggle">
+                    <button onclick="setView('card')" id="viewCard" class="active">カード</button>
+                    <button onclick="setView('table')" id="viewTable">テーブル</button>
+                </div>
                 <button onclick="openAddModal()" class="btn btn-primary">+ マシン追加</button>
                 <button onclick="openBulkAddModal()" class="btn btn-success">++ 複数台追加</button>
-                <button onclick="toggleBulkEdit()" class="btn btn-warning" id="bulkEditBtn">一括編集モード</button>
-                <a href="?M=export_csv" class="btn btn-secondary">CSV出力</a>
-                <button onclick="openImportModal()" class="btn btn-secondary">CSVインポート</button>
-                <button onclick="sendBulkCommand('RESTART')" class="btn btn-danger">全台再起動</button>
+                <a href="?M=export_csv" class="btn btn-outline">CSV出力</a>
+                <button onclick="openImportModal()" class="btn btn-outline">CSVインポート</button>
             </div>
         </div>
 
@@ -552,8 +666,68 @@ function DispMachineList($template, $message = "") {
             </div>
         </div>
 
+        <!-- マシンカード表示 -->
+        <div class="machines-grid" id="cardView">
+            <?php if (count($machines) > 0): ?>
+                <?php foreach ($machines as $m):
+                    $cardClass = '';
+                    if ($m['game_status'] == 'playing') {
+                        $cardClass = 'playing';
+                    } elseif ($m['pc_status'] == 'online') {
+                        $cardClass = 'online';
+                    }
+                ?>
+                <div class="machine-card <?= $cardClass ?>">
+                    <input type="checkbox" class="select-checkbox machine-checkbox-card"
+                           value="<?= $m['machine_no'] ?>" onchange="updateCommandPanel()">
+
+                    <div class="machine-card-header">
+                        <div class="machine-no"><?= $m['machine_no'] ?></div>
+                        <div class="machine-status">
+                            <span class="status-badge status-<?= $m['pc_status'] ?: 'offline' ?>">
+                                <?= $m['pc_status'] == 'online' ? 'PC ON' : 'PC OFF' ?>
+                            </span>
+                            <?php if ($m['game_status'] == 'playing'): ?>
+                            <span class="status-badge status-playing">プレイ中</span>
+                            <?php elseif ($m['game_status'] == 'standby'): ?>
+                            <span class="status-badge status-standby">待機中</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="machine-model"><?= htmlspecialchars($m['model_name'] ?: '機種未設定') ?></div>
+
+                    <dl class="machine-info">
+                        <dt>IP</dt>
+                        <dd><?= htmlspecialchars($m['ip_address'] ?: '-') ?></dd>
+                        <dt>MAC</dt>
+                        <dd><?= htmlspecialchars($m['mac_address'] ?: '-') ?></dd>
+                        <dt>カメラ</dt>
+                        <dd>No.<?= $m['camera_no'] ?: '-' ?></dd>
+                        <?php if ($m['last_heartbeat']): ?>
+                        <dt>最終通信</dt>
+                        <dd><?= date('m/d H:i', strtotime($m['last_heartbeat'])) ?></dd>
+                        <?php endif; ?>
+                    </dl>
+
+                    <div class="machine-actions">
+                        <button type="button" onclick="openEditModal(<?= $m['machine_no'] ?>)" class="btn btn-outline">編集</button>
+                        <button type="button" onclick="sendCommand(<?= $m['machine_no'] ?>, 'RESTART')" class="btn btn-warning">再起動</button>
+                        <button type="button" onclick="deleteConfirm(<?= $m['machine_no'] ?>)" class="btn btn-danger">削除</button>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="empty-state" style="grid-column: 1/-1;">
+                    <div class="empty-state-icon">🖥️</div>
+                    <p>マシンが登録されていません</p>
+                    <p style="font-size: 14px; margin-top: 8px;">「+ マシン追加」ボタンで追加してください</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
         <!-- マシン一覧テーブル -->
-        <div class="table-container">
+        <div class="table-container" id="tableView">
             <div class="table-header">
                 <h2>マシン一覧 (<?= $total ?>台)</h2>
                 <div>
@@ -793,7 +967,97 @@ function DispMachineList($template, $message = "") {
         <input type="hidden" name="machine_no" id="deleteMachineNo">
     </form>
 
+    <!-- 編集モーダル -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>マシン編集</h3>
+                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <form method="POST" action="" id="editForm">
+                <input type="hidden" name="M" value="update">
+                <input type="hidden" name="machine_no" id="edit_machine_no">
+
+                <div class="form-group">
+                    <label>マシン番号</label>
+                    <input type="text" id="edit_machine_no_display" disabled style="background: #f5f5f5;">
+                </div>
+
+                <div class="form-group">
+                    <label>マシン名</label>
+                    <input type="text" name="name" id="edit_name">
+                </div>
+
+                <div class="form-group">
+                    <label>機種</label>
+                    <select name="model_no" id="edit_model_no">
+                        <option value="">-- 選択 --</option>
+                        <?php foreach ($models as $model): ?>
+                        <option value="<?= $model['model_no'] ?>"><?= htmlspecialchars($model['model_name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>カメラ番号</label>
+                    <input type="number" name="camera_no" id="edit_camera_no">
+                </div>
+
+                <div class="form-group">
+                    <label>MACアドレス</label>
+                    <input type="text" name="mac_address" id="edit_mac_address" placeholder="00:00:00:00:00:00">
+                </div>
+
+                <div class="form-group">
+                    <label>IPアドレス</label>
+                    <input type="text" name="ip_address" id="edit_ip_address" placeholder="192.168.1.x">
+                </div>
+
+                <div class="form-group">
+                    <label>Signaling ID</label>
+                    <input type="text" name="signaling_id" id="edit_signaling_id">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">保存</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // マシンデータ（編集モーダル用）
+        const machineData = <?= json_encode(array_combine(
+            array_column($machines, 'machine_no'),
+            $machines
+        )) ?>;
+
+        // ビュー切り替え
+        function setView(view) {
+            const cardView = document.getElementById('cardView');
+            const tableView = document.getElementById('tableView');
+            const viewCard = document.getElementById('viewCard');
+            const viewTable = document.getElementById('viewTable');
+
+            if (view === 'card') {
+                cardView.style.display = 'grid';
+                tableView.classList.remove('active');
+                viewCard.classList.add('active');
+                viewTable.classList.remove('active');
+            } else {
+                cardView.style.display = 'none';
+                tableView.classList.add('active');
+                viewCard.classList.remove('active');
+                viewTable.classList.add('active');
+            }
+
+            localStorage.setItem('machineViewMode', view);
+        }
+
+        // 保存されたビューモードを復元
+        const savedView = localStorage.getItem('machineViewMode');
+        if (savedView === 'table') {
+            setView('table');
+        }
+
         // モーダル操作
         function openAddModal() {
             document.getElementById('addModal').classList.add('active');
@@ -807,57 +1071,51 @@ function DispMachineList($template, $message = "") {
             document.getElementById('importModal').classList.add('active');
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
+        function openEditModal(machineNo) {
+            const machine = machineData[machineNo];
+            if (!machine) return;
+
+            document.getElementById('edit_machine_no').value = machineNo;
+            document.getElementById('edit_machine_no_display').value = machineNo;
+            document.getElementById('edit_name').value = machine.name || '';
+            document.getElementById('edit_model_no').value = machine.model_no || '';
+            document.getElementById('edit_camera_no').value = machine.camera_no || '';
+            document.getElementById('edit_mac_address').value = machine.mac_address || '';
+            document.getElementById('edit_ip_address').value = machine.ip_address || '';
+            document.getElementById('edit_signaling_id').value = machine.signaling_id || '';
+
+            document.getElementById('editModal').classList.add('active');
         }
 
-        // 一括編集モード
-        let bulkEditMode = false;
-
-        function toggleBulkEdit() {
-            bulkEditMode = !bulkEditMode;
-            const btn = document.getElementById('bulkEditBtn');
-            const actions = document.getElementById('bulkEditActions');
-            const inputs = document.querySelectorAll('.bulk-edit-row input, .bulk-edit-row select');
-
-            if (bulkEditMode) {
-                btn.textContent = '編集モード解除';
-                btn.classList.remove('btn-warning');
-                btn.classList.add('btn-danger');
-                actions.style.display = 'block';
-                inputs.forEach(i => i.style.background = '#0f172a');
-            } else {
-                btn.textContent = '一括編集モード';
-                btn.classList.remove('btn-danger');
-                btn.classList.add('btn-warning');
-                actions.style.display = 'none';
-                inputs.forEach(i => i.style.background = 'transparent');
-            }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
         }
 
         // 選択操作
         function toggleSelectAll() {
             const checked = document.getElementById('selectAll').checked;
-            document.querySelectorAll('.machine-checkbox').forEach(cb => cb.checked = checked);
+            document.querySelectorAll('.machine-checkbox, .machine-checkbox-card').forEach(cb => cb.checked = checked);
             updateCommandPanel();
         }
 
         function updateCommandPanel() {
-            const selected = document.querySelectorAll('.machine-checkbox:checked').length;
-            document.getElementById('commandPanel').style.display = selected > 0 ? 'block' : 'none';
+            const selectedTable = document.querySelectorAll('.machine-checkbox:checked').length;
+            const selectedCard = document.querySelectorAll('.machine-checkbox-card:checked').length;
+            const total = selectedTable + selectedCard;
+            document.getElementById('commandPanel').style.display = total > 0 ? 'block' : 'none';
         }
 
         // コマンド送信
         function sendCommand(machineNo, command) {
             if (confirm(`マシン ${machineNo} に ${command} コマンドを送信しますか？`)) {
-                // WebSocket経由でコマンド送信（実装予定）
                 alert(`コマンド ${command} をマシン ${machineNo} に送信しました`);
             }
         }
 
         function sendSelectedCommand(command) {
-            const selected = Array.from(document.querySelectorAll('.machine-checkbox:checked'))
-                                  .map(cb => cb.value);
+            const selectedTable = Array.from(document.querySelectorAll('.machine-checkbox:checked')).map(cb => cb.value);
+            const selectedCard = Array.from(document.querySelectorAll('.machine-checkbox-card:checked')).map(cb => cb.value);
+            const selected = [...new Set([...selectedTable, ...selectedCard])];
 
             if (selected.length === 0) {
                 alert('マシンを選択してください');
@@ -866,12 +1124,6 @@ function DispMachineList($template, $message = "") {
 
             if (confirm(`選択した ${selected.length} 台に ${command} コマンドを送信しますか？`)) {
                 alert(`コマンド ${command} を ${selected.length} 台に送信しました`);
-            }
-        }
-
-        function sendBulkCommand(command) {
-            if (confirm(`全マシンに ${command} コマンドを送信しますか？`)) {
-                alert(`コマンド ${command} を全マシンに送信しました`);
             }
         }
 
@@ -891,6 +1143,9 @@ function DispMachineList($template, $message = "") {
                 }
             });
         });
+
+        // 30秒で自動リロード
+        setTimeout(() => location.reload(), 30000);
     </script>
 </body>
 </html>
