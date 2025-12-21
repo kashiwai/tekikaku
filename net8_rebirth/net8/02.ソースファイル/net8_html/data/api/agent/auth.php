@@ -8,7 +8,7 @@
  * APIキー認証
  * @return array|false 認証情報 or false
  */
-function authenticateApiKey(): array|false
+function authenticateApiKey()
 {
     // Authorizationヘッダーから取得
     $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';

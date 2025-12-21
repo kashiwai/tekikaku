@@ -60,7 +60,9 @@ $sql = "SELECT cr.*, cq.command, a.agent_id
         LIMIT 20";
 $recentResults = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-$onlineCount = count(array_filter($agents, fn($a) => $a['status'] === 'online' && ($a['minutes_ago'] === null || $a['minutes_ago'] <= 5)));
+$onlineCount = count(array_filter($agents, function($a) {
+    return $a['status'] === 'online' && ($a['minutes_ago'] === null || $a['minutes_ago'] <= 5);
+}));
 ?>
 <!DOCTYPE html>
 <html lang="ja">

@@ -94,7 +94,7 @@ if (!empty($agentId)) {
     }
 
     // サマリー
-    $onlineCount = count(array_filter($agents, fn($a) => $a['status'] === 'online'));
+    $onlineCount = count(array_filter($agents, function($a) { return $a['status'] === 'online'; }));
     $offlineCount = count($agents) - $onlineCount;
 
     echo json_encode([
