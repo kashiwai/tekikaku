@@ -217,6 +217,12 @@ $onlineCount = count(array_filter($agents, function($a) {
     </style>
 </head>
 <body>
+    <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="index.php" style="background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">← ダッシュボード</a>
+        <a href="machine_control.php" style="background: #0066cc; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">🖥️ マシンコントロール</a>
+        <a href="machine_monitor.php" style="background: #00cc66; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">📊 マシンモニター</a>
+        <a href="menu.php" style="background: #666; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">📋 全メニュー</a>
+    </div>
     <h1>Net8 Agent Control Panel</h1>
 
     <?php if ($message): ?>

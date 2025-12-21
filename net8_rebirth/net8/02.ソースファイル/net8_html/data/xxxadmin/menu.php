@@ -54,6 +54,22 @@ require_once('../../_etc/require_files_admin.php');
             </div>
 
             <div class="nav-section">
+                <div class="nav-section-title">エージェント管理</div>
+                <a href="machine_control.php" class="nav-item">
+                    <span class="nav-icon">🖥️</span>
+                    <span>マシンコントロール</span>
+                </a>
+                <a href="agent_control.php" class="nav-item">
+                    <span class="nav-icon">🤖</span>
+                    <span>Agentコントロール</span>
+                </a>
+                <a href="machine_monitor.php" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>マシンモニター</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
                 <div class="nav-section-title">カメラ・配信</div>
                 <a href="camera.php" class="nav-item">
                     <span class="nav-icon">📹</span>
@@ -256,8 +272,25 @@ require_once('../../_etc/require_files_admin.php');
                     </nav>
                 </div>
 
-                <!-- カメラ・配信管理 -->
+                <!-- エージェント管理 -->
                 <div class="card fade-in" style="animation-delay: 0.7s;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🤖</span>
+                            エージェント管理
+                        </h2>
+                        <span class="card-badge">4</span>
+                    </div>
+                    <nav style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="machine_control.php" class="btn btn-primary">🖥️ マシンコントロール</a>
+                        <a href="agent_control.php" class="btn btn-primary">🤖 Agentコントロール</a>
+                        <a href="machine_monitor.php" class="btn btn-outline">📊 マシンモニター</a>
+                        <a href="machine_setup_list.php" class="btn btn-outline">📋 セットアップ一覧</a>
+                    </nav>
+                </div>
+
+                <!-- カメラ・配信管理 -->
+                <div class="card fade-in" style="animation-delay: 0.8s;">
                     <div class="card-header">
                         <h2 class="card-title">
                             <span>📹</span>

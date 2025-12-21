@@ -415,8 +415,11 @@ function DispMachineList($template, $message = "") {
 
             <div class="header-actions">
                 <a href="index.php" class="btn btn-secondary">← ダッシュボードに戻る</a>
-                <a href="sales_analytics.php" class="btn btn-success" title="売上・利益の集計を確認">
-                    💰 売上集計
+                <a href="agent_control.php" class="btn btn-primary" title="リモートコマンド実行">
+                    🤖 Agentコントロール
+                </a>
+                <a href="machine_monitor.php" class="btn btn-success" title="全台リアルタイム監視">
+                    📊 モニター
                 </a>
                 <a href="model_sort_settings.php" class="btn btn-secondary" title="機種リストの並び順を設定">
                     ⚙️ 機種並び順設定
