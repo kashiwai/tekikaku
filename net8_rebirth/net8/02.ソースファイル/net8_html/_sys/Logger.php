@@ -34,11 +34,11 @@ class Logger {
 
 	private $_nowDate;										//現在の日時
 	private $_level;										//ログの出力レベル
-	private $_handle = array();;							//logのfp
+	private $_handle = array();							//logのfp
 	private $_format = "{%date%} [{%level%}] {%filename%} {%function%} ({%line%}) {%message%}";
 	
 	private $_options = array(
-		 "nowDate"    => Date("Y-m-d H:i:s")
+		 "nowDate"    => null
 		,"level"      => "20"
 		,"handle"     => array("php://stdout")
 		,"critical"   => null
@@ -84,7 +84,8 @@ class Logger {
 	 * @return  						インスタンス
 	 */
 	public function init() {
-		
+		$this->_options["nowDate"] = Date("Y-m-d H:i:s");
+		$this->_nowDate = Date("Y-m-d H:i:s");
 		return($this);
 	}
 

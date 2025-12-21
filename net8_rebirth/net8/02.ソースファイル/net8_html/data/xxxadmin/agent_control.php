@@ -3,9 +3,9 @@
  * Agent Control Panel
  * エージェント管理・コマンド送信UI
  */
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/../../_etc/require_files.php';
 
-$pdo = getDbConnection();
+$pdo = get_db_connection();
 
 // APIキー（管理画面用）
 $adminApiKey = 'admin_dev_key_2024';

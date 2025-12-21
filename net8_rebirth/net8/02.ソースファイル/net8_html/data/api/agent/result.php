@@ -21,11 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-require_once __DIR__ . '/../../lib/db.php';
+require_once __DIR__ . '/../../../_etc/require_files.php';
 require_once __DIR__ . '/auth.php';
 
 try {
-    $pdo = getDbConnection();
+    $pdo = get_db_connection();
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Database connection failed']);

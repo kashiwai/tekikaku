@@ -297,6 +297,7 @@ CREATE TABLE IF NOT EXISTS game_sessions (
                 echo "<p class='error'>❌ エラー: " . htmlspecialchars($e->getMessage()) . "</p>\n";
             }
         }
+        }
     }
 
     echo "<hr>\n";

@@ -10,10 +10,10 @@ header('Access-Control-Allow-Methods: POST, GET');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // DB接続
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/../../_etc/require_files.php';
 
 try {
-    $pdo = getDbConnection();
+    $pdo = get_db_connection();
 } catch (Exception $e) {
     echo json_encode(['error' => 'DB connection failed']);
     exit;
