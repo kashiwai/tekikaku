@@ -26,7 +26,7 @@ function authenticateApiKey(): array|false
 
     global $pdo;
 
-    $sql = "SELECT id, name, role, is_active FROM api_keys WHERE api_key = :key";
+    $sql = "SELECT id, name, key_type as role, is_active FROM api_keys WHERE key_value = :key";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':key' => $apiKey]);
     $keyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
