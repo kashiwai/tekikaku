@@ -133,6 +133,15 @@ function DispTop($template) {
 
 	$layout_data    = json_decode( $row["layout_data"], true );
 
+	// デフォルト値を設定（model_no = 0 等で layout_data が NULL の場合）
+	if ( $layout_data === null ) {
+		$layout_data = [
+			'video_portrait' => 0,
+			'video_mode' => 4,
+			'drum' => 1
+		];
+	}
+
 	//
 	$sql = (new SqlString($template->DB))
 		->update( "lnk_machine" )
@@ -152,6 +161,18 @@ function DispTop($template) {
 
 
 	$prizeball_data = json_decode( $row["prizeball_data"], true );
+
+	// デフォルト値を設定（model_no = 0 等で prizeball_data が NULL の場合）
+	if ( $prizeball_data === null ) {
+		$prizeball_data = [
+			'MAX' => 0,
+			'MAX_RATE' => 0,
+			'NAVEL' => 0,
+			'TULIP' => 0,
+			'ATTACKER1' => 0,
+			'ATTACKER2' => 0
+		];
+	}
 
 	//カメラ名称の更新
 	$camera  = sprintf(CAMERA_NAME, $row["camera_no"], Time());
