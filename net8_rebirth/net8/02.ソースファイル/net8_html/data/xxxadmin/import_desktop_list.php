@@ -135,10 +135,10 @@ try {
         $machine_no = $row['no'];
         $model_name = $row['model'];
 
-        // 「無」の場合は機種未設定（model_no = NULL）
+        // 「無」の場合は機種未設定（model_no = 0）
         $is_empty = ($model_name === '無' || empty($model_name));
-        $model_no = $is_empty ? 'NULL' : ($model_mapping[$model_name] ?? 1);
-        $model_no_display = $is_empty ? 'NULL（未設定）' : $model_no;
+        $model_no = $is_empty ? 0 : ($model_mapping[$model_name] ?? 1);
+        $model_no_display = $is_empty ? '0（未設定）' : $model_no;
 
         $name = "MACHINE-" . str_pad($machine_no, 2, '0', STR_PAD_LEFT);
         $camera_no = $machine_no;
