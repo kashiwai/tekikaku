@@ -1,0 +1,16 @@
+{
+  "name": "net8-meshcentral",
+  "version": "1.0.0",
+  "description": "MeshCentral for NET8 Remote Management",
+  "main": "start.js",
+  "scripts": {
+    "start": "node start.js",
+    "install-meshcentral": "npm install meshcentral"
+  },
+  "dependencies": {
+    "meshcentral": "latest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

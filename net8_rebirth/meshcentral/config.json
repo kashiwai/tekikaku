@@ -1,0 +1,52 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Ylianst/MeshCentral/master/meshcentral-config-schema.json",
+  "settings": {
+    "cert": "meshcentral.net8.app",
+    "port": 443,
+    "aliasPort": 443,
+    "redirPort": 80,
+    "agentPort": 443,
+    "agentAliasPort": 443,
+    "tlsOffload": false,
+    "allowLoginToken": true,
+    "allowFraming": true,
+    "webRTC": true,
+    "compression": true,
+    "wsCompression": true,
+    "agentCoreDump": false,
+    "exactPorts": false,
+    "newAccounts": false,
+    "newAccountsUserGroups": [],
+    "userNameIsEmail": false,
+    "sessionKey": "MySessionKey123!@#CHANGE_THIS",
+    "sessionSameSite": "strict"
+  },
+  "domains": {
+    "": {
+      "title": "NET8 Remote Management",
+      "title2": "41 Windows PC Manager",
+      "newAccounts": false,
+      "userNameIsEmail": false,
+      "certUrl": "https://meshcentral.net8.app/",
+      "geoLocation": true,
+      "novnc": true,
+      "mstsc": true,
+      "ssh": true,
+      "agentInviteCodes": true,
+      "deviceMeshRouterLinks": {
+        "rdp": true,
+        "ssh": true,
+        "scp": true
+      },
+      "footer": "NET8 Remote Management System",
+      "myServer": {
+        "Backup": true,
+        "Restore": true,
+        "Upgrade": true,
+        "ErrorLog": true,
+        "Console": true,
+        "Trace": true
+      }
+    }
+  }
+}
