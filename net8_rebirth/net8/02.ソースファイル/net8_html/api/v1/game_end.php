@@ -385,6 +385,8 @@ try {
 
         // member_noがある場合、his_playに記録
         if ($memberNo) {
+            error_log("🔍 DEBUG: Entering his_play block with member_no={$memberNo}, machine_no={$session['machine_no']}");
+
             // 機種情報を取得
             $modelStmt = $pdo->prepare("
                 SELECT dm.owner_no, dm.convert_no, mc.point, mc.credit, mc.draw_point, mm.model_name, mm.category
@@ -396,7 +398,10 @@ try {
             $modelStmt->execute(['machine_no' => $session['machine_no']]);
             $machineData = $modelStmt->fetch(PDO::FETCH_ASSOC);
 
+            error_log("🔍 DEBUG: machineData result: " . ($machineData ? json_encode($machineData) : 'NULL'));
+
             if ($machineData) {
+                error_log("🔍 DEBUG: About to INSERT into his_play");
                 // draw_pointを計算（既存システムのロジックを踏襲）
                 $credit = $resultData['credit'] ?? 0;
                 $drawPointCalculated = 0;
@@ -438,6 +443,8 @@ try {
                     'rb_count' => $resultData['rb_count'] ?? 0
                 ]);
 
+                error_log("✅ DEBUG: his_play INSERT completed successfully for member_no={$memberNo}");
+
                 // dat_machinePlay を更新（機種統計）
                 $updateMachinePlayStmt = $pdo->prepare("
                     UPDATE dat_machinePlay
@@ -466,7 +473,11 @@ try {
                     WHERE machine_no = :machine_no
                 ");
                 $releaseMachineStmt->execute(['machine_no' => $session['machine_no']]);
+            } else {
+                error_log("⚠️ DEBUG: machineData is NULL - his_play INSERT skipped for machine_no={$session['machine_no']}");
             }
+        } else {
+            error_log("⚠️ DEBUG: member_no is empty - his_play INSERT skipped");
         }
 
         // トランザクションコミット
