@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: meshcentral
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_KEY
+        generateValue: true
+    healthCheckPath: /
