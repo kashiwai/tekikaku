@@ -320,14 +320,11 @@ try {
             ");
             $sdkUserStmt->execute(['user_id' => $session['user_id']]);
             $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
-        } else {
-            $sdkUser = null; // member_noが既にある場合はスキップ
-        }
 
-        if ($sdkUser && !$memberNo) {
-            // SDKユーザー用の仮想member_noを生成または取得
-            $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $sdkUser['partner_name'] ?? 'SDK');
-            $virtualEmail = 'sdk_' . $sdkUser['partner_user_id'] . '@' . $partnerName . '.net8.local';
+            if ($sdkUser) {
+                // SDKユーザー用の仮想member_noを生成または取得
+                $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $sdkUser['partner_name'] ?? 'SDK');
+                $virtualEmail = 'sdk_' . $sdkUser['partner_user_id'] . '@' . $partnerName . '.net8.local';
 
             $memberStmt = $pdo->prepare("
                 SELECT member_no FROM mst_member WHERE mail = :mail
@@ -379,11 +376,15 @@ try {
                     'pass' => $password,
                     'now' => $now
                 ]);
-                $memberNo = $pdo->lastInsertId();
-            } else {
-                $memberNo = $member['member_no'];
+                    $memberNo = $pdo->lastInsertId();
+                } else {
+                    $memberNo = $member['member_no'];
+                }
             }
+        }
 
+        // member_noがある場合、his_playに記録
+        if ($memberNo) {
             // 機種情報を取得
             $modelStmt = $pdo->prepare("
                 SELECT dm.owner_no, dm.convert_no, mc.point, mc.credit, mc.draw_point, mm.model_name, mm.category
