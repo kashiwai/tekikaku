@@ -307,17 +307,24 @@ try {
         }
 
         // 既存システムとの統合: his_play, dat_machinePlay, lnk_machine更新
-        // SDKユーザーに対応するmst_memberレコードを取得または作成
-        $sdkUserStmt = $pdo->prepare("
-            SELECT su.*, ak.name as partner_name
-            FROM sdk_users su
-            JOIN api_keys ak ON su.api_key_id = ak.id
-            WHERE su.id = :user_id
-        ");
-        $sdkUserStmt->execute(['user_id' => $session['user_id']]);
-        $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
+        // game_sessionsに既にmember_noがある場合はそれを使用（優先）
+        $memberNo = $session['member_no'];
 
-        if ($sdkUser) {
+        // member_noが空の場合のみ、SDKユーザーに対応するmst_memberレコードを取得または作成
+        if (!$memberNo) {
+            $sdkUserStmt = $pdo->prepare("
+                SELECT su.*, ak.name as partner_name
+                FROM sdk_users su
+                JOIN api_keys ak ON su.api_key_id = ak.id
+                WHERE su.id = :user_id
+            ");
+            $sdkUserStmt->execute(['user_id' => $session['user_id']]);
+            $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            $sdkUser = null; // member_noが既にある場合はスキップ
+        }
+
+        if ($sdkUser && !$memberNo) {
             // SDKユーザー用の仮想member_noを生成または取得
             $partnerName = preg_replace('/[^a-zA-Z0-9]/', '', $sdkUser['partner_name'] ?? 'SDK');
             $virtualEmail = 'sdk_' . $sdkUser['partner_user_id'] . '@' . $partnerName . '.net8.local';
