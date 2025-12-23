@@ -178,7 +178,30 @@ try {
         $endedAt = new DateTime();
         $playDuration = $endedAt->getTimestamp() - $startedAt->getTimestamp();
 
-        // ゲームセッションを更新
+        // member_noを先に取得（UPDATE前に確定させる）
+        $memberNo = $requestMemberNo ?? $session['member_no'];
+        error_log("🔍 Using member_no: {$memberNo} (from " . ($requestMemberNo ? "request body" : "game_sessions") . ")");
+
+        // member_noがNULLの場合、sdk_usersから取得
+        if (!$memberNo && $session['user_id']) {
+            $sdkUserStmt = $pdo->prepare("SELECT member_no, api_key_id, partner_user_id FROM sdk_users WHERE id = :user_id");
+            $sdkUserStmt->execute(['user_id' => $session['user_id']]);
+            $sdkUser = $sdkUserStmt->fetch(PDO::FETCH_ASSOC);
+            if ($sdkUser && $sdkUser['member_no']) {
+                $memberNo = $sdkUser['member_no'];
+                error_log("✅ Retrieved member_no from sdk_users: {$memberNo}");
+            } elseif ($sdkUser) {
+                // member_noがNULLの場合、作成
+                $mstMember = getOrCreateMstMember($pdo, $sdkUser['api_key_id'], $sdkUser['partner_user_id']);
+                $memberNo = $mstMember['member_no'];
+                // sdk_usersも更新
+                $updateStmt = $pdo->prepare("UPDATE sdk_users SET member_no = :member_no WHERE id = :user_id");
+                $updateStmt->execute(['member_no' => $memberNo, 'user_id' => $session['user_id']]);
+                error_log("✅ Created and updated member_no: {$memberNo}");
+            }
+        }
+
+        // ゲームセッションを更新（member_noを含める）
         $stmt = $pdo->prepare("
             UPDATE game_sessions
             SET
@@ -187,7 +210,8 @@ try {
                 result = :result,
                 points_won = :points_won,
                 play_duration = :play_duration,
-                result_data = :result_data
+                result_data = :result_data,
+                member_no = :member_no
             WHERE session_id = :session_id
         ");
 
@@ -199,10 +223,11 @@ try {
             'points_won' => $pointsWon,
             'play_duration' => $playDuration,
             'result_data' => $resultData ? json_encode($resultData) : null,
+            'member_no' => $memberNo,
             'session_id' => $sessionId
         ]);
 
-        // ポイント払い出し（勝利時）
+        // ポイント払い出し（勝利時・精算時）
         $newBalance = null;
         $transaction = null;
 
@@ -221,7 +246,7 @@ try {
             $balanceBefore = $balance['balance'];
             $balanceAfter = $balanceBefore + $pointsWon;
 
-            // 残高を更新
+            // 残高を更新（user_balances）
             $stmt = $pdo->prepare("
                 UPDATE user_balances
                 SET balance = :balance,
@@ -234,6 +259,20 @@ try {
                 'amount' => $pointsWon,
                 'user_id' => $session['user_id']
             ]);
+
+            // ★ mst_member.point にもポイントを追加（精算時にカメラ側と同期するため）
+            if ($memberNo) {
+                $stmt = $pdo->prepare("
+                    UPDATE mst_member
+                    SET point = point + :amount
+                    WHERE member_no = :member_no
+                ");
+                $stmt->execute([
+                    'amount' => $pointsWon,
+                    'member_no' => $memberNo
+                ]);
+                error_log("💰 Game end payout to mst_member: member_no={$memberNo}, amount={$pointsWon}");
+            }
 
             // 取引履歴を記録
             $transactionId = 'txn_' . uniqid() . '_' . time();
@@ -429,6 +468,7 @@ try {
         $response = [
             'success' => true,
             'sessionId' => $sessionId,
+            'memberNo' => $memberNo,
             'result' => $result,
             'pointsConsumed' => $session['points_consumed'],
             'pointsWon' => $pointsWon,

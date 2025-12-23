@@ -178,35 +178,7 @@ try {
         $endedAt = new DateTime();
         $playDuration = $endedAt->getTimestamp() - $startedAt->getTimestamp();
 
-        // ゲームセッションを更新
-        $stmt = $pdo->prepare("
-            UPDATE game_sessions
-            SET
-                ended_at = NOW(),
-                status = :status,
-                result = :result,
-                points_won = :points_won,
-                play_duration = :play_duration,
-                result_data = :result_data
-            WHERE session_id = :session_id
-        ");
-
-        $status = ($result === 'error' || $result === 'cancelled') ? $result : 'completed';
-
-        $stmt->execute([
-            'status' => $status,
-            'result' => $result,
-            'points_won' => $pointsWon,
-            'play_duration' => $playDuration,
-            'result_data' => $resultData ? json_encode($resultData) : null,
-            'session_id' => $sessionId
-        ]);
-
-        // ポイント払い出し（勝利時・精算時）
-        $newBalance = null;
-        $transaction = null;
-
-        // リクエストボディのmember_noを優先、なければセッションから取得
+        // member_noを先に取得（UPDATE前に確定させる）
         $memberNo = $requestMemberNo ?? $session['member_no'];
         error_log("🔍 Using member_no: {$memberNo} (from " . ($requestMemberNo ? "request body" : "game_sessions") . ")");
 
@@ -228,6 +200,36 @@ try {
                 error_log("✅ Created and updated member_no: {$memberNo}");
             }
         }
+
+        // ゲームセッションを更新（member_noを含める）
+        $stmt = $pdo->prepare("
+            UPDATE game_sessions
+            SET
+                ended_at = NOW(),
+                status = :status,
+                result = :result,
+                points_won = :points_won,
+                play_duration = :play_duration,
+                result_data = :result_data,
+                member_no = :member_no
+            WHERE session_id = :session_id
+        ");
+
+        $status = ($result === 'error' || $result === 'cancelled') ? $result : 'completed';
+
+        $stmt->execute([
+            'status' => $status,
+            'result' => $result,
+            'points_won' => $pointsWon,
+            'play_duration' => $playDuration,
+            'result_data' => $resultData ? json_encode($resultData) : null,
+            'member_no' => $memberNo,
+            'session_id' => $sessionId
+        ]);
+
+        // ポイント払い出し（勝利時・精算時）
+        $newBalance = null;
+        $transaction = null;
 
         if ($session['user_id'] && $pointsWon > 0) {
             // 残高を取得（FOR UPDATE でロック）
