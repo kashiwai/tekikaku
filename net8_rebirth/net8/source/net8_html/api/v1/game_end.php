@@ -461,7 +461,7 @@ try {
                 // lnk_machine を解放
                 $releaseMachineStmt = $pdo->prepare("
                     UPDATE lnk_machine
-                    SET assign_flg = 0, member_no = '', onetime_id = '', exit_flg = 0, end_dt = NOW()
+                    SET assign_flg = 0, member_no = NULL, onetime_id = '', exit_flg = 0, end_dt = NOW()
                     WHERE machine_no = :machine_no
                 ");
                 $releaseMachineStmt->execute(['machine_no' => $session['machine_no']]);
