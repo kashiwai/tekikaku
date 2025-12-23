@@ -6,13 +6,15 @@
 
 // MeshCentral設定
 define('MESHCENTRAL_URL', 'https://meshcentral-uz6d.onrender.com');
-define('MESHCENTRAL_TOKEN', '~t:7eLkNoMAbtwTEuFYtPCNs8rp7wA0Y81CcHpN');
+define('MESHCENTRAL_USER', '~t:7eLkNoMAbtwTEuFY');
+define('MESHCENTRAL_SECRET', 'tPCNs8rp7wA0Y81CcHpN');
 
 /**
- * MeshCentral APIを呼び出す
+ * MeshCentral APIを呼び出す（ログイントークン認証）
  */
 function meshcentralAPI($action, $params = []) {
-    $url = MESHCENTRAL_URL . '/api/meshcentral';
+    // URLにログイントークンを追加
+    $url = MESHCENTRAL_URL . '/control.ashx?user=' . urlencode(MESHCENTRAL_USER) . '&pass=' . urlencode(MESHCENTRAL_SECRET);
 
     $data = array_merge(['action' => $action], $params);
 
@@ -23,8 +25,7 @@ function meshcentralAPI($action, $params = []) {
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
-            'Content-Type: application/json',
-            'x-meshcentral-loginkey: ' . MESHCENTRAL_TOKEN
+            'Content-Type: application/json'
         ],
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_TIMEOUT => 30
@@ -36,10 +37,45 @@ function meshcentralAPI($action, $params = []) {
     curl_close($ch);
 
     if ($error) {
-        return ['error' => $error];
+        return ['error' => $error, 'httpCode' => 0];
     }
 
-    return json_decode($response, true) ?: ['raw' => $response, 'httpCode' => $httpCode];
+    $decoded = json_decode($response, true);
+    if ($decoded) {
+        return $decoded;
+    }
+
+    // JSONでない場合は別の方法を試す
+    return meshcentralAPIWithHeader($action, $params);
+}
+
+/**
+ * ヘッダー認証方式
+ */
+function meshcentralAPIWithHeader($action, $params = []) {
+    $url = MESHCENTRAL_URL . '/api/meshcentral';
+    $data = array_merge(['action' => $action], $params);
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'x-meshcentral-user: ' . MESHCENTRAL_USER,
+            'x-meshcentral-pass: ' . MESHCENTRAL_SECRET
+        ],
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 30
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return json_decode($response, true) ?: ['raw' => substr($response, 0, 500), 'httpCode' => $httpCode];
 }
 
 /**
