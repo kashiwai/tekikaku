@@ -63,6 +63,19 @@ $result = $input['result'] ?? 'completed'; // win, lose, draw, error, cancelled
 $pointsWon = isset($input['pointsWon']) ? (int)$input['pointsWon'] : 0;
 $resultData = $input['resultData'] ?? [];
 
+// リクエストボディからmember_noを読み取る（両方のキー名をサポート）
+$requestMemberNo = null;
+if (isset($input['member_no'])) {
+    $requestMemberNo = intval($input['member_no']);
+    error_log("📝 Received member_no from request body: {$requestMemberNo}");
+} elseif (isset($input['memberNo'])) {
+    $requestMemberNo = intval($input['memberNo']);
+    error_log("📝 Received memberNo from request body (camelCase): {$requestMemberNo}");
+}
+
+// デバッグ用: リクエストボディ全体をログ出力
+error_log("📋 Raw request input: " . json_encode($input));
+
 // resultDataが配列でない場合は空配列に
 if (!is_array($resultData)) {
     $resultData = [];
