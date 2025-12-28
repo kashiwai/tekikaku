@@ -974,30 +974,12 @@
 			<h2>おすすめ機体</h2>
 		</div>
 		<div class="category-grid">
-			<a href="./?CN=new" class="category-item">
-				<div class="category-icon">🆕</div>
-				<span class="category-name">新台</span>
+			<!--loop:{RECOMMENDED_LIST}-->
+			<a href="{%LINK_URL%}" class="category-item">
+				<div class="category-icon">{%CATEGORY_ICON%}</div>
+				<span class="category-name">{%CATEGORY_NAME%}</span>
 			</a>
-			<a href="./" class="category-item">
-				<div class="category-icon">🎰</div>
-				<span class="category-name">パチスロ</span>
-			</a>
-			<a href="./" class="category-item">
-				<div class="category-icon">🎯</div>
-				<span class="category-name">パチンコ</span>
-			</a>
-			<a href="./" class="category-item">
-				<div class="category-icon">⭐</div>
-				<span class="category-name">人気機種</span>
-			</a>
-			<a href="./" class="category-item">
-				<div class="category-icon">🏆</div>
-				<span class="category-name">ジャックポット</span>
-			</a>
-			<a href="./" class="category-item">
-				<div class="category-icon">🎮</div>
-				<span class="category-name">クラシック</span>
-			</a>
+			<!--/loop:{RECOMMENDED_LIST}-->
 		</div>
 	</section>
 

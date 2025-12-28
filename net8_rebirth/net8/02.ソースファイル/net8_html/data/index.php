@@ -128,6 +128,17 @@ function DispTop($template) {
 		->createSql("\n");
 	$notice_row = $template->DB->getAll($notice_sql, PDO::FETCH_ASSOC);
 
+	// おすすめカテゴリー取得
+	$recommended_sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+		->select()
+			->field("mrc.category_no, mrc.category_name, mrc.category_roman, mrc.category_icon, mrc.link_url, mrc.disp_order")
+			->from("mst_recommended_category mrc")
+			->where()
+				->and(false, "mrc.del_flg = ", "0", FD_NUM)
+			->orderby( 'mrc.disp_order asc' )
+		->createSql("\n");
+	$recommended_row = $template->DB->getAll($recommended_sql, PDO::FETCH_ASSOC);
+
 	// コーナー取得
 	$corner_sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
 		->select()
@@ -289,9 +300,21 @@ function DispTop($template) {
 	$notice_count = 0;
 	$template->loop_start("NOTICE_LIST2");
 	foreach( $notice_row as $notice){
+		// 画像URLの処理（GCS URLでない場合はローカルパスまたはDIR付与）
+		$topImageUrl = $notice["top_image"];
+		if (!empty($topImageUrl)) {
+			// GCS URLかどうかチェック
+			if (strpos($topImageUrl, 'https://storage.googleapis.com/') !== 0) {
+				// GCS URLでない場合、相対パスかファイル名のみの場合はDIR_IMG_NOTICE_DIRを付与
+				if (strpos($topImageUrl, '/') !== 0) {
+					$topImageUrl = DIR_IMG_NOTICE_DIR . $topImageUrl;
+				}
+			}
+		}
+
 		$template->assign("TITLE",      $notice["title"], true);
 		$template->assign("SUB_TITLE",  $notice["sub_title"], true);
-		$template->assign("TOP_IMAGE",  $notice["top_image"], true);
+		$template->assign("TOP_IMAGE",  $topImageUrl, true);
 		$template->assign("ACTIVE",    ($notice_count==0)? ' active':'', true);
 		$template->assign("LINK_URL",  ($notice["link_type"]==1)? $notice["link_url"]: (($notice["link_type"]==2)? "notice.php?NO=".$notice["notice_no"]:'#' ));
 		$template->assign("OTHER_LINK",($notice["link_type"]==1)? ' target="_blank"': "", true);
@@ -302,7 +325,18 @@ function DispTop($template) {
 	$template->loop_end("NOTICE_LIST2");
 	
 	$template->if_enable("HAVE_NOTICE", !empty($notice_row));
-	
+
+	// おすすめカテゴリー部分
+	$template->loop_start("RECOMMENDED_LIST");
+	foreach( $recommended_row as $category){
+		$template->assign("CATEGORY_NO",    $category["category_no"], true);
+		$template->assign("CATEGORY_NAME",  (FOLDER_LANG==DEFAULT_LANG)? $category["category_name"]:$category["category_roman"], true);
+		$template->assign("CATEGORY_ICON",  $category["category_icon"], true);
+		$template->assign("LINK_URL",       $category["link_url"], true);
+		$template->loop_next();
+	}
+	$template->loop_end("RECOMMENDED_LIST");
+
 	$template->flush();
 }
 
