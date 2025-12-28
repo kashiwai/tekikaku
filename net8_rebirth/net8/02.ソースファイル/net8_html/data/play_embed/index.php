@@ -34,10 +34,27 @@ $cameraIdParam = $_GET['cameraId'] ?? null; // URLから直接カメラID（Peer
 $initialPoints = intval($_GET['points'] ?? 0); // 初期ポイント（korea_net8frontから渡される）
 $initialCredit = intval($_GET['credit'] ?? 0); // 初期クレジット
 
+// Case 4: 多言語対応
+$lang = $_GET['lang'] ?? 'ja'; // デフォルト: 日本語
+$supportedLangs = ['ja', 'ko', 'en', 'zh'];
+if (!in_array($lang, $supportedLangs)) {
+    $lang = 'ja'; // サポート外の言語は日本語にフォールバック
+}
+
+// 言語ファイル読み込み
+$langFile = __DIR__ . "/lang/{$lang}.php";
+if (!file_exists($langFile)) {
+    error_log("❌ Language file not found: {$langFile}, falling back to ja");
+    $lang = 'ja';
+    $langFile = __DIR__ . "/lang/ja.php";
+}
+$i18n = require $langFile;
+error_log("🌐 Language loaded: {$lang}");
+
 // 必須パラメータチェック
 if (!$machineNo || !$sessionId) {
     http_response_code(400);
-    outputError('必須パラメータが不足しています: NO, sessionId');
+    outputError('必須パラメータが不足しています: NO, sessionId', $i18n);
     exit;
 }
 
@@ -89,7 +106,7 @@ try {
     if (!$session) {
         error_log("❌ play_embed: Invalid or expired session - sessionId={$sessionId}, machineNo={$machineNo}");
         http_response_code(401);
-        outputError('無効または期限切れのセッションです');
+        outputError('無効または期限切れのセッションです', $i18n);
         exit;
     }
 
@@ -173,7 +190,7 @@ try {
             $pdo->rollBack();
             error_log("❌ play_embed: Machine already assigned to another user");
             http_response_code(409);
-            outputError('この台は他のユーザーが使用中です');
+            outputError('この台は他のユーザーが使用中です', $i18n);
             exit;
         }
 
@@ -201,7 +218,7 @@ try {
         $pdo->rollBack();
         error_log("❌ play_embed: Failed to update lnk_machine - " . $e->getMessage());
         http_response_code(500);
-        outputError('台の確保に失敗しました');
+        outputError('台の確保に失敗しました', $i18n);
         exit;
     }
 
@@ -209,29 +226,13 @@ try {
     if (!$webRTC->addKeySignaling($oneTimeAuthID, $signalingId)) {
         error_log("❌ play_embed: Failed to register auth key with signaling server");
         http_response_code(500);
-        outputError('シグナリングサーバーへの登録に失敗しました: ' . $webRTC->errorMessage());
+        outputError('シグナリングサーバーへの登録に失敗しました: ' . $webRTC->errorMessage(), $i18n);
         exit;
     }
     error_log("✅ play_embed: Auth key registered with signaling server - authId={$oneTimeAuthID}, signalingId={$signalingId}");
 
-    // エラーメッセージ定義
-    $errorMessages = [
-        "U5050" => "システムエラーが発生しました。",
-        "U5051" => "接続がタイムアウトしました。",
-        "U5052" => "カメラとの接続に失敗しました。",
-        "U5053" => "セッションが終了しました。",
-        "U5054" => "残高が不足しています。",
-        "U5058" => "サーバーエラーが発生しました。",
-        "U5059" => "接続が切断されました。",
-        "U5060" => "再接続中...",
-        "U5061" => "認証に失敗しました。",
-        "U5062" => "台が使用中です。",
-        "U5063" => "営業時間外です。",
-        "U5064" => "台が使用できません。",
-        "U5066" => "エラーが発生しました。",
-        "U5067" => "操作がタイムアウトしました。",
-        "U5069" => "通信エラーが発生しました。"
-    ];
+    // エラーメッセージ定義（言語ファイルから取得）
+    $errorMessages = $i18n['errors'];
 
     // HTMLを出力
     outputPlayerHTML([
@@ -255,30 +256,38 @@ try {
         'imageReel' => $session['image_reel'] ?? '',
         'username' => 'Player',
         'initialPoints' => $initialPoints,
-        'initialCredit' => $initialCredit
+        'initialCredit' => $initialCredit,
+        'lang' => $lang,
+        'i18n' => $i18n
     ]);
 
 } catch (PDOException $e) {
     error_log("❌ play_embed DB error: " . $e->getMessage());
     http_response_code(500);
-    outputError('データベースエラー: ' . $e->getMessage());
+    outputError('データベースエラー: ' . $e->getMessage(), $i18n);
 } catch (Exception $e) {
     error_log("❌ play_embed error: " . $e->getMessage());
     http_response_code(500);
-    outputError('サーバーエラー: ' . $e->getMessage());
+    outputError('サーバーエラー: ' . $e->getMessage(), $i18n);
 }
 
 /**
  * エラーページ出力
  */
-function outputError($message) {
+function outputError($message, $i18n = null) {
+    // 言語ファイルが渡されていない場合は日本語をデフォルトで読み込む
+    if (!$i18n) {
+        $i18n = require __DIR__ . '/lang/ja.php';
+    }
+    $errorPageTitle = $i18n['error_page']['title'] ?? 'Error - NET8 Player';
+    $errorPageDetail = $i18n['error_page']['detail'] ?? 'セッションが無効か、接続に問題があります。';
     ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error - NET8 Player</title>
+    <title><?= htmlspecialchars($errorPageTitle) ?></title>
     <style>
         body {
             margin: 0;
@@ -314,7 +323,7 @@ function outputError($message) {
     <div class="error-container">
         <div class="error-icon">⚠️</div>
         <div class="error-message"><?= htmlspecialchars($message) ?></div>
-        <div class="error-detail">セッションが無効か、接続に問題があります。</div>
+        <div class="error-detail"><?= htmlspecialchars($errorPageDetail) ?></div>
     </div>
     <script>
         // 親ウィンドウにエラー通知
@@ -340,11 +349,15 @@ function outputPlayerHTML($data) {
     $errorMessagesJson = json_encode($data['errorMessages']);
     $iceServersJson = $data['iceServers'];
 
+    // 言語情報を取得
+    $lang = $data['lang'] ?? 'ja';
+    $i18n = $data['i18n'] ?? require __DIR__ . '/lang/ja.php';
+
     // カテゴリによってパチンコ/スロットを判定
     $isSlot = ($data['category'] == 2);
     ?>
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="<?= htmlspecialchars($lang) ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -361,7 +374,7 @@ function outputPlayerHTML($data) {
 </head>
 <script>
     // 設定値をJavaScript変数に設定
-    var languageMode   = 'ja';
+    var languageMode   = '<?= htmlspecialchars($lang) ?>';
     var machineno      = '<?= $data['machineNo'] ?>';
     var cameraid       = '<?= $data['cameraId'] ?>';
     var peerjskey      = '<?= $data['peerJsKey'] ?>';
@@ -429,16 +442,16 @@ function outputPlayerHTML($data) {
     <!-- ローディング表示 -->
     <div id="loading">
         <div class="loader">Loading...</div>
-        <div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
-        <div id="loading_pay" style="display:none;">精算中です。しばらくお待ち下さい。</div>
+        <div id="loading_connect"><?= htmlspecialchars($i18n['loading']['connecting']) ?><span id="phase"></span></div>
+        <div id="loading_pay" style="display:none;"><?= htmlspecialchars($i18n['loading']['paying']) ?></div>
         <div id="loadinglost" style="display:none;">
-            <a id="loading_cancel" class="btn btn-primary btn-loading game-after-button">Exit</a>
-            <a id="btn_reload2" class="btn btn-primary btn-loading">Reload</a>
+            <a id="loading_cancel" class="btn btn-primary btn-loading game-after-button"><?= htmlspecialchars($i18n['loading']['exit_button']) ?></a>
+            <a id="btn_reload2" class="btn btn-primary btn-loading"><?= htmlspecialchars($i18n['loading']['reload_button']) ?></a>
         </div>
         <div id="connectlost" style="display:none;">
             <div><span id="conn_error_message"></span></div>
-            <a class="btn btn-primary btn-loading game-after-button">Exit</a>
-            <a id="btn_reload" class="btn btn-primary btn-loading">Reload</a>
+            <a class="btn btn-primary btn-loading game-after-button"><?= htmlspecialchars($i18n['loading']['exit_button']) ?></a>
+            <a id="btn_reload" class="btn btn-primary btn-loading"><?= htmlspecialchars($i18n['loading']['reload_button']) ?></a>
         </div>
     </div>
 
@@ -447,26 +460,26 @@ function outputPlayerHTML($data) {
         <div class="container">
             <div class="game_status">
                 <div class="machine-no">
-                    <div>台番</div>
+                    <div><?= htmlspecialchars($i18n['nav']['machine_no']) ?></div>
                     <span id="machine_no"><?= $data['machineNo'] ?></span>
                 </div>
                 <div class="game-situation-group">
                     <div class="game-situation situation-gc">
-                        <div>ゲーム数</div>
+                        <div><?= htmlspecialchars($i18n['nav']['game_count']) ?></div>
                         <span id="count">0</span>
                     </div>
                     <div class="game-situation situation-bb">
-                        <div>大当り</div>
+                        <div><?= htmlspecialchars($i18n['nav']['big_bonus']) ?></div>
                         <span id="bb_count">0</span>
                     </div>
                     <div class="game-situation situation-rb" id="rb_back">
-                        <div>初当り</div>
+                        <div><?= htmlspecialchars($i18n['nav']['regular_bonus']) ?></div>
                         <span id="rb_count">0</span>
                     </div>
                 </div>
             </div>
             <div class="game_status txt-btn-group">
-                <div class="num-title">PT</div>
+                <div class="num-title"><?= htmlspecialchars($i18n['nav']['points_label']) ?></div>
                 <span id="point">0</span>
                 <span id="point_add" class="add-point"></span>
             </div>
@@ -491,31 +504,31 @@ function outputPlayerHTML($data) {
             <!-- 1列目: 残高・クレジット・変換・精算 -->
             <div class="control-row-1">
                 <div class="info-box">
-                    <span class="info-label">残高</span>
+                    <span class="info-label"><?= htmlspecialchars($i18n['control']['balance']) ?></span>
                     <span id="playpoint" class="info-value"><?= (int)$data['initialPoints'] ?></span>
                 </div>
                 <div class="info-box credit-box">
-                    <span class="info-label">CR</span>
+                    <span class="info-label"><?= htmlspecialchars($i18n['control']['credit']) ?></span>
                     <span id="credit" class="info-value" nextnumber="0"><?= (int)$data['initialCredit'] ?></span>
                 </div>
-                <button class="btn-compact btn-convert" id="convcr-button" onclick="showConvModal()">変換</button>
-                <button class="btn-compact btn-pay" id="pay-button" onclick="showPayModal()">精算</button>
+                <button class="btn-compact btn-convert" id="convcr-button" onclick="showConvModal()"><?= htmlspecialchars($i18n['control']['convert_button']) ?></button>
+                <button class="btn-compact btn-pay" id="pay-button" onclick="showPayModal()"><?= htmlspecialchars($i18n['control']['pay_button']) ?></button>
             </div>
 
             <!-- 2列目: ゲームコントロール -->
             <?php if ($isSlot): ?>
-            <div class="control-row-2" data-label="スロット操作">
-                <button class="btn-game maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false">MAX BET</button>
-                <button class="btn-game start sendBtn" id="sendBtnss" oncontextmenu="return false">START</button>
-                <button class="btn-game stop sendBtn" id="sendBtns1" oncontextmenu="return false">STOP1</button>
-                <button class="btn-game stop sendBtn" id="sendBtns2" oncontextmenu="return false">STOP2</button>
-                <button class="btn-game stop sendBtn" id="sendBtns3" oncontextmenu="return false">STOP3</button>
-                <button class="btn-game auto autoplay-off" id="autoplay_credit" startlabel="AUTO" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false">AUTO</button>
+            <div class="control-row-2" data-label="<?= htmlspecialchars($i18n['control']['slot_operation']) ?>">
+                <button class="btn-game maxbet sendBtn" id="sendBtnsb" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['maxbet']) ?></button>
+                <button class="btn-game start sendBtn" id="sendBtnss" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['start']) ?></button>
+                <button class="btn-game stop sendBtn" id="sendBtns1" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['stop1']) ?></button>
+                <button class="btn-game stop sendBtn" id="sendBtns2" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['stop2']) ?></button>
+                <button class="btn-game stop sendBtn" id="sendBtns3" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['stop3']) ?></button>
+                <button class="btn-game auto autoplay-off" id="autoplay_credit" startlabel="<?= htmlspecialchars($i18n['control']['auto']) ?>" stoplabel="STOP" waitlabel="WAIT" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['auto']) ?></button>
             </div>
             <?php else: ?>
-            <div class="control-row-2" data-label="パチンコ操作">
-                <button class="btn-game sendBtn" id="sendBtnph" oncontextmenu="return false">ハンドル</button>
-                <button class="btn-game start sendBtn" id="sendBtnpstart" oncontextmenu="return false">START</button>
+            <div class="control-row-2" data-label="<?= htmlspecialchars($i18n['control']['pachinko_operation']) ?>">
+                <button class="btn-game sendBtn" id="sendBtnph" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['handle']) ?></button>
+                <button class="btn-game start sendBtn" id="sendBtnpstart" oncontextmenu="return false"><?= htmlspecialchars($i18n['control']['start']) ?></button>
             </div>
             <?php endif; ?>
             <div id="animeField" style="display:none;"><span id="animeNumber"></span></div>
@@ -525,12 +538,12 @@ function outputPlayerHTML($data) {
         <div id="convcr-modal" class="embed-modal" style="display:none;">
             <div class="embed-modal-content">
                 <div class="embed-modal-header">
-                    <h3>クレジット変換</h3>
+                    <h3><?= htmlspecialchars($i18n['convert_modal']['title']) ?></h3>
                     <button class="embed-modal-close" onclick="hideConvModal()">&times;</button>
                 </div>
                 <div class="embed-modal-body">
-                    <p>変換金額を選択してください</p>
-                    <p class="current-points">現在のポイント: <span id="modal-playpoint">0</span> pt</p>
+                    <p><?= htmlspecialchars($i18n['convert_modal']['description']) ?></p>
+                    <p class="current-points"><?= htmlspecialchars($i18n['convert_modal']['current_points']) ?>: <span id="modal-playpoint">0</span> pt</p>
                     <div class="conv-buttons">
                         <button class="conv-amount-btn" data-amount="500" onclick="convertCredit(500)">
                             500 クレジット (2,500pt)
@@ -546,7 +559,7 @@ function outputPlayerHTML($data) {
                         </button>
                     </div>
                     <button class="conv-all-btn" onclick="convertAllCredit()">
-                        全額変換
+                        <?= htmlspecialchars($i18n['convert_modal']['convert_all']) ?>
                     </button>
                 </div>
             </div>
@@ -556,15 +569,15 @@ function outputPlayerHTML($data) {
         <div id="pay-modal" class="embed-modal" style="display:none;">
             <div class="embed-modal-content">
                 <div class="embed-modal-header">
-                    <h3>精算確認</h3>
+                    <h3><?= htmlspecialchars($i18n['pay_modal']['title']) ?></h3>
                     <button class="embed-modal-close" onclick="hidePayModal()">&times;</button>
                 </div>
                 <div class="embed-modal-body">
-                    <p>現在のクレジットを精算してゲームを終了しますか？</p>
-                    <p class="current-credit">現在のクレジット: <span id="modal-credit">0</span></p>
+                    <p><?= htmlspecialchars($i18n['pay_modal']['description']) ?></p>
+                    <p class="current-credit"><?= htmlspecialchars($i18n['pay_modal']['current_credit']) ?>: <span id="modal-credit">0</span></p>
                     <div class="pay-buttons">
-                        <button class="pay-confirm-btn" onclick="confirmPay()">精算する</button>
-                        <button class="pay-cancel-btn" onclick="hidePayModal()">キャンセル</button>
+                        <button class="pay-confirm-btn" onclick="confirmPay()"><?= htmlspecialchars($i18n['pay_modal']['confirm']) ?></button>
+                        <button class="pay-cancel-btn" onclick="hidePayModal()"><?= htmlspecialchars($i18n['pay_modal']['cancel']) ?></button>
                     </div>
                 </div>
             </div>
@@ -574,12 +587,12 @@ function outputPlayerHTML($data) {
         <div id="error-modal" class="embed-modal" style="display:none;">
             <div class="embed-modal-content">
                 <div class="embed-modal-header">
-                    <h3 id="error-modal_title">エラー</h3>
+                    <h3 id="error-modal_title"><?= htmlspecialchars($i18n['error_modal']['title']) ?></h3>
                     <button class="embed-modal-close" onclick="hideErrorModal()">&times;</button>
                 </div>
                 <div class="embed-modal-body">
                     <p id="error-modal_message"></p>
-                    <button class="pay-cancel-btn" onclick="hideErrorModal()">OK</button>
+                    <button class="pay-cancel-btn" onclick="hideErrorModal()"><?= htmlspecialchars($i18n['error_modal']['ok_button']) ?></button>
                 </div>
             </div>
         </div>
@@ -587,18 +600,18 @@ function outputPlayerHTML($data) {
         <!-- ステータスバー（play_v2互換） -->
         <div id="status_bar" class="status-bar" style="display:none;">
             <div class="status-item">
-                <span class="status-label">POINT</span>
+                <span class="status-label"><?= htmlspecialchars($i18n['status']['point']) ?></span>
                 <span id="playpoint" class="status-value">0</span>
             </div>
             <div class="status-item">
-                <span class="status-label">TOTAL</span>
+                <span class="status-label"><?= htmlspecialchars($i18n['status']['total']) ?></span>
                 <span id="total_count" class="status-value">0</span>
             </div>
         </div>
 
         <!-- 終了ボタン -->
         <div id="exit_area" class="exit-area" style="display:none;">
-            <button id="btn_exit" class="btn btn-exit">終了</button>
+            <button id="btn_exit" class="btn btn-exit"><?= htmlspecialchars($i18n['control']['exit']) ?></button>
         </div>
     </main>
 

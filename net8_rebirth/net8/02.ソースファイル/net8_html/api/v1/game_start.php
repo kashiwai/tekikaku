@@ -63,6 +63,8 @@ $modelId = $input['modelId'];
 $partnerUserId = $input['userId'] ?? null; // パートナー側のユーザーID（オプション）
 $requestedMachineNo = $input['machineNo'] ?? null; // 直接台番号を指定（オプション）
 $initialPoints = isset($input['initialPoints']) ? (int)$input['initialPoints'] : 0; // 韓国側からのポイント
+$balanceMode = $input['balanceMode'] ?? 'add'; // Case 1: 'add' or 'set'（デフォルト: 'add'）
+$consumeImmediately = isset($input['consumeImmediately']) ? (bool)$input['consumeImmediately'] : true; // Case 6: デフォルト true
 
 try {
     $pdo = get_db_connection();
@@ -156,6 +158,26 @@ try {
             error_log("ℹ️  member_no column already exists");
         }
 
+        // Case 6対応: reserved_pointsカラム追加
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'reserved_points'");
+        if ($stmt->rowCount() === 0) {
+            error_log("Adding reserved_points column to game_sessions...");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN reserved_points INT(10) UNSIGNED DEFAULT 0");
+            error_log("✅ reserved_points column added");
+        } else {
+            error_log("ℹ️  reserved_points column already exists");
+        }
+
+        // Case 1対応: balance_modeカラム追加
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'balance_mode'");
+        if ($stmt->rowCount() === 0) {
+            error_log("Adding balance_mode column to game_sessions...");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN balance_mode VARCHAR(10) DEFAULT 'add'");
+            error_log("✅ balance_mode column added");
+        } else {
+            error_log("ℹ️  balance_mode column already exists");
+        }
+
         error_log("✅ SDK tables auto-migration completed successfully");
     } catch (PDOException $e) {
         error_log("❌ Table migration FAILED: " . $e->getMessage());
@@ -217,14 +239,32 @@ try {
         $userId = $user['id'];
         $memberNo = $user['member_no']; // mst_member.member_noを取得
 
-        // 韓国側からのポイントをデポジット（初期ポイントがある場合）
+        // 韓国側からのポイント処理（Case 1: balanceMode対応）
         if ($initialPoints > 0) {
-            error_log("💰 Depositing Korea points: user_id={$userId}, amount={$initialPoints}");
-            $depositResult = depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
-            // depositPointsでmember_noが作成/更新された場合、それを使用
-            if ($depositResult['member_no']) {
-                $memberNo = $depositResult['member_no'];
-                error_log("✅ Using member_no from deposit: {$memberNo}");
+            if ($balanceMode === 'set') {
+                // setモード: 既存残高を無視して新しい値を設定
+                error_log("💰 Setting balance (set mode): user_id={$userId}, amount={$initialPoints}");
+                $stmt = $pdo->prepare("
+                    INSERT INTO user_balances (user_id, balance, created_at, updated_at)
+                    VALUES (?, ?, NOW(), NOW())
+                    ON DUPLICATE KEY UPDATE balance = ?, updated_at = NOW()
+                ");
+                $stmt->execute([$userId, $initialPoints, $initialPoints]);
+
+                // mst_member.point も同期
+                $stmt = $pdo->prepare("UPDATE mst_member SET point = ? WHERE member_no = ?");
+                $stmt->execute([$initialPoints, $memberNo]);
+
+                error_log("✅ Balance set to {$initialPoints} (set mode)");
+            } else {
+                // addモード: 既存残高に加算（従来の動作）
+                error_log("💰 Depositing Korea points (add mode): user_id={$userId}, amount={$initialPoints}");
+                $depositResult = depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
+                // depositPointsでmember_noが作成/更新された場合、それを使用
+                if ($depositResult['member_no']) {
+                    $memberNo = $depositResult['member_no'];
+                    error_log("✅ Using member_no from deposit: {$memberNo}");
+                }
             }
         }
 
@@ -240,15 +280,16 @@ try {
             exit;
         }
 
-        // 残高不足チェック（ゲーム開始に必要なポイント）
-        if ($userBalance['balance'] < $gamePrice) {
+        // 残高不足チェック（Case 6: consumeImmediately=trueの場合のみ）
+        if ($consumeImmediately && $userBalance['balance'] < $gamePrice) {
             http_response_code(402);
             echo json_encode([
                 'error' => 'INSUFFICIENT_BALANCE',
                 'message' => 'Insufficient points',
                 'balance' => $userBalance['balance'],
                 'required' => $gamePrice,
-                'initialPointsReceived' => $initialPoints
+                'initialPointsReceived' => $initialPoints,
+                'balanceMode' => $balanceMode
             ]);
             exit;
         }
@@ -460,20 +501,29 @@ try {
             ]);
         }
 
-        // 5. ポイント消費（userIdがある場合のみ）
+        // 5. ポイント消費（Case 6: consumeImmediately対応）
+        $reservedPoints = 0;
         if ($userId) {
-            // ポイント消費
-            $transaction = consumePoints($pdo, $userId, $gamePrice, $sessionId);
-            $pointsConsumed = $transaction['amount'];
-            $userBalance = getUserBalance($pdo, $userId); // 最新残高を取得
+            if ($consumeImmediately) {
+                // 即座にポイント消費（従来の動作）
+                $transaction = consumePoints($pdo, $userId, $gamePrice, $sessionId);
+                $pointsConsumed = $transaction['amount'];
+                $userBalance = getUserBalance($pdo, $userId); // 最新残高を取得
+                error_log("✅ Points consumed immediately: {$pointsConsumed}");
+            } else {
+                // ポイント消費を後で行う（reserved_pointsに記録）
+                $reservedPoints = $gamePrice;
+                $pointsConsumed = 0;
+                error_log("⏸️ Points reserved for later: {$reservedPoints}");
+            }
         }
 
         // 6. ゲームセッションをDBに記録（userIdの有無に関わらず）
         $stmt = $pdo->prepare("
             INSERT INTO game_sessions
-            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, status, ip_address, user_agent)
+            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, reserved_points, balance_mode, status, ip_address, user_agent)
             VALUES
-            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, 'playing', :ip, :user_agent)
+            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :reserved_points, :balance_mode, 'playing', :ip, :user_agent)
         ");
 
         $stmt->execute([
@@ -486,6 +536,8 @@ try {
             'model_cd' => $model['model_cd'],
             'model_name' => $model['model_name'],
             'points_consumed' => $pointsConsumed,
+            'reserved_points' => $reservedPoints,
+            'balance_mode' => $balanceMode,
             'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
         ]);
