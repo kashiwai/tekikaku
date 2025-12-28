@@ -297,13 +297,16 @@ try {
     }
 
     // 1. 機種情報を取得（多言語対応）
-    // 言語に応じた機種名カラムを決定
-    $modelNameColumn = match($lang) {
-        'ko' => 'COALESCE(model_name_ko, model_name_ja, model_name)',
-        'en' => 'COALESCE(model_name_en, model_name_ja, model_name)',
-        'zh' => 'COALESCE(model_name_zh, model_name_ja, model_name)',
-        default => 'COALESCE(model_name_ja, model_name)'
-    };
+    // 言語に応じた機種名カラムを決定（PHP 7.4互換）
+    if ($lang === 'ko') {
+        $modelNameColumn = 'COALESCE(model_name_ko, model_name_ja, model_name)';
+    } elseif ($lang === 'en') {
+        $modelNameColumn = 'COALESCE(model_name_en, model_name_ja, model_name)';
+    } elseif ($lang === 'zh') {
+        $modelNameColumn = 'COALESCE(model_name_zh, model_name_ja, model_name)';
+    } else {
+        $modelNameColumn = 'COALESCE(model_name_ja, model_name)';
+    }
 
     if ($environment === 'test' || $environment === 'staging') {
         // テスト/ステージング環境：モックモデルを使用

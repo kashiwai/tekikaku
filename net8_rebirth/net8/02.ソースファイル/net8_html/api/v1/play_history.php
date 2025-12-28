@@ -122,13 +122,16 @@ try {
     }
 
     // クエリビルド（Case 3: タイムアウト検知対応 + 多言語対応）
-    // 言語に応じた機種名カラムを決定
-    $modelNameColumn = match($lang) {
-        'ko' => 'COALESCE(m.model_name_ko, m.model_name_ja, m.model_name)',
-        'en' => 'COALESCE(m.model_name_en, m.model_name_ja, m.model_name)',
-        'zh' => 'COALESCE(m.model_name_zh, m.model_name_ja, m.model_name)',
-        default => 'COALESCE(m.model_name_ja, m.model_name)'
-    };
+    // 言語に応じた機種名カラムを決定（PHP 7.4互換）
+    if ($lang === 'ko') {
+        $modelNameColumn = 'COALESCE(m.model_name_ko, m.model_name_ja, m.model_name)';
+    } elseif ($lang === 'en') {
+        $modelNameColumn = 'COALESCE(m.model_name_en, m.model_name_ja, m.model_name)';
+    } elseif ($lang === 'zh') {
+        $modelNameColumn = 'COALESCE(m.model_name_zh, m.model_name_ja, m.model_name)';
+    } else {
+        $modelNameColumn = 'COALESCE(m.model_name_ja, m.model_name)';
+    }
 
     $sql = "SELECT
                 gs.id,
