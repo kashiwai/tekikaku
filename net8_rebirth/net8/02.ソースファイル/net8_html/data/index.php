@@ -128,16 +128,28 @@ function DispTop($template) {
 		->createSql("\n");
 	$notice_row = $template->DB->getAll($notice_sql, PDO::FETCH_ASSOC);
 
-	// おすすめカテゴリー取得
-	$recommended_sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-		->select()
-			->field("mrc.category_no, mrc.category_name, mrc.category_roman, mrc.category_icon, mrc.link_url, mrc.disp_order")
-			->from("mst_recommended_category mrc")
-			->where()
-				->and(false, "mrc.del_flg = ", "0", FD_NUM)
-			->orderby( 'mrc.disp_order asc' )
-		->createSql("\n");
-	$recommended_row = $template->DB->getAll($recommended_sql, PDO::FETCH_ASSOC);
+	// おすすめカテゴリー取得（テーブルが存在しない場合はデフォルト値）
+	try {
+		$recommended_sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
+			->select()
+				->field("mrc.category_no, mrc.category_name, mrc.category_roman, mrc.category_icon, mrc.link_url, mrc.disp_order")
+				->from("mst_recommended_category mrc")
+				->where()
+					->and(false, "mrc.del_flg = ", "0", FD_NUM)
+				->orderby( 'mrc.disp_order asc' )
+			->createSql("\n");
+		$recommended_row = $template->DB->getAll($recommended_sql, PDO::FETCH_ASSOC);
+	} catch (PDOException $e) {
+		// テーブルが存在しない場合はデフォルト値を使用
+		$recommended_row = array(
+			array("category_no" => 1, "category_name" => "新台", "category_roman" => "New Machines", "category_icon" => "🆕", "link_url" => "./?CN=new", "disp_order" => 1),
+			array("category_no" => 2, "category_name" => "パチスロ", "category_roman" => "Pachislot", "category_icon" => "🎰", "link_url" => "./", "disp_order" => 2),
+			array("category_no" => 3, "category_name" => "パチンコ", "category_roman" => "Pachinko", "category_icon" => "🎯", "link_url" => "./", "disp_order" => 3),
+			array("category_no" => 4, "category_name" => "人気機種", "category_roman" => "Popular", "category_icon" => "⭐", "link_url" => "./", "disp_order" => 4),
+			array("category_no" => 5, "category_name" => "ジャックポット", "category_roman" => "Jackpot", "category_icon" => "🏆", "link_url" => "./", "disp_order" => 5),
+			array("category_no" => 6, "category_name" => "クラシック", "category_roman" => "Classic", "category_icon" => "🎮", "link_url" => "./", "disp_order" => 6)
+		);
+	}
 
 	// コーナー取得
 	$corner_sql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
