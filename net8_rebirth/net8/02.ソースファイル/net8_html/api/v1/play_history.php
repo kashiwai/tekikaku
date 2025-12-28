@@ -52,6 +52,7 @@ $statusFilter = $_GET['status'] ?? null; // active, completed, timeout
 $autoClose = isset($_GET['autoClose']) && $_GET['autoClose'] === 'true'; // Case 3: 自動終了
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 20;
 $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+$lang = $_GET['lang'] ?? 'ja'; // 多言語対応: ja/ko/en/zh（デフォルト: ja）
 
 // タイムアウト閾値（分）
 $timeoutMinutes = 60;
@@ -120,14 +121,22 @@ try {
         }
     }
 
-    // クエリビルド（Case 3: タイムアウト検知対応）
+    // クエリビルド（Case 3: タイムアウト検知対応 + 多言語対応）
+    // 言語に応じた機種名カラムを決定
+    $modelNameColumn = match($lang) {
+        'ko' => 'COALESCE(m.model_name_ko, m.model_name_ja, m.model_name)',
+        'en' => 'COALESCE(m.model_name_en, m.model_name_ja, m.model_name)',
+        'zh' => 'COALESCE(m.model_name_zh, m.model_name_ja, m.model_name)',
+        default => 'COALESCE(m.model_name_ja, m.model_name)'
+    };
+
     $sql = "SELECT
                 gs.id,
                 gs.session_id,
                 u.partner_user_id AS user_id,
                 gs.machine_no,
                 gs.model_cd,
-                gs.model_name,
+                {$modelNameColumn} as model_name,
                 gs.points_consumed,
                 gs.reserved_points,
                 gs.points_won,
@@ -146,6 +155,7 @@ try {
                 END as computed_status
             FROM game_sessions gs
             LEFT JOIN sdk_users u ON gs.user_id = u.id
+            LEFT JOIN mst_model m ON gs.model_cd = m.model_cd AND m.del_flg = 0
             WHERE gs.api_key_id = :api_key_id";
 
     $params = ['api_key_id' => $apiKeyId];
