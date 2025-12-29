@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // 既存の設定ファイル読み込み
 require_once('../../_etc/require_files.php');
 require_once(__DIR__ . '/helpers/user_helper.php');
+require_once(__DIR__ . '/helpers/camera_helper.php');
 
 // 認証ヘッダー確認（複数ソース対応）
 $authHeader = '';
@@ -617,21 +618,21 @@ try {
             'mock' => true
         ];
     } else {
-        // 本番環境：実際のカメラ情報（camera_name = PeerID）
+        // 本番環境：シグナリングサーバーから動的にPeerIDを取得
         if ($machine['camera_no']) {
-            $cameraSql = "SELECT camera_no, camera_name, camera_mac FROM mst_camera
-                          WHERE camera_no = :camera_no AND del_flg = 0";
-            $stmt = $pdo->prepare($cameraSql);
-            $stmt->execute(['camera_no' => $machine['camera_no']]);
-            $camera = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($camera) {
-                $cameraInfo = [
-                    'cameraNo' => $machine['camera_no'],
-                    'peerId' => $camera['camera_name'],      // WebRTC PeerID（カメラのPeer名）
-                    'cameraName' => $camera['camera_name'],  // 互換性のため両方
-                    'cameraMac' => $camera['camera_mac']     // MACアドレス
-                ];
-                error_log("✅ Camera info: camera_no={$machine['camera_no']}, peerId={$camera['camera_name']}, mac={$camera['camera_mac']}");
+            error_log("🔍 Fetching camera info from signaling server for camera_no={$machine['camera_no']}");
+
+            $cameraInfo = getCameraInfo(
+                $machine['camera_no'],
+                SIGNALING_HOST,
+                SIGNALING_PORT,
+                $pdo
+            );
+
+            if ($cameraInfo) {
+                error_log("✅ Camera info: camera_no={$cameraInfo['cameraNo']}, peerId={$cameraInfo['peerId']}, mac={$cameraInfo['cameraMac']}, source={$cameraInfo['source']}, active=" . ($cameraInfo['active'] ? 'true' : 'false'));
+            } else {
+                error_log("⚠️  No camera info found for camera_no={$machine['camera_no']}");
             }
         }
     }
