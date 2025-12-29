@@ -83,6 +83,11 @@ Authorization: Bearer YOUR_API_KEY
       "category": "slot",
       "status": "available",
       "isAvailable": true,
+      "images": {
+        "thumbnail": "https://mgg-webservice-production.up.railway.app/data/img/model/hokuto4go.jpg",
+        "detail": "https://mgg-webservice-production.up.railway.app/data/img/model/hokuto4go.jpg",
+        "reel": null
+      },
       "camera": {
         "cameraNo": 1,
         "peerId": "camera_10000021_1765859502",
@@ -152,9 +157,18 @@ Authorization: Bearer YOUR_API_KEY
 | `category` | string | カテゴリ<br>`slot`, `pachinko`, `unknown` |
 | `status` | string | 台のステータス<br>`available`, `playing`, `maintenance`, `inactive` |
 | `isAvailable` | boolean | 利用可能かどうか |
+| `images` | object | 機種画像（サムネイル、詳細、リール） |
 | `camera` | object | カメラ情報 |
 | `currentUser` | object/null | 現在のユーザー（プレイ中の場合） |
 | `stats` | object | 統計情報 |
+
+#### images オブジェクト
+
+| フィールド | 型 | 説明 |
+|----------|---|------|
+| `thumbnail` | string/null | サムネイル画像URL |
+| `detail` | string/null | 詳細画像URL |
+| `reel` | string/null | リール画像URL |
 
 #### camera オブジェクト
 

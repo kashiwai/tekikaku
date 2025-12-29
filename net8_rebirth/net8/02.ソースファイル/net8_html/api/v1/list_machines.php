@@ -60,6 +60,10 @@ try {
         $modelNameColumn = 'COALESCE(m.model_name_ja, m.model_name)';
     }
 
+    // 画像ベースURL
+    $baseUrl = 'https://mgg-webservice-production.up.railway.app';
+    $imageBasePath = '/data/img/model/';
+
     // ベースクエリ
     $sql = "
         SELECT
@@ -73,6 +77,9 @@ try {
                 WHEN m.type = 2 THEN 'slot'
                 ELSE 'unknown'
             END as category,
+            m.image_list,
+            m.image_detail,
+            m.image_reel,
             dm.camera_no,
             c.mac_address as camera_mac,
             c.peer_id as camera_peer_id,
@@ -163,6 +170,34 @@ try {
             $playingCount++;
         }
 
+        // 画像URL生成
+        $thumbnail = null;
+        if ($machine['image_list']) {
+            if (preg_match('/^https?:\/\//', $machine['image_list'])) {
+                $thumbnail = $machine['image_list'];
+            } else {
+                $thumbnail = $baseUrl . $imageBasePath . $machine['image_list'];
+            }
+        }
+
+        $detailImage = null;
+        if ($machine['image_detail']) {
+            if (preg_match('/^https?:\/\//', $machine['image_detail'])) {
+                $detailImage = $machine['image_detail'];
+            } else {
+                $detailImage = $baseUrl . $imageBasePath . $machine['image_detail'];
+            }
+        }
+
+        $reelImage = null;
+        if ($machine['image_reel']) {
+            if (preg_match('/^https?:\/\//', $machine['image_reel'])) {
+                $reelImage = $machine['image_reel'];
+            } else {
+                $reelImage = $baseUrl . $imageBasePath . $machine['image_reel'];
+            }
+        }
+
         $formattedMachines[] = [
             'machineNo' => (int)$machine['machine_no'],
             'modelNo' => (int)$machine['model_no'],
@@ -172,6 +207,11 @@ try {
             'category' => $machine['category'],
             'status' => $machineStatus,
             'isAvailable' => $machineStatus === 'available',
+            'images' => [
+                'thumbnail' => $thumbnail,
+                'detail' => $detailImage,
+                'reel' => $reelImage
+            ],
             'camera' => [
                 'cameraNo' => (int)$machine['camera_no'],
                 'peerId' => $machine['camera_peer_id'],
