@@ -8,7 +8,7 @@
  * https://mgg-webservice-production.up.railway.app/data/xxxadmin/update_model_images.php
  */
 
-require_once(__DIR__ . '/../../_etc/db_connect.php');
+require_once('../../_etc/require_files_admin.php');
 
 // 画像マッピング（機種名 → 画像ファイル名）
 $imageMapping = [
@@ -51,8 +51,7 @@ $imageMapping = [
 ];
 
 try {
-    $db = new DBConnect();
-    $pdo = $db->getPDO();
+    $db = new NetDB();
 
     echo "<html><head><meta charset='UTF-8'><title>画像登録結果</title></head><body>";
     echo "<h1>機種画像登録スクリプト</h1>";
@@ -67,27 +66,20 @@ try {
         // 機種名で検索（部分一致）
         $sql = "SELECT model_no, model_id, model_name, model_name_ja, image_list
                 FROM mst_model
-                WHERE model_name LIKE :modelName
-                   OR model_name_ja LIKE :modelName
+                WHERE model_name LIKE '%" . $modelName . "%'
+                   OR model_name_ja LIKE '%" . $modelName . "%'
                 LIMIT 1";
 
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':modelName' => '%' . $modelName . '%']);
-        $model = $stmt->fetch(PDO::FETCH_ASSOC);
+        $model = $db->getRow($sql, PDO::FETCH_ASSOC);
 
-        if ($model) {
+        if ($model && !empty($model)) {
             // 画像を更新
             $updateSql = "UPDATE mst_model
-                         SET image_list = :image_list,
-                             image_detail = :image_detail
-                         WHERE model_no = :model_no";
+                         SET image_list = " . $db->conv_sql($images['image_list'], FD_STR) . ",
+                             image_detail = " . $db->conv_sql($images['image_detail'], FD_STR) . "
+                         WHERE model_no = " . $db->conv_sql($model['model_no'], FD_NUM);
 
-            $updateStmt = $pdo->prepare($updateSql);
-            $updateStmt->execute([
-                ':image_list' => $images['image_list'],
-                ':image_detail' => $images['image_detail'],
-                ':model_no' => $model['model_no']
-            ]);
+            $db->query($updateSql);
 
             $results[] = [
                 'status' => 'success',
@@ -131,8 +123,7 @@ try {
     $allModelsSql = "SELECT model_no, model_id, model_name, model_name_ja, image_list
                      FROM mst_model
                      ORDER BY model_no";
-    $allModelsStmt = $pdo->query($allModelsSql);
-    $allModels = $allModelsStmt->fetchAll(PDO::FETCH_ASSOC);
+    $allModels = $db->getAll($allModelsSql, PDO::FETCH_ASSOC);
 
     echo "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>";
     echo "<tr style='background: #f5f5f5;'>
