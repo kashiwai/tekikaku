@@ -1027,13 +1027,27 @@ var _savestream;					//Video確認用
 				if ( koreaMode && window.parent !== window ) {
 					console.log('💰 [Korea] Settlement complete - notifying parent');
 					try {
+						// ハイブリッド方式: HTML要素から取得を試み、失敗したらgameオブジェクトから取得
+						var finalPlayPoint = parseInt($('#pay_play_point').text().replace(/,/g, '') || game.playpoint || '0');
+						var finalCredit = parseInt($('#pay_credit').text().replace(/,/g, '') || game.credit || '0');
+						var finalDrawPoint = parseInt($('#pay_draw_point').text().replace(/,/g, '') || game.drawpoint || '0');
+						var finalTotalDrawPoint = parseInt($('#pay_total_draw_point').text().replace(/,/g, '') || game.total_drawpoint || '0');
+
+						console.log('💰 [Korea] Settlement data:', {
+							playPoint: finalPlayPoint,
+							credit: finalCredit,
+							drawPoint: finalDrawPoint,
+							totalDrawPoint: finalTotalDrawPoint,
+							source: $('#pay_play_point').length > 0 ? 'HTML' : 'gameObject'
+						});
+
 						window.parent.postMessage({
 							type: 'game:settlement',
 							payload: {
-								playPoint: parseInt($('#pay_play_point').text().replace(/,/g, '') || '0'),
-								credit: parseInt($('#pay_credit').text().replace(/,/g, '') || '0'),
-								drawPoint: parseInt($('#pay_draw_point').text().replace(/,/g, '') || '0'),
-								totalDrawPoint: parseInt($('#pay_total_draw_point').text().replace(/,/g, '') || '0'),
+								playPoint: finalPlayPoint,
+								credit: finalCredit,
+								drawPoint: finalDrawPoint,
+								totalDrawPoint: finalTotalDrawPoint,
 								result: 'completed'
 							}
 						}, '*');
