@@ -64,10 +64,9 @@ try {
 
     foreach ($imageMapping as $modelName => $images) {
         // 機種名で検索（部分一致）
-        $sql = "SELECT model_no, model_id, model_name, model_name_ja, image_list
+        $sql = "SELECT model_no, model_cd, model_name, image_list
                 FROM mst_model
                 WHERE model_name LIKE '%" . $modelName . "%'
-                   OR model_name_ja LIKE '%" . $modelName . "%'
                 LIMIT 1";
 
         $model = $db->getRow($sql, PDO::FETCH_ASSOC);
@@ -84,7 +83,7 @@ try {
             $results[] = [
                 'status' => 'success',
                 'model_name' => $model['model_name'],
-                'model_id' => $model['model_id'],
+                'model_cd' => $model['model_cd'],
                 'model_no' => $model['model_no'],
                 'image' => $images['image_list']
             ];
@@ -92,7 +91,7 @@ try {
 
             echo "<div style='margin: 10px 0; padding: 10px; background: #e8f5e9; border-left: 4px solid #4caf50;'>";
             echo "<strong>✅ 更新成功</strong><br>";
-            echo "機種名: {$model['model_name']} ({$model['model_id']})<br>";
+            echo "機種名: {$model['model_name']} ({$model['model_cd']})<br>";
             echo "機種番号: {$model['model_no']}<br>";
             echo "画像ファイル: {$images['image_list']}<br>";
             echo "URL: <a href='https://mgg-webservice-production.up.railway.app/data/img/model/{$images['image_list']}' target='_blank'>https://mgg-webservice-production.up.railway.app/data/img/model/{$images['image_list']}</a>";
@@ -120,17 +119,17 @@ try {
     // 全機種リスト表示
     echo "<hr>";
     echo "<h2>データベース内の全機種</h2>";
-    $allModelsSql = "SELECT model_no, model_id, model_name, model_name_ja, image_list
+    $allModelsSql = "SELECT model_no, model_cd, model_name, image_list
                      FROM mst_model
+                     WHERE del_flg = 0
                      ORDER BY model_no";
     $allModels = $db->getAll($allModelsSql, PDO::FETCH_ASSOC);
 
     echo "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>";
     echo "<tr style='background: #f5f5f5;'>
             <th>機種番号</th>
-            <th>機種ID</th>
+            <th>機種コード</th>
             <th>機種名</th>
-            <th>機種名(日本語)</th>
             <th>画像ファイル</th>
             <th>プレビュー</th>
           </tr>";
@@ -138,9 +137,8 @@ try {
     foreach ($allModels as $m) {
         echo "<tr>";
         echo "<td>{$m['model_no']}</td>";
-        echo "<td>{$m['model_id']}</td>";
+        echo "<td>{$m['model_cd']}</td>";
         echo "<td>{$m['model_name']}</td>";
-        echo "<td>{$m['model_name_ja']}</td>";
         echo "<td>" . ($m['image_list'] ?: '<span style="color: #999;">未設定</span>') . "</td>";
         echo "<td>";
         if ($m['image_list']) {
