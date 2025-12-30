@@ -107,6 +107,12 @@ function DispMachineList($template, $message = "") {
         PDO::FETCH_ASSOC
     );
 
+    // カメラリスト取得（選択用）
+    $cameras = $template->DB->getAll(
+        "SELECT camera_no, camera_name, camera_mac FROM mst_camera WHERE del_flg = 0 ORDER BY camera_no",
+        PDO::FETCH_ASSOC
+    );
+
     // 統計情報（PC状態 / ゲーム機状態）
     $total = count($machines);
     $pc_online = 0;
@@ -784,8 +790,14 @@ function DispMachineList($template, $message = "") {
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" name="machines[<?= $m['machine_no'] ?>][camera_no]"
-                                               value="<?= $m['camera_no'] ?>" class="input-sm">
+                                        <select name="machines[<?= $m['machine_no'] ?>][camera_no]" class="input-md">
+                                            <option value="">-- カメラ選択 --</option>
+                                            <?php foreach ($cameras as $cam): ?>
+                                            <option value="<?= $cam['camera_no'] ?>" <?= $m['camera_no'] == $cam['camera_no'] ? 'selected' : '' ?>>
+                                                No.<?= $cam['camera_no'] ?> - <?= substr($cam['camera_mac'], 0, 17) ?> - <?= htmlspecialchars($cam['camera_name']) ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </td>
                                     <td>
                                         <input type="text" name="machines[<?= $m['machine_no'] ?>][mac_address]"
@@ -883,8 +895,15 @@ function DispMachineList($template, $message = "") {
                 </div>
 
                 <div class="form-group">
-                    <label>カメラ番号</label>
-                    <input type="number" name="camera_no" value="<?= $next_machine_no ?>">
+                    <label>カメラ選択</label>
+                    <select name="camera_no">
+                        <option value="">-- カメラ選択 --</option>
+                        <?php foreach ($cameras as $cam): ?>
+                        <option value="<?= $cam['camera_no'] ?>" <?= $cam['camera_no'] == $next_machine_no ? 'selected' : '' ?>>
+                            No.<?= $cam['camera_no'] ?> - <?= $cam['camera_mac'] ?> - <?= htmlspecialchars($cam['camera_name']) ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -999,8 +1018,15 @@ function DispMachineList($template, $message = "") {
                 </div>
 
                 <div class="form-group">
-                    <label>カメラ番号</label>
-                    <input type="number" name="camera_no" id="edit_camera_no">
+                    <label>カメラ選択</label>
+                    <select name="camera_no" id="edit_camera_no">
+                        <option value="">-- カメラ選択 --</option>
+                        <?php foreach ($cameras as $cam): ?>
+                        <option value="<?= $cam['camera_no'] ?>">
+                            No.<?= $cam['camera_no'] ?> - <?= $cam['camera_mac'] ?> - <?= htmlspecialchars($cam['camera_name']) ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
