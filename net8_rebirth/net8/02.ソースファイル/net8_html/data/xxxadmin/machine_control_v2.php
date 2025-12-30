@@ -1258,10 +1258,20 @@ function ProcUpdate($template) {
     getData($_POST, array("machine_no", "camera_no", "mac_address", "ip_address", "name", "model_no", "signaling_id"));
 
     $machine_no = intval($_POST["machine_no"]);
+    $camera_no = intval($_POST["camera_no"]);
     $mac_address = strtolower(trim($_POST["mac_address"] ?? ''));
 
+    // カメラ番号が指定されている場合、カメラのMACアドレスを自動取得
+    if ($camera_no > 0) {
+        $camera_sql = "SELECT camera_mac FROM mst_camera WHERE camera_no = $camera_no AND del_flg = 0";
+        $camera = $template->DB->getRow($camera_sql, PDO::FETCH_ASSOC);
+        if ($camera && !empty($camera['camera_mac'])) {
+            $mac_address = strtolower($camera['camera_mac']);
+        }
+    }
+
     $sql = "UPDATE dat_machine SET
-                camera_no = " . intval($_POST["camera_no"]) . ",
+                camera_no = $camera_no,
                 mac_address = " . $template->DB->quote($mac_address) . ",
                 ip_address = " . $template->DB->quote(trim($_POST["ip_address"] ?? '')) . ",
                 name = " . $template->DB->quote(trim($_POST["name"] ?? '')) . ",
@@ -1271,9 +1281,9 @@ function ProcUpdate($template) {
 
     $template->DB->query($sql);
 
-    // mst_camera連携
-    if (!empty($mac_address)) {
-        UpdateCameraMAC($template, intval($_POST["camera_no"]), $mac_address);
+    // mst_camera連携（双方向同期）
+    if (!empty($mac_address) && $camera_no > 0) {
+        UpdateCameraMAC($template, $camera_no, $mac_address);
     }
 
     DispMachineList($template, "✅ マシン $machine_no を更新しました");
@@ -1290,10 +1300,20 @@ function ProcBulkUpdate($template) {
         $machine_no = intval($machine_no);
         if ($machine_no <= 0) continue;
 
+        $camera_no = intval($data["camera_no"]);
         $mac_address = strtolower(trim($data["mac_address"] ?? ''));
 
+        // カメラ番号が指定されている場合、カメラのMACアドレスを自動取得
+        if ($camera_no > 0) {
+            $camera_sql = "SELECT camera_mac FROM mst_camera WHERE camera_no = $camera_no AND del_flg = 0";
+            $camera = $template->DB->getRow($camera_sql, PDO::FETCH_ASSOC);
+            if ($camera && !empty($camera['camera_mac'])) {
+                $mac_address = strtolower($camera['camera_mac']);
+            }
+        }
+
         $sql = "UPDATE dat_machine SET
-                    camera_no = " . intval($data["camera_no"]) . ",
+                    camera_no = $camera_no,
                     mac_address = " . $template->DB->quote($mac_address) . ",
                     ip_address = " . $template->DB->quote(trim($data["ip_address"] ?? '')) . ",
                     name = " . $template->DB->quote(trim($data["name"] ?? '')) . ",
@@ -1303,9 +1323,9 @@ function ProcBulkUpdate($template) {
 
         $template->DB->query($sql);
 
-        // mst_camera連携
-        if (!empty($mac_address)) {
-            UpdateCameraMAC($template, intval($data["camera_no"]), $mac_address);
+        // mst_camera連携（双方向同期）
+        if (!empty($mac_address) && $camera_no > 0) {
+            UpdateCameraMAC($template, $camera_no, $mac_address);
         }
 
         $updated++;
