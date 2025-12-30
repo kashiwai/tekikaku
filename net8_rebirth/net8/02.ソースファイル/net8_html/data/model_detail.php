@@ -197,6 +197,133 @@ function DispDetail($template) {
 		}
 	}
 
+	// ============================================================
+	// 統計データ取得（BB数、RB数、差枚数）
+	// ============================================================
+
+	// この機種の全台番号を取得
+	$machineNumbers = array_column($machineList, 'machine_no');
+
+	// 統計データ初期化
+	$stats = [
+		'bb_today' => 0,
+		'bb_1day' => 0,
+		'bb_2day' => 0,
+		'rb_today' => 0,
+		'rb_1day' => 0,
+		'rb_2day' => 0,
+		'bb_total' => 0,
+		'rb_total' => 0,
+		'max_diff_today' => 0,
+		'max_diff_ever' => 0,
+		'history' => []
+	];
+
+	if (!empty($machineNumbers)) {
+		// 基準日時の取得
+		$refToday = GetRefTimeTodayExt();  // 今日の基準日（04:00基準）
+		$ref1DayAgo = date('Y-m-d', strtotime($refToday . ' -1 day'));
+		$ref2DayAgo = date('Y-m-d', strtotime($refToday . ' -2 day'));
+
+		// IN句用のプレースホルダ
+		$machineNoPlaceholders = implode(',', array_fill(0, count($machineNumbers), '?'));
+
+		// 日別集計クエリ
+		$sqlDailyStats = "
+			SELECT
+				DATE(start_dt) as play_date,
+				SUM(bb_count) as total_bb,
+				SUM(rb_count) as total_rb,
+				MAX(out_point - in_point) as max_diff
+			FROM his_play
+			WHERE machine_no IN ($machineNoPlaceholders)
+			  AND start_dt >= ?
+			GROUP BY DATE(start_dt)
+			ORDER BY play_date DESC
+		";
+
+		try {
+			$stmt = $template->DB->prepare($sqlDailyStats);
+			$params = array_merge($machineNumbers, [$ref2DayAgo . ' 00:00:00']);
+			$stmt->execute($params);
+
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$playDate = $row['play_date'];
+
+				if ($playDate == $refToday) {
+					$stats['bb_today'] = (int)$row['total_bb'];
+					$stats['rb_today'] = (int)$row['total_rb'];
+					$stats['max_diff_today'] = (int)$row['max_diff'];
+				} elseif ($playDate == $ref1DayAgo) {
+					$stats['bb_1day'] = (int)$row['total_bb'];
+					$stats['rb_1day'] = (int)$row['total_rb'];
+				} elseif ($playDate == $ref2DayAgo) {
+					$stats['bb_2day'] = (int)$row['total_bb'];
+					$stats['rb_2day'] = (int)$row['total_rb'];
+				}
+			}
+		} catch (Exception $e) {
+			// エラー時はデフォルト値を使用
+		}
+
+		// 累計と過去最高差枚数を取得
+		$sqlTotalStats = "
+			SELECT
+				SUM(bb_count) as total_bb,
+				SUM(rb_count) as total_rb,
+				MAX(out_point - in_point) as max_diff_ever
+			FROM his_play
+			WHERE machine_no IN ($machineNoPlaceholders)
+		";
+
+		try {
+			$stmt = $template->DB->prepare($sqlTotalStats);
+			$stmt->execute($machineNumbers);
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if ($row) {
+				$stats['bb_total'] = (int)$row['total_bb'];
+				$stats['rb_total'] = (int)$row['total_rb'];
+				$stats['max_diff_ever'] = (int)$row['max_diff_ever'];
+			}
+		} catch (Exception $e) {
+			// エラー時はデフォルト値を使用
+		}
+
+		// 直近10回のプレイ履歴（グラフ用）
+		$sqlHistory = "
+			SELECT
+				bb_count,
+				rb_count,
+				(out_point - in_point) as diff_count,
+				start_dt
+			FROM his_play
+			WHERE machine_no IN ($machineNoPlaceholders)
+			  AND (bb_count > 0 OR rb_count > 0)
+			ORDER BY start_dt DESC
+			LIMIT 10
+		";
+
+		try {
+			$stmt = $template->DB->prepare($sqlHistory);
+			$stmt->execute($machineNumbers);
+
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$stats['history'][] = [
+					'bb' => (int)$row['bb_count'],
+					'rb' => (int)$row['rb_count'],
+					'diff' => (int)$row['diff_count'],
+					'date' => $row['start_dt']
+				];
+			}
+
+			// 履歴を時系列順に並び替え（古い順）
+			$stats['history'] = array_reverse($stats['history']);
+		} catch (Exception $e) {
+			// エラー時は空配列
+		}
+	}
+
 	// prizeball_dataとlayout_dataをパース
 	$prizeballData = json_decode($modelData["prizeball_data"], true) ?? [];
 	$layoutData = json_decode($modelData["layout_data"], true) ?? [];
@@ -268,6 +395,23 @@ function DispDetail($template) {
 		$template->loop_next();
 	}
 	$template->loop_end("MACHINE_LIST");
+
+	// ============================================================
+	// 統計データをテンプレートに渡す
+	// ============================================================
+	$template->assign("STATS_BB_TODAY", $stats['bb_today'], true);
+	$template->assign("STATS_BB_1DAY", $stats['bb_1day'], true);
+	$template->assign("STATS_BB_2DAY", $stats['bb_2day'], true);
+	$template->assign("STATS_RB_TODAY", $stats['rb_today'], true);
+	$template->assign("STATS_RB_1DAY", $stats['rb_1day'], true);
+	$template->assign("STATS_RB_2DAY", $stats['rb_2day'], true);
+	$template->assign("STATS_BB_TOTAL", $stats['bb_total'], true);
+	$template->assign("STATS_RB_TOTAL", $stats['rb_total'], true);
+	$template->assign("STATS_MAX_DIFF_TODAY", number_format($stats['max_diff_today']), true);
+	$template->assign("STATS_MAX_DIFF_EVER", number_format($stats['max_diff_ever']), true);
+
+	// 履歴データをJSONでテンプレートに渡す（JavaScript用）
+	$template->assign("STATS_HISTORY_JSON", json_encode($stats['history']), true);
 
 	// 表示
 	$template->flush();

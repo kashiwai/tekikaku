@@ -485,6 +485,215 @@
 		}
 
 		/* ================================================
+		   Statistics Section
+		   ================================================ */
+		.stats-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 15px;
+			margin-bottom: 20px;
+		}
+
+		.stats-card {
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			border-radius: 15px;
+			padding: 18px;
+		}
+
+		.stats-card-header {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.stats-icon {
+			font-size: 1.3rem;
+		}
+
+		.stats-title {
+			font-size: 0.95rem;
+			font-weight: 700;
+			color: var(--text-white);
+		}
+
+		.stats-days {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 12px;
+		}
+
+		.stat-day {
+			text-align: center;
+		}
+
+		.stat-label {
+			font-size: 0.75rem;
+			color: var(--text-gray);
+			margin-bottom: 5px;
+		}
+
+		.stat-value {
+			font-size: 1.8rem;
+			font-weight: 900;
+			line-height: 1;
+		}
+
+		.stat-unit {
+			font-size: 0.7rem;
+			margin-left: 2px;
+			font-weight: 400;
+		}
+
+		.bb-value {
+			color: #ff6b6b;
+		}
+
+		.rb-value {
+			color: #ffd93d;
+		}
+
+		/* Total Stats Card */
+		.stats-total-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 15px;
+		}
+
+		.total-item {
+			text-align: center;
+			padding: 12px;
+			background: rgba(255, 255, 255, 0.05);
+			border-radius: 10px;
+		}
+
+		.total-label {
+			font-size: 0.85rem;
+			color: var(--text-gray);
+			margin-bottom: 8px;
+		}
+
+		.total-value {
+			font-size: 1.6rem;
+			font-weight: 900;
+		}
+
+		/* Max Diff Card */
+		.stats-max-diff {
+			background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+			border-color: rgba(255, 215, 0, 0.3);
+		}
+
+		.max-diff-item {
+			padding: 12px 0;
+		}
+
+		.max-diff-item + .max-diff-item {
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.max-diff-label {
+			font-size: 0.85rem;
+			color: var(--text-gray);
+			margin-bottom: 8px;
+		}
+
+		.max-diff-value {
+			font-size: 1.8rem;
+			font-weight: 900;
+			color: var(--text-white);
+		}
+
+		.max-diff-value.gold {
+			background: var(--gradient-gold);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		/* Bonus History Chart */
+		.bonus-history-section {
+			margin-top: 20px;
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			border-radius: 15px;
+			padding: 20px;
+		}
+
+		.history-title {
+			font-size: 1rem;
+			font-weight: 700;
+			margin-bottom: 15px;
+			color: var(--text-white);
+		}
+
+		.history-chart {
+			min-height: 200px;
+		}
+
+		.chart-bar-group {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+			gap: 10px;
+		}
+
+		.chart-label {
+			min-width: 40px;
+			font-size: 0.75rem;
+			color: var(--text-gray);
+			text-align: right;
+		}
+
+		.chart-bars {
+			flex: 1;
+			display: flex;
+			gap: 3px;
+			height: 24px;
+		}
+
+		.chart-bar {
+			border-radius: 4px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.7rem;
+			font-weight: 700;
+			color: white;
+			transition: all 0.3s;
+		}
+
+		.chart-bar.bb {
+			background: linear-gradient(90deg, #ff6b6b, #ff8787);
+		}
+
+		.chart-bar.rb {
+			background: linear-gradient(90deg, #ffd93d, #ffe066);
+		}
+
+		.chart-bar:hover {
+			transform: scaleY(1.1);
+			box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+		}
+
+		.chart-value {
+			min-width: 50px;
+			font-size: 0.75rem;
+			font-weight: 700;
+			text-align: left;
+		}
+
+		.chart-empty {
+			text-align: center;
+			padding: 40px 20px;
+			color: var(--text-gray);
+			font-size: 0.9rem;
+		}
+
+		/* ================================================
 		   Responsive
 		   ================================================ */
 		@media (min-width: 768px) {
@@ -803,6 +1012,96 @@
 			</div>
 		</div>
 
+		<!-- Statistics Section -->
+		<div class="section">
+			<h3 class="section-title">データ統計</h3>
+
+			<!-- BB/RB Statistics Grid -->
+			<div class="stats-grid">
+				<!-- BB Section -->
+				<div class="stats-card">
+					<div class="stats-card-header">
+						<span class="stats-icon">🔴</span>
+						<span class="stats-title">BB（ビッグボーナス）</span>
+					</div>
+					<div class="stats-days">
+						<div class="stat-day">
+							<div class="stat-label">本日</div>
+							<div class="stat-value bb-value">{%STATS_BB_TODAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">1日前</div>
+							<div class="stat-value bb-value">{%STATS_BB_1DAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">2日前</div>
+							<div class="stat-value bb-value">{%STATS_BB_2DAY%}<span class="stat-unit">回</span></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- RB Section -->
+				<div class="stats-card">
+					<div class="stats-card-header">
+						<span class="stats-icon">🟡</span>
+						<span class="stats-title">RB（レギュラーボーナス）</span>
+					</div>
+					<div class="stats-days">
+						<div class="stat-day">
+							<div class="stat-label">本日</div>
+							<div class="stat-value rb-value">{%STATS_RB_TODAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">1日前</div>
+							<div class="stat-value rb-value">{%STATS_RB_1DAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">2日前</div>
+							<div class="stat-value rb-value">{%STATS_RB_2DAY%}<span class="stat-unit">回</span></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Total Stats -->
+				<div class="stats-card stats-total">
+					<div class="stats-card-header">
+						<span class="stats-icon">📊</span>
+						<span class="stats-title">差枚数（最高）</span>
+					</div>
+					<div class="stats-total-grid">
+						<div class="total-item">
+							<div class="total-label">BB</div>
+							<div class="total-value bb-value">{%STATS_BB_TOTAL%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="total-item">
+							<div class="total-label">RB</div>
+							<div class="total-value rb-value">{%STATS_RB_TOTAL%}<span class="stat-unit">回</span></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Max Diff Today & Ever -->
+				<div class="stats-card stats-max-diff">
+					<div class="max-diff-item">
+						<div class="max-diff-label">本日の最大差枚数</div>
+						<div class="max-diff-value">{%STATS_MAX_DIFF_TODAY%}<span class="stat-unit">枚</span></div>
+					</div>
+					<div class="max-diff-item highlight">
+						<div class="max-diff-label">過去最高差枚数</div>
+						<div class="max-diff-value gold">{%STATS_MAX_DIFF_EVER%}<span class="stat-unit">枚</span></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Bonus History Chart -->
+			<div class="bonus-history-section">
+				<h4 class="history-title">ボーナス履歴</h4>
+				<div class="history-chart" id="bonusHistoryChart">
+					<!-- グラフはJavaScriptで描画 -->
+				</div>
+			</div>
+		</div>
+
 		<!-- Description Section -->
 		<div class="section">
 			<h3 class="section-title">説明</h3>
@@ -889,7 +1188,58 @@
 				slot.classList.add('selected');
 			}
 		}
+
+		// ボーナス履歴グラフを描画
+		renderBonusHistoryChart();
 	});
+
+	// ボーナス履歴グラフを描画
+	function renderBonusHistoryChart() {
+		const historyData = {%STATS_HISTORY_JSON%} || [];
+		const chartContainer = document.getElementById('bonusHistoryChart');
+
+		if (!chartContainer) return;
+
+		// データが空の場合
+		if (historyData.length === 0) {
+			chartContainer.innerHTML = '<div class="chart-empty">📊 プレイ履歴がありません</div>';
+			return;
+		}
+
+		// 最大値を取得（グラフの幅計算用）
+		const maxValue = Math.max(
+			...historyData.map(d => (d.bb || 0) + (d.rb || 0)),
+			10 // 最小値を10に設定
+		);
+
+		// グラフを構築
+		let chartHTML = '';
+		historyData.forEach((data, index) => {
+			const bbCount = data.bb || 0;
+			const rbCount = data.rb || 0;
+			const totalCount = bbCount + rbCount;
+
+			// ラベル（番号）
+			const label = (index + 1);
+
+			// バーの幅（パーセンテージ）
+			const bbWidth = (bbCount / maxValue) * 100;
+			const rbWidth = (rbCount / maxValue) * 100;
+
+			chartHTML += `
+				<div class="chart-bar-group">
+					<div class="chart-label">${label}</div>
+					<div class="chart-bars">
+						${bbCount > 0 ? `<div class="chart-bar bb" style="width: ${bbWidth}%;" title="BB: ${bbCount}回">${bbCount > 0 ? bbCount : ''}</div>` : ''}
+						${rbCount > 0 ? `<div class="chart-bar rb" style="width: ${rbWidth}%;" title="RB: ${rbCount}回">${rbCount > 0 ? rbCount : ''}</div>` : ''}
+					</div>
+					<div class="chart-value">${totalCount}回</div>
+				</div>
+			`;
+		});
+
+		chartContainer.innerHTML = chartHTML;
+	}
 	</script>
 
 	</body>
