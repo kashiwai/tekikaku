@@ -14,6 +14,11 @@
  * @since    2025/11/06 初版作成
  */
 
+// エラー表示を有効化（デバッグ用）
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // インクルード
 require_once('../../_etc/require_files_admin.php');
 define("PRE_HTML", basename(get_self(), ".php"));
