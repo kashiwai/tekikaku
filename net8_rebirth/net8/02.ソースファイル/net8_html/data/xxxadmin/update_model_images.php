@@ -20,38 +20,39 @@
 require_once('../../_etc/require_files_admin.php');
 
 // 画像マッピング（機種コードまたは機種名 → 画像ファイル名）
+// 注意: 3種類の画像（list, detail, reel）すべてに同じ画像を設定
 $imageMapping = [
     // 新規追加（機種名での完全一致）
     'SLOT-100' => [  // 吉宗(ピンク)
         'image_list' => 'yoshimune.png',
         'image_detail' => 'yoshimune.png',
-        'search_by' => 'code'
+        'image_reel' => 'yoshimune.png'
     ],
     'SLOT-101' => [  // 番長
         'image_list' => 'bancho.jpg',
         'image_detail' => 'bancho.jpg',
-        'search_by' => 'code'
+        'image_reel' => 'bancho.jpg'
     ],
     'SLOT-104' => [  // ジャグラー
         'image_list' => 'jagger01.jpg',
         'image_detail' => 'jagger01.jpg',
-        'search_by' => 'code'
+        'image_reel' => 'jagger01.jpg'
     ],
     'SLOT-106' => [  // 銭形
         'image_list' => 'zenigata.jpg',
         'image_detail' => 'zenigata.jpg',
-        'search_by' => 'code'
+        'image_reel' => 'zenigata.jpg'
     ],
     // GCS画像を使っている既存機種の更新（機種コードで検索）
     'HOKUTO4GO' => [
         'image_list' => 'hokuto4go.jpg',
         'image_detail' => 'hokuto4go.jpg',
-        'search_by' => 'code'
+        'image_reel' => 'hokuto4go.jpg'
     ],
     'NANGOKU01' => [  // 南国育ち
         'image_list' => 'nangoku.jpg',
         'image_detail' => 'nangoku.jpg',
-        'search_by' => 'code'
+        'image_reel' => 'nangoku.jpg'
     ]
 ];
 
@@ -78,10 +79,11 @@ try {
         $model = $db->getRow($sql, PDO::FETCH_ASSOC);
 
         if ($model && !empty($model)) {
-            // 画像を更新
+            // 画像を更新（3種類すべて）
             $updateSql = "UPDATE mst_model
                          SET image_list = " . $db->conv_sql($images['image_list'], FD_STR) . ",
-                             image_detail = " . $db->conv_sql($images['image_detail'], FD_STR) . "
+                             image_detail = " . $db->conv_sql($images['image_detail'], FD_STR) . ",
+                             image_reel = " . $db->conv_sql($images['image_reel'], FD_STR) . "
                          WHERE model_no = " . $db->conv_sql($model['model_no'], FD_NUM);
 
             $db->query($updateSql);
@@ -126,7 +128,7 @@ try {
     // 全機種リスト表示
     echo "<hr>";
     echo "<h2>データベース内の全機種</h2>";
-    $allModelsSql = "SELECT model_no, model_cd, model_name, image_list
+    $allModelsSql = "SELECT model_no, model_cd, model_name, image_list, image_detail, image_reel
                      FROM mst_model
                      WHERE del_flg = 0
                      ORDER BY model_no";
@@ -137,7 +139,9 @@ try {
             <th>機種番号</th>
             <th>機種コード</th>
             <th>機種名</th>
-            <th>画像ファイル</th>
+            <th>リスト画像</th>
+            <th>詳細画像</th>
+            <th>リール画像</th>
             <th>プレビュー</th>
           </tr>";
 
@@ -147,6 +151,8 @@ try {
         echo "<td>{$m['model_cd']}</td>";
         echo "<td>{$m['model_name']}</td>";
         echo "<td>" . ($m['image_list'] ?: '<span style="color: #999;">未設定</span>') . "</td>";
+        echo "<td>" . ($m['image_detail'] ?: '<span style="color: #999;">未設定</span>') . "</td>";
+        echo "<td>" . ($m['image_reel'] ?: '<span style="color: #999;">未設定</span>') . "</td>";
         echo "<td>";
         if ($m['image_list']) {
             $imageUrl = "https://mgg-webservice-production.up.railway.app/data/img/model/{$m['image_list']}";
