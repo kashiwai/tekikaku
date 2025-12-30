@@ -19,35 +19,39 @@
 
 require_once('../../_etc/require_files_admin.php');
 
-// 画像マッピング（機種コードまたは機種名 → 画像ファイル名）
+// 画像マッピング（機種コード → 画像ファイル名）
 // 注意: 3種類の画像（list, detail, reel）すべてに同じ画像を設定
 $imageMapping = [
-    // 新規追加（機種名での完全一致）
-    'SLOT-100' => [  // 吉宗(ピンク)
-        'image_list' => 'yoshimune.png',
-        'image_detail' => 'yoshimune.png',
-        'image_reel' => 'yoshimune.png'
+    // 実際のデータベースに存在する機種コードで登録
+    'HOKUTO4GO' => [  // 北斗の拳
+        'image_list' => 'hokuto4go.jpg',
+        'image_detail' => 'hokuto4go.jpg',
+        'image_reel' => 'hokuto4go.jpg'
     ],
-    'SLOT-101' => [  // 番長
-        'image_list' => 'bancho.jpg',
-        'image_detail' => 'bancho.jpg',
-        'image_reel' => 'bancho.jpg'
-    ],
-    'SLOT-104' => [  // ジャグラー
-        'image_list' => 'jagger01.jpg',
-        'image_detail' => 'jagger01.jpg',
-        'image_reel' => 'jagger01.jpg'
-    ],
-    'SLOT-106' => [  // 銭形
+    'ZENIGATA01' => [  // 主役は銭形
         'image_list' => 'zenigata.jpg',
         'image_detail' => 'zenigata.jpg',
         'image_reel' => 'zenigata.jpg'
     ],
-    // GCS画像を使っている既存機種の更新（機種コードで検索）
-    'HOKUTO4GO' => [
-        'image_list' => 'hokuto4go.jpg',
-        'image_detail' => 'hokuto4go.jpg',
-        'image_reel' => 'hokuto4go.jpg'
+    'MILLIONGOD01' => [  // ミリオンゴッド
+        'image_list' => 'milliongod_gaisen.jpg',
+        'image_detail' => 'milliongod_gaisen.jpg',
+        'image_reel' => 'milliongod_gaisen.jpg'
+    ],
+    'JAGGLERK' => [  // ジャグラーガールズK
+        'image_list' => 'jagger01.jpg',
+        'image_detail' => 'jagger01.jpg',
+        'image_reel' => 'jagger01.jpg'
+    ],
+    'YOSHIMUNE' => [  // 吉宗 4号機
+        'image_list' => 'yoshimune.png',
+        'image_detail' => 'yoshimune.png',
+        'image_reel' => 'yoshimune.png'
+    ],
+    'BANCHO01' => [  // 押忍!番長
+        'image_list' => 'bancho.jpg',
+        'image_detail' => 'bancho.jpg',
+        'image_reel' => 'bancho.jpg'
     ],
     'NANGOKU01' => [  // 南国育ち
         'image_list' => 'nangoku.jpg',
