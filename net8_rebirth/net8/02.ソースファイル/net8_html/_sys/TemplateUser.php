@@ -462,6 +462,7 @@ class TemplateUser extends SmartTemplate {
 			$this->assign("DIR_IMG_MODEL_DIR", "", true);		// 機材画像表示用パス（GCS対応）
 
 			// image_list - GCS URLの場合はそのまま使用、そうでなければローカルパスを追加
+			// Railway deploy trigger: 2025-12-30 14:51 - Force OPcache refresh
 			$imageList = $row["image_list"];
 			if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
 				$imageList = '/data/img/model/' . $imageList;
