@@ -1259,15 +1259,20 @@ function ProcUpdate($template) {
 
     $machine_no = intval($_POST["machine_no"]);
     $camera_no = intval($_POST["camera_no"]);
-    $mac_address = strtolower(trim($_POST["mac_address"] ?? ''));
+    $manual_mac = strtolower(trim($_POST["mac_address"] ?? ''));
 
-    // カメラ番号が指定されている場合、カメラのMACアドレスを自動取得
+    $mac_address = $manual_mac;
+
+    // カメラ番号が指定されている場合
     if ($camera_no > 0) {
         $camera_sql = "SELECT camera_mac FROM mst_camera WHERE camera_no = $camera_no AND del_flg = 0";
         $camera = $template->DB->getRow($camera_sql, PDO::FETCH_ASSOC);
-        if ($camera && !empty($camera['camera_mac'])) {
+
+        // 手動でMACが入力されていない場合のみ、カメラのMACを使用
+        if (empty($manual_mac) && $camera && !empty($camera['camera_mac'])) {
             $mac_address = strtolower($camera['camera_mac']);
         }
+        // 手動入力がある場合は、手動入力を優先（$mac_addressはすでに$manual_mac）
     }
 
     $sql = "UPDATE dat_machine SET
@@ -1282,6 +1287,7 @@ function ProcUpdate($template) {
     $template->DB->query($sql);
 
     // mst_camera連携（双方向同期）
+    // この画面で変更したMACアドレスを、カメラのMACアドレスにも反映（優先）
     if (!empty($mac_address) && $camera_no > 0) {
         UpdateCameraMAC($template, $camera_no, $mac_address);
     }
@@ -1301,15 +1307,20 @@ function ProcBulkUpdate($template) {
         if ($machine_no <= 0) continue;
 
         $camera_no = intval($data["camera_no"]);
-        $mac_address = strtolower(trim($data["mac_address"] ?? ''));
+        $manual_mac = strtolower(trim($data["mac_address"] ?? ''));
 
-        // カメラ番号が指定されている場合、カメラのMACアドレスを自動取得
+        $mac_address = $manual_mac;
+
+        // カメラ番号が指定されている場合
         if ($camera_no > 0) {
             $camera_sql = "SELECT camera_mac FROM mst_camera WHERE camera_no = $camera_no AND del_flg = 0";
             $camera = $template->DB->getRow($camera_sql, PDO::FETCH_ASSOC);
-            if ($camera && !empty($camera['camera_mac'])) {
+
+            // 手動でMACが入力されていない場合のみ、カメラのMACを使用
+            if (empty($manual_mac) && $camera && !empty($camera['camera_mac'])) {
                 $mac_address = strtolower($camera['camera_mac']);
             }
+            // 手動入力がある場合は、手動入力を優先（$mac_addressはすでに$manual_mac）
         }
 
         $sql = "UPDATE dat_machine SET
@@ -1324,6 +1335,7 @@ function ProcBulkUpdate($template) {
         $template->DB->query($sql);
 
         // mst_camera連携（双方向同期）
+        // この画面で変更したMACアドレスを、カメラのMACアドレスにも反映（優先）
         if (!empty($mac_address) && $camera_no > 0) {
             UpdateCameraMAC($template, $camera_no, $mac_address);
         }
