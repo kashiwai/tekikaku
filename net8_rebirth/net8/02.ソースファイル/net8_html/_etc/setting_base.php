@@ -51,7 +51,7 @@ define('UPLOAD_PATH', '/var/www/html/data/uploads/');
 
 // ページネーション設定
 define('ITEMS_PER_PAGE', 20);
-define('MODEL_LIST_VIEW', 20); // 機種一覧の1ページ表示件数
+define('MODEL_LIST_VIEW', 100); // 機種一覧の1ページ表示件数（全機種表示対応）
 
 // セレクトボックス用定数
 define('SELECT_VALUE_NONE', ''); // セレクトボックスの「選択なし」値
