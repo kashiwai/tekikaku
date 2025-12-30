@@ -413,6 +413,115 @@ function DispTop($template) {
 	//決済用データ抽出用
 	$SPOINT = new SettlementPoint( $template->DB );
 
+	// ============================================================
+	// 統計データ取得（BB数、RB数、差枚数）
+	// ============================================================
+	$stats = [
+		'bb_today' => 0,
+		'bb_1day' => 0,
+		'bb_2day' => 0,
+		'rb_today' => 0,
+		'rb_1day' => 0,
+		'rb_2day' => 0,
+		'bb_total' => 0,
+		'rb_total' => 0,
+		'max_diff_today' => 0,
+		'max_diff_ever' => 0,
+		'history' => []
+	];
+
+	try {
+		// 基準日時の取得
+		$refToday = GetRefTimeTodayExt();  // 今日の基準日（04:00基準）
+		$ref1DayAgo = date('Y-m-d', strtotime($refToday . ' -1 day'));
+		$ref2DayAgo = date('Y-m-d', strtotime($refToday . ' -2 day'));
+
+		// 日別集計クエリ（この台のみ）
+		$sqlDailyStats = "
+			SELECT
+				DATE(start_dt) as play_date,
+				SUM(bb_count) as total_bb,
+				SUM(rb_count) as total_rb,
+				MAX(out_point - in_point) as max_diff
+			FROM his_play
+			WHERE machine_no = ?
+			  AND start_dt >= ?
+			GROUP BY DATE(start_dt)
+			ORDER BY play_date DESC
+		";
+
+		$stmt = $template->DB->prepare($sqlDailyStats);
+		$stmt->execute([$_GET["NO"], $ref2DayAgo . ' 00:00:00']);
+
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$playDate = $row['play_date'];
+
+			if ($playDate == $refToday) {
+				$stats['bb_today'] = (int)$row['total_bb'];
+				$stats['rb_today'] = (int)$row['total_rb'];
+				$stats['max_diff_today'] = (int)$row['max_diff'];
+			} elseif ($playDate == $ref1DayAgo) {
+				$stats['bb_1day'] = (int)$row['total_bb'];
+				$stats['rb_1day'] = (int)$row['total_rb'];
+			} elseif ($playDate == $ref2DayAgo) {
+				$stats['bb_2day'] = (int)$row['total_bb'];
+				$stats['rb_2day'] = (int)$row['total_rb'];
+			}
+		}
+
+		// 累計と過去最高差枚数を取得
+		$sqlTotalStats = "
+			SELECT
+				SUM(bb_count) as total_bb,
+				SUM(rb_count) as total_rb,
+				MAX(out_point - in_point) as max_diff_ever
+			FROM his_play
+			WHERE machine_no = ?
+		";
+
+		$stmt = $template->DB->prepare($sqlTotalStats);
+		$stmt->execute([$_GET["NO"]]);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if ($row) {
+			$stats['bb_total'] = (int)$row['total_bb'];
+			$stats['rb_total'] = (int)$row['total_rb'];
+			$stats['max_diff_ever'] = (int)$row['max_diff_ever'];
+		}
+
+		// 直近10回のプレイ履歴（グラフ用）
+		$sqlHistory = "
+			SELECT
+				bb_count,
+				rb_count,
+				(out_point - in_point) as diff_count,
+				start_dt
+			FROM his_play
+			WHERE machine_no = ?
+			  AND (bb_count > 0 OR rb_count > 0)
+			ORDER BY start_dt DESC
+			LIMIT 10
+		";
+
+		$stmt = $template->DB->prepare($sqlHistory);
+		$stmt->execute([$_GET["NO"]]);
+
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$stats['history'][] = [
+				'bb' => (int)$row['bb_count'],
+				'rb' => (int)$row['rb_count'],
+				'diff' => (int)$row['diff_count'],
+				'date' => $row['start_dt']
+			];
+		}
+
+		// 履歴を時系列順に並び替え（古い順）
+		$stats['history'] = array_reverse($stats['history']);
+	} catch (Exception $e) {
+		// エラー時はデフォルト値を使用
+		error_log('統計データ取得エラー: ' . $e->getMessage());
+	}
+
 	$template->assignCommon();
 	
 	$template->assign("CAMERA_ID"       , $camera);
@@ -478,6 +587,21 @@ function DispTop($template) {
 
 
 	$template->assign("BROWSERVERSION"  , "{$browserStatus["name"]}/{$browserStatus["version"]}" );
+
+	// ============================================================
+	// 統計データをテンプレートに渡す
+	// ============================================================
+	$template->assign("STATS_BB_TODAY", $stats['bb_today'], true);
+	$template->assign("STATS_BB_1DAY", $stats['bb_1day'], true);
+	$template->assign("STATS_BB_2DAY", $stats['bb_2day'], true);
+	$template->assign("STATS_RB_TODAY", $stats['rb_today'], true);
+	$template->assign("STATS_RB_1DAY", $stats['rb_1day'], true);
+	$template->assign("STATS_RB_2DAY", $stats['rb_2day'], true);
+	$template->assign("STATS_BB_TOTAL", $stats['bb_total'], true);
+	$template->assign("STATS_RB_TOTAL", $stats['rb_total'], true);
+	$template->assign("STATS_MAX_DIFF_TODAY", number_format($stats['max_diff_today']), true);
+	$template->assign("STATS_MAX_DIFF_EVER", number_format($stats['max_diff_ever']), true);
+	$template->assign("STATS_HISTORY_JSON", json_encode($stats['history']), true);
 
 	// 最後にアクセスした時間を記録
 	$_SESSION["lastplaytime"] = time();

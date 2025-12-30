@@ -15,6 +15,169 @@
 		<!-- Custom styles for this template -->
 		<link href="/data/play_v2/css/styles_ls_v001.css?{%TIMESTAMP%}" rel="stylesheet">
 
+		<!-- Statistics Styles -->
+		<style>
+			/* Statistics Section Styles */
+			.stats-section {
+				padding: 20px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				border-radius: 10px;
+				color: white;
+				max-height: 500px;
+				overflow-y: auto;
+			}
+
+			.stats-title {
+				font-size: 1.2rem;
+				font-weight: bold;
+				margin-bottom: 15px;
+				text-align: center;
+			}
+
+			.stats-grid {
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+				margin-bottom: 20px;
+			}
+
+			.stats-card {
+				background: rgba(255, 255, 255, 0.1);
+				backdrop-filter: blur(10px);
+				border-radius: 8px;
+				padding: 12px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+			}
+
+			.stats-card-header {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 10px;
+			}
+
+			.stats-icon {
+				font-size: 1.2rem;
+			}
+
+			.stats-card-title {
+				font-size: 1rem;
+				font-weight: bold;
+			}
+
+			.stats-days {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 8px;
+			}
+
+			.stat-day {
+				background: rgba(255, 255, 255, 0.05);
+				border-radius: 4px;
+				padding: 8px;
+				text-align: center;
+			}
+
+			.stat-total {
+				grid-column: span 2;
+				background: rgba(255, 215, 0, 0.2);
+			}
+
+			.stat-label {
+				font-size: 0.75rem;
+				opacity: 0.9;
+				margin-bottom: 4px;
+			}
+
+			.stat-value {
+				font-size: 1.3rem;
+				font-weight: bold;
+			}
+
+			.stat-unit {
+				font-size: 0.8rem;
+				margin-left: 2px;
+			}
+
+			.bb-value {
+				color: #ff6b6b;
+			}
+
+			.rb-value {
+				color: #4ecdc4;
+			}
+
+			.diff-value {
+				color: #ffd700;
+			}
+
+			.stats-history {
+				background: rgba(255, 255, 255, 0.1);
+				backdrop-filter: blur(10px);
+				border-radius: 8px;
+				padding: 15px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+			}
+
+			.stats-history-title {
+				font-size: 1rem;
+				margin-bottom: 10px;
+				text-align: center;
+			}
+
+			.stats-chart {
+				background: rgba(255, 255, 255, 0.9);
+				border-radius: 4px;
+				padding: 10px;
+			}
+
+			/* Mobile Stats Overlay */
+			#stats-overlay {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.8);
+				z-index: 10000;
+				overflow-y: auto;
+			}
+
+			#stats-overlay.show {
+				display: block;
+			}
+
+			.stats-overlay-content {
+				margin: 20px;
+				padding: 20px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				border-radius: 10px;
+				position: relative;
+			}
+
+			.stats-overlay-close {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				background: rgba(255, 255, 255, 0.2);
+				border: none;
+				color: white;
+				font-size: 1.5rem;
+				width: 35px;
+				height: 35px;
+				border-radius: 50%;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.stats-overlay-close:hover {
+				background: rgba(255, 255, 255, 0.3);
+			}
+		</style>
+
 	</head>
 	<script>
 		var languageMode   = '{%LANG%}';
@@ -108,6 +271,7 @@
 		<div class="slidemenu-bg" style="display:none;"></div>
 		<button type="button" class="btn-slidemenu-reel"><i class="fas fa-database"></i><br /><span>リール</span></button>
 		<button type="button" class="btn-slidemenu-set"><i class="fas fa-cog"></i><br /><span>設定</span></button>
+		<button type="button" class="btn-slidemenu-stats"><i class="fas fa-chart-bar"></i><br /><span>データ</span></button>
 		<!-- リール配列 -->
 		<div id="slide-reel" class="slide-reel">
 			<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
@@ -162,6 +326,9 @@
 					<li class="nav-item">
 						<a id="tab-setting" class="nav-link active" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">設定</a>
 					</li>
+					<li class="nav-item">
+						<a id="tab-stats" class="nav-link" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false">データ</a>
+					</li>
 				</ul>
 				<div class="tab-content">
 					<!-- リール配列タブ -->
@@ -201,6 +368,88 @@
 								<label id="ctrl-panel-menu" class="btn btn-secondary">
 									<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
 								</label>
+							</div>
+						</div>
+					</div>
+					<!-- データタブ -->
+					<div id="stats" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-stats">
+						<div class="stats-section">
+							<h4 class="stats-title">データ統計</h4>
+							<div class="stats-grid">
+								<!-- BB Section -->
+								<div class="stats-card">
+									<div class="stats-card-header">
+										<span class="stats-icon">🔴</span>
+										<span class="stats-card-title">BB</span>
+									</div>
+									<div class="stats-days">
+										<div class="stat-day">
+											<div class="stat-label">本日</div>
+											<div class="stat-value bb-value">{%STATS_BB_TODAY%}<span class="stat-unit">回</span></div>
+										</div>
+										<div class="stat-day">
+											<div class="stat-label">1日前</div>
+											<div class="stat-value bb-value">{%STATS_BB_1DAY%}<span class="stat-unit">回</span></div>
+										</div>
+										<div class="stat-day">
+											<div class="stat-label">2日前</div>
+											<div class="stat-value bb-value">{%STATS_BB_2DAY%}<span class="stat-unit">回</span></div>
+										</div>
+										<div class="stat-day stat-total">
+											<div class="stat-label">累計</div>
+											<div class="stat-value bb-value">{%STATS_BB_TOTAL%}<span class="stat-unit">回</span></div>
+										</div>
+									</div>
+								</div>
+								<!-- RB Section -->
+								<div class="stats-card">
+									<div class="stats-card-header">
+										<span class="stats-icon">🔵</span>
+										<span class="stats-card-title">RB</span>
+									</div>
+									<div class="stats-days">
+										<div class="stat-day">
+											<div class="stat-label">本日</div>
+											<div class="stat-value rb-value">{%STATS_RB_TODAY%}<span class="stat-unit">回</span></div>
+										</div>
+										<div class="stat-day">
+											<div class="stat-label">1日前</div>
+											<div class="stat-value rb-value">{%STATS_RB_1DAY%}<span class="stat-unit">回</span></div>
+										</div>
+										<div class="stat-day">
+											<div class="stat-label">2日前</div>
+											<div class="stat-value rb-value">{%STATS_RB_2DAY%}<span class="stat-unit">回</span></div>
+										</div>
+										<div class="stat-day stat-total">
+											<div class="stat-label">累計</div>
+											<div class="stat-value rb-value">{%STATS_RB_TOTAL%}<span class="stat-unit">回</span></div>
+										</div>
+									</div>
+								</div>
+								<!-- 差枚数 Section -->
+								<div class="stats-card">
+									<div class="stats-card-header">
+										<span class="stats-icon">💰</span>
+										<span class="stats-card-title">最大差枚数</span>
+									</div>
+									<div class="stats-days">
+										<div class="stat-day">
+											<div class="stat-label">本日</div>
+											<div class="stat-value diff-value">{%STATS_MAX_DIFF_TODAY%}<span class="stat-unit">枚</span></div>
+										</div>
+										<div class="stat-day stat-total">
+											<div class="stat-label">過去最高</div>
+											<div class="stat-value diff-value">{%STATS_MAX_DIFF_EVER%}<span class="stat-unit">枚</span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Bonus History Chart -->
+							<div class="stats-history">
+								<h5 class="stats-history-title">最近10回のボーナス履歴</h5>
+								<div class="stats-chart">
+									<canvas id="bonusHistoryChart" width="400" height="200"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -531,6 +780,90 @@
 		</div>
 	</div>
 
+	<!-- Mobile Stats Overlay -->
+	<div id="stats-overlay" class="d-lg-none">
+		<div class="stats-overlay-content">
+			<button class="stats-overlay-close" id="close-stats-overlay">&times;</button>
+			<h4 class="stats-title">データ統計</h4>
+			<div class="stats-grid">
+				<!-- BB Section -->
+				<div class="stats-card">
+					<div class="stats-card-header">
+						<span class="stats-icon">🔴</span>
+						<span class="stats-card-title">BB</span>
+					</div>
+					<div class="stats-days">
+						<div class="stat-day">
+							<div class="stat-label">本日</div>
+							<div class="stat-value bb-value">{%STATS_BB_TODAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">1日前</div>
+							<div class="stat-value bb-value">{%STATS_BB_1DAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">2日前</div>
+							<div class="stat-value bb-value">{%STATS_BB_2DAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day stat-total">
+							<div class="stat-label">累計</div>
+							<div class="stat-value bb-value">{%STATS_BB_TOTAL%}<span class="stat-unit">回</span></div>
+						</div>
+					</div>
+				</div>
+				<!-- RB Section -->
+				<div class="stats-card">
+					<div class="stats-card-header">
+						<span class="stats-icon">🔵</span>
+						<span class="stats-card-title">RB</span>
+					</div>
+					<div class="stats-days">
+						<div class="stat-day">
+							<div class="stat-label">本日</div>
+							<div class="stat-value rb-value">{%STATS_RB_TODAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">1日前</div>
+							<div class="stat-value rb-value">{%STATS_RB_1DAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day">
+							<div class="stat-label">2日前</div>
+							<div class="stat-value rb-value">{%STATS_RB_2DAY%}<span class="stat-unit">回</span></div>
+						</div>
+						<div class="stat-day stat-total">
+							<div class="stat-label">累計</div>
+							<div class="stat-value rb-value">{%STATS_RB_TOTAL%}<span class="stat-unit">回</span></div>
+						</div>
+					</div>
+				</div>
+				<!-- 差枚数 Section -->
+				<div class="stats-card">
+					<div class="stats-card-header">
+						<span class="stats-icon">💰</span>
+						<span class="stats-card-title">最大差枚数</span>
+					</div>
+					<div class="stats-days">
+						<div class="stat-day">
+							<div class="stat-label">本日</div>
+							<div class="stat-value diff-value">{%STATS_MAX_DIFF_TODAY%}<span class="stat-unit">枚</span></div>
+						</div>
+						<div class="stat-day stat-total">
+							<div class="stat-label">過去最高</div>
+							<div class="stat-value diff-value">{%STATS_MAX_DIFF_EVER%}<span class="stat-unit">枚</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Bonus History Chart -->
+			<div class="stats-history">
+				<h5 class="stats-history-title">最近10回のボーナス履歴</h5>
+				<div class="stats-chart">
+					<canvas id="bonusHistoryChartMobile" width="400" height="200"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Bootstrap core JavaScript -->
 	<script src="/data/play_v2/vendor/jquery/jquery-3.3.1.min.js"></script>
 	<script src="/data/play_v2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -540,6 +873,161 @@
 	<script src="{%JSDIR%}/view_functions.js?{%TIMESTAMP%}" type="text/javascript"></script>
 	<script src="{%JSDIR%}/view_auth.js?{%TIMESTAMP%}-{%MACHINE_NO%}-{%AUTHID%}" type="text/javascript"></script>
 	<script src="/data/play_v2/js/playground.js?{%TIMESTAMP%}" type="text/javascript"></script>
+
+	<!-- Chart.js for statistics charts -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+	<!-- Statistics functionality -->
+	<script>
+		$(document).ready(function() {
+			// Mobile stats button click handler
+			$('.btn-slidemenu-stats').on('click', function() {
+				$('#stats-overlay').addClass('show');
+				// Render chart when overlay is shown
+				renderBonusChart('bonusHistoryChartMobile');
+			});
+
+			// Close overlay button click handler
+			$('#close-stats-overlay').on('click', function() {
+				$('#stats-overlay').removeClass('show');
+			});
+
+			// Close overlay when clicking on background
+			$('#stats-overlay').on('click', function(e) {
+				if ($(e.target).is('#stats-overlay')) {
+					$(this).removeClass('show');
+				}
+			});
+
+			// Render PC chart when stats tab is shown
+			$('#tab-stats').on('shown.bs.tab', function() {
+				renderBonusChart('bonusHistoryChart');
+			});
+
+			// Bonus History Chart Rendering Function
+			function renderBonusChart(canvasId) {
+				var canvas = document.getElementById(canvasId);
+				if (!canvas) return;
+
+				// Parse history data from template
+				var historyData = {%STATS_HISTORY%};
+
+				if (!historyData || historyData.length === 0) {
+					// No data available
+					var ctx = canvas.getContext('2d');
+					ctx.font = '14px sans-serif';
+					ctx.fillStyle = '#666';
+					ctx.textAlign = 'center';
+					ctx.fillText('データがありません', canvas.width / 2, canvas.height / 2);
+					return;
+				}
+
+				var labels = [];
+				var bbData = [];
+				var rbData = [];
+				var diffData = [];
+
+				// Prepare chart data
+				for (var i = 0; i < historyData.length; i++) {
+					labels.push((i + 1) + '回目');
+					bbData.push(historyData[i].bb_count || 0);
+					rbData.push(historyData[i].rb_count || 0);
+					diffData.push(historyData[i].diff_count || 0);
+				}
+
+				// Destroy existing chart if it exists
+				if (window['chart_' + canvasId]) {
+					window['chart_' + canvasId].destroy();
+				}
+
+				// Create new chart
+				var ctx = canvas.getContext('2d');
+				window['chart_' + canvasId] = new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: labels,
+						datasets: [
+							{
+								label: 'BB',
+								data: bbData,
+								backgroundColor: 'rgba(255, 107, 107, 0.7)',
+								borderColor: 'rgba(255, 107, 107, 1)',
+								borderWidth: 1
+							},
+							{
+								label: 'RB',
+								data: rbData,
+								backgroundColor: 'rgba(78, 205, 196, 0.7)',
+								borderColor: 'rgba(78, 205, 196, 1)',
+								borderWidth: 1
+							},
+							{
+								label: '差枚数',
+								data: diffData,
+								backgroundColor: 'rgba(255, 215, 0, 0.7)',
+								borderColor: 'rgba(255, 215, 0, 1)',
+								borderWidth: 1,
+								yAxisID: 'y1'
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						scales: {
+							y: {
+								beginAtZero: true,
+								position: 'left',
+								title: {
+									display: true,
+									text: 'BB/RB回数'
+								}
+							},
+							y1: {
+								beginAtZero: true,
+								position: 'right',
+								title: {
+									display: true,
+									text: '差枚数'
+								},
+								grid: {
+									drawOnChartArea: false
+								}
+							}
+						},
+						plugins: {
+							legend: {
+								display: true,
+								position: 'top'
+							},
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										var label = context.dataset.label || '';
+										if (label) {
+											label += ': ';
+										}
+										label += context.parsed.y;
+										if (context.dataset.label === '差枚数') {
+											label += '枚';
+										} else {
+											label += '回';
+										}
+										return label;
+									}
+								}
+							}
+						}
+					}
+				});
+			}
+
+			// Render PC chart on page load if stats tab is active
+			if ($('#tab-stats').hasClass('active')) {
+				renderBonusChart('bonusHistoryChart');
+			}
+		});
+	</script>
 
   </body>
 
