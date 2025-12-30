@@ -15,75 +15,77 @@ try {
     echo "<hr>";
 
     // 正しい機種マッピング（CSVデータから正確に読み取り）
+    // 注: 吉宗(青/ピンク/オレンジ) は全て「吉宗」機種
+    // 注: 「無」は空いている機器（model_no = 0）
     $correctMapping = [
-        1 => '吉宗(ピンク)',
+        1 => '吉宗',      // CSVでは吉宗(ピンク)
         2 => '番長',
-        3 => '吉宗(ピンク)',
+        3 => '吉宗',      // CSVでは吉宗(ピンク)
         4 => '番長',
-        5 => '吉宗(ピンク)',
+        5 => '吉宗',      // CSVでは吉宗(ピンク)
         6 => '番長',
-        7 => '吉宗(ピンク)',
+        7 => '吉宗',      // CSVでは吉宗(ピンク)
         8 => 'カイジ',
         9 => 'カイジ',
-        10 => '吉宗(ピンク)',
-        11 => '吉宗(青)',
-        12 => '吉宗(青)',
+        10 => '吉宗',     // CSVでは吉宗(ピンク)
+        11 => '吉宗',     // CSVでは吉宗(青)
+        12 => '吉宗',     // CSVでは吉宗(青)
         13 => '南国物語',
         14 => '南国物語',
         15 => '南国物語',
         16 => 'ミリオンゴッド',
-        17 => '無',
+        17 => null,       // 無（空き機器）
         18 => 'ミリオンゴッド',
-        19 => '無',
+        19 => null,       // 無（空き機器）
         20 => 'ミリオンゴッド',
-        21 => '無',
-        22 => '無',
+        21 => null,       // 無（空き機器）
+        22 => null,       // 無（空き機器）
         23 => '北斗の拳',
         24 => '北斗の拳',
-        25 => '無',
+        25 => null,       // 無（空き機器）
         26 => '北斗の拳',
-        27 => '無',
-        28 => '無',
+        27 => null,       // 無（空き機器）
+        28 => null,       // 無（空き機器）
         29 => 'ジャグラー',
         30 => 'ジャグラー',
-        31 => '無',
-        32 => '無',
+        31 => null,       // 無（空き機器）
+        32 => null,       // 無（空き機器）
         33 => 'ジャグラー',
-        34 => '無',
-        35 => '無',
-        36 => '無',
+        34 => null,       // 無（空き機器）
+        35 => null,       // 無（空き機器）
+        36 => null,       // 無（空き機器）
         37 => 'ファイヤードリフト',
         38 => '鬼武者',
-        39 => '無',
+        39 => null,       // 無（空き機器）
         40 => 'ビンゴ',
         41 => '北斗の拳',
-        42 => '無',
+        42 => null,       // 無（空き機器）
         43 => '北斗の拳',
-        44 => '無',
-        45 => '無',
-        46 => '無',
-        47 => '無',
-        48 => '無',
+        44 => null,       // 無（空き機器）
+        45 => null,       // 無（空き機器）
+        46 => null,       // 無（空き機器）
+        47 => null,       // 無（空き機器）
+        48 => null,       // 無（空き機器）
         49 => '北斗の拳',
         50 => '銭形',
         51 => '銭形',
-        52 => '無',
+        52 => null,       // 無（空き機器）
         53 => '銭形',
         54 => 'ファイヤードリフト',
         55 => '鬼武者',
-        56 => '無',
+        56 => null,       // 無（空き機器）
         57 => 'ビンゴ',
         58 => '島唄',
         59 => '島唄',
-        60 => '吉宗(オレンジ)',
-        61 => '無',
-        62 => '無',
-        63 => '無',
+        60 => '吉宗',     // CSVでは吉宗(オレンジ)
+        61 => null,       // 無（空き機器）
+        62 => null,       // 無（空き機器）
+        63 => null,       // 無（空き機器）
         64 => '島唄',
-        65 => '無',
-        66 => '無',
+        65 => null,       // 無（空き機器）
+        66 => null,       // 無（空き機器）
         67 => '島唄',
-        68 => '吉宗(オレンジ)'
+        68 => '吉宗'      // CSVでは吉宗(オレンジ)
     ];
 
     // 機種名とmodel_noのマッピングを取得
@@ -122,27 +124,39 @@ try {
     foreach ($machines as $m) {
         $machine_no = $m['machine_no'];
         $currentModel = $m['model_name'] ?? '未設定';
-        $correctModel = $correctMapping[$machine_no] ?? null;
 
-        if (!$correctModel) {
-            continue; // マッピングにない台はスキップ
-        }
-
-        $correctModelNo = $modelNameToNo[$correctModel] ?? null;
-
-        if (!$correctModelNo) {
-            $missingModels[$correctModel] = true;
-            echo "<tr style='background-color:#fff3cd;'>";
-            echo "<td>{$machine_no}</td>";
-            echo "<td>{$currentModel}</td>";
-            echo "<td>→</td>";
-            echo "<td>{$correctModel}</td>";
-            echo "<td>⚠️ 機種マスターに未登録</td>";
-            echo "</tr>";
+        // マッピングに存在しない台はスキップ
+        if (!array_key_exists($machine_no, $correctMapping)) {
             continue;
         }
 
-        $needsUpdate = ($currentModel != $correctModel);
+        $correctModel = $correctMapping[$machine_no];
+
+        // 空き機器（無）の場合
+        if ($correctModel === null) {
+            $correctModelNo = 0;
+            $correctModelDisplay = '無（空き機器）';
+            $needsUpdate = ($m['model_no'] != 0);
+        } else {
+            // 通常の機種
+            $correctModelNo = $modelNameToNo[$correctModel] ?? null;
+            $correctModelDisplay = $correctModel;
+
+            if (!$correctModelNo) {
+                $missingModels[$correctModel] = true;
+                echo "<tr style='background-color:#fff3cd;'>";
+                echo "<td>{$machine_no}</td>";
+                echo "<td>{$currentModel}</td>";
+                echo "<td>→</td>";
+                echo "<td>{$correctModel}</td>";
+                echo "<td>⚠️ 機種マスターに未登録</td>";
+                echo "</tr>";
+                continue;
+            }
+
+            $needsUpdate = ($currentModel != $correctModel);
+        }
+
         $style = $needsUpdate ? 'style="background-color:#ffe6e6;"' : '';
         $status = $needsUpdate ? '❌ 要修正' : '✅ 一致';
 
@@ -150,7 +164,7 @@ try {
         echo "<td>{$machine_no}</td>";
         echo "<td>{$currentModel}</td>";
         echo "<td>→</td>";
-        echo "<td>{$correctModel}</td>";
+        echo "<td>{$correctModelDisplay}</td>";
         echo "<td>{$status}</td>";
         echo "</tr>";
 
@@ -158,7 +172,7 @@ try {
             $toUpdate[] = [
                 'machine_no' => $machine_no,
                 'current_model' => $currentModel,
-                'correct_model' => $correctModel,
+                'correct_model' => $correctModelDisplay,
                 'correct_model_no' => $correctModelNo
             ];
         }
