@@ -257,12 +257,18 @@ function DispTop($template) {
 	// SLIDER_LIST ループ作成（スライダー表示用）
 	$template->loop_start("SLIDER_LIST");
 	foreach ($machineData as $row) {
+		// 画像パスの処理（GCS URLでない場合はローカルパスを追加）
+		$imageList = $row["image_list"];
+		if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
+			$imageList = '/data/img/model/' . $imageList;
+		}
+
 		$template->assign("NO"               , $row["machine_no"], true);
 		$template->assign("MACHINE_CD"       , $row["machine_cd"], true);
 		$template->assign("MODEL_CD"         , $row["model_cd"], true);
 		$template->assign("MODEL_NAME"       , (FOLDER_LANG==DEFAULT_LANG)? $row["model_name"]:$row["model_roman"], true);
 		$template->assign("GENERATION"       , (FOLDER_LANG==DEFAULT_LANG)? $row["unit_name"]:$row["unit_roman"], true);
-		$template->assign("IMAGE_LIST"       , $row["image_list"], true);
+		$template->assign("IMAGE_LIST"       , $imageList, true);
 		$template->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);
 		$template->loop_next();
 	}
@@ -271,6 +277,12 @@ function DispTop($template) {
 	// LIST ループ作成（リスト表示用）
 	$template->loop_start("LIST");
 	foreach ($machineData as $row) {
+		// 画像パスの処理（GCS URLでない場合はローカルパスを追加）
+		$imageList = $row["image_list"];
+		if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
+			$imageList = '/data/img/model/' . $imageList;
+		}
+
 		$template->assign("NO"               , $row["machine_no"], true);
 		$template->assign("MACHINE_CD"       , $row["machine_cd"], true);
 		$template->assign("MAKER_NO"         , $row["maker_no"], true);
@@ -279,7 +291,7 @@ function DispTop($template) {
 		$template->assign("MODEL_CD"         , $row["model_cd"], true);
 		$template->assign("MODEL_NAME"       , (FOLDER_LANG==DEFAULT_LANG)? $row["model_name"]:$row["model_roman"], true);
 		$template->assign("GENERATION"       , (FOLDER_LANG==DEFAULT_LANG)? $row["unit_name"]:$row["unit_roman"], true);
-		$template->assign("IMAGE_LIST"       , $row["image_list"], true);
+		$template->assign("IMAGE_LIST"       , $imageList, true);
 		$template->assign("DIR_IMG_MODEL_DIR", DIR_IMG_MODEL_DIR, true);
 
 		// ユーザー向け3状態判定（空き台・使用中・準備中）
