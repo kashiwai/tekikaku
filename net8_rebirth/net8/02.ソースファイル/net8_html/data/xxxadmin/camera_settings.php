@@ -181,12 +181,21 @@ function AssignCamera($template) {
 	// camera_no が 0 の場合は割り当て解除
 	if ($camera_no == 0) {
 		$camera_no = null;
+		$mac_address = null;
+	} else {
+		// カメラのMACアドレスを取得
+		$camera_sql = "SELECT camera_mac FROM mst_camera WHERE camera_no = :camera_no AND del_flg = 0";
+		$stmt = $template->DB->prepare($camera_sql);
+		$stmt->execute(['camera_no' => $camera_no]);
+		$camera = $stmt->fetch(PDO::FETCH_ASSOC);
+		$mac_address = $camera ? $camera['camera_mac'] : null;
 	}
 
-	// 更新
+	// マシンのcamera_noとmac_addressを更新（MACアドレスを同期）
 	$sql = "
 		UPDATE dat_machine SET
 			camera_no = :camera_no,
+			mac_address = :mac_address,
 			upd_no = 1,
 			upd_dt = NOW()
 		WHERE machine_no = :machine_no
@@ -195,7 +204,8 @@ function AssignCamera($template) {
 	$stmt = $template->DB->prepare($sql);
 	$stmt->execute([
 		'machine_no' => $machine_no,
-		'camera_no' => $camera_no
+		'camera_no' => $camera_no,
+		'mac_address' => $mac_address
 	]);
 }
 
@@ -207,9 +217,11 @@ function UnassignCamera($template, $machine_no) {
 		throw new Exception('台番号が指定されていません');
 	}
 
+	// カメラ割り当て解除時はMACアドレスもクリア
 	$sql = "
 		UPDATE dat_machine SET
 			camera_no = NULL,
+			mac_address = NULL,
 			upd_no = 1,
 			upd_dt = NOW()
 		WHERE machine_no = :machine_no
