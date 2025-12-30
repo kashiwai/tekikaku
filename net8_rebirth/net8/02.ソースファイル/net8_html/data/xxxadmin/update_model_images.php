@@ -57,6 +57,36 @@ $imageMapping = [
         'image_list' => 'nangoku.jpg',
         'image_detail' => 'nangoku.jpg',
         'image_reel' => 'nangoku.jpg'
+    ],
+    'FIREDRIFT01' => [  // ファイヤードリフト
+        'image_list' => 'fire.jpg',
+        'image_detail' => 'fire.jpg',
+        'image_reel' => 'fire.jpg'
+    ],
+    'KAIJI01' => [  // カイジ
+        'image_list' => 'kaiji.jpg',
+        'image_detail' => 'kaiji.jpg',
+        'image_reel' => 'kaiji.jpg'
+    ],
+    'ONIMUSHA01' => [  // 鬼武者3
+        'image_list' => 'onimusya.jpg',
+        'image_detail' => 'onimusya.jpg',
+        'image_reel' => 'onimusya.jpg'
+    ],
+    'BINGO01' => [  // ビンゴ
+        'image_list' => 'bingo.png',
+        'image_detail' => 'bingo.png',
+        'image_reel' => 'bingo.png'
+    ],
+    'SHIMAUTA01' => [  // 島唄
+        'image_list' => 'shimauta.jpg',
+        'image_detail' => 'shimauta.jpg',
+        'image_reel' => 'shimauta.jpg'
+    ],
+    'SLOT-107' => [  // 秘宝伝
+        'image_list' => 'hihouden.jpg',
+        'image_detail' => 'hihouden.jpg',
+        'image_reel' => 'hihouden.jpg'
     ]
 ];
 
