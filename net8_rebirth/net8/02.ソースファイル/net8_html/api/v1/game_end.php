@@ -227,11 +227,11 @@ try {
             'session_id' => $sessionId
         ]);
 
-        // ポイント払い出し（勝利時・精算時）
+        // ポイント払い出し（勝利時・精算時）/ ポイント減算（損失時）
         $newBalance = null;
         $transaction = null;
 
-        if ($session['user_id'] && $pointsWon > 0) {
+        if ($session['user_id'] && $pointsWon != 0) {
             // 残高を取得（FOR UPDATE でロック）
             $stmt = $pdo->prepare("
                 SELECT balance FROM user_balances WHERE user_id = :user_id FOR UPDATE
@@ -247,20 +247,35 @@ try {
             $balanceAfter = $balanceBefore + $pointsWon;
 
             // 残高を更新（user_balances）
-            $stmt = $pdo->prepare("
-                UPDATE user_balances
-                SET balance = :balance,
-                    total_won = total_won + :amount,
-                    last_transaction_at = NOW()
-                WHERE user_id = :user_id
-            ");
-            $stmt->execute([
-                'balance' => $balanceAfter,
-                'amount' => $pointsWon,
-                'user_id' => $session['user_id']
-            ]);
+            // pointsWonが正の値（勝ち）の場合はtotal_wonに加算、負の値（負け）の場合はtotal_wonは変更しない
+            if ($pointsWon > 0) {
+                $stmt = $pdo->prepare("
+                    UPDATE user_balances
+                    SET balance = :balance,
+                        total_won = total_won + :amount,
+                        last_transaction_at = NOW()
+                    WHERE user_id = :user_id
+                ");
+                $stmt->execute([
+                    'balance' => $balanceAfter,
+                    'amount' => $pointsWon,
+                    'user_id' => $session['user_id']
+                ]);
+            } else {
+                // 負の値の場合はbalanceのみ更新
+                $stmt = $pdo->prepare("
+                    UPDATE user_balances
+                    SET balance = :balance,
+                        last_transaction_at = NOW()
+                    WHERE user_id = :user_id
+                ");
+                $stmt->execute([
+                    'balance' => $balanceAfter,
+                    'user_id' => $session['user_id']
+                ]);
+            }
 
-            // ★ mst_member.point にもポイントを追加（精算時にカメラ側と同期するため）
+            // ★ mst_member.point にもポイントを追加/減算（精算時にカメラ側と同期するため）
             if ($memberNo) {
                 $stmt = $pdo->prepare("
                     UPDATE mst_member
@@ -271,24 +286,30 @@ try {
                     'amount' => $pointsWon,
                     'member_no' => $memberNo
                 ]);
-                error_log("💰 Game end payout to mst_member: member_no={$memberNo}, amount={$pointsWon}");
+                $actionType = $pointsWon > 0 ? 'payout' : 'deduction';
+                error_log("💰 Game end {$actionType} to mst_member: member_no={$memberNo}, amount={$pointsWon}");
             }
 
             // 取引履歴を記録
             $transactionId = 'txn_' . uniqid() . '_' . time();
+            $transactionType = $pointsWon > 0 ? 'payout' : 'loss';
+            $description = $pointsWon > 0 ? 'Game win payout' : 'Game loss deduction';
+
             $stmt = $pdo->prepare("
                 INSERT INTO point_transactions
                 (user_id, transaction_id, type, amount, balance_before, balance_after, game_session_id, description)
                 VALUES
-                (:user_id, :transaction_id, 'payout', :amount, :balance_before, :balance_after, :game_session_id, 'Game win payout')
+                (:user_id, :transaction_id, :type, :amount, :balance_before, :balance_after, :game_session_id, :description)
             ");
             $stmt->execute([
                 'user_id' => $session['user_id'],
                 'transaction_id' => $transactionId,
+                'type' => $transactionType,
                 'amount' => $pointsWon,
                 'balance_before' => $balanceBefore,
                 'balance_after' => $balanceAfter,
-                'game_session_id' => $sessionId
+                'game_session_id' => $sessionId,
+                'description' => $description
             ]);
 
             $transaction = [
@@ -301,7 +322,7 @@ try {
             $newBalance = $balanceAfter;
 
         } else if ($session['user_id']) {
-            // 残高取得のみ
+            // pointsWon = 0 の場合: 残高取得のみ
             $userBalance = getUserBalance($pdo, $session['user_id']);
             $newBalance = $userBalance['balance'] ?? null;
         }
