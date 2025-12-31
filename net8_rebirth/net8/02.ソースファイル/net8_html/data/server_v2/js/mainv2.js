@@ -148,10 +148,7 @@ if ( videoMode ){
 			},
 			audio: {
 				deviceId: audioID
-			},
-			advanced: [
-				{ width: 768, height: 576 },
-			]
+			}
 		};
 	}
 	if( videoMode == 5 ){
