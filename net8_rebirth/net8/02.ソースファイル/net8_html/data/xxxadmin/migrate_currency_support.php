@@ -95,7 +95,7 @@ try {
     } else {
         $migrations[] = [
             'name' => 'sdk_users.currency カラム追加',
-            'sql' => "ALTER TABLE sdk_users ADD COLUMN currency VARCHAR(3) DEFAULT 'JPY' COMMENT '通貨コード (ISO 4217)' AFTER balance"
+            'sql' => "ALTER TABLE sdk_users ADD COLUMN currency VARCHAR(3) DEFAULT 'JPY' COMMENT '通貨コード (ISO 4217)' AFTER member_no"
         ];
     }
 
