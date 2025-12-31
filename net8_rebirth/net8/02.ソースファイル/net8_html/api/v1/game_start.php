@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 require_once('../../_etc/require_files.php');
 require_once(__DIR__ . '/helpers/user_helper.php');
 require_once(__DIR__ . '/helpers/camera_helper.php');
+require_once(__DIR__ . '/helpers/currency_helper.php');
 
 // 認証ヘッダー確認（複数ソース対応）
 $authHeader = '';
@@ -67,6 +68,14 @@ $initialPoints = isset($input['initialPoints']) ? (int)$input['initialPoints'] :
 $balanceMode = $input['balanceMode'] ?? 'add'; // Case 1: 'add' or 'set'（デフォルト: 'add'）
 $consumeImmediately = isset($input['consumeImmediately']) ? (bool)$input['consumeImmediately'] : true; // Case 6: デフォルト true
 $lang = $input['lang'] ?? 'ja'; // 多言語対応: ja/ko/en/zh（デフォルト: ja）
+$currency = normalizeCurrency($input['currency'] ?? 'JPY'); // 通貨対応: JPY/CNY/USD/TWD（デフォルト: JPY）
+
+// 通貨バリデーション
+if (!validateCurrency($currency)) {
+    http_response_code(400);
+    echo json_encode(createCurrencyErrorResponse($input['currency'] ?? 'unknown'));
+    exit;
+}
 
 try {
     $pdo = get_db_connection();
@@ -245,13 +254,13 @@ try {
         if ($initialPoints > 0) {
             if ($balanceMode === 'set') {
                 // setモード: 既存残高を無視して新しい値を設定
-                error_log("💰 Setting balance (set mode): user_id={$userId}, amount={$initialPoints}");
+                error_log("💰 Setting balance (set mode): user_id={$userId}, amount={$initialPoints}, currency={$currency}");
                 $stmt = $pdo->prepare("
-                    INSERT INTO user_balances (user_id, balance, created_at, updated_at)
-                    VALUES (?, ?, NOW(), NOW())
-                    ON DUPLICATE KEY UPDATE balance = ?, updated_at = NOW()
+                    INSERT INTO user_balances (user_id, balance, currency, created_at, updated_at)
+                    VALUES (?, ?, ?, NOW(), NOW())
+                    ON DUPLICATE KEY UPDATE balance = ?, currency = ?, updated_at = NOW()
                 ");
-                $stmt->execute([$userId, $initialPoints, $initialPoints]);
+                $stmt->execute([$userId, $initialPoints, $currency, $initialPoints, $currency]);
 
                 // mst_member.point も同期
                 $stmt = $pdo->prepare("UPDATE mst_member SET point = ? WHERE member_no = ?");
@@ -540,9 +549,9 @@ try {
         // 6. ゲームセッションをDBに記録（userIdの有無に関わらず）
         $stmt = $pdo->prepare("
             INSERT INTO game_sessions
-            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, reserved_points, balance_mode, status, ip_address, user_agent)
+            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, currency, reserved_points, balance_mode, status, ip_address, user_agent)
             VALUES
-            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :reserved_points, :balance_mode, 'playing', :ip, :user_agent)
+            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :currency, :reserved_points, :balance_mode, 'playing', :ip, :user_agent)
         ");
 
         $stmt->execute([
@@ -555,6 +564,7 @@ try {
             'model_cd' => $model['model_cd'],
             'model_name' => $model['model_name'],
             'points_consumed' => $pointsConsumed,
+            'currency' => $currency, // 通貨コード
             'reserved_points' => $reservedPoints,
             'balance_mode' => $balanceMode,
             'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
@@ -662,9 +672,12 @@ try {
         $response['points'] = [
             'consumed' => $pointsConsumed,
             'balance' => $userBalance['balance'],
-            'balanceBefore' => $userBalance['balance'] + $pointsConsumed
+            'balanceBefore' => $userBalance['balance'] + $pointsConsumed,
+            'currency' => $currency,
+            'formatted' => formatCurrency($userBalance['balance'], $currency)
         ];
         $response['pointsConsumed'] = $pointsConsumed; // SDK互換性のため
+        $response['balance'] = createCurrencyResponse($userBalance['balance'], $currency); // 通貨対応レスポンス
     }
 
     http_response_code(200);

@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // 既存の設定ファイル読み込み
 require_once('../../_etc/require_files.php');
 require_once(__DIR__ . '/helpers/user_helper.php');
+require_once(__DIR__ . '/helpers/currency_helper.php');
 
 // 認証ヘッダー確認
 $authHeader = '';
@@ -128,6 +129,7 @@ try {
             machine_no,
             model_cd,
             points_consumed,
+            currency,
             status,
             started_at
         FROM game_sessions
@@ -505,6 +507,8 @@ try {
         $pdo->commit();
 
         // 成功レスポンス
+        $currency = $session['currency'] ?? 'JPY'; // セッション開始時の通貨を使用
+
         $response = [
             'success' => true,
             'sessionId' => $sessionId,
@@ -514,12 +518,14 @@ try {
             'pointsWon' => $pointsWon,
             'netProfit' => $pointsWon - $session['points_consumed'],
             'playDuration' => $playDuration,
-            'endedAt' => $endedAt->format('Y-m-d H:i:s')
+            'endedAt' => $endedAt->format('Y-m-d H:i:s'),
+            'currency' => $currency
         ];
 
-        // 残高情報を追加
+        // 残高情報を追加（通貨フォーマット付き）
         if ($newBalance !== null) {
             $response['newBalance'] = $newBalance;
+            $response['balance'] = createCurrencyResponse($newBalance, $currency);
         }
 
         // 取引情報を追加
