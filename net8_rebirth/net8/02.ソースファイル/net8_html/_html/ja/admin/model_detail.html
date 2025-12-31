@@ -15,7 +15,6 @@
 				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();" enctype="multipart/form-data">
 					<input type="hidden" name="MODEL_NO" value="{%MODEL_NO%}">
 					<input type="hidden" name="OLD_CATEGORY" value="{%OLD_CATEGORY%}">
-					<input type="hidden" name="LAYOUT_DATA" value="{%LAYOUT_DATA%}">
 					<input type="hidden" name="IMAGE_REEL" value="{%IMAGE_REEL%}">
 					
 					<div class="container-fluid">
@@ -239,6 +238,27 @@
 								<tr>
 									<th>備考</th>
 									<td><textarea class="form-control" rows="4" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+								<tr>
+									<th>レイアウトデータ (JSON)<br>
+										<span class="text-muted small">※機種固有の設定（カメラ、ボタン等）</span>
+									</th>
+									<td>
+										<textarea class="form-control" rows="10" name="LAYOUT_DATA" id="LAYOUT_DATA" style="font-family: monospace; font-size: 12px;">{%LAYOUT_DATA%}</textarea>
+										<div class="alert alert-info mt-2 mb-0">
+											<strong>JSON形式で入力してください</strong><br>
+											<small>
+												例: <code>{"video_portrait":0,"video_mode":4,"drum":0,"bonus_push":[{"label":"select","path":"noselect_bonus.png"}],"version":1,"hide":[]}</code><br>
+												<strong>主要パラメータ:</strong><br>
+												・video_mode: カメラ画質モード (1-5)<br>
+												・drum: ドラム表示 (0=非表示, 1=表示)<br>
+												・bonus_push: ボーナスボタン設定<br>
+												・version: 基板バージョン (1=旧, 2=新, 3=ROM)<br>
+												・lightsofftime: ボタン点灯タイムアウト(ms)<br>
+												・orderretry: リトライ回数
+											</small>
+										</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -485,20 +505,19 @@
 					if (!chk_indis("{%A1473%}", frm["PRIZEBALL_DATA_AUTOCHANCE"].value)) return false;
 					if (!chk_numeric("{%A1474%}", frm["PRIZEBALL_DATA_TULIP_COUNT"].value)) return false;
 				}
-				
-				//レイアウトデータ
-				/*
-				if (!chk_indis("{%A1416%}", frm["LAYOUT_DATA"].value)) return false;
-				if (frm["LAYOUT_DATA"].value != ""){
+
+				// レイアウトデータ（JSON形式チェック）
+				if (frm["LAYOUT_DATA"].value != "" && frm["LAYOUT_DATA"].value.trim() != ""){
 					try{
-						var _isJson = JSON.parse( frm["LAYOUT_DATA"].value);
+						var layoutData = JSON.parse(frm["LAYOUT_DATA"].value);
+						// 基本的な構造チェック（任意）
+						console.log("Layout Data parsed successfully:", layoutData);
 					}catch(e){
-						chkAlert("{%A1417%}");
+						alert("レイアウトデータのJSON形式が正しくありません。\n\nエラー: " + e.message + "\n\n正しいJSON形式で入力してください。");
 						return false;
 					}
 				}
-				*/
-				
+
 				//基盤系チェック
 				if( category == 2){
 					var labelname = [];		// ラベル名重複チェック用
