@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  antmedia:
+    build: .
+    container_name: net8-streaming-server
+    ports:
+      - "5080:5080"    # HTTP (管理画面 & REST API)
+      - "5443:5443"    # HTTPS (WebRTC signaling)
+      - "1935:1935"    # RTMP
+      - "5000-5100:5000-5100/udp"  # WebRTC UDP ports
+    environment:
+      - SERVER_MODE=community
+      - TZ=Asia/Tokyo
+    volumes:
+      - antmedia-data:/usr/local/antmedia/webapps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5080/LiveApp"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  antmedia-data:
+    driver: local
