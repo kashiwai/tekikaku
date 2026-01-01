@@ -647,20 +647,32 @@ try {
         }
     }
 
-    // 成功レスポンス（環境情報を追加）
-    // play_v2ページ（既存の動作するゲームページ）を使用
-    $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}";
-    $gameUrl = "https://mgg-webservice-production.up.railway.app{$playUrl}"; // 絶対URL（iframe埋め込み用）
+    // 成功レスポンス（通貨に応じて異なるURLを返す）
 
-    // play_embed（実験的）も一応含める
-    $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}";
+    // 中国側（CNY, USD, TWD）: play_v2（通貨対応済み）
+    // 韓国側（JPY or なし）: play_embed（従来通り）
+    $useCurrencyMode = in_array($currency, ['CNY', 'USD', 'TWD']);
+
+    if ($useCurrencyMode) {
+        // 中国側 → play_v2（通貨対応）
+        $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}";
+        $gameUrl = "https://mgg-webservice-production.up.railway.app{$playUrl}";
+        $playEmbedUrl = null; // 使用しない
+        error_log("✅ Currency mode ({$currency}): Using play_v2");
+    } else {
+        // 韓国側 → play_embed（従来通り）
+        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}";
+        $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}";
+        $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため
+        error_log("✅ Legacy mode (JPY): Using play_embed");
+    }
 
     $response = [
         'success' => true,
         'environment' => $environment,
         'sessionId' => $sessionId,
         'machineNo' => $machine['machine_no'],
-        'memberNo' => $memberNo, // play_embed用のmember_no
+        'memberNo' => $memberNo,
         'signalingId' => $machine['signaling_id'],
         'model' => [
             'id' => $model['model_cd'],
@@ -669,9 +681,10 @@ try {
         ],
         'signaling' => $signalingInfo,
         'camera' => $cameraInfo,
-        'playUrl' => $playUrl, // 相対パス（既存のplay_v2ページ）
-        'playEmbedUrl' => $playEmbedUrl, // 相対パス（実験的なembed専用ページ）
-        'gameUrl' => $gameUrl, // 絶対URL（iframe埋め込み推奨 - play_v2使用）
+        'playUrl' => $playUrl, // 相対パス
+        'playEmbedUrl' => $playEmbedUrl, // play_embed用（韓国側のみ）
+        'gameUrl' => $gameUrl, // 絶対URL（推奨）
+        'mode' => $useCurrencyMode ? 'currency' : 'legacy', // デバッグ用
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 
