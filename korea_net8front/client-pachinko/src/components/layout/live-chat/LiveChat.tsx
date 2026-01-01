@@ -100,11 +100,14 @@ export default function LiveChat({
 
     try {
       const socket = getSocket();
-      socket.emit("livechat_leave", {
-        chatId: activeChat.chat.id,
-        participantId: user.id,
-        role: "user",
-      });
+      // ローカルモードではソケット接続をスキップ
+      if (socket) {
+        socket.emit("livechat_leave", {
+          chatId: activeChat.chat.id,
+          participantId: user.id,
+          role: "user",
+        });
+      }
 
       setActiveChat(null);
       setTab("messages");
@@ -171,11 +174,14 @@ export default function LiveChat({
       }
 
       const socket = getSocket();
-      socket.emit("livechat_join", {
-        chatId: res.data.chat.id,
-        participantId: user.id,
-        role: "user",
-      });
+      // ローカルモードではソケット接続をスキップ
+      if (socket) {
+        socket.emit("livechat_join", {
+          chatId: res.data.chat.id,
+          participantId: user.id,
+          role: "user",
+        });
+      }
 
       setActiveChat(res.data);
       setTab("chat");

@@ -154,11 +154,14 @@ export default function ChatTab({ isPreview }: { isPreview: boolean }) {
 
       if (!lastVisibleUnread) return;
 
-      socket.emit("livechat_read", {
-        chatId: activeChat.chat.id,
-        senderType: "office",
-        after: lastVisibleUnread.createdAt,
-      });
+      // ローカルモードではソケット接続をスキップ
+      if (socket) {
+        socket.emit("livechat_read", {
+          chatId: activeChat.chat.id,
+          senderType: "office",
+          after: lastVisibleUnread.createdAt,
+        });
+      }
 
       markMessagesAsReadAfter(lastVisibleUnread.createdAt, "office");
     };
@@ -668,6 +671,8 @@ const ChatInput = () => {
   const emitTyping = (isTyping: boolean) => {
     if (!activeChat || !user) return;
     const socket = getSocket();
+    // ローカルモードではソケット接続をスキップ
+    if (!socket) return;
 
     socket.emit("livechat_typing", {
       chatId: activeChat.chat.id,
@@ -704,14 +709,16 @@ const ChatInput = () => {
     if (!user) return;
 
     const socket = getSocket();
-
-    socket.emit("livechat_send_message", {
-      chatId: activeChat.chat.id,
-      senderType: activeChat.chat.initiatorType,
-      senderId: user.id,
-      content: message,
-      isRead: false,
-    });
+    // ローカルモードではソケット接続をスキップ
+    if (socket) {
+      socket.emit("livechat_send_message", {
+        chatId: activeChat.chat.id,
+        senderType: activeChat.chat.initiatorType,
+        senderId: user.id,
+        content: message,
+        isRead: false,
+      });
+    }
 
     emitTyping(false);
 

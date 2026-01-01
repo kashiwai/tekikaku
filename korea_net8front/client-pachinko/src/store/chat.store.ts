@@ -267,7 +267,7 @@ export const useChatStore = create<ChatState>(
         },
 
         joinPreviewChat: () => {
-            const { previewChat, activeChat } = get();
+            const { previewChat } = get();
             if (!previewChat) return;
 
             const socket = getSocket();
@@ -275,12 +275,14 @@ export const useChatStore = create<ChatState>(
 
             if (!user) return;
 
-            // Join the chat via socket
-            socket.emit("livechat_join", {
-                chatId: previewChat.chat.id,
-                participantId: user.id,
-                role: "user",
-            });
+            // Join the chat via socket (skip if socket is disabled in local mode)
+            if (socket) {
+                socket.emit("livechat_join", {
+                    chatId: previewChat.chat.id,
+                    participantId: user.id,
+                    role: "user",
+                });
+            }
 
             // Set as active chat and clear preview
             set({

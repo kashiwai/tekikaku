@@ -50,10 +50,8 @@ export default function HydrateUser({ initialUser }: HydrateUserProps) {
 
   useEffect(() => {
     const socket = getSocket();
-    // if (!socket.connected) {
-    //   console.log("Socket not connected, connecting...");
-    //   socket.connect();
-    // }
+    // ローカルモードではソケット接続をスキップ
+    if (!socket) return;
 
     socket.on("user_balance_update", handleBalanceUpdate);
     socket.on("force_logout", handleForceLogout);

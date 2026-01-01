@@ -1,5 +1,7 @@
 import { Net8GamePlayerIframe } from "@/components/net8/Net8GamePlayerIframe";
 import Link from "next/link";
+import { cookies } from 'next/headers';
+import { mockKoreaDB } from '@/lib/mock/korea-db';
 
 // デモ用機種マスター
 const MODELS: Record<string, { name: string; category: "pachinko" | "slot" }> = {
@@ -38,25 +40,32 @@ export default async function PachinkoPlayPage({ params }: Props) {
   }
 
   // ユーザーIDを認証セッションから取得
-  const { cookies } = require('next/headers');
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('sessionId');
+  const sessionCookie = cookieStore.get('user.sid'); // 正しいCookie名を使用
   let userId = "demo_user_001"; // フォールバック
-  
+  let net8UserId = "kr_net8_demo_user_001"; // NET8 UserIDフォールバック
+
   if (sessionCookie?.value) {
-    // 韓国ログインセッションから実際のユーザーIDを取得
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4865'}/api/test/session-check`, {
-        headers: {
-          'Cookie': `sessionId=${sessionCookie.value}`
+    // mockKoreaDBから直接セッション情報を取得
+    const session = mockKoreaDB.getSessionById(sessionCookie.value);
+
+    if (session && session.user) {
+      userId = session.user.id || session.user.loginId;
+
+      // NET8 UserIDを取得（連携されていなければ自動連携）
+      if (session.user.net8UserId) {
+        net8UserId = session.user.net8UserId;
+      } else {
+        const linkResult = mockKoreaDB.linkNet8User(session.user.id);
+        if (linkResult.success) {
+          net8UserId = linkResult.net8UserId;
         }
-      });
-      const sessionData = await response.json();
-      if (sessionData.success && sessionData.user) {
-        userId = sessionData.user.userId || sessionData.user.loginId || "demo_user_001";
       }
-    } catch (error) {
-      console.warn('Session check failed:', error);
+
+      console.log('[Game Page] User authenticated:', {
+        koreaUserId: userId,
+        net8UserId
+      });
     }
   }
 
@@ -78,6 +87,7 @@ export default async function PachinkoPlayPage({ params }: Props) {
       {/* Game Player - 既存のNET8プレイヤーを使用 */}
       <Net8GamePlayerIframe
         userId={userId}
+        net8UserId={net8UserId}
         modelId={modelId}
         modelName={model.name}
       />

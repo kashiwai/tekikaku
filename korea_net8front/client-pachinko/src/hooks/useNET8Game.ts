@@ -23,12 +23,35 @@ export function useNET8Game() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Game start failed:', response.status, errorText);
-        throw new Error(`Failed to start game: ${response.status} ${response.statusText}`);
+        // JSONエラーレスポンスを取得
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          const errorText = await response.text();
+          console.error('Game start failed:', response.status, errorText);
+          throw new Error(`Failed to start game: ${response.status} ${response.statusText}`);
+        }
+
+        console.error('Game start failed:', response.status, errorData);
+
+        // ポイント不足エラーの場合は詳細メッセージを表示
+        if (errorData.error === 'INSUFFICIENT_POINTS') {
+          throw new Error(
+            `${errorData.message}\n現在の残高: ${errorData.current}pt\n必要ポイント: ${errorData.required}pt`
+          );
+        }
+
+        throw new Error(errorData.message || `Failed to start game: ${response.status}`);
       }
 
       const result = await response.json();
+
+      // エラーレスポンスの場合（status 200だがerrorフィールドあり）
+      if (result.error) {
+        throw new Error(result.message || result.error);
+      }
+
       setSession(result);
       return result;
     } catch (err) {
@@ -61,6 +84,7 @@ export function useNET8Game() {
           sessionId: session.sessionId,
           result,
           pointsWon,
+          memberNo: session.memberNo, // NET8 APIに必要
         }),
       });
 

@@ -28,6 +28,15 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // NET8 UserIDを取得（連携されていなければ自動連携）
+    let net8UserId = session.user.net8UserId;
+    if (!net8UserId) {
+      const linkResult = mockKoreaDB.linkNet8User(session.user.id);
+      if (linkResult.success) {
+        net8UserId = linkResult.net8UserId;
+      }
+    }
+
     return NextResponse.json({
       success: true,
       authenticated: true,
@@ -36,7 +45,10 @@ export async function GET(request: NextRequest) {
         loginId: session.user.loginId,
         email: session.user.email,
         name: session.user.name,
-        sessionId: session.sessionId
+        sessionId: session.sessionId,
+        // NET8連携情報
+        net8UserId: net8UserId,
+        net8SyncedAt: session.user.net8SyncedAt
       },
       sessionInfo: {
         createdAt: session.createdAt,

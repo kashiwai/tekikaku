@@ -69,7 +69,7 @@ export default function PachinkoPlayer({ session, onGameEnd }: GamePlayerProps) 
 
   const calculateWinPoints = () => {
     // Simple points calculation - replace with actual game logic
-    const basePoints = session.pointsConsumed * 2;
+    const basePoints = (session.pointsConsumed || 100) * 2;
     return Math.floor(basePoints * (0.5 + Math.random()));
   };
 
@@ -100,7 +100,7 @@ export default function PachinkoPlayer({ session, onGameEnd }: GamePlayerProps) 
             <h3 className="text-xl font-bold mb-2">{session.model.name}</h3>
             <p className="text-gray-300">モックゲーム再生中</p>
             <p className="text-sm text-gray-400 mt-2">
-              カメラ: {session.camera.cameraNo} | 機械: {session.machineNo}
+              カメラ: {session.camera?.cameraNo || 'N/A'} | 機械: {session.machineNo}
             </p>
           </div>
         </div>
@@ -162,7 +162,7 @@ export default function PachinkoPlayer({ session, onGameEnd }: GamePlayerProps) 
           autoPlay
           muted
         >
-          <source src={session.camera.streamUrl} type="application/x-mpegURL" />
+          <source src={session.camera?.streamUrl || ''} type="application/x-mpegURL" />
           お使いのブラウザはビデオタグをサポートしていません。
         </video>
         <div className="absolute bottom-4 left-4 right-4 flex gap-2">
@@ -223,7 +223,7 @@ export default function PachinkoPlayer({ session, onGameEnd }: GamePlayerProps) 
         </div>
         <div className="p-3 bg-gray-100 rounded-lg">
           <div className="text-2xl font-bold text-gray-600">
-            {session.points.balance}
+            {session.points?.balance || 0}
           </div>
           <div className="text-sm text-gray-600">現在の残高</div>
         </div>

@@ -14,6 +14,9 @@ export interface MockUser {
   lastLogin?: string;
   role: 'user' | 'admin';
   status: 'active' | 'inactive' | 'suspended';
+  // NET8連携用
+  net8UserId?: string;
+  net8SyncedAt?: string;
 }
 
 // 仮想セッション管理
@@ -24,6 +27,8 @@ export interface MockSession {
   loginId: string;
   createdAt: Date;
   expiresAt: Date;
+  // NET8連携用
+  net8UserId?: string;
 }
 
 class MockKoreaDatabase {
@@ -258,6 +263,87 @@ class MockKoreaDatabase {
     const now = new Date();
     return Array.from(this.sessions.values())
       .filter(session => session.expiresAt > now);
+  }
+
+  // === NET8連携メソッド ===
+
+  // 韓国UserIDから一貫したNET8 UserIDを生成（タイムスタンプなし）
+  generateNet8UserId(koreaUserId: string): string {
+    // 韓国側ユーザーIDにプレフィックスを付与して一意性確保（タイムスタンプなし）
+    return `kr_net8_${koreaUserId}`;
+  }
+
+  // ユーザーにNET8 UserIDを紐付け
+  linkNet8User(koreaUserId: string): { success: boolean; net8UserId: string } {
+    const user = this.users.get(koreaUserId);
+    if (!user) {
+      return { success: false, net8UserId: '' };
+    }
+
+    // 既にNET8連携済みの場合はそのIDを返す
+    if (user.net8UserId) {
+      return { success: true, net8UserId: user.net8UserId };
+    }
+
+    // 新規NET8 UserID生成・紐付け
+    const net8UserId = this.generateNet8UserId(koreaUserId);
+    user.net8UserId = net8UserId;
+    user.net8SyncedAt = new Date().toISOString();
+
+    return { success: true, net8UserId };
+  }
+
+  // NET8 UserIDからユーザーを取得
+  getUserByNet8Id(net8UserId: string): MockUser | null {
+    for (const user of this.users.values()) {
+      if (user.net8UserId === net8UserId) {
+        return user;
+      }
+    }
+    return null;
+  }
+
+  // セッション作成（NET8 UserID付き）
+  createSessionWithNet8(user: MockUser): { sessionId: string; net8UserId: string } {
+    // NET8連携されていなければ自動連携
+    if (!user.net8UserId) {
+      const linkResult = this.linkNet8User(user.id);
+      if (linkResult.success) {
+        user.net8UserId = linkResult.net8UserId;
+      }
+    }
+
+    const sessionId = `mock_session_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24); // 24時間有効
+
+    const session: MockSession = {
+      sessionId,
+      userId: user.id,
+      email: user.email,
+      loginId: user.loginId,
+      createdAt: new Date(),
+      expiresAt,
+      net8UserId: user.net8UserId
+    };
+
+    this.sessions.set(sessionId, session);
+    return { sessionId, net8UserId: user.net8UserId || '' };
+  }
+
+  // セッションからNET8 UserIDを取得
+  getNet8UserIdFromSession(sessionId: string): string | null {
+    const session = this.sessions.get(sessionId);
+    if (!session || session.expiresAt < new Date()) {
+      return null;
+    }
+    return session.net8UserId || null;
+  }
+
+  // 韓国UserIDからNET8 UserIDを取得（既存連携があれば）
+  getNet8UserId(koreaUserId: string): string | null {
+    const user = this.users.get(koreaUserId);
+    return user?.net8UserId || null;
   }
 }
 

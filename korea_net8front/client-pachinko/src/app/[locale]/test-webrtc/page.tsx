@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button';
 
 export default function TestWebRTCPage() {
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const [testUserId] = useState(`test_user_${Date.now()}`);
+  const [testUserId, setTestUserId] = useState('test_user_loading');
+
+  // Hydrationエラー回避: クライアント側でのみDate.now()を使用
+  useEffect(() => {
+    setTestUserId(`test_user_${Date.now()}`);
+  }, []);
   const [modelId] = useState('HOKUTO4GO');
   const [logs, setLogs] = useState<string[]>([]);
   const [connectionTest, setConnectionTest] = useState<any>(null);
@@ -46,7 +51,7 @@ export default function TestWebRTCPage() {
           <div className="space-y-2 text-sm">
             <p>シグナリングサーバー: {process.env.NEXT_PUBLIC_PEERJS_HOST || 'mgg-signaling-production-c1bd.up.railway.app'}</p>
             <p>プロトコル: WSS (Secure WebSocket)</p>
-            <p>パス: {process.env.NEXT_PUBLIC_PEERJS_PATH || '/myapp'}</p>
+            <p>パス: {process.env.NEXT_PUBLIC_PEERJS_PATH || '/'}</p>
             <p>ポート: {process.env.NEXT_PUBLIC_PEERJS_PORT || '443'}</p>
             <p>モックモード: {process.env.NET8_MOCK_MODE === 'true' ? '有効' : '無効'}</p>
           </div>
@@ -99,7 +104,7 @@ export default function TestWebRTCPage() {
           <div className="text-xs font-mono space-y-1">
             <p>User ID: {testUserId}</p>
             <p>Model ID: {modelId}</p>
-            <p>カメラID: camera_10000021_1765720354</p>
+            <p>カメラID: {process.env.NET8_CAMERA_PEER_ID || 'camera_10000021_1765859502'}</p>
             <p>環境: {process.env.NODE_ENV}</p>
             <p>API URL: {process.env.NEXT_PUBLIC_API_URL}</p>
             <p>モックモード: {process.env.NET8_MOCK_MODE === 'true' ? '有効' : '無効'}</p>

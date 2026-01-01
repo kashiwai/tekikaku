@@ -30,7 +30,30 @@
       "CASINO": "カジノ",
       "POWERBALL": "パワーボール",
       "EVENT": "イベント",
-      "KOREA_LOGIN": "韓国ログイン"
+      "KOREA_LOGIN": "韓国ログイン",
+      "OTHERS": "その他",
+      "HELP_CENTER": "ヘルプセンター"
+    },
+    "SETTINGS": {
+      "SETTINGS": "設定",
+      "GENERAL": "一般",
+      "OFFERS": "オファー"
+    },
+    "ACCOUNT": {
+      "ACCOUNT": "アカウント",
+      "BALANCE": "残高",
+      "DEPOSIT": "入金",
+      "WITHDRAW": "出金",
+      "TRANSACTIONS": "取引履歴",
+      "BET_HISTORY": "ベット履歴"
+    },
+    "HELP_CENTER": {
+      "HELP_CENTER": "ヘルプセンター",
+      "BETTING": "ベッティング",
+      "BONUS": "ボーナス",
+      "SUPPORT": "サポート",
+      "TRANSACTIONS": "取引",
+      "REGISTRATION_LOGIN": "登録・ログイン"
     }
   },
   "HEADER": {
@@ -121,11 +144,14 @@
     "PHONE_NUMBER_PLACEHOLDER": "Enter phone number"
   },
   "PROFILE_MENU": {
-    "LOGOUT_SUCCESS": "Logout successfully."
-  },
-  "HEADER": {
-    "LOGIN": "ログイン",
-    "REGISTER": "新規登録"
+    "BALANCE": "残高",
+    "DEPOSIT": "入金",
+    "WITHDRAW": "出金",
+    "TRANSACTIONS": "取引履歴",
+    "BET_HISTORY": "ベット履歴",
+    "SETTINGS": "設定",
+    "LOGOUT": "ログアウト",
+    "LOGOUT_SUCCESS": "ログアウトしました"
   },
   "WHEEL": {
     "NO_SPIN": "No spin count.",
@@ -420,51 +446,8 @@
     }
   },
   "WALLET": {
-    "deposit": "Deposit",
-    "withdrawal": "Withdrawal"
-  },
-  "ASIDEMENU": {
-    "MAIN": {
-      "ATTENDANCE": "Attendance",
-      "SPIN_NOW": "Spin Now",
-      "PACHINKO": "NET8 パチンコ",
-      "LIVE": "Live Casino",
-      "SLOT": "Slot",
-      "HOLDEM": "Hold'em",
-      "MINIGAME": "Minigame",
-      "VIRTUAL": "Virtual",
-      "SPORTS": "Sports",
-      "FAVORITES": "Favorites",
-      "GAMES": "Games",
-      "BONUS": "Bonus",
-      "PROMOTIONS": "Promotions",
-      "OTHERS": "Others",
-      "NOTICE": "Notice",
-      "SUPPORT": "Support",
-      "HELP_CENTER": "Help Center",
-      "SETTINGS": "Settings"
-    },
-    "SETTINGS": {
-      "SETTINGS": "Settings",
-      "GENERAL": "General",
-      "OFFERS": "Offers"
-    },
-    "ACCOUNT": {
-      "ACCOUNT": "Account",
-      "BALANCE": "Balance",
-      "DEPOSIT": "Deposit",
-      "WITHDRAW": "Withdraw",
-      "TRANSACTIONS": "Transactions",
-      "BET_HISTORY": "Bet History"
-    },
-    "HELP_CENTER": {
-      "HELP_CENTER": "Help Center",
-      "BETTING": "Betting",
-      "BONUS": "Bonus",
-      "SUPPORT": "Support",
-      "TRANSACTIONS": "Transactions",
-      "REGISTRATION_LOGIN": "Registration & Login"
-    }
+    "deposit": "入金",
+    "withdrawal": "出金"
   },
   "THEME": {
     "DARK": "Dark",
@@ -485,8 +468,17 @@
     "SPORTS": "Sports"
   },
   "RECENT_BET_WINS": "Recent Bet Wins",
-  "HEADER": {
-    "USD": "USD"
-  },
-  "FOOTER": "GoodFriends - A coonstructive and inclusive social network for professional Casino. With you every step of your journey. GoodFriends @Brown0115 © 2025"
+  "FOOTER": "GoodFriends - A coonstructive and inclusive social network for professional Casino. With you every step of your journey. GoodFriends @Brown0115 © 2025",
+  "LIVE_CHAT": {
+    "TITLE": "ライブチャット",
+    "START_CHAT": "チャット開始",
+    "END_CHAT": "チャット終了",
+    "HOME": "ホーム",
+    "MESSAGES": "メッセージ",
+    "CHAT": "チャット",
+    "HELP": "ヘルプ",
+    "FAQ": "よくある質問",
+    "TYPE_MESSAGE": "メッセージを入力...",
+    "SEND": "送信"
+  }
 }

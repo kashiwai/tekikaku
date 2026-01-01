@@ -30,6 +30,8 @@ export default function HydrateChat() {
     if (!user) return;
 
     const socket = getSocket();
+    // ローカルモードではソケット接続をスキップ
+    if (!socket) return;
 
     const onMessageSent = (message: ChatMessage) => {
       updateActiveChatMessage(message);
@@ -164,11 +166,14 @@ export default function HydrateChat() {
         if (activeChatData) {
           setActiveChat(activeChatData);
           const socket = getSocket();
-          socket.emit("livechat_join", {
-            chatId: activeChatData.chat.id,
-            participantId: user.id,
-            role: "user",
-          });
+          // ローカルモードではソケット接続をスキップ
+          if (socket) {
+            socket.emit("livechat_join", {
+              chatId: activeChatData.chat.id,
+              participantId: user.id,
+              role: "user",
+            });
+          }
         }
       } catch (error) {
         console.error("Failed to load chat data:", error);

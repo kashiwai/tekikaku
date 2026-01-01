@@ -15,7 +15,7 @@ export interface GameStartResponse {
         name: string;
         category: 'pachinko' | 'slot';
     };
-    signaling: {
+    signaling?: {
         signalingId: string;
         host: string;
         port: number;
@@ -24,19 +24,27 @@ export interface GameStartResponse {
         iceServers: Array<{ urls: string }>;
         mock?: boolean;
     };
-    camera: {
+    // ローカルモード用WebRTC設定
+    webRTC?: {
+        signalingUrl: string;
+        peerId: string;
+        remotePeerId: string;
+        stunServers: Array<{ urls: string }>;
+        secure?: boolean;
+    };
+    camera?: {
         cameraNo: number;
         streamUrl: string;
         mock?: boolean;
     };
-    playUrl: string;
+    playUrl?: string;
     mock?: boolean;
-    points: {
-        consumed: number;
-        balance: string;
-        balanceBefore: number;
+    points?: {
+        consumed?: number;
+        balance?: string | number;
+        balanceBefore?: number;
     };
-    pointsConsumed: number;
+    pointsConsumed?: number;
 }
 
 export interface GamePlaybackMethods {

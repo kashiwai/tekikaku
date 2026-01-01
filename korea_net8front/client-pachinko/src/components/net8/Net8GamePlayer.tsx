@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useNET8Game } from "@/hooks/useNET8Game";
 import { useWebRTC } from "@/hooks/useWebRTC";
 import { GameStartResponse } from "@/types/net8";
@@ -15,10 +15,9 @@ export function Net8GamePlayer({ userId, modelId, modelName }: Net8GamePlayerPro
   const { loading, error, session, startGame, endGame } = useNET8Game();
   const [gameStatus, setGameStatus] = useState<"idle" | "playing" | "ended">("idle");
   const [points, setPoints] = useState({ consumed: 0, won: 0 });
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   
-  // WebRTCでビデオストリーミング
-  const { videoRef, connectionStatus } = useWebRTC(session?.signaling);
+  // WebRTCでビデオストリーミング（webRTCプロパティを使用）
+  const { videoRef, connectionStatus } = useWebRTC(session?.webRTC);
 
   const handleStartGame = async () => {
     try {
@@ -100,10 +99,10 @@ export function Net8GamePlayer({ userId, modelId, modelName }: Net8GamePlayerPro
               {connectionStatus === 'error' && '🔴 接続エラー'}
             </div>
             
-            {/* Signaling ID情報 */}
-            {session?.signaling?.signalingId && (
+            {/* PeerID情報 */}
+            {session?.webRTC?.peerId && (
               <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded text-xs">
-                シグナリングID: {session.signaling.signalingId}
+                PeerID: {session.webRTC.peerId.substring(0, 20)}...
               </div>
             )}
 

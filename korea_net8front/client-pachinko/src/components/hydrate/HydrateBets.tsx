@@ -9,6 +9,8 @@ export function HydrateBets() {
 
   useEffect(() => {
     const socket = getSocket();
+    // ローカルモードではソケット接続をスキップ
+    if (!socket) return;
 
     // ask server for recent bets when entering
     socket.emit("recent_bet");

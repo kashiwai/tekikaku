@@ -1,9 +1,6 @@
 // lib/auth.service.ts
 import { User } from '@/types/user.types';
-import { NET8Service } from './net8.service';
-import { getCookieHeader } from '@/actions/cookie.actions';
-import { API_ROUTES } from '@/config/routes.config';
-import fetcher from './fetcher';
+import { mockKoreaDB } from './mock/korea-db';
 
 export interface UnifiedUser {
   // 韓国側ユーザー情報
@@ -29,10 +26,8 @@ export interface AuthSyncResult {
 }
 
 export class UnifiedAuthService {
-  private net8Service: NET8Service;
-
   constructor() {
-    this.net8Service = new NET8Service();
+    // mockKoreaDBを使用するため、NET8Serviceは不要
   }
 
   /**
@@ -85,11 +80,12 @@ export class UnifiedAuthService {
 
   /**
    * 韓国側ユーザーIDからNET8用ユーザーID生成
+   * 一貫性のあるID生成（タイムスタンプなし）
    */
   private generateNet8UserId(koreaUserId: string | number): string {
-    // 韓国側ユーザーIDにプレフィックスを付与して一意性確保
     const userId = String(koreaUserId);
-    return `kr_${userId}_${Date.now()}`;
+    // mockKoreaDBの一貫したID生成を使用
+    return mockKoreaDB.generateNet8UserId(userId);
   }
 
   /**

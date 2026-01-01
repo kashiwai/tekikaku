@@ -1,36 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run *)",
-      "Bash(npx *)",
-      "Bash(git status)",
-      "Bash(git diff*)",
-      "Bash(git log*)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(git branch*)",
-      "Bash(git checkout*)",
-      "Bash(git merge*)",
-      "Bash(git fetch*)",
-      "Bash(git pull*)",
-      "Bash(ls *)",
-      "Bash(mkdir *)",
-      "Bash(cat *)",
-      "Bash(cd *)",
-      "Bash(pwd)",
-      "Bash(echo *)",
-      "Bash(curl *)",
-      "Bash(which *)",
-      "Bash(node *)",
-      "Bash(tsc *)",
       "Read",
       "Write",
       "Edit",
       "Glob",
       "Grep",
-      "Task",
       "WebFetch",
       "WebSearch",
+      "Task",
+      "TodoWrite",
+      "NotebookEdit",
+      "Bash",
       "mcp__cipher__ask_cipher",
       "mcp__claudepoint__*"
     ],
@@ -41,31 +22,23 @@
     ]
   },
   "hooks": {
-    "PreToolExecution": {
-      "Bash(git push*)": {
-        "command": "echo '⚠️ DEPLOY: git push requires approval'",
-        "requiresApproval": true
-      },
-      "Bash(railway *)": {
-        "command": "echo '⚠️ DEPLOY: Railway command requires approval'",
-        "requiresApproval": true
-      },
-      "Bash(npm run deploy*)": {
-        "command": "echo '⚠️ DEPLOY: Deploy command requires approval'",
-        "requiresApproval": true
-      },
-      "Bash(vercel *)": {
-        "command": "echo '⚠️ DEPLOY: Vercel command requires approval'",
-        "requiresApproval": true
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/kotarokashiwai/korea_net8front/.claude/hooks/deploy-checker.py"
+          }
+        ]
       }
-    },
-    "PostToolExecution": {
-      "Bash(npm run build)": {
-        "command": "echo '✅ Build completed'",
-        "enabled": true
-      }
-    }
+    ]
   },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "cipher",
+    "claudepoint"
+  ],
   "context": {
     "includeFiles": [
       "CLAUDE.md",
