@@ -104,9 +104,22 @@ try {
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$session) {
-        error_log("❌ play_embed: Invalid or expired session - sessionId={$sessionId}, machineNo={$machineNo}");
+        // デバッグ: セッションがない理由を調査
+        $debugStmt = $pdo->prepare("SELECT session_id, machine_no, status FROM game_sessions WHERE session_id = :session_id");
+        $debugStmt->execute(['session_id' => $sessionId]);
+        $debugSession = $debugStmt->fetch(PDO::FETCH_ASSOC);
+
+        $errorDetails = '';
+        if ($debugSession) {
+            $errorDetails = "セッション found: DB machine_no={$debugSession['machine_no']}, Requested={$machineNo}, Status={$debugSession['status']}. JOIN failed.";
+            error_log("❌ play_embed: Session exists but JOIN failed - sessionId={$sessionId}, db_machine_no={$debugSession['machine_no']}, requested_machine_no={$machineNo}, status={$debugSession['status']}");
+        } else {
+            $errorDetails = "セッションがデータベースに存在しません。SessionID={$sessionId}";
+            error_log("❌ play_embed: Session not found in DB - sessionId={$sessionId}");
+        }
+
         http_response_code(401);
-        outputError('無効または期限切れのセッションです', $i18n);
+        outputError('無効または期限切れのセッションです。' . $errorDetails, $i18n);
         exit;
     }
 
