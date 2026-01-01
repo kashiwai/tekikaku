@@ -648,9 +648,12 @@ try {
     }
 
     // 成功レスポンス（環境情報を追加）
-    // play_embedページが期待するパラメータ名: sessionId (キャメルケース), NO
+    // play_v2ページ（既存の動作するゲームページ）を使用
+    $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}";
+    $gameUrl = "https://mgg-webservice-production.up.railway.app{$playUrl}"; // 絶対URL（iframe埋め込み用）
+
+    // play_embed（実験的）も一応含める
     $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}";
-    $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}"; // 絶対URL
 
     $response = [
         'success' => true,
@@ -666,9 +669,9 @@ try {
         ],
         'signaling' => $signalingInfo,
         'camera' => $cameraInfo,
-        'playUrl' => "/data/play_v2/index.php?NO={$machine['machine_no']}",
-        'playEmbedUrl' => $playEmbedUrl, // 相対パス（iframe埋め込み用）
-        'gameUrl' => $gameUrl, // 絶対URL（test_iframe_embed.html用）
+        'playUrl' => $playUrl, // 相対パス（既存のplay_v2ページ）
+        'playEmbedUrl' => $playEmbedUrl, // 相対パス（実験的なembed専用ページ）
+        'gameUrl' => $gameUrl, // 絶対URL（iframe埋め込み推奨 - play_v2使用）
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 
