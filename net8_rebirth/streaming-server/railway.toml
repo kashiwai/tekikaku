@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "streaming-server/Dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "/usr/local/antmedia/start.sh"
