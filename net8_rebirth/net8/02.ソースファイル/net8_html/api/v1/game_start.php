@@ -648,7 +648,7 @@ try {
     }
 
     // 成功レスポンス（環境情報を追加）
-    $playEmbedUrl = "/play_embed/?session_id={$sessionId}&member_no={$memberNo}";
+    $playEmbedUrl = "/play_embed/?session_id={$sessionId}&member_no={$memberNo}&NO={$machine['machine_no']}";
     $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}"; // 絶対URL
 
     $response = [
