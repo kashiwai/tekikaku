@@ -648,6 +648,9 @@ try {
     }
 
     // 成功レスポンス（環境情報を追加）
+    $playEmbedUrl = "/play_embed/?session_id={$sessionId}&member_no={$memberNo}";
+    $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}"; // 絶対URL
+
     $response = [
         'success' => true,
         'environment' => $environment,
@@ -663,7 +666,8 @@ try {
         'signaling' => $signalingInfo,
         'camera' => $cameraInfo,
         'playUrl' => "/data/play_v2/index.php?NO={$machine['machine_no']}",
-        'playEmbedUrl' => "/play_embed/?session_id={$sessionId}&member_no={$memberNo}", // iframe埋め込み用URL
+        'playEmbedUrl' => $playEmbedUrl, // 相対パス（iframe埋め込み用）
+        'gameUrl' => $gameUrl, // 絶対URL（test_iframe_embed.html用）
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 
