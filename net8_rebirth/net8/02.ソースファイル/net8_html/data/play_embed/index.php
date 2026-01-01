@@ -169,6 +169,14 @@ try {
 
     // カメラ情報（URLパラメータを優先、なければDBから取得）
     $cameraId = $cameraIdParam ?: ($session['camera_name'] ?? '');
+
+    // モック機械の場合、デフォルトのテスト用cameraIdを使用
+    if (empty($cameraId) && $machineNo == 9999) {
+        // テスト環境用のダミーcameraId（実際のPeer接続は失敗するがデバッグ可能）
+        $cameraId = 'test_mock_camera_9999';
+        error_log("⚠️  play_embed: Using mock cameraId for test machine 9999");
+    }
+
     error_log("📹 play_embed: cameraId={$cameraId} (from param={$cameraIdParam}, from DB={$session['camera_name']})");
 
     // ICE Servers設定
