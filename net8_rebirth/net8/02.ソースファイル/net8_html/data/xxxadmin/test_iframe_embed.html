@@ -120,6 +120,8 @@
             padding: 10px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             overflow: hidden;
+            position: relative;
+            min-height: 820px;
         }
 
         #gameFrame {
@@ -127,6 +129,51 @@
             height: 800px;
             border: none;
             border-radius: 8px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 8px;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #e0e0e0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .loading-subtext {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
         }
 
         .log {
@@ -227,6 +274,11 @@
         </div>
 
         <div class="iframe-container">
+            <div id="loadingOverlay" class="loading-overlay hidden">
+                <div class="spinner"></div>
+                <div class="loading-text">ゲーム準備中...</div>
+                <div class="loading-subtext">しばらくお待ちください</div>
+            </div>
             <iframe
                 id="gameFrame"
                 src="about:blank"
@@ -266,6 +318,10 @@
             const initialPoints = parseInt(document.getElementById('initialPoints').value);
             const modelId = document.getElementById('modelId').value;
             const userId = 'test_china_user_' + Date.now();
+
+            // ローディング表示
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.remove('hidden');
 
             log(`🎮 ゲーム開始リクエスト送信...`, 'info');
             log(`通貨: ${currency}, 言語: ${language}, ポイント: ${initialPoints}`, 'info');
@@ -309,12 +365,24 @@
                 // iframeにゲームURLを設定
                 if (data.gameUrl) {
                     log(`🎯 ゲームをiframeに読み込み中...`, 'info');
-                    document.getElementById('gameFrame').src = data.gameUrl;
+                    const iframe = document.getElementById('gameFrame');
+
+                    // iframe読み込み完了でローディング非表示
+                    iframe.onload = function() {
+                        setTimeout(() => {
+                            loadingOverlay.classList.add('hidden');
+                            log(`✅ ゲーム画面読み込み完了`, 'success');
+                        }, 1000); // 1秒後に非表示（安全のため）
+                    };
+
+                    iframe.src = data.gameUrl;
                 } else {
+                    loadingOverlay.classList.add('hidden');
                     log(`⚠️ gameURLが返されませんでした`, 'error');
                 }
 
             } catch (error) {
+                loadingOverlay.classList.add('hidden');
                 log(`❌ エラー: ${error.message}`, 'error');
                 console.error('Game start error:', error);
             }
