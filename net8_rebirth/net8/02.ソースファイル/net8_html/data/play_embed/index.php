@@ -65,6 +65,7 @@ try {
     $pdo = get_db_connection();
 
     // sessionIdを検証（game_sessionsテーブル）
+    // テスト環境のモックマシン対応: dat_machineとのJOINをLEFT JOINに変更
     $stmt = $pdo->prepare("
         SELECT
             gs.id,
@@ -74,11 +75,11 @@ try {
             gs.partner_user_id,
             gs.status,
             gs.started_at,
+            gs.model_cd,
             dm.signaling_id,
             dm.camera_no,
             dm.model_no,
             mm.model_name,
-            mm.model_cd,
             mm.category,
             mm.prizeball_data,
             mm.layout_data,
@@ -87,8 +88,8 @@ try {
             cp.credit as convcredit,
             cp.point as convplaypoint
         FROM game_sessions gs
-        JOIN dat_machine dm ON gs.machine_no = dm.machine_no
-        LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
+        LEFT JOIN dat_machine dm ON gs.machine_no = dm.machine_no
+        LEFT JOIN mst_model mm ON COALESCE(dm.model_no, gs.model_cd) = mm.model_cd
         LEFT JOIN mst_camera mc ON dm.camera_no = mc.camera_no
         LEFT JOIN mst_convertPoint cp ON dm.convert_no = cp.convert_no
         WHERE gs.session_id = :session_id
