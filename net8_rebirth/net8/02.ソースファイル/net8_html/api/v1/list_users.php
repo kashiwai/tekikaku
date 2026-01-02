@@ -130,12 +130,33 @@ try {
     ]);
 
 } catch (PDOException $e) {
-    error_log("list_users.php error: " . $e->getMessage());
+    error_log("❌ list_users.php DATABASE ERROR:");
+    error_log("  Message: " . $e->getMessage());
+    error_log("  Code: " . $e->getCode());
+    error_log("  File: " . $e->getFile());
+    error_log("  Line: " . $e->getLine());
+    error_log("  Stack trace: " . $e->getTraceAsString());
+    error_log("  Parameters: prefix={$prefix}, hasBalance=" . ($hasBalance ? 'true' : 'false') . ", limit={$limit}, offset={$offset}");
 
     http_response_code(500);
     echo json_encode([
         'success' => false,
         'error' => 'DATABASE_ERROR',
-        'message' => 'Failed to fetch users'
+        'message' => 'Failed to fetch users',
+        'debug' => [
+            'error_message' => $e->getMessage(),
+            'error_code' => $e->getCode()
+        ]
+    ]);
+} catch (Exception $e) {
+    error_log("❌ list_users.php GENERAL ERROR:");
+    error_log("  Message: " . $e->getMessage());
+    error_log("  Stack trace: " . $e->getTraceAsString());
+
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'INTERNAL_ERROR',
+        'message' => $e->getMessage()
     ]);
 }
