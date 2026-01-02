@@ -94,9 +94,8 @@ try {
 
     $query .= " GROUP BY ub.user_id";
     $query .= " ORDER BY ub.updated_at DESC";
-    $query .= " LIMIT ? OFFSET ?";
-    $params[] = $limit;
-    $params[] = $offset;
+    // LIMIT/OFFSETは直接埋め込み（すでに(int)でキャストされているので安全）
+    $query .= " LIMIT {$limit} OFFSET {$offset}";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
