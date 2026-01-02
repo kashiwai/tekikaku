@@ -96,10 +96,10 @@ function DispList($template) {
             INNER JOIN mst_member m ON w.member_no = m.member_no
             WHERE w.status = ?
             ORDER BY w.request_dt ASC
-            LIMIT ? OFFSET ?";
+            LIMIT {$per_page} OFFSET {$offset}";
 
     $stmt = $template->DB->prepare($sql);
-    $stmt->execute([$status_filter, $per_page, $offset]);
+    $stmt->execute([$status_filter]);
     $withdrawals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // ステータス表示名

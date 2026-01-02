@@ -87,9 +87,7 @@ function DispList($template) {
         $params[] = $status_filter;
     }
 
-    $sql .= " ORDER BY request_dt DESC LIMIT ? OFFSET ?";
-    $params[] = $per_page;
-    $params[] = $offset;
+    $sql .= " ORDER BY request_dt DESC LIMIT {$per_page} OFFSET {$offset}";
 
     $stmt = $template->DB->prepare($sql);
     $stmt->execute($params);
