@@ -1,0 +1,14 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "streaming-server/Dockerfile"
+
+[deploy]
+startCommand = "/usr/local/antmedia/start.sh"
+healthcheckPath = "/LiveApp"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[deploy.environmentVariables]
+SERVER_MODE = "community"
+TZ = "Asia/Tokyo"
