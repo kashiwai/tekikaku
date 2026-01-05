@@ -403,7 +403,7 @@ try {
                     FROM dat_machine m
                     WHERE m.model_no = :model_no
                     AND m.del_flg = 0
-                    AND m.machine_status = 0
+                    AND m.machine_status = 1
                     AND m.end_date >= CURDATE()
                     AND NOT EXISTS (
                         SELECT 1 FROM lnk_machine lm
@@ -422,6 +422,33 @@ try {
                 'error' => 'NO_AVAILABLE_MACHINE',
                 'message' => 'No available machine for this model',
                 'environment' => $environment
+            ]);
+            exit;
+        }
+    }
+
+    // 機種ステータスチェック（MACHINE_STATUS_MANAGEMENT_GUIDE.md に基づく）
+    if ($environment === 'production' && isset($machine['machine_status'])) {
+        if ($machine['machine_status'] == 0) {
+            http_response_code(503);
+            echo json_encode([
+                'error' => 'MACHINE_NOT_AVAILABLE',
+                'message' => 'この台は現在利用できません',
+                'message_en' => 'This machine is currently not available',
+                'message_ko' => '이 기기는 현재 사용할 수 없습니다',
+                'message_zh' => '此机器目前不可用'
+            ]);
+            exit;
+        }
+
+        if ($machine['machine_status'] == 2) {
+            http_response_code(503);
+            echo json_encode([
+                'error' => 'UNDER_MAINTENANCE',
+                'message' => 'メンテナンス中です。しばらくお待ちください',
+                'message_en' => 'Under maintenance. Please wait.',
+                'message_ko' => '유지보수 중입니다. 잠시만 기다려주세요.',
+                'message_zh' => '维护中，请稍候'
             ]);
             exit;
         }

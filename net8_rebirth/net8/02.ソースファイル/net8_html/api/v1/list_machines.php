@@ -88,15 +88,15 @@ try {
             lm.member_no as current_member_no,
             lm.assign_time,
             CASE
-                WHEN dm.status = 0 THEN 'inactive'
-                WHEN dm.status = 1 AND lm.assign_flg = 0 THEN 'available'
-                WHEN dm.status = 1 AND lm.assign_flg = 1 THEN 'playing'
-                WHEN dm.status = 2 THEN 'maintenance'
+                WHEN dm.machine_status = 0 THEN 'inactive'
+                WHEN dm.machine_status = 1 AND lm.assign_flg = 0 THEN 'available'
+                WHEN dm.machine_status = 1 AND lm.assign_flg = 1 THEN 'playing'
+                WHEN dm.machine_status = 2 THEN 'maintenance'
                 ELSE 'unknown'
             END as machine_status,
             dm.last_play_time,
             dm.total_games,
-            dm.status as status_code
+            dm.machine_status as status_code
         FROM dat_machine dm
         LEFT JOIN mst_model m ON dm.model_no = m.model_no
         LEFT JOIN mst_camera c ON dm.camera_no = c.camera_no
@@ -115,19 +115,19 @@ try {
     // ステータスでフィルタ
     if ($status) {
         if ($status === 'available') {
-            $sql .= " AND dm.status = 1 AND lm.assign_flg = 0";
+            $sql .= " AND dm.machine_status = 1 AND lm.assign_flg = 0";
         } else if ($status === 'playing') {
-            $sql .= " AND dm.status = 1 AND lm.assign_flg = 1";
+            $sql .= " AND dm.machine_status = 1 AND lm.assign_flg = 1";
         } else if ($status === 'maintenance') {
-            $sql .= " AND dm.status = 2";
+            $sql .= " AND dm.machine_status = 2";
         } else if ($status === 'inactive') {
-            $sql .= " AND dm.status = 0";
+            $sql .= " AND dm.machine_status = 0";
         }
     }
 
-    // 利用可能な台のみ
+    // 利用可能な台のみ（稼働中かつ未割り当て）
     if ($availableOnly === 'true') {
-        $sql .= " AND dm.status = 1 AND lm.assign_flg = 0";
+        $sql .= " AND dm.machine_status = 1 AND lm.assign_flg = 0";
     }
 
     // ソート: 台番号順

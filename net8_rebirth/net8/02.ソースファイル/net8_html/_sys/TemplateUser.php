@@ -391,7 +391,8 @@ class TemplateUser extends SmartTemplate {
 				// 公開終了日
 				->and("dm.end_date >= ", $toDay, FD_DATE);
 		if (!$isTester) {
-			$sqls->where()->and(false, "dm.machine_status <> ", "0", FD_NUM);
+			// 稼働中(1)の台のみ表示（停止中=0、メンテナンス中=2を除外）
+			$sqls->where()->and(false, "dm.machine_status = ", "1", FD_NUM);
 		}
 	}
 
