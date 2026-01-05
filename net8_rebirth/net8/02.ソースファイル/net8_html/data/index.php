@@ -122,7 +122,8 @@ function DispTop($template) {
 													. " and dn.end_dt >= " . $template->DB->conv_sql($refToDay, FD_DATE)
 					)
 			->where()
-				->and(false, "dnl.top_image is not ", "", FD_STR)
+				// 画像必須条件を一時的に無効化（管理画面から画像アップロード後に有効化可能）
+				// ->and(false, "dnl.top_image is not ", "", FD_STR)
 				->and(false, "dnl.lang = ", FOLDER_LANG, FD_STR)
 			->orderby( 'dn.disp_order asc' )
 		->createSql("\n");
