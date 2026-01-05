@@ -380,6 +380,69 @@
 			color: var(--text-white);
 		}
 
+
+	/* ================================================
+	   Machine Status Styles (稼働状態別スタイル)
+	   ================================================ */
+
+	/* 停止中 (Status 0) - Gray and disabled */
+	.machine-card-status-0 {
+		opacity: 0.5;
+		filter: grayscale(80%);
+		pointer-events: none;
+	}
+
+	.machine-card-status-0 .machine-card-link {
+		cursor: not-allowed !important;
+		pointer-events: none;
+	}
+
+	.machine-card-status-0::after {
+		content: '停止中';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: rgba(0, 0, 0, 0.85);
+		color: #ffffff;
+		padding: 8px 20px;
+		border-radius: 8px;
+		font-size: 0.9rem;
+		font-weight: 700;
+		z-index: 10;
+		border: 2px solid #666;
+	}
+
+	/* メンテナンス中 (Status 2) - Maintenance indicator */
+	.machine-card-status-2 {
+		border-color: rgba(239, 68, 68, 0.5);
+	}
+
+	.machine-card-status-2::before {
+		content: 'メンテナンス中';
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		background: linear-gradient(135deg, #ef4444, #dc2626);
+		color: white;
+		padding: 4px 12px;
+		border-radius: 20px;
+		font-size: 0.65rem;
+		font-weight: 700;
+		z-index: 15;
+		box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+	}
+
+	.machine-card-status-2:hover {
+		border-color: rgba(239, 68, 68, 0.8);
+	}
+
+	/* 稼働中 (Status 1) - Normal active state (default styles apply) */
+	.machine-card-status-1:hover {
+		transform: translateY(-5px);
+		border-color: var(--accent-gold);
+		box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
+	}
 		/* ================================================
 		   Category Section
 		   ================================================ */
@@ -960,8 +1023,8 @@
 		</div>
 		<div class="machine-grid">
 			<!--loop:{LIST}-->
-			<div class="machine-card">
-				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}">
+			<div class="machine-card machine-card-status-{%MACHINE_STATUS%}" data-status="{%MACHINE_STATUS%}">
+				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="machine-card-link">
 					<!-- Machine Type Badge -->
 					<span class="machine-card-badge badge-slot">{%GENERATION%}</span>
 
@@ -1032,14 +1095,32 @@
 		}
 	}
 
+	// Machine Status Click Prevention
+	function preventStoppedMachineClicks() {
+		// 停止中の台 (status=0) のクリックを無効化
+		const stoppedMachines = document.querySelectorAll('.machine-card-status-0');
+		stoppedMachines.forEach(function(machine) {
+			const link = machine.querySelector('a');
+			if (link) {
+				link.addEventListener('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				});
+			}
+		});
+	}
+
 	// On DOM Ready
 	document.addEventListener('DOMContentLoaded', function() {
 		setTimeout(hideLoading, 500);
+		preventStoppedMachineClicks();
 	});
 
 	// On Window Load
 	window.addEventListener('load', function() {
 		hideLoading();
+		preventStoppedMachineClicks();
 	});
 	</script>
 

@@ -390,10 +390,10 @@ class TemplateUser extends SmartTemplate {
 				->and("dm.release_date <= ", $toDay, FD_DATE)
 				// 公開終了日
 				->and("dm.end_date >= ", $toDay, FD_DATE);
-		if (!$isTester) {
-			// 稼働中(1)の台のみ表示（停止中=0、メンテナンス中=2を除外）
-			$sqls->where()->and(false, "dm.machine_status = ", "1", FD_NUM);
-		}
+		// machine_statusフィルタなし: 全ての台を表示
+		// - 稼働中(1): 通常表示、クリック可能
+		// - メンテナンス中(2): メンテナンス表示
+		// - 停止中(0): 灰色表示、クリック無効（フロントエンドで制御）
 	}
 
 	/**

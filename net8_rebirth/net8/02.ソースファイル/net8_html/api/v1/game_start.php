@@ -395,6 +395,7 @@ try {
         ];
     } else {
         // 本番環境：実機を検索（modelIdベース）
+        // 優先順位: 稼働中(1) > メンテナンス中(2) > 停止中(0)
         $machineSql = "SELECT
                         m.machine_no,
                         m.signaling_id,
@@ -403,13 +404,13 @@ try {
                     FROM dat_machine m
                     WHERE m.model_no = :model_no
                     AND m.del_flg = 0
-                    AND m.machine_status = 1
                     AND m.end_date >= CURDATE()
                     AND NOT EXISTS (
                         SELECT 1 FROM lnk_machine lm
                         WHERE lm.machine_no = m.machine_no
                         AND lm.assign_flg = 1
                     )
+                    ORDER BY m.machine_status DESC
                     LIMIT 1";
 
         $stmt = $pdo->prepare($machineSql);
