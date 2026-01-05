@@ -14,20 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/../../lib/config.php';
+require_once('../../_etc/require_files.php');
 
 try {
-    // データベース接続
-    $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
-        DB_USER,
-        DB_PASS,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ]
-    );
+    // データベース接続（get_db_connection関数を使用）
+    $pdo = get_db_connection();
 
     $machineNo = $_GET['machineNo'] ?? $_GET['NO'] ?? null;
     $memberNo = $_GET['memberNo'] ?? null;
