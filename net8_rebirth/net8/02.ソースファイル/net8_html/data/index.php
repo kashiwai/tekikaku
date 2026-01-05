@@ -336,9 +336,16 @@ function DispTop($template) {
 			}
 		}
 
+		// 日付フォーマット（start_dtを表示用に変換）
+		$dispDate = '';
+		if (!empty($notice["start_dt"])) {
+			$dispDate = date('Y.m.d', strtotime($notice["start_dt"]));
+		}
+
 		$template->assign("TITLE",      $notice["title"], true);
 		$template->assign("SUB_TITLE",  $notice["sub_title"], true);
 		$template->assign("TOP_IMAGE",  $topImageUrl, true);
+		$template->assign("DISP_DT",    $dispDate, true);
 		$template->assign("ACTIVE",    ($notice_count==0)? ' active':'', true);
 		$template->assign("LINK_URL",  ($notice["link_type"]==1)? $notice["link_url"]: (($notice["link_type"]==2)? "notice.php?NO=".$notice["notice_no"]:'#' ));
 		$template->assign("OTHER_LINK",($notice["link_type"]==1)? ' target="_blank"': "", true);
