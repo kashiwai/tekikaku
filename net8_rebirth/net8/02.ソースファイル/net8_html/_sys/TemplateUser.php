@@ -373,13 +373,13 @@ class TemplateUser extends SmartTemplate {
 
 		$sqls->select()
 				->from("dat_machine dm")
-				->from("inner join dat_machinePlay dmp on dmp.machine_no = dm.machine_no" )							//実機プレイデータ
-				->from("inner join lnk_machine lm on lm.machine_no = dm.machine_no" )								//実機接続状況
+				->from("left join dat_machinePlay dmp on dmp.machine_no = dm.machine_no" )							//実機プレイデータ
+				->from("left join lnk_machine lm on lm.machine_no = dm.machine_no" )								//実機接続状況
 				->from("inner join mst_model mm on mm.model_no = dm.model_no and mm.del_flg <>'1'" )				//機種マスタ
 				->from("inner join mst_maker ma on ma.maker_no = mm.maker_no and ma.del_flg <>'1'" )				//メーカーマスタ
 				->from("left join mst_unit  mu on mu.unit_no  = mm.unit_no and mu.del_flg <>'1'" )					//号機マスタ
 				->from("inner join mst_type mt on mt.type_no = mm.type_no and mt.del_flg <>'1'" )					//タイプマスタ
-				->from("inner join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1'" )	//ポイント返還マスタ
+				->from("left join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1'" )	//ポイント返還マスタ
 				->from("left join his_machinePlay hmp on hmp.machine_no = dm.machine_no and hmp.play_dt = "
 								 . $this->DB->conv_sql($yesterday->format("Y/m/d"), FD_DATE))							//実機プレイ履歴
 			->where()
@@ -482,15 +482,15 @@ class TemplateUser extends SmartTemplate {
 			$this->assign("LABEL_3"          , $GLOBALS["viewUnitList"]["3"], true);
 			// 各種情報
 			$this->assign("CATEGORY_NO"      , $row['category'], true);
-			$this->assign("HITDATA"          , $row['hit_data'], true);
-			$this->assign("TOTAL_GAME_TIMES" , $row['total_count'], true);
-			$this->assign("GAME_TIMES"       , $row['count'], true);
-			$this->assign("BIG_TIMES"        , $row['bb_count'], true);
-			$this->assign("REG_TIMES"        , $row['rb_count'], true);
-			$this->assign("PLAYPOINT"        , number_format( $row["point"]), true);
-			$this->assign("CREDIT"           , number_format( $row["credit"]), true);
-			$this->assign("DRAW_POINT"       , number_format( $row["draw_point"]), true);
-			$this->assign("HIS_BONUS"        , $row['his_bonus'], true);		// 前日bonus
+			$this->assign("HITDATA"          , ($row['hit_data'] ?? ''), true);
+			$this->assign("TOTAL_GAME_TIMES" , ($row['total_count'] ?? 0), true);
+			$this->assign("GAME_TIMES"       , ($row['count'] ?? 0), true);
+			$this->assign("BIG_TIMES"        , ($row['bb_count'] ?? 0), true);
+			$this->assign("REG_TIMES"        , ($row['rb_count'] ?? 0), true);
+			$this->assign("PLAYPOINT"        , number_format( ($row["point"] ?? 0)), true);
+			$this->assign("CREDIT"           , number_format( ($row["credit"] ?? 0)), true);
+			$this->assign("DRAW_POINT"       , number_format( ($row["draw_point"] ?? 0)), true);
+			$this->assign("HIS_BONUS"        , ($row['his_bonus'] ?? 0), true);		// 前日bonus
 
 			// 総獲得クレジット
 			$this->assign("TOTAL_CREDIT"     , isset($row["total_credit"]) ? number_format($row["total_credit"]) : "0", true);
@@ -541,8 +541,8 @@ class TemplateUser extends SmartTemplate {
 			$this->assign("GRAPH_COUNTS"     , $graphCounts, true);
 
 			// プレイ状況
-			$assignFlg = $row['assign_flg'];	// 実機接続状況
-			if ($isLogin && $assignFlg == 1 && $row["member_no"] == $this->Session->UserInfo["member_no"]) $assignFlg = 0;	// 自身への割当は未割り当て扱い
+			$assignFlg = $row['assign_flg'] ?? 0;	// 実機接続状況
+			if ($isLogin && $assignFlg == 1 && ($row["member_no"] ?? null) == $this->Session->UserInfo["member_no"]) $assignFlg = 0;	// 自身への割当は未割り当て扱い
 			$isLinkMainte = ($assignFlg == 9);	// 実機接続状況：メンテ中
 			$this->if_enable("CLOSED" , !$isOpen);	// 営業時間外
 			$this->if_enable("IS_OPEN", $isOpen);	// 営業時間内
