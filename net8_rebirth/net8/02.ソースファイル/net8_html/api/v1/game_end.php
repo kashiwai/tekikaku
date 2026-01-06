@@ -294,7 +294,7 @@ try {
 
             // 取引履歴を記録
             $transactionId = 'txn_' . uniqid() . '_' . time();
-            $transactionType = $pointsWon > 0 ? 'payout' : 'loss';
+            $transactionType = $pointsWon > 0 ? 'payout' : 'adjust';  // 負の値の場合は'adjust'（ENUM対応）
             $description = $pointsWon > 0 ? 'Game win payout' : 'Game loss deduction';
 
             $stmt = $pdo->prepare("
