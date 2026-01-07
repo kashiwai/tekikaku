@@ -70,6 +70,30 @@ $consumeImmediately = isset($input['consumeImmediately']) ? (bool)$input['consum
 $lang = $input['lang'] ?? 'ja'; // 多言語対応: ja/ko/en/zh（デフォルト: ja）
 $currency = normalizeCurrency($input['currency'] ?? 'JPY'); // 通貨対応: JPY/CNY/USD/TWD（デフォルト: JPY）
 
+// コールバック設定（セキュリティ強化）
+$callbackUrl = $input['callbackUrl'] ?? null; // コールバック先URL（HTTPS必須、オプション）
+$callbackSecret = $input['callbackSecret'] ?? null; // Webhook署名検証用秘密鍵（オプション）
+
+// コールバックURLバリデーション（URLが指定されている場合はHTTPS必須）
+if ($callbackUrl && strpos($callbackUrl, 'https://') !== 0) {
+    http_response_code(400);
+    echo json_encode([
+        'error' => 'INVALID_CALLBACK_URL',
+        'message' => 'Callback URL must use HTTPS protocol'
+    ]);
+    exit;
+}
+
+// コールバックURLがある場合は秘密鍵も必須
+if ($callbackUrl && !$callbackSecret) {
+    http_response_code(400);
+    echo json_encode([
+        'error' => 'MISSING_CALLBACK_SECRET',
+        'message' => 'Callback secret is required when callback URL is provided'
+    ]);
+    exit;
+}
+
 // 通貨バリデーション
 if (!validateCurrency($currency)) {
     http_response_code(400);
@@ -577,9 +601,9 @@ try {
         // 6. ゲームセッションをDBに記録（userIdの有無に関わらず）
         $stmt = $pdo->prepare("
             INSERT INTO game_sessions
-            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, currency, reserved_points, balance_mode, status, ip_address, user_agent)
+            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, currency, reserved_points, balance_mode, callback_url, callback_secret, status, ip_address, user_agent)
             VALUES
-            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :currency, :reserved_points, :balance_mode, 'playing', :ip, :user_agent)
+            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :currency, :reserved_points, :balance_mode, :callback_url, :callback_secret, 'playing', :ip, :user_agent)
         ");
 
         $stmt->execute([
@@ -595,6 +619,8 @@ try {
             'currency' => $currency, // 通貨コード
             'reserved_points' => $reservedPoints,
             'balance_mode' => $balanceMode,
+            'callback_url' => $callbackUrl, // コールバックURL（HTTPS）
+            'callback_secret' => $callbackSecret, // コールバック署名検証用秘密鍵
             'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
         ]);

@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 require_once('../../_etc/require_files.php');
 require_once(__DIR__ . '/helpers/user_helper.php');
 require_once(__DIR__ . '/helpers/currency_helper.php');
+require_once(__DIR__ . '/helpers/callback_helper.php');
 
 // 認証ヘッダー確認
 $authHeader = '';
@@ -117,7 +118,7 @@ try {
         }
     }
 
-    // ゲームセッション情報を取得（member_noとpartner_user_idを含む）
+    // ゲームセッション情報を取得（member_noとpartner_user_idとコールバック情報を含む）
     $stmt = $pdo->prepare("
         SELECT
             id,
@@ -131,7 +132,9 @@ try {
             points_consumed,
             currency,
             status,
-            started_at
+            started_at,
+            callback_url,
+            callback_secret
         FROM game_sessions
         WHERE session_id = :session_id
     ");
@@ -505,6 +508,57 @@ try {
 
         // トランザクションコミット
         $pdo->commit();
+
+        // ★ コールバック送信（サーバー間通信 - セキュリティ強化）
+        if ($session['callback_url'] && $session['callback_secret']) {
+            error_log("📤 Callback configured: {$session['callback_url']}");
+
+            // コールバックデータ構築
+            $callbackData = buildCallbackData($session, [
+                'memberNo' => $memberNo,
+                'pointsWon' => $pointsWon,
+                'newBalance' => $newBalance,
+                'result' => $result,
+                'playDuration' => $playDuration,
+                'endedAt' => date('Y-m-d H:i:s'),
+                'netProfit' => $pointsWon - $session['points_consumed']
+            ]);
+
+            // コールバック送信（非同期風に処理 - 失敗してもユーザーレスポンスには影響しない）
+            $callbackResult = sendSecureCallback(
+                $session['callback_url'],
+                $session['callback_secret'],
+                $callbackData,
+                5 // 最大5回リトライ
+            );
+
+            // コールバック結果をDBに記録
+            $callbackStatus = $callbackResult['success'] ? 'success' : 'failed';
+            $callbackAttempts = $callbackResult['attempts'] ?? 0;
+            $callbackError = $callbackResult['error'] ?? null;
+
+            $pdo->prepare("
+                UPDATE game_sessions
+                SET callback_status = :status,
+                    callback_attempts = :attempts,
+                    callback_last_error = :error,
+                    callback_completed_at = NOW()
+                WHERE session_id = :session_id
+            ")->execute([
+                'status' => $callbackStatus,
+                'attempts' => $callbackAttempts,
+                'error' => $callbackError,
+                'session_id' => $sessionId
+            ]);
+
+            if ($callbackResult['success']) {
+                error_log("✅ Callback succeeded: {$session['callback_url']}");
+            } else {
+                error_log("❌ Callback failed: {$session['callback_url']}, error: {$callbackError}");
+            }
+        } else {
+            error_log("ℹ️ No callback configured for session: {$sessionId}");
+        }
 
         // 成功レスポンス
         $currency = $session['currency'] ?? 'JPY'; // セッション開始時の通貨を使用
