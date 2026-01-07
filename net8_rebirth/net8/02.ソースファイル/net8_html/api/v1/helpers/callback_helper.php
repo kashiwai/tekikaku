@@ -1,25 +1,28 @@
 <?php
 /**
  * NET8 Callback Helper
- * Version: 1.0.0
+ * Version: 2.0.0
  * Created: 2026-01-07
+ * Updated: 2026-01-08 - Added real-time bet/win callback support
  *
  * Purpose: サーバー間コールバック処理（セキュリティ強化）
  * - HMAC-SHA256署名生成
  * - コールバックURL送信
  * - リトライ機構（最大5回）
+ * - リアルタイムイベント対応（game.bet, game.win, game.ended）
  */
 
 /**
- * コールバック送信（HMAC-SHA256署名付き）
+ * リアルタイムコールバック送信（game.bet, game.win用）
  *
  * @param string $callbackUrl コールバック先URL（HTTPS必須）
  * @param string $callbackSecret Webhook署名検証用秘密鍵
+ * @param string $eventType イベントタイプ（game.bet, game.win, game.ended）
  * @param array $data コールバックデータ
- * @param int $maxRetries 最大リトライ回数（デフォルト: 5）
+ * @param int $maxRetries 最大リトライ回数（デフォルト: 3, リアルタイムイベントは短め）
  * @return array ['success' => bool, 'response' => array|null, 'error' => string|null]
  */
-function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 5) {
+function sendRealtimeCallback($callbackUrl, $callbackSecret, $eventType, $data, $maxRetries = 3) {
     // HTTPS必須チェック
     if (strpos($callbackUrl, 'https://') !== 0) {
         error_log("❌ Callback URL must be HTTPS: {$callbackUrl}");
@@ -30,7 +33,7 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
         ];
     }
 
-    $retryIntervals = [0, 5, 15, 30, 60]; // 秒単位
+    $retryIntervals = [0, 2, 5]; // リアルタイムは短い間隔（秒単位）
     $attempt = 0;
 
     while ($attempt < $maxRetries) {
@@ -39,10 +42,10 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
         // リトライ間隔（1回目は即座）
         if ($attempt > 1) {
             $waitTime = $retryIntervals[$attempt - 1];
-            error_log("⏳ Callback retry #{$attempt} after {$waitTime} seconds...");
+            error_log("⏳ Realtime callback retry #{$attempt} after {$waitTime} seconds...");
             sleep($waitTime);
         } else {
-            error_log("📤 Sending callback to {$callbackUrl} (attempt #{$attempt})");
+            error_log("📤 Sending realtime callback ({$eventType}) to {$callbackUrl} (attempt #{$attempt})");
         }
 
         // タイムスタンプ生成
@@ -50,7 +53,7 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
 
         // ペイロード作成
         $payload = [
-            'event' => 'game.ended',
+            'event' => $eventType,
             'timestamp' => $timestamp,
             'data' => $data
         ];
@@ -67,8 +70,8 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
             'Content-Type: application/json',
             'X-NET8-Signature: ' . $signatureHeader,
             'X-NET8-Timestamp: ' . $timestamp,
-            'X-NET8-Event: game.ended',
-            'User-Agent: NET8-Callback/1.0'
+            'X-NET8-Event: ' . $eventType,
+            'User-Agent: NET8-Callback/2.0'
         ];
 
         // cURL送信
@@ -77,7 +80,7 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10秒タイムアウト
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // リアルタイムイベントは5秒タイムアウト
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
@@ -88,7 +91,7 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
 
         // 成功判定
         if ($httpCode >= 200 && $httpCode < 300) {
-            error_log("✅ Callback succeeded on attempt #{$attempt}: HTTP {$httpCode}");
+            error_log("✅ Realtime callback ({$eventType}) succeeded on attempt #{$attempt}: HTTP {$httpCode}");
 
             $responseData = json_decode($response, true);
             return [
@@ -101,7 +104,7 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
 
         // リトライ不要なエラー（400番台）
         if ($httpCode >= 400 && $httpCode < 500) {
-            error_log("❌ Callback failed with client error (no retry): HTTP {$httpCode}");
+            error_log("❌ Realtime callback failed with client error (no retry): HTTP {$httpCode}");
             return [
                 'success' => false,
                 'error' => 'CALLBACK_CLIENT_ERROR',
@@ -114,12 +117,9 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
         // リトライ対象エラー（5xx、タイムアウト、ネットワークエラー）
         if ($attempt < $maxRetries) {
             $errorMsg = $error ? $error : "HTTP {$httpCode}";
-            error_log("⚠️ Callback failed (will retry): {$errorMsg}");
+            error_log("⚠️ Realtime callback failed (will retry): {$errorMsg}");
         } else {
-            error_log("❌ Callback failed after {$maxRetries} attempts: HTTP {$httpCode}");
-
-            // 管理者通知（最終リトライ失敗時）
-            notifyCallbackFailure($callbackUrl, $data, $httpCode, $error);
+            error_log("❌ Realtime callback failed after {$maxRetries} attempts: HTTP {$httpCode}");
 
             return [
                 'success' => false,
@@ -137,6 +137,19 @@ function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 
         'success' => false,
         'error' => 'CALLBACK_UNKNOWN_ERROR'
     ];
+}
+
+/**
+ * コールバック送信（HMAC-SHA256署名付き）- game.ended用
+ *
+ * @param string $callbackUrl コールバック先URL（HTTPS必須）
+ * @param string $callbackSecret Webhook署名検証用秘密鍵
+ * @param array $data コールバックデータ
+ * @param int $maxRetries 最大リトライ回数（デフォルト: 5）
+ * @return array ['success' => bool, 'response' => array|null, 'error' => string|null]
+ */
+function sendSecureCallback($callbackUrl, $callbackSecret, $data, $maxRetries = 5) {
+    return sendRealtimeCallback($callbackUrl, $callbackSecret, 'game.ended', $data, $maxRetries);
 }
 
 /**
@@ -165,7 +178,58 @@ function notifyCallbackFailure($callbackUrl, $data, $httpCode, $error) {
 }
 
 /**
- * コールバックデータ構築
+ * ベットイベントコールバックデータ構築
+ *
+ * @param array $session ゲームセッション情報
+ * @param array $betData ベット情報
+ * @return array コールバックペイロード
+ */
+function buildBetCallbackData($session, $betData) {
+    return [
+        'sessionId' => $session['session_id'],
+        'memberNo' => $session['member_no'],
+        'userId' => $session['partner_user_id'] ?? $session['user_id'],
+        'modelId' => $session['model_cd'],
+        'machineNo' => $session['machine_no'],
+
+        'betAmount' => $betData['betAmount'],
+        'creditBefore' => $betData['creditBefore'],
+        'creditAfter' => $betData['creditAfter'],
+        'totalBetsInSession' => $betData['totalBets'] ?? 1,
+
+        'timestamp' => date('c'), // ISO 8601
+        'currency' => $session['currency'] ?? 'JPY'
+    ];
+}
+
+/**
+ * 勝利イベントコールバックデータ構築
+ *
+ * @param array $session ゲームセッション情報
+ * @param array $winData 勝利情報
+ * @return array コールバックペイロード
+ */
+function buildWinCallbackData($session, $winData) {
+    return [
+        'sessionId' => $session['session_id'],
+        'memberNo' => $session['member_no'],
+        'userId' => $session['partner_user_id'] ?? $session['user_id'],
+        'modelId' => $session['model_cd'],
+        'machineNo' => $session['machine_no'],
+
+        'winAmount' => $winData['winAmount'],
+        'winType' => $winData['winType'] ?? 'normal', // normal, bonus, jackpot
+        'creditBefore' => $winData['creditBefore'],
+        'creditAfter' => $winData['creditAfter'],
+        'totalWinsInSession' => $winData['totalWins'] ?? 1,
+
+        'timestamp' => date('c'), // ISO 8601
+        'currency' => $session['currency'] ?? 'JPY'
+    ];
+}
+
+/**
+ * コールバックデータ構築（game.ended用）
  *
  * @param array $session ゲームセッション情報
  * @param array $result ゲーム結果情報
