@@ -52,7 +52,7 @@ function DispForm($template) {
                    mm.model_name, mm.category,
                    mo.owner_nickname,
                    mc.camera_mac,
-                   lm.status as connection_status,
+                   lm.assign_flg as connection_status,
                    lm.last_heartbeat
             FROM dat_machine dm
             LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
