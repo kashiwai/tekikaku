@@ -7,11 +7,13 @@ require_once __DIR__ . '/../../_etc/require_files.php';
 
 $pdo = get_db_connection();
 
-// 全マシン取得
-$sql = "SELECT dm.*, mm.model_name,
+// 全マシン取得（WebRTC接続状態を含む）
+$sql = "SELECT dm.*, mm.model_name, lm.assign_flg,
         TIMESTAMPDIFF(MINUTE, dm.last_report, NOW()) as minutes_ago
         FROM dat_machine dm
         LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
+        LEFT JOIN lnk_machine lm ON dm.machine_no = lm.machine_no
+        WHERE dm.del_flg = 0
         ORDER BY dm.machine_no";
 $machines = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -136,7 +138,8 @@ $machines = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $online = 0;
     $offline = 0;
     foreach ($machines as $m) {
-        if ($m['status'] == 'online' && ($m['minutes_ago'] === null || $m['minutes_ago'] <= 5)) {
+        // WebRTC接続状態で判定：assign_flg = 9（カメラ配信中）または 1（プレイヤー接続中）
+        if ($m['assign_flg'] == 9 || $m['assign_flg'] == 1) {
             $online++;
         } else {
             $offline++;
@@ -161,9 +164,9 @@ $machines = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="grid">
         <?php foreach ($machines as $m):
-            $isOnline = ($m['status'] == 'online' && ($m['minutes_ago'] === null || $m['minutes_ago'] <= 5));
-            $isWarning = ($m['minutes_ago'] !== null && $m['minutes_ago'] > 2 && $m['minutes_ago'] <= 5);
-            $statusClass = $isOnline ? ($isWarning ? 'warning' : 'online') : 'offline';
+            // WebRTC接続状態で判定：assign_flg = 9（カメラ配信中）または 1（プレイヤー接続中）
+            $isOnline = ($m['assign_flg'] == 9 || $m['assign_flg'] == 1);
+            $statusClass = $isOnline ? 'online' : 'offline';
         ?>
         <div class="machine <?= $statusClass ?>">
             <div class="no"><?= $m['machine_no'] ?></div>
