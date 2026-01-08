@@ -111,7 +111,7 @@ function DispTop($template) {
 						->from("game_sessions")
 						->where()
 							->and( "machine_no =", $machineNo, FD_NUM)
-							->and( "status IN ('playing', 'pending')", "", FD_SKIP)
+							->and( "status IN ('playing', 'pending')")
 						->orderBy("started_at DESC")
 						->limit(1)
 					->createSQL("\n");
@@ -126,7 +126,7 @@ function DispTop($template) {
 
 					$memberSql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
 						->select()
-							->field("member_no, nickname, mail, point, currency")
+							->field("member_no, nickname, mail, pass, point, draw_point")
 							->from("mst_member")
 							->where()
 								->and( "member_no =", $sdkMemberNo, FD_NUM)
@@ -136,8 +136,8 @@ function DispTop($template) {
 					error_log("🔍 Member info: " . json_encode($memberInfo));
 
 					if ($memberInfo && isset($memberInfo['member_no'])) {
-						// 通貨情報を決定（優先順位: game_sessions.currency > mst_member.currency > 'JPY'）
-						$currency = $sdkSession['currency'] ?? $memberInfo['currency'] ?? 'JPY';
+						// 通貨情報を決定（game_sessionsから取得、なければ'JPY'）
+						$currency = $sdkSession['currency'] ?? 'JPY';
 
 						// SmartSessionのsetUserInfo()メソッドを使用してセッションを作成
 						// 注: UserInfoは連想配列として保存される
@@ -146,8 +146,8 @@ function DispTop($template) {
 						$_SESSION['UserInfo']['partner_user_id'] = $sdkSession['partner_user_id'];
 						$_SESSION['UserInfo']['currency'] = $currency;
 
-						// $template->Session->UserInfoを再読み込み
-						$template->Session->setSession();
+						// UserInfoが更新されたので、$template->Session->UserInfoも更新
+						$template->Session->UserInfo = $_SESSION['UserInfo'];
 
 						error_log("✅ SDK user session created: member_no={$sdkMemberNo}, partner_user_id={$sdkSession['partner_user_id']}, currency={$currency}");
 					} else {
@@ -527,21 +527,8 @@ function DispTop($template) {
 		error_log('統計データ取得エラー: ' . $e->getMessage());
 	}
 
-	// 通貨情報を取得（優先順位: UserInfo['currency'] > mst_member.currency > 'JPY'）
-	$userCurrency = $template->Session->UserInfo['currency'] ?? null;
-
-	// UserInfoに通貨がない場合、mst_memberから取得
-	if (!$userCurrency) {
-		$currencySql = (new SqlString())->setAutoConvert( [$template->DB,"conv_sql"] )
-			->select()
-				->field("currency")
-				->from("mst_member")
-				->where()
-					->and( "member_no =", $template->Session->UserInfo["member_no"], FD_NUM)
-			->createSQL("\n");
-		$currencyRow = $template->DB->getRow($currencySql);
-		$userCurrency = $currencyRow['currency'] ?? 'JPY';
-	}
+	// 通貨情報を取得（UserInfo['currency']から取得、なければ'JPY'）
+	$userCurrency = $template->Session->UserInfo['currency'] ?? 'JPY';
 
 	// 通貨を正規化（デフォルトはJPY）
 	$userCurrency = normalizeCurrency($userCurrency);
