@@ -89,7 +89,7 @@ try {
             cp.point as convplaypoint
         FROM game_sessions gs
         LEFT JOIN dat_machine dm ON gs.machine_no = dm.machine_no
-        LEFT JOIN mst_model mm ON COALESCE(dm.model_no, gs.model_cd) = mm.model_cd
+        LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
         LEFT JOIN mst_camera mc ON dm.camera_no = mc.camera_no
         LEFT JOIN mst_convertPoint cp ON dm.convert_no = cp.convert_no
         WHERE gs.session_id = :session_id
