@@ -136,7 +136,7 @@ $machines = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $online = 0;
     $offline = 0;
     foreach ($machines as $m) {
-        if ($m['pc_status'] == 'online' && ($m['minutes_ago'] === null || $m['minutes_ago'] <= 5)) {
+        if ($m['status'] == 'online' && ($m['minutes_ago'] === null || $m['minutes_ago'] <= 5)) {
             $online++;
         } else {
             $offline++;
@@ -161,7 +161,7 @@ $machines = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="grid">
         <?php foreach ($machines as $m):
-            $isOnline = ($m['pc_status'] == 'online' && ($m['minutes_ago'] === null || $m['minutes_ago'] <= 5));
+            $isOnline = ($m['status'] == 'online' && ($m['minutes_ago'] === null || $m['minutes_ago'] <= 5));
             $isWarning = ($m['minutes_ago'] !== null && $m['minutes_ago'] > 2 && $m['minutes_ago'] <= 5);
             $statusClass = $isOnline ? ($isWarning ? 'warning' : 'online') : 'offline';
         ?>
