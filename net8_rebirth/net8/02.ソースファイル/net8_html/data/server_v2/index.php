@@ -142,16 +142,21 @@ function DispTop($template) {
 		];
 	}
 
-	//
+	// lnk_machineの更新（レコードがない場合は新規作成）
 	$sql = (new SqlString($template->DB))
-		->update( "lnk_machine" )
-			->set()
+		->insert()
+			->into( "lnk_machine" )
+				->value( "machine_no",        $row["machine_no"], FD_NUM)
+				->value( "assign_flg",        "9", FD_NUM)
+				->value( "member_no",         "0", FD_NUM)
+				->value( "onetime_id",        "", FD_STR)
+				->value( "exit_flg",          "0", FD_NUM)
+				->value( "start_dt",          "", FD_DATE)
+			->onDuplicateKeyUpdate()
 				->value( "assign_flg",        "9", FD_NUM)
 				->value( "member_no",         "0", FD_NUM)
 				->value( "onetime_id",        "", FD_STR)
 				->value( "start_dt",          "", FD_DATE)
-			->where()
-				->and( "machine_no =",        $row["machine_no"], FD_NUM)
 		->createSQL("\n");
 	$result = $template->DB->query($sql);
 	if ( $result == false ){
