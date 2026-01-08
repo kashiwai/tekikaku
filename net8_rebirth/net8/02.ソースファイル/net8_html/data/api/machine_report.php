@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "UPDATE dat_machine SET
             ip_address = :ip,
             mac_address = :mac,
-            pc_status = :status,
+            status = :status,
             last_report = NOW()
             WHERE machine_no = :machine_no";
 
@@ -51,10 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->rowCount() == 0) {
         // レコードがない場合は挿入
-        $sql = "INSERT INTO dat_machine (machine_no, ip_address, mac_address, pc_status, last_report)
+        $sql = "INSERT INTO dat_machine (machine_no, ip_address, mac_address, status, last_report)
                 VALUES (:machine_no, :ip, :mac, :status, NOW())
                 ON DUPLICATE KEY UPDATE
-                ip_address = :ip2, mac_address = :mac2, pc_status = :status2, last_report = NOW()";
+                ip_address = :ip2, mac_address = :mac2, status = :status2, last_report = NOW()";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':machine_no' => $machine_no,
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // GET: 全マシン状態を取得
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT machine_no, ip_address, mac_address, pc_status, last_report,
+    $sql = "SELECT machine_no, ip_address, mac_address, status, last_report,
             TIMESTAMPDIFF(MINUTE, last_report, NOW()) as minutes_ago
             FROM dat_machine
             ORDER BY machine_no";
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // 5分以上報告がないマシンはoffline扱い
     foreach ($machines as &$m) {
         if ($m['minutes_ago'] > 5) {
-            $m['pc_status'] = 'offline';
+            $m['status'] = 'offline';
         }
     }
 
