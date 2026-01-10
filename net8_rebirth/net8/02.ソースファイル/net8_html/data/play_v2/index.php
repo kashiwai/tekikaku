@@ -562,8 +562,12 @@ function DispTop($template) {
 	
 	$template->assign("PURCHASE"        , $pointJson);
 	$template->assign("NOTICETIME"      , NOTICE_CLOSE_TIME);
-	$template->assign("CONVCREDIT"      , $machineRow["convcredit"]);
-	$template->assign("CONVPLAYPOINT"   , $machineRow["convplaypoint"]);
+	// 変換レート設定（NULLの場合はデフォルト値を使用）
+	$convCredit = $machineRow["convcredit"] ?? 100;  // デフォルト: 100クレジット
+	$convPlaypoint = $machineRow["convplaypoint"] ?? 100;  // デフォルト: 100ポイント
+
+	$template->assign("CONVCREDIT"      , $convCredit);
+	$template->assign("CONVPLAYPOINT"   , $convPlaypoint);
 
 	$template->assign("MAX"             , $prizeball_data["MAX"]);
 	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"]);
