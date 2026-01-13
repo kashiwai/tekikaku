@@ -106,10 +106,10 @@ function DispTop($template) {
 
 	$sql = (new SqlString($template->DB))
 		->select()
-			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.model_name,mm.prizeball_data,mm.layout_data,mcp.convcredit,mcp.convplaypoint")
+			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.model_name,mm.prizeball_data,mm.layout_data,mcp.credit as convcredit,mcp.point as convplaypoint")
 			->from("dat_machine dm")
 			->join("left", "mst_model mm", "dm.model_no = mm.model_no" )
-			->join("left", "mst_convertPoint mcp", "mm.convertpoint_id = mcp.convertpoint_id" )
+			->join("left", "mst_convertPoint mcp", "dm.convert_no = mcp.convert_no" )
 			->where()
 				->subQuery("camera_no",
 							(new SqlString())
