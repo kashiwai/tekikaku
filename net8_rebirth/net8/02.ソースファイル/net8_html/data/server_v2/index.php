@@ -106,9 +106,10 @@ function DispTop($template) {
 
 	$sql = (new SqlString($template->DB))
 		->select()
-			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.model_name,mm.prizeball_data,mm.layout_data")
+			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.model_name,mm.prizeball_data,mm.layout_data,mcp.convcredit,mcp.convplaypoint")
 			->from("dat_machine dm")
 			->join("left", "mst_model mm", "dm.model_no = mm.model_no" )
+			->join("left", "mst_convertPoint mcp", "mm.convertpoint_id = mcp.convertpoint_id" )
 			->where()
 				->subQuery("camera_no",
 							(new SqlString())
@@ -282,6 +283,12 @@ function DispTop($template) {
 	
 	$template->assign("NOTICECLOSETIME" , $noticeTime);
 	$template->assign("RESETBONUS"      , $resetBonus);
+
+	// 変換レート設定（NULLの場合はデフォルト値を使用）
+	$convCredit = $row["convcredit"] ?? 100;  // デフォルト: 100クレジット
+	$convPlaypoint = $row["convplaypoint"] ?? 100;  // デフォルト: 100ポイント
+	$template->assign("CONVCREDIT"      , $convCredit);
+	$template->assign("CONVPLAYPOINT"   , $convPlaypoint);
 
 	$template->assign("MAX"             , $prizeball_data["MAX"]);
 	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"]);
