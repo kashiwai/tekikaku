@@ -106,10 +106,9 @@ function DispTop($template) {
 
 	$sql = (new SqlString($template->DB))
 		->select()
-			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.model_name,mm.prizeball_data,mm.layout_data,mcp.credit as convcredit,mcp.point as convplaypoint")
+			->field("dm.machine_no,dm.signaling_id,dm.camera_no,mm.category,mm.model_name,mm.prizeball_data,mm.layout_data")
 			->from("dat_machine dm")
 			->join("left", "mst_model mm", "dm.model_no = mm.model_no" )
-			->join("left", "mst_convertPoint mcp", "dm.convert_no = mcp.convert_no" )
 			->where()
 				->subQuery("camera_no",
 							(new SqlString())
@@ -284,12 +283,6 @@ function DispTop($template) {
 	$template->assign("NOTICECLOSETIME" , $noticeTime);
 	$template->assign("RESETBONUS"      , $resetBonus);
 
-	// 変換レート設定（NULLの場合はデフォルト値を使用）
-	$convCredit = $row["convcredit"] ?? 100;  // デフォルト: 100クレジット
-	$convPlaypoint = $row["convplaypoint"] ?? 100;  // デフォルト: 100ポイント
-	$template->assign("CONVCREDIT"      , $convCredit);
-	$template->assign("CONVPLAYPOINT"   , $convPlaypoint);
-
 	$template->assign("MAX"             , $prizeball_data["MAX"]);
 	$template->assign("MAX_RATE"        , $prizeball_data["MAX_RATE"]);
 	$template->assign("NAVEL"           , $prizeball_data["NAVEL"]);
@@ -299,10 +292,6 @@ function DispTop($template) {
 	$template->assign("LAYOUTOPTION"    , json_encode($layout_data));
 
 	$template->assign("TIMESTAMP"       , "ts=".time() );
-
-	// 変換レート用グローバル変数を定義
-	$convRateScript = "<script>var CONVPLAYPOINT = {$convPlaypoint}; var CONVCREDIT = {$convCredit};</script>";
-	$template->assign("CONV_RATE_SCRIPT", $convRateScript, false);
 
 	$template->flush();
 }
