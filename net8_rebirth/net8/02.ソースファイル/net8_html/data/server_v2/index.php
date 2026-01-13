@@ -300,6 +300,10 @@ function DispTop($template) {
 
 	$template->assign("TIMESTAMP"       , "ts=".time() );
 
+	// 変換レート用グローバル変数を定義
+	$convRateScript = "<script>var CONVPLAYPOINT = {$convPlaypoint}; var CONVCREDIT = {$convCredit};</script>";
+	$template->assign("CONV_RATE_SCRIPT", $convRateScript, false);
+
 	$template->flush();
 }
 

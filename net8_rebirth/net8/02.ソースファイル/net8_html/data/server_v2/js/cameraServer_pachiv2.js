@@ -129,8 +129,8 @@
 			'autodraw'      : 0,
 			//動作設定
 			'min_credit'    : 3,
-			'conv_point'    : <?php echo $CONVPLAYPOINT; ?>,  // 変換ポイント
-			'conv_credit'   : <?php echo $CONVCREDIT; ?>,     // 変換クレジット
+			'conv_point'    : (typeof CONVPLAYPOINT !== 'undefined') ? CONVPLAYPOINT : 100,  // 変換ポイント
+			'conv_credit'   : (typeof CONVCREDIT !== 'undefined') ? CONVCREDIT : 100,     // 変換クレジット
 			//2020-09-23 追加情報
 			'renchan_count' : 0,
 			'maxrenchan_count' : 0,
