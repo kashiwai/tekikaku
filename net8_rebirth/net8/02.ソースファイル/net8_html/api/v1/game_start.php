@@ -742,6 +742,18 @@ try {
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 
+    // コールバック情報を追加（韓国側が確認できるように）
+    if ($callbackUrl) {
+        $response['callback'] = [
+            'url' => $callbackUrl,
+            'configured' => true
+        ];
+    } else {
+        $response['callback'] = [
+            'configured' => false
+        ];
+    }
+
     // ポイント情報を追加（userIdが提供された場合）
     if ($userId && $userBalance) {
         $response['points'] = [
