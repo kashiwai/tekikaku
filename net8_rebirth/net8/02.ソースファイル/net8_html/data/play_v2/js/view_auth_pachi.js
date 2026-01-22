@@ -45,6 +45,8 @@ var _savestream;					//Video確認用
 			'max_continuous' :  0,
 			'max_dedama'  : 0,
 			'max_bb'      : 0,
+			'totalBets'   : 0,  // ★ 追加: 累計ベット額
+			'totalWins'   : 0   // ★ 追加: 累計勝利額
 		};
 	} else {
 		// 既存のgameオブジェクトに不足しているプロパティを追加
@@ -59,6 +61,8 @@ var _savestream;					//Video確認用
 		game.max_continuous = game.max_continuous || 0;
 		game.max_dedama = game.max_dedama || 0;
 		game.max_bb = game.max_bb || 0;
+		game.totalBets = game.totalBets || 0;  // ★ 追加
+		game.totalWins = game.totalWins || 0;  // ★ 追加
 		console.log('📝 Preserved existing game object - playpoint:', game.playpoint, 'credit:', game.credit);
 	}
 	//2021-06-01 credit加算警告の猶予期間
@@ -122,6 +126,75 @@ var _savestream;					//Video確認用
 	var old_denchu = 0;
 
 	var autoFirstEventFlg = false;
+
+	// ★ 韓国チーム対応: リアルタイムcallback送信ヘルパー関数
+	function sendBetCallback(betAmount, creditBefore, creditAfter) {
+		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) return;
+
+		game.totalBets = (game.totalBets || 0) + betAmount;
+
+		fetch('/api/v1/game_bet.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				sessionId: sessionId,
+				betAmount: betAmount,
+				creditBefore: creditBefore,
+				creditAfter: creditAfter
+			})
+		}).then(function(res) {
+			return res.json();
+		}).then(function(data) {
+			console.log('🎲 Bet callback sent:', data);
+		}).catch(function(err) {
+			console.error('❌ Bet callback failed:', err);
+		});
+	}
+
+	function sendWinCallback(winAmount, creditBefore, creditAfter) {
+		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) return;
+
+		game.totalWins = (game.totalWins || 0) + winAmount;
+
+		fetch('/api/v1/game_win.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				sessionId: sessionId,
+				winAmount: winAmount,
+				creditBefore: creditBefore,
+				creditAfter: creditAfter
+			})
+		}).then(function(res) {
+			return res.json();
+		}).then(function(data) {
+			console.log('🎉 Win callback sent:', data);
+		}).catch(function(err) {
+			console.error('❌ Win callback failed:', err);
+		});
+	}
+
+	function sendPointConvertedCallback(creditConverted, pointsReceived, conversionRate) {
+		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) return;
+
+		fetch('/api/v1/game_point_converted.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				sessionId: sessionId,
+				creditConverted: creditConverted,
+				pointsReceived: pointsReceived,
+				conversionRate: conversionRate || 0
+			})
+		}).then(function(res) {
+			return res.json();
+		}).then(function(data) {
+			console.log('💱 Point converted callback sent:', data);
+		}).catch(function(err) {
+			console.error('❌ Point converted callback failed:', err);
+		});
+	}
+
 	//peer setting
 	var peersetting = {
 		host: sigHost,
@@ -602,25 +675,32 @@ var _savestream;					//Video確認用
 				var cr = parseInt(crcd[1]);
 				var sa = game.credit - cr;
 				if ( sa < 0 ) cr -= sa;
+				var creditBefore = game.credit;  // ★ 追加
 				game.credit -= cr;
 				inCreditCount += cr;
 				$('#animeNumber').animetionNumber( cr * -1 );
 				$('#credit').text(game.credit);
+				// ★ 追加: ベットcallback送信
+				sendBetCallback(cr, creditBefore, game.credit);
 				
-			} else if ( _tag.substr(0,4) == 'CRO_' ){				//CreditIn
+			} else if ( _tag.substr(0,4) == 'CRO_' ){				//CreditOut (勝利)
 				var crcd = _tag.split('_');
 				var cr = parseInt(crcd[1]);
 				addCredit += cr;
+				var creditBefore = game.credit;  // ★ 追加
 				game.credit += cr;
 				$('#credit').text(game.credit);
 				$('#animeNumber').animetionNumber( cr );
 				$('#credit').text(game.credit);
+				// ★ 追加: 勝利callback送信
+				sendWinCallback(cr, creditBefore, game.credit);
 			} else if ( _tag.substr(0,4) == 'UCR_' ){				//CreditIn
 				var crcd = _tag.split('_');
 				var cr = parseInt(crcd[1]);
 				$('#user_credit').text(numberFormat(cr));
-			} else if ( _tag == 'Signal_0' ){							//Signal_IN
+			} else if ( _tag == 'Signal_0' ){							//Signal_IN (ベット)
 				inCreditCount++;
+				var creditBefore = game.credit;  // ★ 追加
 				game.credit--;
 				//サービス回し追加による数値補正
 				if ( game.credit < 0 ) {
@@ -629,13 +709,18 @@ var _savestream;					//Video確認用
 					$('#animeNumber').animetionNumber( -1 );
 				}
 				$('#credit').text(game.credit);
+				// ★ 追加: ベットcallback送信
+				sendBetCallback(1, creditBefore, game.credit);
 
-			} else if ( _tag == 'Signal_1' ){							//Signal_OUT
+			} else if ( _tag == 'Signal_1' ){							//Signal_OUT (勝利)
 				endOneGame = true;
 				addCredit++;
+				var creditBefore = game.credit;  // ★ 追加
 				game.credit++;
 				$('#credit').text(game.credit);
 				$('#animeNumber').animetionNumber( 1 );
+				// ★ 追加: 勝利callback送信
+				sendWinCallback(1, creditBefore, game.credit);
 			} else if ( _tag == 'Sac' ){								//Credit払い出し総数通知
 				if ( $('#autoplay_credit').hasClass('auto-on') && !autoStopSignal ){
 					setTimeout(function(){
@@ -964,11 +1049,25 @@ var _savestream;					//Video確認用
 			//クレジット変換ステータス
 			} else if ( _tag == 'Cst' ){
 				game.ccc_status = _msg;
-				if( game.ccc_status == "ok" ) return;
-				
+
+				// ★ 追加: ポイント変換成功時にcallback送信
+				if( game.ccc_status == "ok" ) {
+					// 変換レート計算（convPlaypoint/convCreditから取得）
+					var convRate = (typeof convPlaypoint !== 'undefined' && typeof convCredit !== 'undefined' && convCredit > 0)
+						? (convPlaypoint / convCredit)
+						: 100;  // デフォルト 100ポイント/クレジット
+
+					// 変換されたクレジット数（実際のゲームロジックに依存）
+					var creditConverted = 1;  // 仮の値（実際の値はカメラから取得）
+					var pointsReceived = Math.floor(creditConverted * convRate);
+
+					sendPointConvertedCallback(creditConverted, pointsReceived, convRate);
+					return;
+				}
+
 				cccCount--;
 				console.log( 'ccc--');
-				
+
 				if( game.ccc_status == "fail" ){
 					dataConnection.close();
 					//クレジット変換エラー
@@ -1048,7 +1147,10 @@ var _savestream;					//Video確認用
 								credit: finalCredit,
 								drawPoint: finalDrawPoint,
 								totalDrawPoint: finalTotalDrawPoint,
-								result: 'completed'
+								result: 'completed',
+								// ★ 追加: 韓国チーム対応
+								totalBets: game.totalBets || 0,
+								totalWins: game.totalWins || 0
 							}
 						}, '*');
 					} catch (e) {
