@@ -213,6 +213,36 @@ try {
             error_log("ℹ️  balance_mode column already exists");
         }
 
+        // 韓国チーム対応: initial_balanceカラム追加
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'initial_balance'");
+        if ($stmt->rowCount() === 0) {
+            error_log("Adding initial_balance column to game_sessions...");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN initial_balance INT DEFAULT 0 COMMENT 'ゲーム開始時のユーザー残高'");
+            error_log("✅ initial_balance column added");
+        } else {
+            error_log("ℹ️  initial_balance column already exists");
+        }
+
+        // 韓国チーム対応: total_betsカラム追加
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'total_bets'");
+        if ($stmt->rowCount() === 0) {
+            error_log("Adding total_bets column to game_sessions...");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN total_bets INT DEFAULT 0 COMMENT 'ゲーム内累計ベット額'");
+            error_log("✅ total_bets column added");
+        } else {
+            error_log("ℹ️  total_bets column already exists");
+        }
+
+        // 韓国チーム対応: total_winsカラム追加
+        $stmt = $pdo->query("SHOW COLUMNS FROM game_sessions LIKE 'total_wins'");
+        if ($stmt->rowCount() === 0) {
+            error_log("Adding total_wins column to game_sessions...");
+            $pdo->exec("ALTER TABLE game_sessions ADD COLUMN total_wins INT DEFAULT 0 COMMENT 'ゲーム内累計勝利額'");
+            error_log("✅ total_wins column added");
+        } else {
+            error_log("ℹ️  total_wins column already exists");
+        }
+
         error_log("✅ SDK tables auto-migration completed successfully");
     } catch (PDOException $e) {
         error_log("❌ Table migration FAILED: " . $e->getMessage());
@@ -599,11 +629,23 @@ try {
         }
 
         // 6. ゲームセッションをDBに記録（userIdの有無に関わらず）
+        // 韓国チーム対応: initial_balanceを計算
+        $initialBalance = 0;
+        if ($initialPoints > 0) {
+            // initialPointsパラメータが指定されている場合（韓国チームから）
+            $initialBalance = $initialPoints;
+            error_log("💰 Using initialPoints as initial_balance: {$initialBalance}");
+        } elseif ($userBalance && isset($userBalance['balance'])) {
+            // ユーザーの現在残高を使用
+            $initialBalance = (int)$userBalance['balance'];
+            error_log("💰 Using user balance as initial_balance: {$initialBalance}");
+        }
+
         $stmt = $pdo->prepare("
             INSERT INTO game_sessions
-            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, currency, reserved_points, balance_mode, callback_url, callback_secret, status, ip_address, user_agent)
+            (session_id, user_id, api_key_id, member_no, partner_user_id, machine_no, model_cd, model_name, points_consumed, currency, reserved_points, balance_mode, initial_balance, callback_url, callback_secret, status, ip_address, user_agent)
             VALUES
-            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :currency, :reserved_points, :balance_mode, :callback_url, :callback_secret, 'playing', :ip, :user_agent)
+            (:session_id, :user_id, :api_key_id, :member_no, :partner_user_id, :machine_no, :model_cd, :model_name, :points_consumed, :currency, :reserved_points, :balance_mode, :initial_balance, :callback_url, :callback_secret, 'playing', :ip, :user_agent)
         ");
 
         $stmt->execute([
@@ -619,6 +661,7 @@ try {
             'currency' => $currency, // 通貨コード
             'reserved_points' => $reservedPoints,
             'balance_mode' => $balanceMode,
+            'initial_balance' => $initialBalance, // 韓国チーム対応: 開始時残高
             'callback_url' => $callbackUrl, // コールバックURL（HTTPS）
             'callback_secret' => $callbackSecret, // コールバック署名検証用秘密鍵
             'ip' => $_SERVER['REMOTE_ADDR'] ?? null,

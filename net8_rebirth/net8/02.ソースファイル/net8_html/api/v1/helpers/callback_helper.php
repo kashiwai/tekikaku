@@ -230,6 +230,7 @@ function buildWinCallbackData($session, $winData) {
 
 /**
  * コールバックデータ構築（game.ended用）
+ * 韓国チーム対応: 正確なポイントデータ構造
  *
  * @param array $session ゲームセッション情報
  * @param array $result ゲーム結果情報
@@ -239,6 +240,15 @@ function buildCallbackData($session, $result) {
     $startedAt = new DateTime($session['started_at']);
     $endedAt = new DateTime($result['endedAt'] ?? 'now');
     $duration = $endedAt->getTimestamp() - $startedAt->getTimestamp();
+
+    // 韓国チーム対応: 正確なポイント計算
+    $initialBalance = isset($session['initial_balance']) ? (int)$session['initial_balance'] : 0;
+    $totalBets = isset($session['total_bets']) ? (int)$session['total_bets'] : 0;
+    $totalWins = isset($session['total_wins']) ? (int)$session['total_wins'] : 0;
+    $finalBalance = $result['newBalance'] ?? null;
+
+    // 純損益を計算（最終残高 - 初期残高）
+    $netProfit = $finalBalance !== null ? ($finalBalance - $initialBalance) : 0;
 
     return [
         'sessionId' => $session['session_id'],
@@ -252,11 +262,11 @@ function buildCallbackData($session, $result) {
         'duration' => $duration,
 
         'points' => [
-            'initial' => $session['points_consumed'], // 初期ポイント（消費予定）
-            'consumed' => $session['points_consumed'],
-            'won' => $result['pointsWon'] ?? 0,
-            'final' => $result['newBalance'] ?? null,
-            'net' => $result['netProfit'] ?? 0
+            'initial' => $initialBalance,      // ✅ ゲーム開始時の残高
+            'consumed' => $totalBets,          // ✅ 累計ベット額
+            'won' => $totalWins,               // ✅ 累計勝利額
+            'final' => $finalBalance,          // ✅ 最終残高
+            'net' => $netProfit                // ✅ 純損益（final - initial）
         ],
 
         'result' => $result['result'] ?? 'completed',

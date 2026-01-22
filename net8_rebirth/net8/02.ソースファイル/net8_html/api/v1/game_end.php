@@ -65,6 +65,20 @@ $result = $input['result'] ?? 'completed'; // win, lose, draw, error, cancelled
 $pointsWon = isset($input['pointsWon']) ? (int)$input['pointsWon'] : 0;
 $resultData = $input['resultData'] ?? [];
 
+// 韓国チーム対応: 累計ベット額・勝利額を受け取る
+$totalBets = isset($input['totalBets']) ? (int)$input['totalBets'] : 0;
+$totalWins = isset($input['totalWins']) ? (int)$input['totalWins'] : 0;
+
+// resultDataからも取得を試みる（フォールバック）
+if ($totalBets === 0 && isset($resultData['total_bets'])) {
+    $totalBets = (int)$resultData['total_bets'];
+}
+if ($totalWins === 0 && isset($resultData['total_wins'])) {
+    $totalWins = (int)$resultData['total_wins'];
+}
+
+error_log("💰 Game end totals: totalBets={$totalBets}, totalWins={$totalWins}, pointsWon={$pointsWon}");
+
 // リクエストボディからmember_noを読み取る（両方のキー名をサポート）
 $requestMemberNo = null;
 if (isset($input['member_no'])) {
@@ -118,7 +132,7 @@ try {
         }
     }
 
-    // ゲームセッション情報を取得（member_noとpartner_user_idとコールバック情報を含む）
+    // ゲームセッション情報を取得（member_noとpartner_user_idとコールバック情報、韓国チーム対応: 累計データを含む）
     $stmt = $pdo->prepare("
         SELECT
             id,
@@ -134,7 +148,10 @@ try {
             status,
             started_at,
             callback_url,
-            callback_secret
+            callback_secret,
+            initial_balance,
+            total_bets,
+            total_wins
         FROM game_sessions
         WHERE session_id = :session_id
     ");
@@ -206,7 +223,7 @@ try {
             }
         }
 
-        // ゲームセッションを更新（member_noを含める）
+        // ゲームセッションを更新（member_no、韓国チーム対応: total_bets/total_winsを含める）
         $stmt = $pdo->prepare("
             UPDATE game_sessions
             SET
@@ -216,7 +233,9 @@ try {
                 points_won = :points_won,
                 play_duration = :play_duration,
                 result_data = :result_data,
-                member_no = :member_no
+                member_no = :member_no,
+                total_bets = :total_bets,
+                total_wins = :total_wins
             WHERE session_id = :session_id
         ");
 
@@ -229,6 +248,8 @@ try {
             'play_duration' => $playDuration,
             'result_data' => $resultData ? json_encode($resultData) : null,
             'member_no' => $memberNo,
+            'total_bets' => $totalBets,
+            'total_wins' => $totalWins,
             'session_id' => $sessionId
         ]);
 
