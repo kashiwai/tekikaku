@@ -129,7 +129,15 @@ var _savestream;					//Video確認用
 
 	// ★ 韓国チーム対応: リアルタイムcallback送信ヘルパー関数
 	function sendBetCallback(betAmount, creditBefore, creditAfter) {
-		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) return;
+		console.log('[DEBUG] sendBetCallback called:', { betAmount, creditBefore, creditAfter, sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined', koreaMode });
+		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) {
+			console.warn('⚠️ Bet callback skipped:', {
+				sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined',
+				koreaMode,
+				reason: !sessionId ? 'no sessionId' : !koreaMode ? 'koreaMode false' : 'sessionId undefined'
+			});
+			return;
+		}
 
 		game.totalBets = (game.totalBets || 0) + betAmount;
 
@@ -152,7 +160,15 @@ var _savestream;					//Video確認用
 	}
 
 	function sendWinCallback(winAmount, creditBefore, creditAfter) {
-		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) return;
+		console.log('[DEBUG] sendWinCallback called:', { winAmount, creditBefore, creditAfter, sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined', koreaMode });
+		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) {
+			console.warn('⚠️ Win callback skipped:', {
+				sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined',
+				koreaMode,
+				reason: !sessionId ? 'no sessionId' : !koreaMode ? 'koreaMode false' : 'sessionId undefined'
+			});
+			return;
+		}
 
 		game.totalWins = (game.totalWins || 0) + winAmount;
 
@@ -175,7 +191,15 @@ var _savestream;					//Video確認用
 	}
 
 	function sendPointConvertedCallback(creditConverted, pointsReceived, conversionRate) {
-		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) return;
+		console.log('[DEBUG] sendPointConvertedCallback called:', { creditConverted, pointsReceived, conversionRate, sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined', koreaMode });
+		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) {
+			console.warn('⚠️ Point conversion callback skipped:', {
+				sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined',
+				koreaMode,
+				reason: !sessionId ? 'no sessionId' : !koreaMode ? 'koreaMode false' : 'sessionId undefined'
+			});
+			return;
+		}
 
 		fetch('/api/v1/game_point_converted.php', {
 			method: 'POST',
@@ -671,6 +695,7 @@ var _savestream;					//Video確認用
 				$('#heso_mark').text(heso);
 				$('#denchu_mark').text(denchu);
 			} else if ( _tag.substr(0,4) == 'CRI_' ){				//CreditIn
+				console.log('[DEBUG] CRI_ event detected:', _tag);
 				var crcd = _tag.split('_');
 				var cr = parseInt(crcd[1]);
 				var sa = game.credit - cr;
@@ -681,9 +706,11 @@ var _savestream;					//Video確認用
 				$('#animeNumber').animetionNumber( cr * -1 );
 				$('#credit').text(game.credit);
 				// ★ 追加: ベットcallback送信
+				console.log('[DEBUG] Calling sendBetCallback with:', { cr, creditBefore, creditAfter: game.credit });
 				sendBetCallback(cr, creditBefore, game.credit);
 				
 			} else if ( _tag.substr(0,4) == 'CRO_' ){				//CreditOut (勝利)
+				console.log('[DEBUG] CRO_ event detected:', _tag);
 				var crcd = _tag.split('_');
 				var cr = parseInt(crcd[1]);
 				addCredit += cr;
@@ -693,12 +720,14 @@ var _savestream;					//Video確認用
 				$('#animeNumber').animetionNumber( cr );
 				$('#credit').text(game.credit);
 				// ★ 追加: 勝利callback送信
+				console.log('[DEBUG] Calling sendWinCallback with:', { cr, creditBefore, creditAfter: game.credit });
 				sendWinCallback(cr, creditBefore, game.credit);
 			} else if ( _tag.substr(0,4) == 'UCR_' ){				//CreditIn
 				var crcd = _tag.split('_');
 				var cr = parseInt(crcd[1]);
 				$('#user_credit').text(numberFormat(cr));
 			} else if ( _tag == 'Signal_0' ){							//Signal_IN (ベット)
+				console.log('[DEBUG] Signal_0 event detected');
 				inCreditCount++;
 				var creditBefore = game.credit;  // ★ 追加
 				game.credit--;
@@ -710,9 +739,11 @@ var _savestream;					//Video確認用
 				}
 				$('#credit').text(game.credit);
 				// ★ 追加: ベットcallback送信
+				console.log('[DEBUG] Calling sendBetCallback with:', { betAmount: 1, creditBefore, creditAfter: game.credit });
 				sendBetCallback(1, creditBefore, game.credit);
 
 			} else if ( _tag == 'Signal_1' ){							//Signal_OUT (勝利)
+				console.log('[DEBUG] Signal_1 event detected');
 				endOneGame = true;
 				addCredit++;
 				var creditBefore = game.credit;  // ★ 追加
@@ -720,6 +751,7 @@ var _savestream;					//Video確認用
 				$('#credit').text(game.credit);
 				$('#animeNumber').animetionNumber( 1 );
 				// ★ 追加: 勝利callback送信
+				console.log('[DEBUG] Calling sendWinCallback with:', { winAmount: 1, creditBefore, creditAfter: game.credit });
 				sendWinCallback(1, creditBefore, game.credit);
 			} else if ( _tag == 'Sac' ){								//Credit払い出し総数通知
 				if ( $('#autoplay_credit').hasClass('auto-on') && !autoStopSignal ){
@@ -1010,11 +1042,21 @@ var _savestream;					//Video確認用
 
 				// 韓国統合用：クライアント側のplaypointをカメラに同期
 				// play_embedで事前に設定されたポイントがある場合、カメラに送信
+				console.log('[DEBUG] Checking koreaMode activation:', {
+					playpoint: game.playpoint,
+					hasConnection: !!_sconnect,
+					connectionOpen: _sconnect ? _sconnect.open : false
+				});
 				if (game.playpoint > 0 && _sconnect && _sconnect.open) {
 					console.log('💰 [Korea] Syncing playpoint to camera:', game.playpoint);
 					_sconnect.send(_sendStr('Spt', game.playpoint));
 					koreaMode = true;  // 韓国モードを有効化
-					console.log('💰 [Korea] Korea mode enabled for AUTO');
+					console.log('💰 [Korea] Korea mode enabled for AUTO, sessionId:', typeof sessionId !== 'undefined' ? sessionId : 'undefined');
+				} else {
+					console.warn('⚠️ Korea mode NOT activated:', {
+						reason: game.playpoint <= 0 ? 'playpoint is 0 or negative' : !_sconnect ? 'no connection' : !_sconnect.open ? 'connection not open' : 'unknown',
+						playpoint: game.playpoint
+					});
 				}
 
 			//終了予告
@@ -1140,6 +1182,14 @@ var _savestream;					//Video確認用
 							source: $('#pay_play_point').length > 0 ? 'HTML' : 'gameObject'
 						});
 
+						console.log('[DEBUG] Sending game:settlement postMessage:', {
+							playPoint: finalPlayPoint,
+							credit: finalCredit,
+							drawPoint: finalDrawPoint,
+							totalDrawPoint: finalTotalDrawPoint,
+							totalBets: game.totalBets || 0,
+							totalWins: game.totalWins || 0
+						});
 						window.parent.postMessage({
 							type: 'game:settlement',
 							payload: {
