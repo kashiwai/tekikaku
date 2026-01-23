@@ -48,6 +48,8 @@ var _savestream;					//Video確認用
 			'totalBets'   : 0,  // ★ 追加: 累計ベット額
 			'totalWins'   : 0   // ★ 追加: 累計勝利額
 		};
+		// ★ デバッグ: 初期化時の状態確認
+		console.log('🚀 [INIT] view_auth_pachi.js game object initialized');
 	} else {
 		// 既存のgameオブジェクトに不足しているプロパティを追加
 		game.drawpoint = game.drawpoint || 0;
@@ -96,6 +98,10 @@ var _savestream;					//Video確認用
 	var autoMode = false;						//autoモード設定
 	var koreaMode = false;						//韓国統合モード（Spt送信時にtrue）
 	var autoModePrep = false;					//韓国用: AUTO待機状態（STARTで開始）
+
+	// ★ デバッグ: 変数初期化後の状態確認
+	console.log('🔍 [VAR-INIT] koreaMode初期値:', koreaMode);
+	console.log('🔍 [VAR-INIT] sessionId:', typeof sessionId !== 'undefined' ? sessionId : 'UNDEFINED (外部から渡されるべき)');
 	var disableAuto = false;					//auto連打禁止用フラグ 2021-05-15
 	var activeGame = false;						//回転中
 	var videoWidth;								//videoサイズ
@@ -129,15 +135,32 @@ var _savestream;					//Video確認用
 
 	// ★ 韓国チーム対応: リアルタイムcallback送信ヘルパー関数
 	function sendBetCallback(betAmount, creditBefore, creditAfter) {
-		console.log('[DEBUG] sendBetCallback called:', { betAmount, creditBefore, creditAfter, sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined', koreaMode });
+		console.log('🎰 [BET-CALLBACK] Called with:', {
+			betAmount: betAmount,
+			creditBefore: creditBefore,
+			creditAfter: creditAfter
+		});
+		console.log('🔍 [BET-CALLBACK] Checking conditions:', {
+			sessionIdType: typeof sessionId,
+			sessionIdValue: typeof sessionId !== 'undefined' ? sessionId : 'UNDEFINED',
+			sessionIdExists: typeof sessionId !== 'undefined',
+			sessionIdTruthy: typeof sessionId !== 'undefined' && !!sessionId,
+			koreaModeValue: koreaMode,
+			koreaModeType: typeof koreaMode
+		});
+
 		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) {
-			console.warn('⚠️ Bet callback skipped:', {
-				sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined',
-				koreaMode,
-				reason: !sessionId ? 'no sessionId' : !koreaMode ? 'koreaMode false' : 'sessionId undefined'
+			console.error('❌ [BET-CALLBACK] SKIPPED! Reason:', {
+				sessionIdUndefined: typeof sessionId === 'undefined',
+				sessionIdEmpty: typeof sessionId !== 'undefined' && !sessionId,
+				koreaModeOff: !koreaMode,
+				actualSessionId: typeof sessionId !== 'undefined' ? sessionId : 'UNDEFINED',
+				actualKoreaMode: koreaMode
 			});
 			return;
 		}
+
+		console.log('✅ [BET-CALLBACK] Conditions passed, sending to API...');
 
 		game.totalBets = (game.totalBets || 0) + betAmount;
 
@@ -151,24 +174,42 @@ var _savestream;					//Video確認用
 				creditAfter: creditAfter
 			})
 		}).then(function(res) {
+			console.log('📡 [BET-CALLBACK] Response status:', res.status);
 			return res.json();
 		}).then(function(data) {
-			console.log('🎲 Bet callback sent:', data);
+			console.log('✅ [BET-CALLBACK] Success:', data);
 		}).catch(function(err) {
-			console.error('❌ Bet callback failed:', err);
+			console.error('❌ [BET-CALLBACK] Failed:', err);
 		});
 	}
 
 	function sendWinCallback(winAmount, creditBefore, creditAfter) {
-		console.log('[DEBUG] sendWinCallback called:', { winAmount, creditBefore, creditAfter, sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined', koreaMode });
+		console.log('🎰 [WIN-CALLBACK] Called with:', {
+			winAmount: winAmount,
+			creditBefore: creditBefore,
+			creditAfter: creditAfter
+		});
+		console.log('🔍 [WIN-CALLBACK] Checking conditions:', {
+			sessionIdType: typeof sessionId,
+			sessionIdValue: typeof sessionId !== 'undefined' ? sessionId : 'UNDEFINED',
+			sessionIdExists: typeof sessionId !== 'undefined',
+			sessionIdTruthy: typeof sessionId !== 'undefined' && !!sessionId,
+			koreaModeValue: koreaMode,
+			koreaModeType: typeof koreaMode
+		});
+
 		if (typeof sessionId === 'undefined' || !sessionId || !koreaMode) {
-			console.warn('⚠️ Win callback skipped:', {
-				sessionId: typeof sessionId !== 'undefined' ? sessionId : 'undefined',
-				koreaMode,
-				reason: !sessionId ? 'no sessionId' : !koreaMode ? 'koreaMode false' : 'sessionId undefined'
+			console.error('❌ [WIN-CALLBACK] SKIPPED! Reason:', {
+				sessionIdUndefined: typeof sessionId === 'undefined',
+				sessionIdEmpty: typeof sessionId !== 'undefined' && !sessionId,
+				koreaModeOff: !koreaMode,
+				actualSessionId: typeof sessionId !== 'undefined' ? sessionId : 'UNDEFINED',
+				actualKoreaMode: koreaMode
 			});
 			return;
 		}
+
+		console.log('✅ [WIN-CALLBACK] Conditions passed, sending to API...');
 
 		game.totalWins = (game.totalWins || 0) + winAmount;
 
@@ -182,11 +223,12 @@ var _savestream;					//Video確認用
 				creditAfter: creditAfter
 			})
 		}).then(function(res) {
+			console.log('📡 [WIN-CALLBACK] Response status:', res.status);
 			return res.json();
 		}).then(function(data) {
-			console.log('🎉 Win callback sent:', data);
+			console.log('✅ [WIN-CALLBACK] Success:', data);
 		}).catch(function(err) {
-			console.error('❌ Win callback failed:', err);
+			console.error('❌ [WIN-CALLBACK] Failed:', err);
 		});
 	}
 
@@ -1051,7 +1093,12 @@ var _savestream;					//Video確認用
 					console.log('💰 [Korea] Syncing playpoint to camera:', game.playpoint);
 					_sconnect.send(_sendStr('Spt', game.playpoint));
 					koreaMode = true;  // 韓国モードを有効化
-					console.log('💰 [Korea] Korea mode enabled for AUTO, sessionId:', typeof sessionId !== 'undefined' ? sessionId : 'undefined');
+					console.log('✅ [Korea] Korea mode ENABLED!', {
+						koreaMode: koreaMode,
+						sessionId: typeof sessionId !== 'undefined' ? sessionId : 'UNDEFINED',
+						sessionIdType: typeof sessionId,
+						hasSessionId: typeof sessionId !== 'undefined' && sessionId !== null && sessionId !== ''
+					});
 				} else {
 					console.warn('⚠️ Korea mode NOT activated:', {
 						reason: game.playpoint <= 0 ? 'playpoint is 0 or negative' : !_sconnect ? 'no connection' : !_sconnect.open ? 'connection not open' : 'unknown',

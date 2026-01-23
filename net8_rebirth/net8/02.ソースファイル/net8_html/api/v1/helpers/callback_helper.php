@@ -269,6 +269,12 @@ function buildCallbackData($session, $result) {
             'net' => $netProfit                // ✅ 純損益（final - initial）
         ],
 
+        // ★ 追加: 韓国チーム対応 - 統計情報を別フィールドで提供
+        'statistics' => [
+            'totalBets' => $totalBets,         // ✅ 累計ベット額（統計用）
+            'totalWins' => $totalWins          // ✅ 累計勝利額（統計用）
+        ],
+
         'result' => $result['result'] ?? 'completed',
         'status' => $result['result'] === 'error' ? 'error' : 'completed',
 
