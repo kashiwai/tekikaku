@@ -1,0 +1,24 @@
+# NET8 .htaccess - /ch/ サブドメイン（iframe対応版）
+# Docker開発環境用：Basic認証とIP制限を無効化
+
+# ★ iframe許可設定（韓国統合用）
+Header always unset X-Frame-Options
+Header always set X-Frame-Options "ALLOWALL"
+Header always set Content-Security-Policy "frame-ancestors *"
+
+# 本番環境では以下のコメントを外してセキュリティを有効化してください
+# AuthUserFile /var/www/net8_html/.htpasswd
+# AuthGroupFile /dev/null
+# AuthName "Please enter your ID and password"
+# AuthType Basic
+# Require valid-user
+
+# Office
+# Require ip ***.***.***.***
+# Camera PC
+# Require ip ***.***.***.***
+# Other
+# Require ip ***.***.***.***
+
+# Allow from all for development
+Require all granted
