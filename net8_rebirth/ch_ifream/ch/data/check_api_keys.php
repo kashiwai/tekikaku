@@ -11,7 +11,7 @@ require_once('../_etc/require_files.php');
 try {
     $pdo = get_db_connection();
 
-    // 有効なAPIキーを取得
+    // 有効なAPIキーを取得（test環境を優先）
     $stmt = $pdo->query("
         SELECT
             id,
@@ -23,30 +23,47 @@ try {
             created_at
         FROM api_keys
         WHERE is_active = 1
-        ORDER BY environment, created_at DESC
+        ORDER BY
+            CASE environment
+                WHEN 'test' THEN 1
+                WHEN 'staging' THEN 2
+                WHEN 'production' THEN 3
+                ELSE 4
+            END,
+            created_at DESC
         LIMIT 10
     ");
 
     $keys = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (empty($keys)) {
-        // APIキーが存在しない場合、テスト用を作成
+    // test環境のキーが存在しない場合、自動作成
+    $hasTestKey = false;
+    foreach ($keys as $key) {
+        if ($key['environment'] === 'test') {
+            $hasTestKey = true;
+            break;
+        }
+    }
+
+    if (!$hasTestKey) {
+        // test環境のAPIキーを作成
         $testKey = 'pk_test_' . bin2hex(random_bytes(16));
         $pdo->exec("
             INSERT INTO api_keys (key_value, key_type, name, environment, is_active)
-            VALUES ('$testKey', 'public', 'Test API Key', 'test', 1)
+            VALUES ('$testKey', 'public', 'Auto-generated Test API Key', 'test', 1)
         ");
 
-        $keys = [$testKey => [
+        // 作成したキーを配列の先頭に追加
+        array_unshift($keys, [
             'id' => $pdo->lastInsertId(),
             'key_value' => $testKey,
             'key_type' => 'public',
-            'name' => 'Test API Key',
+            'name' => 'Auto-generated Test API Key',
             'environment' => 'test',
             'is_active' => 1,
             'created_at' => date('Y-m-d H:i:s'),
             'newly_created' => true
-        ]];
+        ]);
     }
 
     echo json_encode([
