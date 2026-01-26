@@ -767,10 +767,11 @@ try {
         error_log("✅ Currency mode ({$currency}): Using play_v2");
     } else {
         // 韓国側 → play_embed（従来通り）
-        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}";
+        // ★ 修正: initialPointsをURLパラメータとして渡す（500pt→1000pt問題の根本原因対応）
+        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&points={$initialPoints}";
         $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}";
         $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため
-        error_log("✅ Legacy mode (JPY): Using play_embed");
+        error_log("✅ Legacy mode (JPY): Using play_embed with initialPoints={$initialPoints}");
     }
 
     $response = [
