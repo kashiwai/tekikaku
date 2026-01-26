@@ -675,8 +675,8 @@ function outputPlayerHTML($data) {
     <!-- スロット用 -->
     <script src="/data/play_v2/js/view_auth.js?ts=<?= $timestamp ?>"></script>
     <?php else: ?>
-    <!-- パチンコ用 -->
-    <script src="/data/play_v2/js/view_auth_pachi.js?ts=<?= $timestamp ?>"></script>
+    <!-- パチンコ用 - EMBED専用版（koreaMode常時有効） -->
+    <script src="/data/play_embed/js/view_auth_pachi_embed.js?ts=<?= $timestamp ?>"></script>
     <?php endif; ?>
 
     <!-- 埋め込み専用JS -->
