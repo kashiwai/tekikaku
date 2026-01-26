@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ完全無効化
-RUN echo "FORCE-REBUILD-2026-01-26-korea-callback-fix" > /tmp/cache-bust
+RUN echo "FORCE-REBUILD-2026-01-26-17-40-korea-callback-fix-final" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
