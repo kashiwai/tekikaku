@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/ch/ サブドメイン iframe テスト</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+        }
+        h1 {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #2d2d30;
+            border-left: 4px solid #569cd6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        .test-section {
+            background: #252526;
+            border: 1px solid #3c3c3c;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-section h2 {
+            color: #569cd6;
+            margin-bottom: 15px;
+        }
+        iframe {
+            border: 2px solid #4ec9b0;
+            border-radius: 3px;
+            background: white;
+        }
+        .success {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+        .warning {
+            color: #dcdcaa;
+            font-weight: bold;
+        }
+        .error {
+            color: #f48771;
+            font-weight: bold;
+        }
+        .url {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #ce9178;
+            margin: 10px 0;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 /ch/ サブドメイン iframe 埋め込みテスト</h1>
+
+    <div class="info">
+        <strong>📍 テスト目的:</strong> /ch/ サブドメインがiframeで正しく動作するか確認<br>
+        <strong>🎯 テストURL:</strong> http://localhost:8000/ch/<br>
+        <strong>✅ 期待結果:</strong> iframe内にトップページが表示される
+    </div>
+
+    <!-- テスト1: トップページ -->
+    <div class="test-section">
+        <h2>テスト1: /ch/ トップページ</h2>
+        <div class="url">http://localhost:8000/ch/</div>
+        <iframe
+            src="http://localhost:8000/ch/"
+            width="100%"
+            height="600"
+            id="test1-frame">
+        </iframe>
+        <div id="test1-result" style="margin-top: 10px;">
+            <span class="warning">⏳ 読み込み中...</span>
+        </div>
+    </div>
+
+    <!-- テスト2: play_v2 ページ -->
+    <div class="test-section">
+        <h2>テスト2: /ch/play_v2/ プレイヤー</h2>
+        <div class="url">http://localhost:8000/ch/play_v2/</div>
+        <iframe
+            src="http://localhost:8000/ch/play_v2/"
+            width="100%"
+            height="600"
+            id="test2-frame">
+        </iframe>
+        <div id="test2-result" style="margin-top: 10px;">
+            <span class="warning">⏳ 読み込み中...</span>
+        </div>
+    </div>
+
+    <!-- テスト3: データ比較 -->
+    <div class="test-section">
+        <h2>テスト3: /data/ と /ch/ の比較</h2>
+        <button onclick="testOriginal()">オリジナル(/data/)をテスト</button>
+        <button onclick="testCh()">コピー(/ch/)をテスト</button>
+        <div id="test3-result" style="margin-top: 10px;"></div>
+    </div>
+
+    <!-- デバッグ情報 -->
+    <div class="test-section">
+        <h2>🔍 デバッグ情報</h2>
+        <div id="debug-info" style="font-family: monospace; font-size: 12px;">
+            <div>現在のURL: <span class="url" id="current-url"></span></div>
+            <div>User Agent: <span class="url" id="user-agent"></span></div>
+            <div>画面サイズ: <span class="url" id="screen-size"></span></div>
+        </div>
+    </div>
+
+    <script>
+        // iframe読み込み監視（クロスオリジンチェック削除版）
+        // loadイベントが発火 = iframe埋め込み成功
+        document.getElementById('test1-frame').onload = function() {
+            document.getElementById('test1-result').innerHTML =
+                '<span class="success">✅ iframe読み込み成功！iframe内にコンテンツが表示されているか目視確認してください。</span>';
+        };
+
+        document.getElementById('test1-frame').onerror = function() {
+            document.getElementById('test1-result').innerHTML =
+                '<span class="error">❌ iframe読み込み失敗（X-Frame-Optionsでブロックされた可能性）</span>';
+        };
+
+        document.getElementById('test2-frame').onload = function() {
+            document.getElementById('test2-result').innerHTML =
+                '<span class="success">✅ iframe読み込み成功！iframe内にコンテンツが表示されているか目視確認してください。</span>';
+        };
+
+        document.getElementById('test2-frame').onerror = function() {
+            document.getElementById('test2-result').innerHTML =
+                '<span class="error">❌ iframe読み込み失敗（X-Frame-Optionsでブロックされた可能性）</span>';
+        };
+
+        // テスト関数
+        function testOriginal() {
+            const result = document.getElementById('test3-result');
+            result.innerHTML = '<span class="warning">⏳ /data/ をテスト中...</span>';
+
+            fetch('http://localhost:8000/data/')
+                .then(res => {
+                    if (res.ok) {
+                        result.innerHTML = '<span class="success">✅ /data/ アクセス成功 (Status: ' + res.status + ')</span>';
+                    } else {
+                        result.innerHTML = '<span class="error">❌ /data/ アクセス失敗 (Status: ' + res.status + ')</span>';
+                    }
+                })
+                .catch(err => {
+                    result.innerHTML = '<span class="error">❌ /data/ エラー: ' + err.message + '</span>';
+                });
+        }
+
+        function testCh() {
+            const result = document.getElementById('test3-result');
+            result.innerHTML = '<span class="warning">⏳ /ch/ をテスト中...</span>';
+
+            fetch('http://localhost:8000/ch/')
+                .then(res => {
+                    if (res.ok) {
+                        result.innerHTML = '<span class="success">✅ /ch/ アクセス成功 (Status: ' + res.status + ')</span>';
+                    } else {
+                        result.innerHTML = '<span class="error">❌ /ch/ アクセス失敗 (Status: ' + res.status + ')</span>';
+                    }
+                })
+                .catch(err => {
+                    result.innerHTML = '<span class="error">❌ /ch/ エラー: ' + err.message + '</span>';
+                });
+        }
+
+        // デバッグ情報表示
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('user-agent').textContent = navigator.userAgent;
+        document.getElementById('screen-size').textContent =
+            window.innerWidth + ' x ' + window.innerHeight;
+
+        console.log('🧪 [TEST] /ch/ iframe test page loaded');
+        console.log('📍 [TEST] Testing URL: http://localhost:8000/ch/');
+    </script>
+</body>
+</html>
