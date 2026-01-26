@@ -1,0 +1,27 @@
+@charset "utf-8";
+.box{
+	margin-bottom:3px;
+	background-color:#eee;
+}
+
+.box.active{
+	background-color:#f22;
+}
+
+.playing-screen{
+	margin: 20px auto;
+	max-width: 640px;
+}
+.portrait {
+	margin: 20px auto;
+	max-width: 640px;
+	transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+}
+
+.active {
+	background-color:#8f8;
+}
+.error {
+	background-color:#f88;
+}

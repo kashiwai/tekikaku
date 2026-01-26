@@ -95,3 +95,4 @@ backup/
 service-account*.json
 .claudepoint/
 data/
+!ch_ifream/ch/data/

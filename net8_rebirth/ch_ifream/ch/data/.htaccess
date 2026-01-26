@@ -1,0 +1,19 @@
+# NET8 .htaccess
+# Docker開発環境用：Basic認証とIP制限を無効化
+
+# 本番環境では以下のコメントを外してセキュリティを有効化してください
+# AuthUserFile /var/www/net8_html/.htpasswd
+# AuthGroupFile /dev/null
+# AuthName "Please enter your ID and password"
+# AuthType Basic
+# Require valid-user
+
+# Office
+# Require ip ***.***.***.***
+# Camera PC
+# Require ip ***.***.***.***
+# Other
+# Require ip ***.***.***.***
+
+# Allow from all for development
+Require all granted
