@@ -502,7 +502,7 @@ $GLOBALS["boardVersionData"] = array(
 
 // 画像保存ディレクトリ
 if (!defined('DIR_IMG_MODEL')) {
-    define('DIR_IMG_MODEL', '/data/img/model/');
+    define('DIR_IMG_MODEL', '/img/model/');
 }
 
 // GCS統合: 画像表示用ベースURL

@@ -466,14 +466,14 @@ class TemplateUser extends SmartTemplate {
 			// Railway deploy trigger: 2025-12-30 14:51 - Force OPcache refresh
 			$imageList = $row["image_list"];
 			if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
-				$imageList = '/data/img/model/' . $imageList;
+				$imageList = '/img/model/' . $imageList;
 			}
 			$this->assign("IMAGE_LIST"       , $imageList, true);
 
 			// image_detail - GCS URLの場合はそのまま使用、そうでなければローカルパスを追加
 			$imageDetail = $row["image_detail"];
 			if ($imageDetail && !preg_match('/^https?:\/\//', $imageDetail)) {
-				$imageDetail = '/data/img/model/' . $imageDetail;
+				$imageDetail = '/img/model/' . $imageDetail;
 			}
 			$this->assign("IMAGE_DETAIL"     , $imageDetail, true);
 			// 単位

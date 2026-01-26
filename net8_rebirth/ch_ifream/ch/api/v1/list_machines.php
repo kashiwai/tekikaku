@@ -62,7 +62,7 @@ try {
 
     // 画像ベースURL
     $baseUrl = 'https://mgg-webservice-production.up.railway.app';
-    $imageBasePath = '/data/img/model/';
+    $imageBasePath = '/img/model/';
 
     // ベースクエリ
     $sql = "
