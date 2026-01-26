@@ -182,7 +182,7 @@
         async function fetchApiKey() {
             log('🔑 正在获取API密钥...', 'info');
             try {
-                const response = await fetch('/check_api_keys.php');
+                const response = await fetch('/data/check_api_keys.php');
                 const data = await response.json();
 
                 if (data.success && data.keys && data.keys.length > 0) {

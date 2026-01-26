@@ -261,7 +261,7 @@ function DispTop($template) {
 		// 画像パスの処理（GCS URLでない場合はローカルパスを追加）
 		$imageList = $row["image_list"];
 		if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
-			$imageList = '/img/model/' . $imageList;
+			$imageList = '/data/img/model/' . $imageList;
 		}
 
 		$template->assign("NO"               , $row["machine_no"], true);
@@ -281,7 +281,7 @@ function DispTop($template) {
 		// 画像パスの処理（GCS URLでない場合はローカルパスを追加）
 		$imageList = $row["image_list"];
 		if ($imageList && !preg_match('/^https?:\/\//', $imageList)) {
-			$imageList = '/img/model/' . $imageList;
+			$imageList = '/data/img/model/' . $imageList;
 		}
 
 		$template->assign("NO"               , $row["machine_no"], true);

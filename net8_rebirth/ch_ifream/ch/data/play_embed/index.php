@@ -392,7 +392,7 @@ function outputPlayerHTML($data) {
 
     <!-- Play CSS -->
     <link href="/css/play.css?ts=<?= $timestamp ?>" rel="stylesheet">
-    <link href="/play_embed/css/embed.css?ts=<?= $timestamp ?>" rel="stylesheet">
+    <link href="/data/play_embed/css/embed.css?ts=<?= $timestamp ?>" rel="stylesheet">
 </head>
 <script>
     // 設定値をJavaScript変数に設定
@@ -670,17 +670,17 @@ function outputPlayerHTML($data) {
     </script>
 
     <!-- play_v2のJSを使用 - view_functionsを先に読み込む（_touch等の変数定義が必要） -->
-    <script src="/play_v2/js/view_functions.js?ts=<?= $timestamp ?>"></script>
+    <script src="/data/play_v2/js/view_functions.js?ts=<?= $timestamp ?>"></script>
     <?php if ($isSlot): ?>
     <!-- スロット用 -->
-    <script src="/play_v2/js/view_auth.js?ts=<?= $timestamp ?>"></script>
+    <script src="/data/play_v2/js/view_auth.js?ts=<?= $timestamp ?>"></script>
     <?php else: ?>
-    <!-- パチンコ用 - EMBED専用版（koreaMode常時有効） -->
-    <script src="/play_embed/js/view_auth_pachi_embed.js?ts=<?= $timestamp ?>"></script>
+    <!-- パチンコ用 -->
+    <script src="/data/play_v2/js/view_auth_pachi.js?ts=<?= $timestamp ?>"></script>
     <?php endif; ?>
 
     <!-- 埋め込み専用JS -->
-    <script src="/play_embed/js/embed_player.js?ts=<?= $timestamp ?>"></script>
+    <script src="/data/play_embed/js/embed_player.js?ts=<?= $timestamp ?>"></script>
 
     <script>
         // モーダル表示関数

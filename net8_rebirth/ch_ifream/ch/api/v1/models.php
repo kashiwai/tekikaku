@@ -125,7 +125,7 @@ try {
 
     // 画像のベースURL
     $baseUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'mgg-webservice-production.up.railway.app');
-    $imageBasePath = '/img/model/';
+    $imageBasePath = '/data/img/model/';
 
     // カテゴリー変換
     $categoryMap = [

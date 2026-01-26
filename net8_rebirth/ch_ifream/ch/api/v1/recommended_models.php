@@ -152,7 +152,7 @@ try {
                 $thumbnail = $model['thumbnail'];
             } else {
                 // 相対パスの場合はプレフィックス追加
-                $thumbnail = '/img/model/' . $model['thumbnail'];
+                $thumbnail = '/data/img/model/' . $model['thumbnail'];
             }
         }
 
