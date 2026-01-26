@@ -744,25 +744,18 @@ try {
         }
     }
 
-    // 成功レスポンス（通貨に応じて異なるURLを返す）
+    // 成功レスポンス（iframe埋め込み統一）
+    // 動的ドメイン取得（ifreamnet8-development または mgg-webservice-production）
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'ifreamnet8-development.up.railway.app';
+    $baseUrl = "{$protocol}://{$host}";
 
-    // 中国側（CNY, USD, TWD）: play_v2（通貨対応済み）
-    // 韓国側（JPY or なし）: play_embed（従来通り）
-    $useCurrencyMode = in_array($currency, ['CNY', 'USD', 'TWD']);
+    // すべての通貨で play_embed を使用（iframe埋め込み対応）
+    $playEmbedUrl = "/data/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&lang={$lang}&currency={$currency}";
+    $gameUrl = "{$baseUrl}{$playEmbedUrl}";
+    $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため（非推奨）
 
-    if ($useCurrencyMode) {
-        // 中国側 → play_v2（通貨対応）
-        $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}";
-        $gameUrl = "https://mgg-webservice-production.up.railway.app{$playUrl}";
-        $playEmbedUrl = null; // 使用しない
-        error_log("✅ Currency mode ({$currency}): Using play_v2");
-    } else {
-        // 韓国側 → play_embed（従来通り）
-        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}";
-        $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}";
-        $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため
-        error_log("✅ Legacy mode (JPY): Using play_embed");
-    }
+    error_log("✅ iframe embed mode - Currency: {$currency}, Lang: {$lang}, URL: {$gameUrl}");
 
     $response = [
         'success' => true,
@@ -778,10 +771,10 @@ try {
         ],
         'signaling' => $signalingInfo,
         'camera' => $cameraInfo,
-        'playUrl' => $playUrl, // 相対パス
-        'playEmbedUrl' => $playEmbedUrl, // play_embed用（韓国側のみ）
+        'playUrl' => $playUrl, // 相対パス（非推奨）
+        'playEmbedUrl' => $playEmbedUrl, // play_embed用（推奨）
         'gameUrl' => $gameUrl, // 絶対URL（推奨）
-        'mode' => $useCurrencyMode ? 'currency' : 'legacy', // デバッグ用
+        'mode' => 'iframe_embed', // iframe埋め込みモード
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 
