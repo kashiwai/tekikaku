@@ -56,10 +56,10 @@ COPY apache-mpm-fix.conf /etc/apache2/conf-available/mpm-fix.conf
 RUN a2enconf mpm-fix
 
 # カスタムPHP設定
-COPY ch/net8/docker/web/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY config/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Apacheカスタム設定
-COPY ch/net8/docker/web/apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # アプリケーションファイルをコピー（/ch/ iframe対応版）
 COPY ch /var/www/html
