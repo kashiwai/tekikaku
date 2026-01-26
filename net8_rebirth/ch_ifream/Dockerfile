@@ -65,20 +65,20 @@ COPY config/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY ch /var/www/html/ch
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
-WORKDIR /var/www/html
+WORKDIR /var/www/html/ch
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # 画像アップロード用ディレクトリ作成
-RUN mkdir -p /var/www/html/data/img/model \
-    && mkdir -p /var/www/html/data/uploads \
-    && mkdir -p /var/www/html/content/images/notice
+RUN mkdir -p /var/www/html/ch/data/img/model \
+    && mkdir -p /var/www/html/ch/data/uploads \
+    && mkdir -p /var/www/html/ch/content/images/notice
 
 # 権限設定
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 777 /var/www/html/data/img/model \
-    && chmod -R 777 /var/www/html/data/uploads \
-    && chmod -R 777 /var/www/html/content/images/notice
+RUN chown -R www-data:www-data /var/www/html/ch \
+    && chmod -R 755 /var/www/html/ch \
+    && chmod -R 777 /var/www/html/ch/data/img/model \
+    && chmod -R 777 /var/www/html/ch/data/uploads \
+    && chmod -R 777 /var/www/html/ch/content/images/notice
 
 # カスタムエントリポイントをコピー（起動時にMPMクリーンアップ）
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
