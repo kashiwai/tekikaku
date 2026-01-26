@@ -74,14 +74,20 @@ $currency = normalizeCurrency($input['currency'] ?? 'JPY'); // 通貨対応: JPY
 $callbackUrl = $input['callbackUrl'] ?? null; // コールバック先URL（HTTPS必須、オプション）
 $callbackSecret = $input['callbackSecret'] ?? null; // Webhook署名検証用秘密鍵（オプション）
 
-// コールバックURLバリデーション（URLが指定されている場合はHTTPS必須）
-if ($callbackUrl && strpos($callbackUrl, 'https://') !== 0) {
-    http_response_code(400);
-    echo json_encode([
-        'error' => 'INVALID_CALLBACK_URL',
-        'message' => 'Callback URL must use HTTPS protocol'
-    ]);
-    exit;
+// コールバックURLバリデーション（本番環境ではHTTPS必須、localhost HTTPは許可）
+if ($callbackUrl) {
+    $isHttps = strpos($callbackUrl, 'https://') === 0;
+    $isLocalhost = strpos($callbackUrl, 'http://localhost') === 0 || strpos($callbackUrl, 'http://127.0.0.1') === 0;
+
+    // HTTPS または localhost HTTP を許可
+    if (!$isHttps && !$isLocalhost) {
+        http_response_code(400);
+        echo json_encode([
+            'error' => 'INVALID_CALLBACK_URL',
+            'message' => 'Callback URL must use HTTPS protocol (or HTTP localhost for development)'
+        ]);
+        exit;
+    }
 }
 
 // コールバックURLがある場合は秘密鍵も必須
@@ -300,7 +306,10 @@ try {
 
     if ($partnerUserId && $apiKeyId) {
         // ユーザーを取得または作成（mst_memberと紐づけ）
-        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId);
+        // ★ 修正: initialPointsを初期残高として渡す（500pt→1000pt問題対応）
+        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId, [
+            'initialBalance' => $initialPoints
+        ]);
         $userId = $user['id'];
         $memberNo = $user['member_no']; // mst_member.member_noを取得
 
