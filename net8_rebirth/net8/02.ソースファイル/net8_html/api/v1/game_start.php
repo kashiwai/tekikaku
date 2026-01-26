@@ -798,6 +798,45 @@ try {
         'mock' => ($environment === 'test' || $environment === 'staging')
     ];
 
+    // game.started コールバック送信（ポイント投入通知）
+    if ($callbackUrl && $callbackSecret) {
+        error_log("📤 Sending game.started callback to: {$callbackUrl}");
+
+        // セッション情報を取得（コールバック用）
+        $sessionData = [
+            'session_id' => $sessionId,
+            'partner_user_id' => $partnerUserId,
+            'model_cd' => $modelId,
+            'machine_no' => $machineNo,
+            'initial_balance' => $initialPoints,
+            'currency' => $currency
+        ];
+
+        $callbackData = buildCallbackData($sessionData, [
+            'sessionId' => $sessionId,
+            'userId' => $partnerUserId,
+            'initialPoints' => $initialPoints,
+            'modelId' => $modelId,
+            'machineNo' => $machineNo,
+            'startedAt' => date('Y-m-d H:i:s'),
+            'currency' => $currency
+        ]);
+
+        $callbackResult = sendRealtimeCallback(
+            $callbackUrl,
+            $callbackSecret,
+            'game.started',
+            $callbackData,
+            3 // リトライ3回
+        );
+
+        if ($callbackResult['success']) {
+            error_log("✅ game.started callback succeeded");
+        } else {
+            error_log("⚠️ game.started callback failed: " . ($callbackResult['error'] ?? 'unknown'));
+        }
+    }
+
     // コールバック情報を追加（韓国側が確認できるように）
     if ($callbackUrl) {
         $response['callback'] = [
