@@ -746,7 +746,8 @@ try {
 
     // 成功レスポンス（iframe埋め込み統一）
     // 動的ドメイン取得（ifreamnet8-development または mgg-webservice-production）
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    // Railwayはリバースプロキシの後ろなので常にhttps
+    $protocol = 'https';
     $host = $_SERVER['HTTP_HOST'] ?? 'ifreamnet8-development.up.railway.app';
     $baseUrl = "{$protocol}://{$host}";
 
