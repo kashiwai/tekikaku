@@ -753,7 +753,15 @@ try {
 
     // すべての通貨で play_embed を使用（iframe埋め込み対応）
     // DocumentRoot が /var/www/html/ch/data なので /data/ プレフィックス不要
-    $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&lang={$lang}&currency={$currency}";
+    // カメラpeerIDをURLパラメータとして追加（WebRTC接続に必須）
+    $cameraIdParam = '';
+    if ($cameraInfo && isset($cameraInfo['peerId'])) {
+        $cameraIdParam = "&cameraId=" . urlencode($cameraInfo['peerId']);
+    } elseif ($environment === 'test' || $environment === 'staging') {
+        // モック環境用のテストcameraId
+        $cameraIdParam = "&cameraId=test_mock_camera_9999";
+    }
+    $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&lang={$lang}&currency={$currency}{$cameraIdParam}";
     $gameUrl = "{$baseUrl}{$playEmbedUrl}";
     $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため（非推奨）
 
