@@ -306,12 +306,10 @@ try {
 
     if ($partnerUserId && $apiKeyId) {
         // ユーザーを取得または作成（mst_memberと紐づけ）
-        // ★ 修正: initialPoints > 0 の場合のみ初期残高として渡す（0の場合はデフォルト10000pt）
-        $userData = [];
-        if ($initialPoints > 0) {
-            $userData['initialBalance'] = $initialPoints;
-        }
-        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData);
+        // ★ 修正: initialPointsを初期残高として渡す
+        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId, [
+            'initialBalance' => $initialPoints
+        ]);
         $userId = $user['id'];
         $memberNo = $user['member_no']; // mst_member.member_noを取得
 
@@ -769,12 +767,11 @@ try {
         error_log("✅ Currency mode ({$currency}): Using play_v2");
     } else {
         // 韓国側 → play_embed（従来通り）
-        // ★ 修正: initialPointsをURLパラメータとして渡す（0の場合はデフォルト10000pt）
-        $pointsToPass = $initialPoints > 0 ? $initialPoints : 10000;
-        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&points={$pointsToPass}";
+        // ★ 修正: initialPointsをURLパラメータとして渡す（500pt→1000pt問題の根本原因対応）
+        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&points={$initialPoints}";
         $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}";
         $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため
-        error_log("✅ Legacy mode (JPY): Using play_embed with points={$pointsToPass} (initial={$initialPoints})");
+        error_log("✅ Legacy mode (JPY): Using play_embed with initialPoints={$initialPoints}");
     }
 
     $response = [
