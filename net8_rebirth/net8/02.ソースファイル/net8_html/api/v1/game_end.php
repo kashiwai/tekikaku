@@ -253,11 +253,17 @@ try {
             'session_id' => $sessionId
         ]);
 
-        // ポイント払い出し（勝利時・精算時）/ ポイント減算（損失時）
-        $newBalance = null;
+        // 韓国側で残高管理をしているため、最終残高を計算してコールバックで返す
+        // 計算: 初期残高 - 総ベット額 + 総勝利額
+        $initialBalance = $session['initial_balance'] ?? 0;
+        $finalBalance = $initialBalance - $totalBets + $totalWins;
+        error_log("💰 Final balance calculation: {$initialBalance} - {$totalBets} + {$totalWins} = {$finalBalance}");
+
+        $newBalance = $finalBalance;
         $transaction = null;
 
-        if ($session['user_id'] && $pointsWon != 0) {
+        // Net8側では残高更新をスキップ（韓国側で管理）
+        if (false && $session['user_id'] && $pointsWon != 0) {
             // 残高を取得（FOR UPDATE でロック）
             $stmt = $pdo->prepare("
                 SELECT balance FROM user_balances WHERE user_id = :user_id FOR UPDATE
@@ -534,11 +540,15 @@ try {
         if ($session['callback_url'] && $session['callback_secret']) {
             error_log("📤 Callback configured: {$session['callback_url']}");
 
-            // コールバックデータ構築
+            // コールバックデータ構築（韓国側の残高管理用）
             $callbackData = buildCallbackData($session, [
                 'memberNo' => $memberNo,
                 'pointsWon' => $pointsWon,
                 'newBalance' => $newBalance,
+                'finalBalance' => $finalBalance, // 最終残高（initial_balance - totalBets + totalWins）
+                'initialBalance' => $initialBalance, // 開始時の残高
+                'totalBets' => $totalBets, // 累計ベット額
+                'totalWins' => $totalWins, // 累計勝利額
                 'result' => $result,
                 'playDuration' => $playDuration,
                 'endedAt' => date('Y-m-d H:i:s'),

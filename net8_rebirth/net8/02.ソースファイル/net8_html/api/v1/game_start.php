@@ -306,41 +306,14 @@ try {
 
     if ($partnerUserId && $apiKeyId) {
         // ユーザーを取得または作成（mst_memberと紐づけ）
-        // ★ 修正: initialPointsを初期残高として渡す
-        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId, [
-            'initialBalance' => $initialPoints
-        ]);
+        // ★ 韓国側で残高管理をしているため、Net8側ではデフォルト値を使用
+        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId);
         $userId = $user['id'];
         $memberNo = $user['member_no']; // mst_member.member_noを取得
 
-        // 韓国側からのポイント処理（Case 1: balanceMode対応）
-        if ($initialPoints > 0) {
-            if ($balanceMode === 'set') {
-                // setモード: 既存残高を無視して新しい値を設定
-                error_log("💰 Setting balance (set mode): user_id={$userId}, amount={$initialPoints}, currency={$currency}");
-                $stmt = $pdo->prepare("
-                    INSERT INTO user_balances (user_id, balance, currency, created_at, updated_at)
-                    VALUES (?, ?, ?, NOW(), NOW())
-                    ON DUPLICATE KEY UPDATE balance = ?, currency = ?, updated_at = NOW()
-                ");
-                $stmt->execute([$userId, $initialPoints, $currency, $initialPoints, $currency]);
-
-                // mst_member.point も同期
-                $stmt = $pdo->prepare("UPDATE mst_member SET point = ? WHERE member_no = ?");
-                $stmt->execute([$initialPoints, $memberNo]);
-
-                error_log("✅ Balance set to {$initialPoints} (set mode)");
-            } else {
-                // addモード: 既存残高に加算（従来の動作）
-                error_log("💰 Depositing Korea points (add mode): user_id={$userId}, amount={$initialPoints}");
-                $depositResult = depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
-                // depositPointsでmember_noが作成/更新された場合、それを使用
-                if ($depositResult['member_no']) {
-                    $memberNo = $depositResult['member_no'];
-                    error_log("✅ Using member_no from deposit: {$memberNo}");
-                }
-            }
-        }
+        // 韓国側で残高管理をしているため、Net8側では残高を更新しない
+        // initialPointsはゲームセッション用の一時ポイントとしてのみ使用
+        error_log("💰 Korea manages balance. Using initialPoints={$initialPoints} for game session only.");
 
         // 残高チェック
         $userBalance = getUserBalance($pdo, $userId);
