@@ -371,12 +371,13 @@ try {
 
     // 1. 機種情報を取得（多言語対応）
     // 言語に応じた機種名カラムを決定（PHP 7.4互換）
+    // 注: model_name_ko, model_name_en, model_name_zh カラムが存在しない場合はmodel_name_jaにフォールバック
     if ($lang === 'ko') {
-        $modelNameColumn = 'COALESCE(model_name_ko, model_name_ja, model_name)';
+        $modelNameColumn = 'COALESCE(model_name_ja, model_name)'; // model_name_ko未実装
     } elseif ($lang === 'en') {
-        $modelNameColumn = 'COALESCE(model_name_en, model_name_ja, model_name)';
+        $modelNameColumn = 'COALESCE(model_name_ja, model_name)'; // model_name_en未実装
     } elseif ($lang === 'zh') {
-        $modelNameColumn = 'COALESCE(model_name_zh, model_name_ja, model_name)';
+        $modelNameColumn = 'COALESCE(model_name_ja, model_name)'; // model_name_zh未実装
     } else {
         $modelNameColumn = 'COALESCE(model_name_ja, model_name)';
     }
