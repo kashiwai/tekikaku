@@ -62,7 +62,7 @@ COPY config/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # アプリケーションファイルをコピー（/ch/ iframe対応版）
-COPY ch /var/www/html
+COPY ch /var/www/html/ch
 
 # 依存関係インストール（Google Cloud Storage PHP SDK）
 WORKDIR /var/www/html
