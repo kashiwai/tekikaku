@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 応募履歴</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">応募履歴</h1>
+		<hr>
+		<div class="d-flex w-100 justify-content-end">
+			<div class="input-group input-group-sm w-auto mb-3">
+				<div class="input-group-prepend">
+					<label class="input-group-text" for="listType">種別</label>
+				</div>
+				<select class="custom-select" id="listType" name="TYPE">
+					{%SEL_TYPE%}
+				</select>
+				<div class="input-group-append">
+					<button id="typeselect" class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+				</div>
+			</div>
+		</div>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				応募履歴はありません。
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>商品名</th>
+					<th>{%CURRENCY_3%}</th>
+					<th>応募結果</th>
+					<th>応募日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="商品名" class="text-center">{%GOODS_NAME%}</td>
+					<td aria-label="コイン" class="text-right">{%DRAW_POINT%} {%CURRENCY_3%}</td>
+					<td aria-label="応募結果" class="text-center">{%RESULT%}</td>
+					<td aria-label="当選日時" class="text-center">{%REQUEST_DT%}</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}apply_history.html"-->
+	
+	</body>
+</html>

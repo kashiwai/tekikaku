@@ -1,0 +1,237 @@
+<?php
+/*
+ * camera_settings.php
+ *
+ * (C)SmartRams Co.,Ltd. 2025 All Rights Reserved．
+ *
+ * カメラ・台割り当て設定管理
+ *
+ * カメラとマシン（台）の紐付け設定を行う
+ *
+ * @package
+ * @author   System
+ * @version  1.0
+ * @since    2025/11/06 初版作成
+ */
+
+// エラー表示を有効化（デバッグ用）
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// インクルード
+require_once('../../_etc/require_files_admin.php');
+define("PRE_HTML", basename(get_self(), ".php"));
+
+// メイン処理
+main();
+
+/**
+ * メイン処理
+ */
+function main() {
+	try {
+		$template = new TemplateAdmin();
+
+		// パラメータ取得
+		$mode = isset($_GET['mode']) ? $_GET['mode'] : 'list';
+		$machine_no = isset($_GET['machine_no']) ? intval($_GET['machine_no']) : 0;
+
+		switch ($mode) {
+			case 'list':
+				DispList($template);
+				break;
+			case 'assign':
+				AssignCamera($template);
+				DispList($template);
+				break;
+			case 'unassign':
+				UnassignCamera($template, $machine_no);
+				DispList($template);
+				break;
+			default:
+				DispList($template);
+		}
+
+	} catch (Exception $e) {
+		echo '<h1>エラーが発生しました</h1>';
+		echo '<p>' . htmlspecialchars($e->getMessage()) . '</p>';
+		exit;
+	}
+}
+
+/**
+ * カメラ割り当て一覧表示
+ */
+function DispList($template) {
+	// 全台一覧取得（カメラ割り当て情報含む）
+	$sql = "
+		SELECT
+			dm.machine_no,
+			dm.machine_cd,
+			dm.camera_no,
+			dm.machine_status,
+			dm.release_date,
+			mm.model_name,
+			mm.model_cd,
+			mm.category,
+			mc.camera_name,
+			mc.camera_mac,
+			mcl.state as camera_state,
+			mcl.ip_address as camera_ip
+		FROM dat_machine dm
+		INNER JOIN mst_model mm ON dm.model_no = mm.model_no AND mm.del_flg = 0
+		LEFT JOIN mst_camera mc ON dm.camera_no = mc.camera_no AND mc.del_flg = 0
+		LEFT JOIN mst_cameralist mcl ON mc.camera_mac = mcl.mac_address
+		WHERE dm.del_flg = 0
+		ORDER BY dm.machine_no ASC
+	";
+
+	$result = $template->DB->query($sql);
+	$machine_list = [];
+	$assigned_count = 0;
+	$unassigned_count = 0;
+
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		$machine_list[] = $row;
+
+		if ($row['camera_no']) {
+			$assigned_count++;
+		} else {
+			$unassigned_count++;
+		}
+	}
+
+	// カメラ一覧取得（割り当て用）
+	$camera_sql = "
+		SELECT
+			camera_no,
+			camera_name,
+			camera_mac
+		FROM mst_camera
+		WHERE del_flg = 0
+		ORDER BY camera_no ASC
+	";
+
+	$camera_result = $template->DB->query($camera_sql);
+	$camera_list = [];
+
+	while ($row = $camera_result->fetch(PDO::FETCH_ASSOC)) {
+		$camera_list[] = $row;
+	}
+
+	// テンプレート表示（SmartTemplate API使用）
+	$template->open(PRE_HTML . ".html");
+	$template->assignCommon();
+
+	$template->assign('machine_count', count($machine_list));
+	$template->assign('assigned_count', $assigned_count);
+	$template->assign('unassigned_count', $unassigned_count);
+
+	// マシンリストのループ
+	if (count($machine_list) > 0) {
+		$template->loop_start('MACHINE');
+		foreach ($machine_list as $machine) {
+			$template->assign('machine_no', $machine['machine_no']);
+			$template->assign('machine_cd', $machine['machine_cd']);
+			$template->assign('model_name', $machine['model_name']);
+			$template->assign('model_cd', $machine['model_cd']);
+			$template->assign('camera_no', $machine['camera_no'] ?? 0);
+			$template->assign('camera_name', $machine['camera_name'] ?? '未割当');
+			$template->assign('camera_mac', $machine['camera_mac'] ?? '');
+			$template->assign('camera_ip', $machine['camera_ip'] ?? '-');
+			$template->assign('camera_state', $machine['camera_state'] ?? 0);
+
+			// カメラ割り当て状態
+			$template->if_enable('has_camera', !empty($machine['camera_no']));
+
+			// カメラオンライン状態
+			$template->if_enable('state_online', isset($machine['camera_state']) && $machine['camera_state'] == 1);
+			$template->if_enable('state_offline', !isset($machine['camera_state']) || $machine['camera_state'] != 1);
+
+			// カメラリストのループ（割り当て用セレクトボックス） - 各マシンごとに展開
+			if (count($camera_list) > 0) {
+				$template->loop_start('CAMERA');
+				foreach ($camera_list as $camera) {
+					$template->assign('camera_no', $camera['camera_no']);
+					$template->assign('camera_name', $camera['camera_name']);
+					$template->assign('camera_mac', $camera['camera_mac']);
+					$template->loop_next();
+				}
+				$template->loop_end('CAMERA');
+			}
+
+			$template->loop_next();
+		}
+		$template->loop_end('MACHINE');
+		$template->if_enable('HAS_MACHINES', true);
+	} else {
+		$template->if_enable('HAS_MACHINES', false);
+	}
+
+	$template->flush();
+}
+
+/**
+ * カメラ割り当て
+ */
+function AssignCamera($template) {
+	$machine_no = isset($_POST['machine_no']) ? intval($_POST['machine_no']) : 0;
+	$camera_no = isset($_POST['camera_no']) ? intval($_POST['camera_no']) : 0;
+
+	if ($machine_no <= 0) {
+		throw new Exception('台番号が指定されていません');
+	}
+
+	// camera_no が 0 の場合は割り当て解除
+	if ($camera_no == 0) {
+		$camera_no = null;
+		$mac_address = null;
+	} else {
+		// カメラのMACアドレスを取得
+		$camera_sql = "SELECT camera_mac FROM mst_camera WHERE camera_no = :camera_no AND del_flg = 0";
+		$stmt = $template->DB->prepare($camera_sql);
+		$stmt->execute(['camera_no' => $camera_no]);
+		$camera = $stmt->fetch(PDO::FETCH_ASSOC);
+		$mac_address = $camera ? $camera['camera_mac'] : null;
+	}
+
+	// マシンのcamera_noとmac_addressを更新（MACアドレスを同期）
+	$sql = "
+		UPDATE dat_machine SET
+			camera_no = :camera_no,
+			mac_address = :mac_address,
+			upd_no = 1,
+			upd_dt = NOW()
+		WHERE machine_no = :machine_no
+	";
+
+	$stmt = $template->DB->prepare($sql);
+	$stmt->execute([
+		'machine_no' => $machine_no,
+		'camera_no' => $camera_no,
+		'mac_address' => $mac_address
+	]);
+}
+
+/**
+ * カメラ割り当て解除
+ */
+function UnassignCamera($template, $machine_no) {
+	if ($machine_no <= 0) {
+		throw new Exception('台番号が指定されていません');
+	}
+
+	// カメラ割り当て解除時はMACアドレスもクリア
+	$sql = "
+		UPDATE dat_machine SET
+			camera_no = NULL,
+			mac_address = NULL,
+			upd_no = 1,
+			upd_dt = NOW()
+		WHERE machine_no = :machine_no
+	";
+
+	$stmt = $template->DB->prepare($sql);
+	$stmt->execute(['machine_no' => $machine_no]);
+}

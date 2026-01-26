@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_レイヤー_2" data-name="レイヤー 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 18.96 31.28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f4f4f4;
+      }
+
+      .cls-2 {
+        fill: url(#_名称未設定グラデーション_19);
+      }
+    </style>
+    <linearGradient id="_名称未設定グラデーション_19" data-name="名称未設定グラデーション 19" x1="10.03" y1="-612.61" x2="10.03" y2="-631.66" gradientTransform="translate(0 -612.61) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#808181"/>
+      <stop offset="1" stop-color="#5b5a5b"/>
+    </linearGradient>
+  </defs>
+  <g id="_レイヤー_1-2" data-name="レイヤー 1">
+    <path class="cls-1" d="M3.82,30.63v.65H.64v-.65h3.19ZM.8,25.26v6.02h-.8v-6.02h.8ZM3.4,27.85v.65H.64v-.65h2.77ZM3.78,25.26v.65H.64v-.65h3.15ZM5.33,25.26l1.45,2.31,1.45-2.31h.93l-1.9,2.98,1.95,3.04h-.94l-1.48-2.35-1.49,2.35h-.94l1.95-3.04-1.9-2.98h.93ZM10.98,25.26v6.02h-.8v-6.02h.8ZM14.53,25.26v6.02h-.78v-6.02h.78ZM16.46,25.26v.65h-4.65v-.65h4.65Z"/>
+    <path class="cls-2" d="M15.39,11.91v-2.38h-5.95v-2.38h5.95v-2.38l3.57,3.57-3.57,3.57ZM14.2,10.72v4.76h-5.95v3.57l-7.14-3.57V0h13.1v5.95h-1.19V1.19H3.48l4.76,2.38v10.72h4.76v-3.57h1.19Z"/>
+  </g>
+</svg>

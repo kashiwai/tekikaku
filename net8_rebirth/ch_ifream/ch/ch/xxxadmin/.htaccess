@@ -1,0 +1,24 @@
+# NET8 Admin Panel - Static Files Configuration
+
+# CSS and JS files MIME type fix
+<FilesMatch "\.(css)$">
+    Header set Content-Type "text/css; charset=utf-8"
+</FilesMatch>
+
+<FilesMatch "\.(js)$">
+    Header set Content-Type "application/javascript; charset=utf-8"
+</FilesMatch>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Enable compression for CSS and JS
+<IfModule mod_deflate.c>
+    <FilesMatch "\.(css|js)$">
+        SetOutputFilter DEFLATE
+    </FilesMatch>
+</IfModule>

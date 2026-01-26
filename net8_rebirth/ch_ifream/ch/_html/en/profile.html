@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Profile Confirmation / Setting</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">Profile Confirmation / Setting</h1>
+		
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="regist">
+			
+			<div class="input-form">
+				<div class="form-group row">
+					<label for="invitationCode" class="col-sm-3 col-form-label text-secondary">Invitation Code</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" name="INV_CODE" id="invitationCode" value="{%INV_CODE%}" placeholder="1234567890" readonly>
+					</div>
+				</div>
+				
+				<div class="alert alert-secondary">
+					<small class="text-muted">
+						Invitation code is a code used to invite a friend.
+						When the invited friend enters your invitation code and registers for membership, both you and your friend will receive {%CURRENCY_1%} as a gift.
+					</small>
+				</div>
+			</div>
+			<hr>
+			<div class="input-form">
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">Full Name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="name" value="{%DISP_NAME%}" placeholder="None" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">Date of Birth</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="birthday" value="{%DISP_BIRTHDAY%}" placeholder="None" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">Sex</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="sex" value="{%DISP_SEX%}" placeholder="None" readonly>
+					</div>
+				</div>
+				
+				<!--if:{PROFILE_EDIT}-->
+				<div class="alert alert-secondary text-center text-muted">
+					<small>Profile not being set up</small>
+				</div>
+				<!--/if:{PROFILE_EDIT}-->
+				
+			</div>
+			
+			<hr>
+			<div class="input-form">
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label text-secondary">Receive the information on the Setting 6 events and the new machine introduction.</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control-plaintext" id="magazine" value="{%DISP_MAGAZINE%}" placeholder="None" readonly>
+					</div>
+				</div>
+			</div>
+			
+		</form>
+		<hr>
+		<div class="text-center">
+			<a href="profile_detail.php" class="btn btn-primary">Set up your profile</a>
+		</div>
+		
+		<hr>
+		<div class="text-center mb-5">
+			<a href="leave.php"  class="btn btn-danger">Procedures to Cancel the Membership</a>
+		</div>
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	
+	</body>
+</html>

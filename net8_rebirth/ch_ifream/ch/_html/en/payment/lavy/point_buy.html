@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Purchase of {%CURRENCY_1%}</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">Purchase of {%CURRENCY_1%}</h1>
+		<hr>
+		<div class="alert alert-primary now-point">
+			Your Currently Owned {%CURRENCY_1%} : <strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
+		</div>
+		<div id="myDraw" class="alert alert-primary now-point" style="display:none;">
+			Your Currently Owned {%CURRENCY_3%} : <strong>{%MILE%}</strong> <small>{%CURRENCY_3%}</small>
+		</div>
+
+		<hr>
+
+		<form method="post" action="{%SELF%}?M=conf" id="MAINFORM" name="MAINFORM">
+			<input type="hidden" name="buytype" value="">
+			<input type="hidden" name="buyprice" value="">
+
+			<div id="panel-buy-type">
+				<div class="d-flex flex-column panel-buy-point">
+					<p>Please select the purchase method.</p>
+					<div class="card bg-light mb-3" onClick="setBuyType(12);">
+						<div class="card-body">
+							<h4 class="card-title"><i class="far fa-credit-card"></i> Credit Card</h4>
+							<hr>
+							<div class="card-text">
+								<p>Accepted Credit Cards</p>
+								<i class="fab fa-cc-visa"></i>
+								<i class="fab fa-cc-mastercard"></i>
+								<i class="fab fa-cc-jcb"></i>
+								<i class="fab fa-cc-diners-club"></i>
+								<i class="fab fa-cc-amex"></i>
+							</div>
+						</div>
+					</div>
+					<div class="card bg-light mb-3" onClick="setBuyType(13);">
+						<div class="card-body">
+							<h4 class="card-title"><i class="fas fa-store-alt"></i> Convenience Store Payment</h4>
+							<hr>
+							<div class="card-text">
+								<p>Accepted Convenience Stores</p>
+							</div>
+						</div>
+					</div>
+					<div class="card bg-light mb-3" onClick="setBuyType(11);">
+						<div class="card-body">
+							<h4 class="card-title"><i class="fas fa-coins"></i> Exchange of {%CURRENCY_3%}</h4>
+							<hr>
+							<div class="card-text">
+								Your Currently Owned {%CURRENCY_3%} : {%MILE%} {%CURRENCY_3%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="panel-buy-price" style="display:none;">
+				<div class="d-flex flex-column panel-buy-point">
+					<p>Please select the purchase price.</p>
+					<!--loop:{LIST}-->
+					<div class="priceBlock" id="type_{%PURCHASE_TYPE%}">
+						<!--loop:{VALUELIST}-->
+						<div class="card bg-light mb-3" data-price="{%PURCHASE_AMOUNT%}" onClick="buyPoint({%PURCHASE_AMOUNT%}, this);">
+							<div class="card-body">
+								<h4 class="card-title m-0"><i class="fas fa-money-bill"></i> {%DISP_PURCHASE_AMOUNT%} {%CURRENCY%} <small>→ {%DISP_PURCHASE_POINT%} {%CURRENCY_1%}</small></h4>
+							</div>
+						</div>
+						<!--/loop:{VALUELIST}-->
+					</div>
+					<!--/loop:{LIST}-->
+					<div class="mt-4">
+						<button type="button" id="back-buy" class="btn btn-primary btn-block">Return</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<script>
+		// init
+		var _myDraw = Number( $('#myDraw strong').html().replace(/,/, '') );
+		$('#type_11 .card').each( function(){
+			var _price = $(this).data('price');
+			if( _price > _myDraw){
+				$(this).addClass('disabled');
+			}
+		});
+		
+		$('#back-buy').on('click', function(){
+			$('#panel-buy-price').hide();
+			$('#panel-buy-type').show();
+			$('.priceBlock').hide();
+			$('#myDraw').hide();
+		});
+
+		function setBuyType(buyType) {
+			// 
+			var _target = "#type_" + buyType;
+			$('.priceBlock').hide();
+			$(_target).show();
+			//
+			if( buyType == 11){
+				$('#myDraw').show();
+			}else{
+				$('#myDraw').hide();
+			}
+			// main
+			$('#panel-buy-type').hide();
+			$('#panel-buy-price').show();
+			// 支払い方法セット
+			$('input[name="buytype"]').val([buyType]);
+		}
+
+		function buyPoint(price, thisobj) {
+			if( $(thisobj).hasClass('disabled')){
+				chkAlert("{%U1801%}");
+				return false;
+			}
+			
+			// confirm
+			$('input[name="buyprice"]').val([price]);
+			$('#MAINFORM').submit();
+			/*
+			swal({
+				title: 'ポイント購入',
+				text: '確認画面に進む',
+				type: 'question',
+				showCancelButton: true
+			}).then(function(result) {
+				$('input[name="buyprice"]').val([price]);
+				// submit
+				$('#MAINFORM').submit();
+			}, function(dismiss) {
+			});
+			*/
+			
+		}
+
+	</script>
+
+	</body>
+</html>

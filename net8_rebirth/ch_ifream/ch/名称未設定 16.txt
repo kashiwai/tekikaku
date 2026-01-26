@@ -1,0 +1,4 @@
+API MD　　MSXR6W_NA_NA
+API　Username　medicalsandbox
+API KEY PASS　　pUidKxYgUQzrya
+Webhook Secret keyqd1NxUxy053Mv4

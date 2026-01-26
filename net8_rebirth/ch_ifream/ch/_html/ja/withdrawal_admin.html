@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出金申請管理 - {%SITE_TITLE%}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 12px 24px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filter-tab:hover {
+            background: #dee2e6;
+        }
+
+        .filter-tab.active {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .total-count {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .total-count strong {
+            color: #007bff;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 2px;
+            transition: all 0.3s;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #218838;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+        }
+
+        .btn-complete {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-complete:hover {
+            background: #138496;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-link {
+            padding: 8px 16px;
+            background: #e9ecef;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .page-link:hover {
+            background: #dee2e6;
+        }
+
+        .page-link.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 出金申請管理</h1>
+
+        <!-- フィルタータブ -->
+        <div class="filter-tabs">
+            <a href="withdrawal_admin.php?STATUS=0" class="filter-tab {%STATUS_FILTER%}|0|active">
+                申請中
+            </a>
+            <a href="withdrawal_admin.php?STATUS=1" class="filter-tab {%STATUS_FILTER%}|1|active">
+                承認済
+            </a>
+            <a href="withdrawal_admin.php?STATUS=9" class="filter-tab {%STATUS_FILTER%}|9|active">
+                送金完了
+            </a>
+            <a href="withdrawal_admin.php?STATUS=2" class="filter-tab {%STATUS_FILTER%}|2|active">
+                却下
+            </a>
+        </div>
+
+        <!-- 総件数表示 -->
+        <div class="total-count">
+            全 <strong>{%TOTAL_COUNT%}</strong> 件
+        </div>
+
+        <!-- 出金申請テーブル -->
+        <table>
+            <thead>
+                <tr>
+                    <th>申請番号</th>
+                    <th>申請日時</th>
+                    <th>会員情報</th>
+                    <th class="text-right">出金ポイント</th>
+                    <th class="text-right">出金金額</th>
+                    <th>振込先</th>
+                    <th>ステータス</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%WITHDRAWAL_HTML%}
+            </tbody>
+        </table>
+
+        <!-- ページネーション -->
+        <div class="pagination">
+            {%PAGINATION_HTML%}
+        </div>
+    </div>
+
+    <script>
+        // 承認処理
+        function approveWithdrawal(withdrawalNo) {
+            if (!confirm('この出金申請を承認しますか？')) {
+                return;
+            }
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'withdrawal_admin.php?M=approve';
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'withdrawal_no';
+            input.value = withdrawalNo;
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // 却下処理
+        function rejectWithdrawal(withdrawalNo) {
+            const reason = prompt('却下理由を入力してください:');
+            if (!reason || reason.trim() === '') {
+                alert('却下理由を入力してください');
+                return;
+            }
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'withdrawal_admin.php?M=reject';
+
+            const inputNo = document.createElement('input');
+            inputNo.type = 'hidden';
+            inputNo.name = 'withdrawal_no';
+            inputNo.value = withdrawalNo;
+            form.appendChild(inputNo);
+
+            const inputReason = document.createElement('input');
+            inputReason.type = 'hidden';
+            inputReason.name = 'reject_reason';
+            inputReason.value = reason;
+            form.appendChild(inputReason);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // 送金完了処理
+        function completeWithdrawal(withdrawalNo) {
+            if (!confirm('送金完了としてマークしますか？\n※実際に送金処理を完了してから実行してください。')) {
+                return;
+            }
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'withdrawal_admin.php?M=complete';
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'withdrawal_no';
+            input.value = withdrawalNo;
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+</html>

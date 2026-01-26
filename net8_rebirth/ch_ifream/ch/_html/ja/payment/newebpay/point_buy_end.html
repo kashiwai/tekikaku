@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - {%CURRENCY_1%}購入</title>
+	</head>
+
+	<body>
+	<!--if:{INSIDE}--><!--#include file="inc_navigation.html"--><!--/if:{INSIDE}-->
+	<!--if:{OUTSIDE}--><!--#include file="inc_navigation_simple.html"--><!--/if:{OUTSIDE}-->
+
+	<!-- Page Content -->
+	<div class="container mt-5 mb-5">
+		<h1 class="h3 text-center my-4">{%CURRENCY_1%}購入</h1>
+		<hr>
+		
+		<!--if:{DONE}-->
+		<div class="alert alert-secondary">
+			{%CURRENCY_1%}の購入処理が完了しました。<br>
+		</div>
+		<!--/if:{DONE}-->
+		<!--if:{FAIL}-->
+		<div class="alert alert-danger">
+			{%CURRENCY_1%}の購入処理に失敗しました。[{%ERROR_CODE%}]<br>
+		</div>
+		<!--/if:{FAIL}-->
+
+	</div>
+	<!-- /.container -->
+
+	<!--if:{INSIDE}--><!--#include file="inc_footer.html"--><!--/if:{INSIDE}-->
+	<!--if:{OUTSIDE}--><!--#include file="inc_footer_simple.html"--><!--/if:{OUTSIDE}-->
+	<!--#include file="inc_script.html"-->
+
+	</body>
+</html>

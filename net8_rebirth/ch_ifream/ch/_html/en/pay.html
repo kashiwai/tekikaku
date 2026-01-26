@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Payment History</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">Payment History</h1>
+		<hr>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				There is no payment history.
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>Date and Time of the Purchase</th>
+					<th>Purchase Methods</th>
+					<th>Status</th>
+					<th style="width:120px;">Items</th>
+					<th style="width:120px;">Amount of Money</th>
+					<th>Settled Date and Time</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="Date and Time of the Purchase" class="text-center">{%RECEPT_DT%}</td>
+					<td aria-label="Purchase Methods" class="text-center">{%PURCHASE_TYPE_LABEL%}</td>
+					<td aria-label="Status" class="text-center">{%RESULT_STATUS_LABEL%}</td>
+					<td aria-label="Items" class="text-right">{%POINT%}{%CURRENCY_1%}</td>
+					<td aria-label="Amount of Money" class="text-right">{%AMOUNT%}{%CURRENCY%}</td>
+					<td aria-label="Settled Date and Time" class="text-center">{%PURCHASE_DT%}</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	
+	</body>
+</html>

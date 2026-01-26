@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net8 iframe埋め込みテスト</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .controls input,
+        .controls select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .controls input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .status {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .status-value {
+            color: #333;
+        }
+
+        .iframe-container {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            overflow: hidden;
+            position: relative;
+            min-height: 820px;
+        }
+
+        #gameFrame {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 8px;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #e0e0e0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .loading-subtext {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .log {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #9ca3af;
+        }
+
+        .log-success { color: #48bb78; }
+        .log-error { color: #f56565; }
+        .log-info { color: #4299e1; }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            .controls input {
+                width: 100%;
+            }
+            #gameFrame {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Net8 iFrame埋め込みテスト</h1>
+            <p>中国向けAPI統合テスト - iframe埋め込み動作確認</p>
+
+            <div class="controls">
+                <select id="currency">
+                    <option value="JPY">JPY (日本円)</option>
+                    <option value="CNY" selected>CNY (人民元)</option>
+                    <option value="KRW">KRW (韓国ウォン)</option>
+                    <option value="USD">USD (米ドル)</option>
+                </select>
+
+                <select id="language">
+                    <option value="ja">日本語</option>
+                    <option value="zh" selected>中国語</option>
+                    <option value="ko">韓国語</option>
+                    <option value="en">英語</option>
+                </select>
+
+                <input type="number" id="initialPoints" value="1000" placeholder="初期ポイント" min="0">
+
+                <select id="modelId">
+                    <option value="HOKUTO4GO">北斗の拳 (HOKUTO4GO)</option>
+                    <option value="MILLIONGOD01">ミリオンゴッド</option>
+                    <option value="NANGOKU01">南国育ち</option>
+                    <option value="SLOT-107">秘宝伝</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="startGame()">ゲーム開始</button>
+                <button class="btn btn-success" onclick="reloadFrame()">リロード</button>
+                <button class="btn btn-danger" onclick="clearLog()">ログクリア</button>
+            </div>
+        </div>
+
+        <div class="status" id="status" style="display: none;">
+            <div class="status-item">
+                <span class="status-label">セッションID:</span>
+                <span class="status-value" id="sessionId">-</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">残高:</span>
+                <span class="status-value" id="balance">-</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">通貨:</span>
+                <span class="status-value" id="currencyDisplay">-</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">ゲームURL:</span>
+                <span class="status-value" id="gameUrl">-</span>
+            </div>
+        </div>
+
+        <div class="iframe-container">
+            <div id="loadingOverlay" class="loading-overlay hidden">
+                <div class="spinner"></div>
+                <div class="loading-text">ゲーム準備中...</div>
+                <div class="loading-subtext">しばらくお待ちください</div>
+            </div>
+            <iframe
+                id="gameFrame"
+                src="about:blank"
+                allow="autoplay; fullscreen; camera; microphone"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="log" id="log">
+            <div class="log-entry">
+                <span class="log-time">[システム]</span>
+                <span class="log-info">テストページ準備完了</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://mgg-webservice-production.up.railway.app/api/v1';
+        const API_KEY = 'pk_demo_12345'; // デモAPIキー（本番では差し替え）
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString('ja-JP');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <span class="log-time">[${time}]</span>
+                <span class="log-${type}">${message}</span>
+            `;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function startGame() {
+            const currency = document.getElementById('currency').value;
+            const language = document.getElementById('language').value;
+            const initialPoints = parseInt(document.getElementById('initialPoints').value);
+            const modelId = document.getElementById('modelId').value;
+            const userId = 'test_china_user_' + Date.now();
+
+            // ローディング表示
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.remove('hidden');
+
+            log(`🎮 ゲーム開始リクエスト送信...`, 'info');
+            log(`通貨: ${currency}, 言語: ${language}, ポイント: ${initialPoints}`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/game_start.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        modelId: modelId,
+                        userId: userId,
+                        initialPoints: initialPoints,
+                        currency: currency,
+                        lang: language,
+                        balanceMode: 'add',
+                        consumeImmediately: true
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'API エラー');
+                }
+
+                const data = await response.json();
+
+                log(`✅ ゲーム開始成功`, 'success');
+                log(`セッションID: ${data.sessionId}`, 'success');
+                log(`残高: ${data.balance?.amount || 0} ${data.balance?.currency || currency}`, 'success');
+
+                // ステータス表示
+                document.getElementById('status').style.display = 'block';
+                document.getElementById('sessionId').textContent = data.sessionId;
+                document.getElementById('balance').textContent = `${data.balance?.amount || 0} ${data.balance?.currency || currency}`;
+                document.getElementById('currencyDisplay').textContent = data.balance?.currency || currency;
+                document.getElementById('gameUrl').textContent = data.gameUrl || '-';
+
+                // iframeにゲームURLを設定
+                if (data.gameUrl) {
+                    log(`🎯 ゲームをiframeに読み込み中...`, 'info');
+                    const iframe = document.getElementById('gameFrame');
+
+                    // iframe読み込み完了でローディング非表示
+                    iframe.onload = function() {
+                        setTimeout(() => {
+                            loadingOverlay.classList.add('hidden');
+                            log(`✅ ゲーム画面読み込み完了`, 'success');
+                        }, 1000); // 1秒後に非表示（安全のため）
+                    };
+
+                    iframe.src = data.gameUrl;
+                } else {
+                    loadingOverlay.classList.add('hidden');
+                    log(`⚠️ gameURLが返されませんでした`, 'error');
+                }
+
+            } catch (error) {
+                loadingOverlay.classList.add('hidden');
+                log(`❌ エラー: ${error.message}`, 'error');
+                console.error('Game start error:', error);
+            }
+        }
+
+        function reloadFrame() {
+            log('🔄 iframeをリロード', 'info');
+            const iframe = document.getElementById('gameFrame');
+            iframe.src = iframe.src;
+        }
+
+        function clearLog() {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML = `
+                <div class="log-entry">
+                    <span class="log-time">[システム]</span>
+                    <span class="log-info">ログをクリアしました</span>
+                </div>
+            `;
+        }
+
+        // ページ読み込み時の自動テスト（オプション）
+        // window.onload = () => {
+        //     setTimeout(startGame, 1000);
+        // };
+
+        // iframe内のメッセージをリスン（将来的な拡張用）
+        window.addEventListener('message', (event) => {
+            // セキュリティ: originを確認
+            if (event.origin !== 'https://mgg-webservice-production.up.railway.app') {
+                return;
+            }
+
+            log(`📨 iframeからメッセージ: ${JSON.stringify(event.data)}`, 'info');
+        });
+
+        // iOS対応: タッチイベントのテスト
+        if ('ontouchstart' in window) {
+            log('📱 タッチデバイスを検出（iOS/Android）', 'info');
+        }
+
+        // ブラウザ情報
+        log(`🌐 ブラウザ: ${navigator.userAgent}`, 'info');
+    </script>
+</body>
+</html>

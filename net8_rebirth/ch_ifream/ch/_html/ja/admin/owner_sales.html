@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - オーナー売上詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=csv" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM">
+					<input type="hidden" name="OWNER_NO" value="{%OWNER_NO%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fab fa-fw fa-fort-awesome"></i> オーナー売上詳細</h3>
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>オーナーCD</th>
+									<td>{%OWNER_CD%}</td>
+								</tr>
+								<tr>
+									<th>オーナー名</th>
+									<td>{%OWNER_NAME%}</td>
+								</tr>
+								<tr>
+									<th>総プレイ回数</th>
+									<td>{%TOTAL_PLAY_COUNT%}</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<hr>
+						<!--if:{EXIST_MACHINE}-->
+						<table class="table table-bordered th-center-bg mt-3">
+							<thead>
+								<tr>
+									<th>機　種</th>
+									<th>公開期間</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!--loop:{LIST}-->
+								<tr>
+									<td>[{%DSP_MACHINE_NO%}]&nbsp;{%MODEL_NAME%}</td>
+									<td>
+										{%RELEASE_DATE%} ～ {%END_DATE%}
+									</td>
+								</tr>
+								<!--/loop:{LIST}-->
+							</tbody>
+						</table>
+						<div class="row">
+							<div class="col-8 text-right">
+								<select class="custom-select custom-select-sm" name="CSV_YEAR" style="width:100px;">{%SEL_YEAR%}</select> 年 
+								<select class="custom-select custom-select-sm" name="CSV_MONTH" style="width:100px;">
+									<option value="">全</option>
+									{%SEL_MONTH%}
+								</select> 月分
+							</div>
+							<div class="col-4 text-right">
+								<input type="submit" class="btn btn-primary" value="CSVダウンロード">
+							</div>
+						</div>
+						<!--/if:{EXIST_MACHINE}-->
+						<!--if:{NONE_MACHINE}-->
+						<!--/if:{NONE_MACHINE}-->
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+	</body>
+
+</html>

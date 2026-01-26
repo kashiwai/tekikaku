@@ -1,0 +1,37 @@
+# play_embed/.htaccess
+# 埋め込みプレイヤー用CORS/セキュリティ設定
+
+# CORS設定（外部サイトからのiFrame埋め込みを許可）
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+    Header always set Access-Control-Allow-Credentials "true"
+
+    # X-Frame-Options を削除（iFrame埋め込み許可）
+    Header always unset X-Frame-Options
+
+    # Content-Security-Policy の frame-ancestors を許可
+    # Header always set Content-Security-Policy "frame-ancestors *"
+</IfModule>
+
+# OPTIONSリクエストの処理
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# PHP設定
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# キャッシュ設定
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 hour"
+    ExpiresByType application/javascript "access plus 1 hour"
+    ExpiresByType image/png "access plus 1 day"
+    ExpiresByType image/jpeg "access plus 1 day"
+    ExpiresByType image/gif "access plus 1 day"
+</IfModule>

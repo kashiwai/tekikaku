@@ -1,0 +1,102 @@
+	<!-- Modal -->
+	<div class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">台の名前</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-5 mt-2 text-center">
+							<img src="" class="img-fluid" alt="">
+						</div>
+						<div class="col-lg-7 mt-2">
+							<div class="row">
+								<div class="col-lg-6 pr-0 mb-2">
+									<div class="game-graph h-100">
+										<div class="game-graph-inner">
+											<ul></ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 mb-2">
+									<div class="game-info h-100">
+										<div class="d-flex w-100">
+											<div class="w-50 cnt-big text-center"><small><span>BIG</span></small><span></span></div>
+											<div class="w-50 cnt-reg text-center"><small><span>REG</span></small><span></span></div>
+										</div>
+										<div class="d-flex w-100 justify-content-between cnt-total">
+											<div>総ゲーム数</div>
+											<div>1,000</div>
+										</div>
+										<div class="d-flex w-100 justify-content-between cnt-game">
+											<div>ゲーム数</div>
+											<div>0</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="alert alert-primary">
+								<ul class="list-group list-group-flush base-info">
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>台番号：</span>
+										<span>0000</span>
+									</li>
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>ID：</span>
+										<span>00000000000</span>
+									</li>
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>メーカー：</span>
+										<span>メーカー名</span>
+									</li>
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>5号機</span>
+										<span>スロット (ノーマルA)</span>
+									</li>
+								</ul>
+							</div>
+							<ul class="list-group list-group-flush base-info mt-4">
+								<li class="list-group-item medal-change d-flex w-100 justify-content-between">
+									<span>変換：</span>
+									<span></span>
+								</li>
+								<li class="list-group-item medal-rate d-flex w-100 justify-content-between">
+									<span>精算：</span>
+									<span></span>
+								</li>
+							</ul>
+							<div class="base-clock my-4">
+								<i class="far fa-clock"></i> {%GLOBAL_OPEN_TIME%}～{%GLOBAL_CLOSE_TIME%}
+							</div>
+							<!--if:{NON_TESTER}-->
+							<p class="closed">営業時間外</p>
+							<p class="maintenance">メンテナンス中</p>
+							<p class="notavailable">使用中</p>
+							<!--if:{NON_LOGIN}-->
+							<a href="{%SITE_SSL_URL%}login.php?NO=" class="btn btn-block btn-primary play">ログインしてプレイ</a>
+							<!--/if:{NON_LOGIN}-->
+							<!--if:{LOGIN}-->
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary play">プレイ</a>
+							<!--/if:{LOGIN}-->
+							<!--/if:{NON_TESTER}-->
+							<!--if:{TESTER}-->
+							<p class="maintenance">メンテナンス中</p>
+							<p class="notavailable">使用中</p>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary preparation">準備中</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary closed">営業時間外</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary maintenance">メンテナンス中</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary play">プレイ</a>
+							<!--/if:{TESTER}-->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>

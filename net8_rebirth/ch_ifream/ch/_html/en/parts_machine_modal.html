@@ -1,0 +1,102 @@
+	<!-- Modal -->
+	<div class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Machine</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-5 mt-2 text-center">
+							<img src="" class="img-fluid" alt="">
+						</div>
+						<div class="col-lg-7 mt-2">
+							<div class="row">
+								<div class="col-lg-6 pr-0 mb-2">
+									<div class="game-graph h-100">
+										<div class="game-graph-inner">
+											<ul></ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 mb-2">
+									<div class="game-info h-100">
+										<div class="d-flex w-100">
+											<div class="w-50 cnt-big text-center"><small><span>BIG</span></small><span></span></div>
+											<div class="w-50 cnt-reg text-center"><small><span>REG</span></small><span></span></div>
+										</div>
+										<div class="d-flex w-100 justify-content-between cnt-total">
+											<div>Total Games</div>
+											<div>1,000</div>
+										</div>
+										<div class="d-flex w-100 justify-content-between cnt-game">
+											<div>Games</div>
+											<div>0</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="alert alert-primary">
+								<ul class="list-group list-group-flush base-info">
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>Machine No :</span>
+										<span>0000</span>
+									</li>
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>ID :</span>
+										<span>00000000000</span>
+									</li>
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>Manufacturer :</span>
+										<span>Manufacturer Name</span>
+									</li>
+									<li class="list-group-item d-flex w-100 justify-content-between">
+										<span>Model Name</span>
+										<span>スロット (ノーマルA)</span>
+									</li>
+								</ul>
+							</div>
+							<ul class="list-group list-group-flush base-info mt-4">
+								<li class="list-group-item medal-change d-flex w-100 justify-content-between">
+									<span>Conversion :</span>
+									<span></span>
+								</li>
+								<li class="list-group-item medal-rate d-flex w-100 justify-content-between">
+									<span>Settlement :</span>
+									<span></span>
+								</li>
+							</ul>
+							<div class="base-clock my-4">
+								<i class="far fa-clock"></i> {%GLOBAL_OPEN_TIME%}～{%GLOBAL_CLOSE_TIME%}
+							</div>
+							<!--if:{NON_TESTER}-->
+							<p class="closed">After Hours</p>
+							<p class="maintenance">Under Maintenance</p>
+							<p class="notavailable">In Use</p>
+							<!--if:{NON_LOGIN}-->
+							<a href="{%SITE_SSL_URL%}login.php?NO=" class="btn btn-block btn-primary play">Login and Play</a>
+							<!--/if:{NON_LOGIN}-->
+							<!--if:{LOGIN}-->
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary play">Play</a>
+							<!--/if:{LOGIN}-->
+							<!--/if:{NON_TESTER}-->
+							<!--if:{TESTER}-->
+							<p class="maintenance">Under Maintenance</p>
+							<p class="notavailable">In Use</p>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary preparation">In Preparation</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary closed">After Hours</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary maintenance">Under Maintenance</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary play">Play</a>
+							<!--/if:{TESTER}-->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>

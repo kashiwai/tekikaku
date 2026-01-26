@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - オーナー情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="OWNER_NO" value="{%OWNER_NO%}">
+					<input type="hidden" name="MACHINE_COUNT" value="{%MACHINE_COUNT%}">
+					<input type="hidden" name="ADD_DT" value="{%ADD_DT%}">
+					<input type="hidden" name="UPD_DT" value="{%UPD_DT%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fab fa-fw fa-fort-awesome"></i> オーナー情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>オーナーCD&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="OWNER_CD" value="{%OWNER_CD%}" maxlength="20">
+									</td>
+								</tr>
+								<tr>
+									<th>オーナー名</th>
+									<td>
+										<input type="text" class="form-control" name="OWNER_NAME" value="{%OWNER_NAME%}" maxlength="20">
+									</td>
+								</tr>
+								<tr>
+									<th>ニックネーム&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span><br />（表示名）</th>
+									<td>
+										<input type="text" class="form-control" name="OWNER_NICKNAME" value="{%OWNER_NICKNAME%}" maxlength="20">
+									</td>
+								</tr>
+								<tr>
+									<th>都道府県</th>
+									<td>
+										<select class="custom-select custom-select-sm" id="OWNER_PREF" name="OWNER_PREF">
+											{%SEL_OWNER_PREF%}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>メールアドレス&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="text" class="form-control" name="MAIL" value="{%MAIL%}" maxlength="255" style="width:300px;"></td>
+								</tr>
+								
+								<tr>
+									<th>機種台数</th>
+									<td>
+										{%DSP_MACHINE_COUNT%}
+									</td>
+								</tr>
+								
+								
+								<tr>
+									<th>ダミーフラグ</th>
+									<td>
+										{%RDO_DUMMY_FLG%}
+									</td>
+								</tr>
+								
+								<tr>
+									<th>登録日時</th>
+									<td>{%ADD_DT%}</td>
+								</tr>
+								<tr>
+									<th>更新日時</th>
+									<td>{%UPD_DT%}</td>
+								</tr>
+								<tr>
+									<th>備考</th>
+									<td><textarea class="form-control" rows="6" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{CAN_DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{CAN_DEL}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				
+				//オーナーCD
+				if (!chk_indis("{%A1501%}", frm["OWNER_CD"].value)) return false;
+				if (frm["OWNER_CD"].value.length > 20) {
+					chkAlert("{%A1502%}");
+					return false;
+				}
+				//オーナー名
+				if (frm["OWNER_NAME"].value.length > 0) {
+					if (frm["OWNER_NAME"].value.length > 20) {
+						chkAlert("{%A1504%}");
+						return false;
+					}
+				}
+				//ニックネーム
+				if (!chk_indis("{%A1505%}", frm["OWNER_NICKNAME"].value)) return false;
+				if (frm["OWNER_NICKNAME"].value.length > 20) {
+					chkAlert("{%A1506%}");
+					return false;
+				}
+				//メールアドレス
+				if (!chk_indis("{%A1507%}", frm["MAIL"].value)) return false;
+				if (!chk_mail("{%A1508%}",  frm["MAIL"].value, false)) return false;
+				if (frm["MAIL"].value.length > 255) {
+					chkAlert("{%A1508%}");
+					return false;
+				}
+				
+				//
+				swal({
+					title: 'オーナー情報登録',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// 削除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: 'オーナー情報削除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #remoteVideo {
+            width: 100%;
+            max-width: 1280px;
+            height: auto;
+            background: #333;
+            border: 2px solid #4CAF50;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .info { background: #2196F3; }
+        .success { background: #4CAF50; }
+        .error { background: #f44336; }
+        .warning { background: #ff9800; }
+        #log {
+            margin-top: 20px;
+            padding: 10px;
+            background: #222;
+            border: 1px solid #444;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        input {
+            padding: 8px;
+            font-size: 14px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎥 Simple Test Player</h1>
+
+        <div id="status" class="status info">Initializing...</div>
+
+        <video id="remoteVideo" autoplay playsinline></video>
+
+        <div style="margin: 20px 0;">
+            <label>Camera ID: <input type="text" id="cameraInput" value="camera_5_" style="width: 300px;"></label>
+            <br><br>
+            <button onclick="startConnection()">▶️ Start Connection</button>
+            <button onclick="stopConnection()">⏹️ Stop</button>
+        </div>
+
+        <div style="background: #222; padding: 10px; border-radius: 5px; margin: 20px 0;">
+            <p><strong>Signaling Server:</strong> aimoderation.ngrok-free.app:443</p>
+            <p><strong>PeerJS Key:</strong> peerjs</p>
+            <p><strong>Instructions:</strong></p>
+            <ol>
+                <li>Camera IDの末尾に現在のタイムスタンプを追加 (例: camera_5_1761335370)</li>
+                <li>Windows側のConsoleで確認したcamera_nameをここに入力</li>
+                <li>「Start Connection」ボタンをクリック</li>
+            </ol>
+        </div>
+
+        <h3>📝 Connection Log</h3>
+        <div id="log"></div>
+    </div>
+
+    <script src="js/peer_ie.js"></script>
+    <script>
+        const statusDiv = document.getElementById('status');
+        const logDiv = document.getElementById('log');
+        const remoteVideo = document.getElementById('remoteVideo');
+        const cameraInput = document.getElementById('cameraInput');
+
+        let peer = null;
+        let currentCall = null;
+
+        // 設定
+        const sigHost = 'aimoderation.ngrok-free.app';
+        const sigPort = 443;
+        const peerjskey = 'peerjs';
+
+        // ランダムな認証ID（認証バイパス済みなので何でもOK）
+        const authID = Math.random().toString(36).substr(2, 16);
+
+        // ICE Servers
+        const iceServers = [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+        ];
+
+        function log(message, type = 'info') {
+            console.log(message);
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(message, className) {
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + className;
+        }
+
+        function startConnection() {
+            const cameraid = cameraInput.value.trim();
+
+            if (!cameraid) {
+                log('❌ Please enter camera ID');
+                updateStatus('Please enter camera ID', 'error');
+                return;
+            }
+
+            log('🚀 Starting PeerJS connection...');
+            log('📹 Target camera: ' + cameraid);
+            updateStatus('Connecting to signaling server...', 'info');
+
+            const viewerId = 'viewer_' + Math.random().toString(36).substr(2, 9);
+            log('👤 My ID: ' + viewerId);
+
+            try {
+                peer = new Peer(viewerId, {
+                    host: sigHost,
+                    port: sigPort,
+                    path: '/',  // サーバー側が自動的に/peerjsを追加
+                    secure: true,
+                    key: peerjskey,
+                    token: authID,
+                    config: {
+                        iceServers: iceServers,
+                        iceTransportPolicy: 'all',
+                        iceCandidatePoolSize: 0
+                    },
+                    debug: 3
+                });
+
+                peer.on('open', function(id) {
+                    log('✅ PeerJS connection opened. My ID: ' + id);
+                    updateStatus('Connected! Calling camera...', 'success');
+
+                    // カメラに接続
+                    log('📞 Calling camera: ' + cameraid);
+                    currentCall = peer.call(cameraid, null);
+
+                    if (!currentCall) {
+                        log('❌ Failed to call camera');
+                        updateStatus('Failed to call camera', 'error');
+                        return;
+                    }
+
+                    currentCall.on('stream', function(remoteStream) {
+                        log('✅ Received remote stream!');
+                        log('📊 Stream info: ' + remoteStream.id);
+                        log('🎬 Video tracks: ' + remoteStream.getVideoTracks().length);
+                        updateStatus('✅ Stream received! Playing...', 'success');
+
+                        remoteVideo.srcObject = remoteStream;
+
+                        remoteVideo.onloadedmetadata = function() {
+                            log('🎥 Video dimensions: ' + remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight);
+                        };
+                    });
+
+                    currentCall.on('error', function(err) {
+                        log('❌ Call error: ' + err);
+                        updateStatus('Call error: ' + err, 'error');
+                    });
+
+                    currentCall.on('close', function() {
+                        log('⚠️ Call closed');
+                        updateStatus('Call closed', 'warning');
+                    });
+                });
+
+                peer.on('error', function(err) {
+                    log('❌ PeerJS error: ' + err);
+                    updateStatus('Error: ' + err, 'error');
+                    console.error('PeerJS error:', err);
+                });
+
+                peer.on('close', function() {
+                    log('⚠️ PeerJS connection closed');
+                    updateStatus('Connection closed', 'warning');
+                });
+
+                peer.on('disconnected', function() {
+                    log('⚠️ PeerJS disconnected');
+                    updateStatus('Disconnected', 'warning');
+                });
+
+            } catch (err) {
+                log('❌ Exception: ' + err);
+                updateStatus('Exception: ' + err, 'error');
+                console.error(err);
+            }
+        }
+
+        function stopConnection() {
+            if (currentCall) {
+                currentCall.close();
+                currentCall = null;
+            }
+            if (peer) {
+                peer.destroy();
+                peer = null;
+                log('⏹️ Connection stopped');
+                updateStatus('Stopped', 'info');
+            }
+            if (remoteVideo.srcObject) {
+                remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+                remoteVideo.srcObject = null;
+            }
+        }
+
+        // 初期化
+        log('📱 Simple test player loaded');
+        updateStatus('Ready. Enter camera ID and click "Start Connection".', 'info');
+
+        // 現在のタイムスタンプを追加
+        cameraInput.value = 'camera_5_' + Math.floor(Date.now() / 1000);
+    </script>
+</body>
+</html>

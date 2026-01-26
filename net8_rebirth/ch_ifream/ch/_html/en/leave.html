@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Procedures to Cancel the Membership</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">Procedures to Cancel the Membership</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=conf" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<div class="input-form mb-5">
+				<div class="alert alert-danger">
+					<small>* All your {%CURRENCY_1%} and {%CURRENCY_3%} will be revoked on canceling the membership.</small>
+				</div>
+				<hr>
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				<div class="form-group">
+					<label class="col-form-label" for="password">Password</label>
+					<input type="password" class="form-control" id="password" name="PASS">
+				</div>
+				
+				<div class="form-group">
+					<label class="col-form-label" for="reason">Reasons for Canceling the Membership</label>
+					<textarea rows="5" class="form-control" name="REASON" id="reason">{%REASON%}</textarea>
+				</div>
+				<hr>
+				
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary">Cancel the membership</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}leave.html"-->
+	
+	</body>
+</html>

@@ -1,0 +1,138 @@
+	<!-- Header Wrapper -->
+	<div class="header-wrapper">
+	<header>
+
+		<!-- Logo -->
+		<div class="l-header__logo">
+			<a href="{%SITE_SSL_URL%}">
+				<img src="/content/images/common/net8_logo.jpg" alt="{%SITE_TITLE%}">
+			</a>
+		</div>
+
+		<!-- ========== モバイル版ナビゲーション ========== -->
+		<div class="smp">
+
+			<!-- ログインボタン（非ログイン時のみ） -->
+			<!--if:{NON_LOGIN}-->
+			<div class="smp-login">
+				<a href="{%SITE_SSL_URL%}login.php" class="login smp">
+					<img src="/content/images/icon/menu_login_icon.svg">ログイン
+				</a>
+			</div>
+			<!--/if:{NON_LOGIN}-->
+
+			<!-- 上部メニュー -->
+			<nav class="up-menu">
+				<ul>
+					<li><a href="{%SITE_SSL_URL%}search.php" class="installation">設置機種</a></li>
+					<!--if:{NAVIGATION_MYPAGE}-->
+						<li><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">マイページ</a></li>
+					<!--/if:{NAVIGATION_MYPAGE}-->
+					<!--if:{NON_LOGIN}-->
+						<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">新規登録</a></li>
+					<!--/if:{NON_LOGIN}-->
+				</ul>
+			</nav>
+
+			<!-- ハンバーガーメニュー -->
+			<div class="menu-set">
+				<input type="checkbox" id="menu-toggle">
+				<label for="menu-toggle" class="menu-button">
+					<span class="bar"></span>
+					<span class="bar"></span>
+					<span class="bar"></span>
+				</label>
+				<div class="black-bg"></div>
+
+				<nav class="menu">
+					<p>MENU</p>
+					<ul class="nav navbar-nav navbar-right">
+						<!--if:{NON_LOGIN}-->
+							<li><a href="{%SITE_SSL_URL%}regist.php" title="アカウントの作成">アカウントの作成</a></li>
+						<!--/if:{NON_LOGIN}-->
+						<li><a href="{%SITE_SSL_URL%}rule.php" title="ハウスルール">ハウスルール</a></li>
+						<!--if:{NAVIGATION_inquiry}-->
+							<li><a href="{%SITE_SSL_URL%}inquiry.php" title="お問い合わせ">お問い合わせフォーム</a></li>
+						<!--/if:{NAVIGATION_inquiry}-->
+						<li><a href="{%SITE_SSL_URL%}beginner.php" title="初めての方へ">初めての方へ</a></li>
+						<li><a href="{%SITE_SSL_URL%}privacy.php" title="プライバシーポリシー">プライバシーポリシー</a></li>
+						<li><a href="{%SITE_SSL_URL%}guideline.php" title="ガイドライン">ガイドライン</a></li>
+						<li><a href="{%SITE_SSL_URL%}terms.php" title="利用規約">利用規約</a></li>
+						<li><a href="{%SITE_SSL_URL%}faq.php" title="FAQ（よくある質問）">FAQ（よくある質問）</a></li>
+						<!--if:{LOGIN}-->
+							<!--if:{NAVIGATION_logout}-->
+								<li class="last"><a href="{%SITE_SSL_URL%}logout.php" title="ログアウト">ログアウト</a></li>
+							<!--/if:{NAVIGATION_logout}-->
+						<!--/if:{LOGIN}-->
+					</ul>
+				</nav>
+			</div>
+
+		</div>
+		<!-- ========== /モバイル版ナビゲーション ========== -->
+
+
+		<!-- ========== PC版ナビゲーション ========== -->
+		<div class="menu-container">
+			<div class="navi pc">
+				<nav class="menu pc">
+					<ul>
+						<li class="n-navi"><a href="{%SITE_SSL_URL%}search.php" class="installation">設置機種</a></li>
+						<!--if:{NAVIGATION_MYPAGE}-->
+							<li class="n-navi"><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">マイページ</a></li>
+						<!--/if:{NAVIGATION_MYPAGE}-->
+					</ul>
+				</nav>
+
+				<nav class="menu pc">
+					<ul>
+						<!--if:{LOGIN}-->
+							<!--if:{COIN_TRADE}-->
+								<li><a href="{%SITE_SSL_URL%}wallet.php" class="walet">ウォレット</a></li>
+							<!--/if:{COIN_TRADE}-->
+						<!--/if:{LOGIN}-->
+						<!--if:{NON_LOGIN}-->
+							<li><a href="{%SITE_SSL_URL%}login.php" class="login">ログイン</a></li>
+							<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">新規登録</a></li>
+						<!--/if:{NON_LOGIN}-->
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<!-- ========== /PC版ナビゲーション ========== -->
+
+	</header>
+
+	<!-- ========== ログイン後メニュー ========== -->
+	<!--if:{LOGIN}-->
+	<div class="login-menu-wrapper">
+		<ul class="login-menu">
+			<li class="login-menu-user-name">
+				<img src="/content/images/icon/menu_login_icon.svg">{%LOGIN_USER%}
+			</li>
+			<!--if:{COIN_TRADE}-->
+				<li class="login-menu-ryu">
+					<img src="/content/images/icon/coin-yen.svg">{%USER_DRAW_PT%}
+				</li>
+			<!--/if:{COIN_TRADE}-->
+			<li class="login-menu-point">
+				<i class="fas fa-coins"></i> {%USER_PT%}
+				<a href="{%SITE_SSL_URL%}point_buy.php" class="btn-buy-point">{%CURRENCY_1%}購入</a>
+			</li>
+			<!--if:{NAVIGATION_message}-->
+				<li class="login-menu-news">
+					<a href="{%SITE_SSL_URL%}message.php">
+						<img src="/content/images/icon/material-symbols_mail-outline.svg">
+						<!--if:{NOTDISP_CONTACT}-->
+							<span class="mess_badge">{%NOTDISP_CONTACTCNT%}</span>
+						<!--/if:{NOTDISP_CONTACT}-->
+					</a>
+				</li>
+			<!--/if:{NAVIGATION_message}-->
+		</ul>
+	</div>
+	<!--/if:{LOGIN}-->
+	<!-- ========== /ログイン後メニュー ========== -->
+
+	</div>
+	<!-- /Header Wrapper -->
