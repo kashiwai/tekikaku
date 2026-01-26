@@ -752,7 +752,8 @@ try {
     $baseUrl = "{$protocol}://{$host}";
 
     // すべての通貨で play_embed を使用（iframe埋め込み対応）
-    $playEmbedUrl = "/data/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&lang={$lang}&currency={$currency}";
+    // DocumentRoot が /var/www/html/ch/data なので /data/ プレフィックス不要
+    $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&lang={$lang}&currency={$currency}";
     $gameUrl = "{$baseUrl}{$playEmbedUrl}";
     $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため（非推奨）
 
