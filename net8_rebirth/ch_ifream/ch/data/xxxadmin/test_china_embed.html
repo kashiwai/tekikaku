@@ -124,13 +124,18 @@
             </div>
 
             <div class="control-group">
-                <label for="memberNo">会员编号</label>
-                <input type="text" id="memberNo" value="9999" placeholder="会员编号">
+                <label for="modelId">机种ID</label>
+                <input type="text" id="modelId" value="1" placeholder="机种ID (1-6)">
+            </div>
+
+            <div class="control-group">
+                <label for="userId">用户ID</label>
+                <input type="text" id="userId" value="user_9999" placeholder="用户ID">
             </div>
 
             <div class="control-group">
                 <label for="machineNo">机台编号</label>
-                <input type="number" id="machineNo" value="9999" placeholder="机台编号">
+                <input type="number" id="machineNo" value="9999" placeholder="机台编号（可选）">
             </div>
 
             <div class="control-group">
@@ -213,7 +218,8 @@
 
         async function startGame() {
             const apiKey = document.getElementById('apiKey').value;
-            const memberNo = document.getElementById('memberNo').value;
+            const modelId = document.getElementById('modelId').value;
+            const userId = document.getElementById('userId').value;
             const machineNo = document.getElementById('machineNo').value;
             const currency = document.getElementById('currency').value;
             const lang = document.getElementById('lang').value;
@@ -224,8 +230,26 @@
                 return;
             }
 
+            if (!modelId) {
+                log('❌ 错误: 请输入机种ID', 'error');
+                return;
+            }
+
             log(`🎮 正在发送游戏开始请求...`, 'info');
-            log(`货币: ${currency}, 语言: ${lang}, 积分: ${points}`, 'info');
+            log(`机种ID: ${modelId}, 货币: ${currency}, 语言: ${lang}, 积分: ${points}`, 'info');
+
+            const requestBody = {
+                modelId: modelId,
+                userId: userId,
+                currency: currency,
+                lang: lang,
+                initialPoints: parseInt(points)
+            };
+
+            // 机台编号是可选的
+            if (machineNo) {
+                requestBody.machineNo = parseInt(machineNo);
+            }
 
             try {
                 const response = await fetch(`${API_BASE}/game_start.php`, {
@@ -234,13 +258,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${apiKey}`
                     },
-                    body: JSON.stringify({
-                        memberNo: memberNo,
-                        machineNo: parseInt(machineNo),
-                        currency: currency,
-                        lang: lang,
-                        points: parseInt(points)
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!response.ok) {
