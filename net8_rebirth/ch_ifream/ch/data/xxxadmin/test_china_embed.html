@@ -251,8 +251,12 @@
                 requestBody.machineNo = parseInt(machineNo);
             }
 
+            const apiUrl = `${API_BASE}/game_start.php`;
+            log(`📡 请求URL: ${apiUrl}`, 'info');
+            log(`📦 请求数据: ${JSON.stringify(requestBody)}`, 'info');
+
             try {
-                const response = await fetch(`${API_BASE}/game_start.php`, {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -261,8 +265,12 @@
                     body: JSON.stringify(requestBody)
                 });
 
+                log(`📨 响应状态: ${response.status} ${response.statusText}`, 'info');
+
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    const errorText = await response.text();
+                    log(`❌ 响应内容: ${errorText}`, 'error');
+                    throw new Error(`HTTP ${response.status}: ${response.statusText || 'No status text'} - ${errorText || 'No error message'}`);
                 }
 
                 const data = await response.json();
