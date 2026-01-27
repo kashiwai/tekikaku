@@ -26,6 +26,7 @@ require_once('../../_etc/require_files.php');
 require_once(__DIR__ . '/helpers/user_helper.php');
 require_once(__DIR__ . '/helpers/camera_helper.php');
 require_once(__DIR__ . '/helpers/currency_helper.php');
+require_once(__DIR__ . '/helpers/callback_helper.php');
 
 // 認証ヘッダー確認（複数ソース対応）
 $authHeader = '';
