@@ -242,6 +242,48 @@ var _savestream;					//Video確認用
 	peer.on('close', function() {
 		console.warn('🔒 PeerJS Connection closed');
 		notifyParent('peer_closed', {});
+
+		// ゲーム終了処理（精算）
+		if (typeof sessionId !== 'undefined' && sessionId && typeof apiKey !== 'undefined' && apiKey) {
+			console.log('💰 Calling game_end API for settlement...');
+
+			// gameオブジェクトから累計ベット額と勝利額を取得（存在する場合）
+			var totalBets = (typeof game !== 'undefined' && game.total_bets) ? game.total_bets : 0;
+			var totalWins = (typeof game !== 'undefined' && game.total_wins) ? game.total_wins : 0;
+
+			// game_end APIを呼び出し
+			fetch('/api/v1/game_end.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + apiKey
+				},
+				body: JSON.stringify({
+					sessionId: sessionId,
+					result: 'completed',
+					totalBets: totalBets,
+					totalWins: totalWins
+				})
+			})
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(data) {
+				if (data.success) {
+					console.log('✅ Game settlement completed:', data);
+					notifyParent('game_ended', { success: true, data: data });
+				} else {
+					console.error('❌ Game settlement failed:', data);
+					notifyParent('game_ended', { success: false, error: data });
+				}
+			})
+			.catch(function(error) {
+				console.error('❌ Game settlement API error:', error);
+				notifyParent('game_ended', { success: false, error: error.toString() });
+			});
+		} else {
+			console.warn('⚠️ Cannot call game_end: sessionId or apiKey is missing');
+		}
 	});
 
 	peer.on('open', function(){

@@ -76,6 +76,8 @@ try {
             gs.status,
             gs.started_at,
             gs.model_cd,
+            gs.api_key_id,
+            ak.key_value as api_key,
             dm.signaling_id,
             dm.camera_no,
             dm.model_no,
@@ -88,6 +90,7 @@ try {
             cp.credit as convcredit,
             cp.point as convplaypoint
         FROM game_sessions gs
+        LEFT JOIN api_keys ak ON gs.api_key_id = ak.id
         LEFT JOIN dat_machine dm ON gs.machine_no = dm.machine_no
         LEFT JOIN mst_model mm ON dm.model_no = mm.model_no
         LEFT JOIN mst_camera mc ON dm.camera_no = mc.camera_no
@@ -416,6 +419,7 @@ function outputPlayerHTML($data) {
     var closeTime      = '06:00';
     var pachi_rate     = '0';
     var sessionId      = '<?= $data['sessionId'] ?>';
+    var apiKey         = '<?= isset($session['api_key']) ? $session['api_key'] : '' ?>';
 
     // 初期ポイント・クレジット（korea_net8frontから渡される）
     var initialPoints  = <?= (int)$data['initialPoints'] ?>;
