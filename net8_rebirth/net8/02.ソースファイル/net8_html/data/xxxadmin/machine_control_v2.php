@@ -169,21 +169,7 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PC接続状態（Chrome RD Session ID or pc_status で判定）
-        // Session IDが入っている場合は優先、なければpc_statusを使用
-        if (!empty($m['chrome_rd_session_id'])) {
-            $m['pc_connected'] = true;
-        } else {
-            $m['pc_connected'] = ($m['pc_status'] == 'online');
-        }
-
-        if ($m['pc_connected']) {
-            $pc_online++;
-        } else {
-            $pc_offline++;
-        }
-
-        // PeerID接続状態チェック
+        // PeerID接続状態チェック（Signaling Server WebSocket接続）
         $m['peer_connected'] = false;
         if (!empty($m['camera_mac'])) {
             $peer_id = str_replace(':', '', strtolower($m['camera_mac']));
@@ -191,6 +177,16 @@ function DispMachineList($template, $message = "") {
                 $m['peer_connected'] = true;
                 $peer_connected++;
             }
+        }
+
+        // PC接続状態 = WebSocket接続状態
+        // Signaling ServerにPeerIDが登録されていればPC接続中
+        $m['pc_connected'] = $m['peer_connected'];
+
+        if ($m['pc_connected']) {
+            $pc_online++;
+        } else {
+            $pc_offline++;
         }
 
         // メンテナンス状態チェック
