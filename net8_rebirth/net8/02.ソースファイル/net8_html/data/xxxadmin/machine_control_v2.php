@@ -169,7 +169,26 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PeerID接続状態チェック（Signaling Server WebSocket接続）
+        // PC接続状態を last_heartbeat で判定
+        // 5分以内（300秒）にハートビートがあれば接続中
+        $m['pc_connected'] = false;
+        if (!empty($m['last_heartbeat'])) {
+            $heartbeat_time = strtotime($m['last_heartbeat']);
+            $current_time = time();
+            $diff_seconds = $current_time - $heartbeat_time;
+
+            if ($diff_seconds <= 300) { // 5分以内
+                $m['pc_connected'] = true;
+            }
+        }
+
+        if ($m['pc_connected']) {
+            $pc_online++;
+        } else {
+            $pc_offline++;
+        }
+
+        // PeerID接続状態チェック（参考情報として保持）
         $m['peer_connected'] = false;
         if (!empty($m['camera_mac'])) {
             $peer_id = str_replace(':', '', strtolower($m['camera_mac']));
@@ -177,16 +196,6 @@ function DispMachineList($template, $message = "") {
                 $m['peer_connected'] = true;
                 $peer_connected++;
             }
-        }
-
-        // PC接続状態 = WebSocket接続状態
-        // Signaling ServerにPeerIDが登録されていればPC接続中
-        $m['pc_connected'] = $m['peer_connected'];
-
-        if ($m['pc_connected']) {
-            $pc_online++;
-        } else {
-            $pc_offline++;
         }
 
         // メンテナンス状態チェック
@@ -704,18 +713,6 @@ function DispMachineList($template, $message = "") {
         </div>
         <?php endif; ?>
 
-        <!-- デバッグ: Signaling Server PeerID一覧 -->
-        <div style="background: #fff3cd; border: 2px solid #ff0000; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
-            <h3 style="color: #ff0000; margin: 0 0 10px 0;">🔴 DEBUG: Signaling Server Active Peers (<?= count($active_peers) ?>台)</h3>
-            <div style="font-size: 11px; font-family: monospace; max-height: 150px; overflow-y: auto; background: #fff; padding: 10px; border-radius: 4px;">
-                <?php if (count($active_peers) > 0): ?>
-                    <?= implode(', ', array_map('htmlspecialchars', $active_peers)) ?>
-                <?php else: ?>
-                    <span style="color: red; font-weight: bold;">⚠️ EMPTY - Signaling Serverから取得できていません</span>
-                <?php endif; ?>
-            </div>
-        </div>
-
         <!-- 統計情報 -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -842,22 +839,20 @@ function DispMachineList($template, $message = "") {
                         ?></dd>
                         <dt>PC接続</dt>
                         <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
-                        <dt style="color: #ff0000;">🔴 camera_mac</dt>
-                        <dd style="color: #ff0000; font-size: 10px; word-break: break-all;"><?= htmlspecialchars($m['camera_mac'] ?: 'NULL') ?></dd>
-                        <dt style="color: #ff0000;">🔴 PeerID変換後</dt>
-                        <dd style="color: #ff0000; font-size: 10px; word-break: break-all;"><?php
-                            if (!empty($m['camera_mac'])) {
-                                echo htmlspecialchars(str_replace(':', '', strtolower($m['camera_mac'])));
+                        <dt style="color: #ff0000;">🔴 last_heartbeat</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?php
+                            if (!empty($m['last_heartbeat'])) {
+                                $hb_time = strtotime($m['last_heartbeat']);
+                                $diff = time() - $hb_time;
+                                echo htmlspecialchars($m['last_heartbeat']) . " ({$diff}秒前)";
                             } else {
                                 echo 'NULL';
                             }
                         ?></dd>
-                        <dt style="color: #ff0000;">🔴 peer_connected</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['peer_connected'] ? 'TRUE' : 'FALSE' ?></dd>
                         <dt style="color: #ff0000;">🔴 pc_connected</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE' : 'FALSE' ?></dd>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE (≤300秒)' : 'FALSE (>300秒 or NULL)' ?></dd>
                         <dt style="color: #ff0000;">🔴 machine_status</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?></dd>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> (0=停止, 1=稼働, 2=メンテ)</dd>
                         <dt style="color: #ff0000;">🔴 assign_flg</dt>
                         <dd style="color: #ff0000; font-size: 10px;"><?= $m['assign_flg'] ?> | playing_member: <?= $m['playing_member'] ?: 'NULL' ?></dd>
                         <dt>IP</dt>
