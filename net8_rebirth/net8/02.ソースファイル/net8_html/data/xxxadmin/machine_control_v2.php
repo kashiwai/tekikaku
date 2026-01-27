@@ -169,8 +169,9 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PC状態（Chrome起動）
-        if ($m['pc_status'] == 'online') {
+        // PC接続状態（Chrome Remote Desktop Session IDで判定）
+        $m['pc_connected'] = !empty($m['chrome_rd_session_id']);
+        if ($m['pc_connected']) {
             $pc_online++;
         } else {
             $pc_offline++;
@@ -191,21 +192,26 @@ function DispMachineList($template, $message = "") {
             $maintenance_count++;
         }
 
-        // ゲーム機状態を判定
+        // ゲーム機状態を判定（実際の使用可否）
         // machine_status: 0=停止中, 1=稼働中, 2=メンテナンス中
         // assign_flg: 0=空き, 1=プレイ中, 9=待機
         if ($m['machine_status'] == 2) {
+            // メンテナンス中
             $m['game_status'] = 'maintenance';
         } elseif (!empty($m['playing_member']) && $m['playing_member'] > 0) {
+            // プレイ中（使用不可）
             $m['game_status'] = 'playing';
             $game_playing++;
         } elseif ($m['assign_flg'] == 1) {
+            // プレイ中（使用不可）
             $m['game_status'] = 'playing';
             $game_playing++;
-        } elseif ($m['pc_status'] == 'online' && $m['machine_status'] == 1) {
+        } elseif ($m['pc_connected'] && $m['machine_status'] == 1) {
+            // 待機中（使用可）
             $m['game_status'] = 'standby';
             $game_standby++;
         } else {
+            // オフライン（PC未接続）
             $m['game_status'] = 'offline';
         }
     }
@@ -785,20 +791,22 @@ function DispMachineList($template, $message = "") {
                     <div class="machine-card-header">
                         <div class="machine-no"><?= $m['machine_no'] ?></div>
                         <div class="machine-status">
-                            <span class="status-badge status-<?= $m['pc_status'] ?: 'offline' ?>">
-                                <?= $m['pc_status'] == 'online' ? '💻 PC ON' : '⏸️ PC OFF' ?>
+                            <span class="status-badge status-<?= $m['pc_connected'] ? 'online' : 'offline' ?>">
+                                <?= $m['pc_connected'] ? '💻 PC ON' : '⏸️ PC OFF' ?>
                             </span>
                             <?php if ($m['peer_connected']): ?>
                             <span class="status-badge status-peer-on">📡 接続中</span>
                             <?php else: ?>
                             <span class="status-badge status-peer-off">📡 未接続</span>
                             <?php endif; ?>
-                            <?php if ($m['machine_status'] == 2): ?>
+                            <?php if ($m['game_status'] == 'maintenance'): ?>
                             <span class="status-badge status-maintenance">🔧 メンテ</span>
                             <?php elseif ($m['game_status'] == 'playing'): ?>
                             <span class="status-badge status-playing">🎮 プレイ中</span>
                             <?php elseif ($m['game_status'] == 'standby'): ?>
                             <span class="status-badge status-standby">🟢 待機中</span>
+                            <?php elseif ($m['game_status'] == 'offline'): ?>
+                            <span class="status-badge status-offline">⏸️ オフライン</span>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -807,15 +815,27 @@ function DispMachineList($template, $message = "") {
 
                     <dl class="machine-info">
                         <dt>状態</dt>
-                        <dd><?= $machine_status_label ?></dd>
+                        <dd><?php
+                            if ($m['game_status'] == 'maintenance') {
+                                echo '🔧 メンテナンス中';
+                            } elseif ($m['game_status'] == 'playing') {
+                                echo '🎮 プレイ中（使用不可）';
+                            } elseif ($m['game_status'] == 'standby') {
+                                echo '🟢 待機中（使用可）';
+                            } else {
+                                echo '⏸️ オフライン';
+                            }
+                        ?></dd>
+                        <dt>PC接続</dt>
+                        <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
                         <dt>IP</dt>
                         <dd><?= htmlspecialchars($m['ip_address'] ?: '-') ?></dd>
                         <dt>MAC</dt>
                         <dd><?= htmlspecialchars($m['mac_address'] ?: '-') ?></dd>
                         <dt>カメラ</dt>
                         <dd>No.<?= $m['camera_no'] ?: '-' ?> (<?= htmlspecialchars($m['camera_name'] ?: '-') ?>)</dd>
-                        <dt>PeerID</dt>
-                        <dd><?= $m['peer_connected'] ? '🟢 接続中' : '⚫ 未接続' ?></dd>
+                        <dt>WebRTC</dt>
+                        <dd><?= $m['peer_connected'] ? '📡 接続中' : '📡 未接続' ?></dd>
                         <?php if ($m['last_heartbeat']): ?>
                         <dt>最終通信</dt>
                         <dd><?= date('m/d H:i', strtotime($m['last_heartbeat'])) ?></dd>
@@ -865,8 +885,8 @@ function DispMachineList($template, $message = "") {
                                 <th>MACアドレス</th>
                                 <th>IPアドレス</th>
                                 <th>Signaling</th>
-                                <th>PC状態</th>
-                                <th>ゲーム機</th>
+                                <th>PC接続</th>
+                                <th>使用状態</th>
                                 <th>最終接続</th>
                                 <th>操作</th>
                             </tr>
@@ -924,22 +944,26 @@ function DispMachineList($template, $message = "") {
                                                class="input-md">
                                     </td>
                                     <td>
-                                        <span class="status-badge status-<?= $m['pc_status'] ?: 'offline' ?>">
-                                            <?= $m['pc_status'] == 'online' ? '💻 ON' : '⏸️ OFF' ?>
+                                        <span class="status-badge status-<?= $m['pc_connected'] ? 'online' : 'offline' ?>">
+                                            <?= $m['pc_connected'] ? '💻 ON' : '⏸️ OFF' ?>
                                         </span>
                                     </td>
                                     <td>
-                                        <?php if ($m['game_status'] == 'playing'): ?>
+                                        <?php if ($m['game_status'] == 'maintenance'): ?>
+                                        <span class="status-badge status-maintenance">
+                                            🔧 メンテ
+                                        </span>
+                                        <?php elseif ($m['game_status'] == 'playing'): ?>
                                         <span class="status-badge status-playing">
-                                            🎮 プレイ中
+                                            🎮 使用不可
                                         </span>
                                         <?php elseif ($m['game_status'] == 'standby'): ?>
                                         <span class="status-badge status-standby">
-                                            🟢 待機
+                                            🟢 使用可
                                         </span>
                                         <?php else: ?>
                                         <span class="status-badge status-offline">
-                                            ⚫ 停止
+                                            ⏸️ オフライン
                                         </span>
                                         <?php endif; ?>
                                     </td>
