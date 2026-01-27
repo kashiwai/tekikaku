@@ -1,9 +1,9 @@
 	<!-- Footer -->
 	<div class="footer-wrapper">
 
-		<!-- ページのトップへ -->
+		<!-- 返回顶部 -->
 		<p class="pagetop">
-			<a href="#wrapper"><img src="/content/images/common/arrow_up.png" alt="ページトップへ"></a>
+			<a href="#wrapper"><img src="/content/images/common/arrow_up.png" alt="返回顶部"></a>
 		</p>
 
 		<footer id="footer" class="l-footer">
@@ -15,39 +15,39 @@
 			</a>
 			<!--/if:{FOOTER_DISP_SNS}-->
 
-			<!-- フッターナビ -->
+			<!-- 底部导航 -->
 			<nav>
 				<ul class="nav navbar-nav navbar-right">
 					<!--if:{FOOTER_DISP_GUIDE}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=userguide" title="ご利用ガイド" rel="nofollow">ご利用ガイド</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=userguide" title="使用指南" rel="nofollow">使用指南</a></li>
 					<!--/if:{FOOTER_DISP_GUIDE}-->
 					<!--if:{FOOTER_DISP_FIRST}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=beginners" title="はじめての方へ" rel="nofollow">はじめての方へ</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=beginners" title="新手指南" rel="nofollow">新手指南</a></li>
 					<!--/if:{FOOTER_DISP_FIRST}-->
 					<!--if:{FOOTER_DISP_CONTACT}-->
-						<li><a href="{%SITE_SSL_URL%}inquiry.php" title="お問い合わせ" rel="nofollow">お問い合わせフォーム</a></li>
+						<li><a href="{%SITE_SSL_URL%}inquiry.php" title="联系我们" rel="nofollow">联系我们</a></li>
 					<!--/if:{FOOTER_DISP_CONTACT}-->
 					<!--if:{FOOTER_DISP_RULE}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=rule" title="ハウスルール" rel="nofollow">ハウスルール</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=rule" title="规则" rel="nofollow">规则</a></li>
 					<!--/if:{FOOTER_DISP_RULE}-->
 					<!--if:{FOOTER_DISP_POLICY}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=policy" title="プライバシーポリシー" rel="nofollow">プライバシーポリシー</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=policy" title="隐私政策" rel="nofollow">隐私政策</a></li>
 					<!--/if:{FOOTER_DISP_POLICY}-->
 					<!--if:{FOOTER_DISP_GUIDELINE}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=guideline" title="ガイドライン" rel="nofollow">ガイドライン</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=guideline" title="使用指南" rel="nofollow">使用指南</a></li>
 					<!--/if:{FOOTER_DISP_GUIDELINE}-->
 					<!--if:{FOOTER_DISP_TERMS}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=terms" title="利用規約" rel="nofollow">利用規約</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=terms" title="使用条款" rel="nofollow">使用条款</a></li>
 					<!--/if:{FOOTER_DISP_TERMS}-->
 					<!--if:{FOOTER_DISP_FAQ}-->
-						<li><a href="{%SITE_SSL_URL%}info.php?M=faq" title="FAQ（よくある質問）" rel="nofollow">FAQ（よくある質問）</a></li>
+						<li><a href="{%SITE_SSL_URL%}info.php?M=faq" title="常见问题" rel="nofollow">常见问题</a></li>
 					<!--/if:{FOOTER_DISP_FAQ}-->
 					<!--if:{FOOTER_DISP_ACT}-->
-						<li class="last"><a href="{%SITE_SSL_URL%}info.php?M=act" title="特定商取引法に基づく表記" rel="nofollow">特定商取引法に基づく表記</a></li>
+						<li class="last"><a href="{%SITE_SSL_URL%}info.php?M=act" title="特定商业交易法标识" rel="nofollow">特定商业交易法标识</a></li>
 					<!--/if:{FOOTER_DISP_ACT}-->
 				</ul>
 			</nav>
-			<!-- //フッターナビ -->
+			<!-- //底部导航 -->
 
 			<p class="copyright"><span lang="en">{%COPYRIGHT%}</span></p>
 		</footer>
@@ -55,9 +55,9 @@
 	</div>
 	<!-- /Footer -->
 
-	<!-- 後読み用スクリプト -->
+	<!-- 延迟加载脚本 -->
 	<script>
-	// ページトップへ戻るボタン
+	// 返回顶部按钮
 	$(document).ready(function() {
 		var pagetop = $('.pagetop');
 		$(window).scroll(function () {
@@ -73,7 +73,7 @@
 		});
 	});
 
-	// スクロール時のヘッダー表示（固定ヘッダー）
+	// 滚动时显示固定头部
 	(function () {
 		const fh = document.getElementById('fixed-header');
 		if (fh) {
@@ -87,7 +87,7 @@
 		}
 	})();
 	</script>
-	<!-- //後読み用スクリプト -->
+	<!-- //延迟加载脚本 -->
 
 	<!-- Page Loading Animation -->
 	<script src="/js/loading.js"></script>

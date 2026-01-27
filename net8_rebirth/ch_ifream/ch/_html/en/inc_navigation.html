@@ -1,86 +1,138 @@
-	<!-- Navigation -->
-	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="/">{%SITE_TITLE%}</a>
-			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-				<!--if:{NAVIGATION_message}--><!--if:{LOGIN}--><!--if:{NOTDISP_CONTACT}--><span class="notification-cnt bg-danger">{%NOTDISP_CONTACTCNT%}</span><!--/if:{NOTDISP_CONTACT}--><!--/if:{LOGIN}--><!--/if:{NAVIGATION_message}-->
-			</button>
-			<div class="collapse navbar-collapse" id="navbarResponsive">
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="{%SITE_SSL_URL%}">TOP</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{%SITE_SSL_URL%}search.php">Look for a Machine</a>
-					</li>
+<!-- Header Wrapper -->
+<div class="header-wrapper">
+<header>
 
-					<!--if:{LOGIN}-->
-					
-					<!--if:{COIN_TRADE}-->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="dropdownMypage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Exchange of {%CURRENCY_3%}
-						</a>
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMypage">
-							<!--if:{NAVIGATION_goods}--><a class="dropdown-item" href="{%SITE_SSL_URL%}goods.php">List of Items</a><!--/if:{NAVIGATION_goods}-->
-							<!--if:{NAVIGATION_apply_history}--><a class="dropdown-item" href="{%SITE_SSL_URL%}apply_history.php">Application History</a><!--/if:{NAVIGATION_apply_history}-->
-							<!--if:{NAVIGATION_shipping}--><a class="dropdown-item" href="{%SITE_SSL_URL%}shipping.php">Shipping Procedures</a><!--/if:{NAVIGATION_shipping}-->
-						</div>
-					</li>
-					<!--/if:{COIN_TRADE}-->
+	<!-- Logo -->
+	<div class="l-header__logo">
+		<a href="{%SITE_SSL_URL%}">
+			<img src="/content/images/common/net8_logo.jpg" alt="{%SITE_TITLE%}">
+		</a>
+	</div>
 
-					<!--if:{NAVIGATION_MYPAGE}-->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="dropdownMypage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							My Page
-							<!--if:{NAVIGATION_message}--><!--if:{NOTDISP_CONTACT}--><span class="notification-cnt bg-danger">{%NOTDISP_CONTACTCNT%}</span><!--/if:{NOTDISP_CONTACT}--><!--/if:{NAVIGATION_message}-->
-						</a>
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMypage">
-							<!--if:{NAVIGATION_message}--><a class="dropdown-item" href="{%SITE_SSL_URL%}message.php">Contact BOX<!--if:{NOTDISP_CONTACT}--><span class="notification-cnt bg-danger">{%NOTDISP_CONTACTCNT%}</span><!--/if:{NOTDISP_CONTACT}--></a><!--/if:{NAVIGATION_message}-->
-							<!--if:{NAVIGATION_mail}--><a class="dropdown-item" href="{%SITE_SSL_URL%}mail.php">Change email address</a><!--/if:{NAVIGATION_mail}-->
-							<!--if:{NAVIGATION_mobile}--><a class="dropdown-item" href="{%SITE_SSL_URL%}mobile.php">Change Mobile phone</a><!--/if:{NAVIGATION_mobile}-->
-							<!--if:{NAVIGATION_profile}--><a class="dropdown-item" href="{%SITE_SSL_URL%}profile.php">Profile Confirmation / Setting</a><!--/if:{NAVIGATION_profile}-->
-							<!--if:{NAVIGATION_address}--><a class="dropdown-item" href="{%SITE_SSL_URL%}address.php">Shipping Address Confirmation / Setting</a><!--/if:{NAVIGATION_address}-->
-							<!--if:{NAVIGATION_gift}--><a class="dropdown-item" href="{%SITE_SSL_URL%}gift.php">Send Gift</a><!--/if:{NAVIGATION_gift}-->
-							<!--if:{NAVIGATION_playlist}--><a class="dropdown-item" href="{%SITE_SSL_URL%}playlist.php">Play History</a><!--/if:{NAVIGATION_playlist}-->
-							<!--if:{NAVIGATION_draw}--><a class="dropdown-item" href="{%SITE_SSL_URL%}draw.php">{%CURRENCY_3%} History</a><!--/if:{NAVIGATION_draw}-->
-							<!--if:{NAVIGATION_point}--><a class="dropdown-item" href="{%SITE_SSL_URL%}point.php">{%CURRENCY_1%} History</a><!--/if:{NAVIGATION_point}-->
-							<!--if:{NAVIGATION_pay}--><a class="dropdown-item" href="{%SITE_SSL_URL%}pay.php">Payment History</a><!--/if:{NAVIGATION_pay}-->
-							<!--if:{NAVIGATION_inquiry}--><a class="dropdown-item" href="{%SITE_SSL_URL%}inquiry.php">Contact Us</a><!--/if:{NAVIGATION_inquiry}-->
-							<!--if:{NAVIGATION_logout}--><a class="dropdown-item" href="{%SITE_SSL_URL%}logout.php">Logout</a><!--/if:{NAVIGATION_logout}-->
-						</div>
-					</li>
-					<!--/if:{NAVIGATION_MYPAGE}-->
-					
-					<!--/if:{LOGIN}-->
-					<!--if:{DISP_LANGLIST}-->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="dropdownLang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Language
-						</a>
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownLang">
-							{%LANGLIST%}
-						</div>
-					</li>
-					<!--/if:{DISP_LANGLIST}-->
-				</ul>
-			</div>
+	<!-- ========== Mobile Navigation ========== -->
+	<div class="smp">
+
+		<!-- Login Button (Non-login only) -->
+		<!--if:{NON_LOGIN}-->
+		<div class="smp-login">
+			<a href="{%SITE_SSL_URL%}login.php" class="login smp">
+				<img src="/content/images/icon/menu_login_icon.svg">Login
+			</a>
 		</div>
-	</nav>
+		<!--/if:{NON_LOGIN}-->
 
-	<div class="sub-navbar fixed-top">
-		<div class="container">
-			<ul class="sub-navbar-nav">
+		<!-- Top Menu -->
+		<nav class="up-menu">
+			<ul>
+				<li><a href="{%SITE_SSL_URL%}search.php" class="installation">Available Machines</a></li>
+				<!--if:{NAVIGATION_MYPAGE}-->
+					<li><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">My Page</a></li>
+				<!--/if:{NAVIGATION_MYPAGE}-->
 				<!--if:{NON_LOGIN}-->
-				<li><a href="{%SITE_SSL_URL%}regist.php"><i class="fas fa-user"></i> New Member Registration</a></li>
-				<li><a href="{%SITE_SSL_URL%}login.php"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+					<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">Sign Up</a></li>
 				<!--/if:{NON_LOGIN}-->
-				<!--if:{LOGIN}-->
-				<li><i class="fas fa-user"></i> {%LOGIN_USER%}</li>
-				<li><i class="fas fa-copyright"></i> {%USER_DRAW_PT%}</li>
-				<li><i class="fas fa-coins"></i> {%USER_PT%} <a href="{%SITE_SSL_URL%}point_buy.php" class="btn btn-buy-point">Purchase of {%CURRENCY_1%}</a></li>
-				<!--/if:{LOGIN}-->
 			</ul>
+		</nav>
+
+		<!-- Hamburger Menu -->
+		<div class="menu-set">
+			<input type="checkbox" id="menu-toggle">
+			<label for="menu-toggle" class="menu-button">
+				<span class="bar"></span>
+				<span class="bar"></span>
+				<span class="bar"></span>
+			</label>
+			<div class="black-bg"></div>
+
+			<nav class="menu">
+				<p>MENU</p>
+				<ul class="nav navbar-nav navbar-right">
+					<!--if:{NON_LOGIN}-->
+						<li><a href="{%SITE_SSL_URL%}regist.php" title="Create Account">Create Account</a></li>
+					<!--/if:{NON_LOGIN}-->
+					<li><a href="{%SITE_SSL_URL%}rule.php" title="House Rules">House Rules</a></li>
+					<!--if:{NAVIGATION_inquiry}-->
+						<li><a href="{%SITE_SSL_URL%}inquiry.php" title="Contact Us">Contact Us</a></li>
+					<!--/if:{NAVIGATION_inquiry}-->
+					<li><a href="{%SITE_SSL_URL%}beginner.php" title="For Beginners">For Beginners</a></li>
+					<li><a href="{%SITE_SSL_URL%}privacy.php" title="Privacy Policy">Privacy Policy</a></li>
+					<li><a href="{%SITE_SSL_URL%}guideline.php" title="Guidelines">Guidelines</a></li>
+					<li><a href="{%SITE_SSL_URL%}terms.php" title="Terms of Service">Terms of Service</a></li>
+					<li><a href="{%SITE_SSL_URL%}faq.php" title="FAQ">FAQ</a></li>
+					<!--if:{LOGIN}-->
+						<!--if:{NAVIGATION_logout}-->
+							<li class="last"><a href="{%SITE_SSL_URL%}logout.php" title="Logout">Logout</a></li>
+						<!--/if:{NAVIGATION_logout}-->
+					<!--/if:{LOGIN}-->
+				</ul>
+			</nav>
+		</div>
+
+	</div>
+	<!-- ========== /Mobile Navigation ========== -->
+
+
+	<!-- ========== PC Navigation ========== -->
+	<div class="menu-container">
+		<div class="navi pc">
+			<nav class="menu pc">
+				<ul>
+					<li class="n-navi"><a href="{%SITE_SSL_URL%}search.php" class="installation">Available Machines</a></li>
+					<!--if:{NAVIGATION_MYPAGE}-->
+						<li class="n-navi"><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">My Page</a></li>
+					<!--/if:{NAVIGATION_MYPAGE}-->
+				</ul>
+			</nav>
+
+			<nav class="menu pc">
+				<ul>
+					<!--if:{LOGIN}-->
+						<!--if:{COIN_TRADE}-->
+							<li><a href="{%SITE_SSL_URL%}wallet.php" class="walet">Wallet</a></li>
+						<!--/if:{COIN_TRADE}-->
+					<!--/if:{LOGIN}-->
+					<!--if:{NON_LOGIN}-->
+						<li><a href="{%SITE_SSL_URL%}login.php" class="login">Login</a></li>
+						<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">Sign Up</a></li>
+					<!--/if:{NON_LOGIN}-->
+				</ul>
+			</nav>
 		</div>
 	</div>
+	<!-- ========== /PC Navigation ========== -->
+
+</header>
+
+<!-- ========== Login Menu ========== -->
+<!--if:{LOGIN}-->
+<div class="login-menu-wrapper">
+	<ul class="login-menu">
+		<li class="login-menu-user-name">
+			<img src="/content/images/icon/menu_login_icon.svg">{%LOGIN_USER%}
+		</li>
+		<!--if:{COIN_TRADE}-->
+			<li class="login-menu-ryu">
+				<img src="/content/images/icon/coin-yen.svg">{%USER_DRAW_PT%}
+			</li>
+		<!--/if:{COIN_TRADE}-->
+		<li class="login-menu-point">
+			<i class="fas fa-coins"></i> {%USER_PT%}
+			<a href="{%SITE_SSL_URL%}point_buy.php" class="btn-buy-point">Purchase {%CURRENCY_1%}</a>
+		</li>
+		<!--if:{NAVIGATION_message}-->
+			<li class="login-menu-news">
+				<a href="{%SITE_SSL_URL%}message.php">
+					<img src="/content/images/icon/material-symbols_mail-outline.svg">
+					<!--if:{NOTDISP_CONTACT}-->
+						<span class="mess_badge">{%NOTDISP_CONTACTCNT%}</span>
+					<!--/if:{NOTDISP_CONTACT}-->
+				</a>
+			</li>
+		<!--/if:{NAVIGATION_message}-->
+	</ul>
+</div>
+<!--/if:{LOGIN}-->
+<!-- ========== /Login Menu ========== -->
+
+</div>
+<!-- /Header Wrapper -->

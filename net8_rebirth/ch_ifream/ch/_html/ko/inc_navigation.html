@@ -9,32 +9,32 @@
 			</a>
 		</div>
 
-		<!-- ========== モバイル版ナビゲーション ========== -->
+		<!-- ========== 모바일 버전 내비게이션 ========== -->
 		<div class="smp">
 
-			<!-- ログインボタン（非ログイン時のみ） -->
+			<!-- 로그인 버튼 (비로그인 시에만) -->
 			<!--if:{NON_LOGIN}-->
 			<div class="smp-login">
 				<a href="{%SITE_SSL_URL%}login.php" class="login smp">
-					<img src="/content/images/icon/menu_login_icon.svg">ログイン
+					<img src="/content/images/icon/menu_login_icon.svg">로그인
 				</a>
 			</div>
 			<!--/if:{NON_LOGIN}-->
 
-			<!-- 上部メニュー -->
+			<!-- 상단 메뉴 -->
 			<nav class="up-menu">
 				<ul>
-					<li><a href="{%SITE_SSL_URL%}search.php" class="installation">設置機種</a></li>
+					<li><a href="{%SITE_SSL_URL%}search.php" class="installation">설치 기종</a></li>
 					<!--if:{NAVIGATION_MYPAGE}-->
-						<li><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">マイページ</a></li>
+						<li><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">마이 페이지</a></li>
 					<!--/if:{NAVIGATION_MYPAGE}-->
 					<!--if:{NON_LOGIN}-->
-						<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">新規登録</a></li>
+						<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">신규 등록</a></li>
 					<!--/if:{NON_LOGIN}-->
 				</ul>
 			</nav>
 
-			<!-- ハンバーガーメニュー -->
+			<!-- 햄버거 메뉴 -->
 			<div class="menu-set">
 				<input type="checkbox" id="menu-toggle">
 				<label for="menu-toggle" class="menu-button">
@@ -48,20 +48,20 @@
 					<p>MENU</p>
 					<ul class="nav navbar-nav navbar-right">
 						<!--if:{NON_LOGIN}-->
-							<li><a href="{%SITE_SSL_URL%}regist.php" title="アカウントの作成">アカウントの作成</a></li>
+							<li><a href="{%SITE_SSL_URL%}regist.php" title="계정 생성">계정 생성</a></li>
 						<!--/if:{NON_LOGIN}-->
-						<li><a href="{%SITE_SSL_URL%}rule.php" title="ハウスルール">ハウスルール</a></li>
+						<li><a href="{%SITE_SSL_URL%}rule.php" title="이용 규칙">이용 규칙</a></li>
 						<!--if:{NAVIGATION_inquiry}-->
-							<li><a href="{%SITE_SSL_URL%}inquiry.php" title="お問い合わせ">お問い合わせフォーム</a></li>
+							<li><a href="{%SITE_SSL_URL%}inquiry.php" title="문의하기">문의하기</a></li>
 						<!--/if:{NAVIGATION_inquiry}-->
-						<li><a href="{%SITE_SSL_URL%}beginner.php" title="初めての方へ">初めての方へ</a></li>
-						<li><a href="{%SITE_SSL_URL%}privacy.php" title="プライバシーポリシー">プライバシーポリシー</a></li>
-						<li><a href="{%SITE_SSL_URL%}guideline.php" title="ガイドライン">ガイドライン</a></li>
-						<li><a href="{%SITE_SSL_URL%}terms.php" title="利用規約">利用規約</a></li>
-						<li><a href="{%SITE_SSL_URL%}faq.php" title="FAQ（よくある質問）">FAQ（よくある質問）</a></li>
+						<li><a href="{%SITE_SSL_URL%}beginner.php" title="처음 이용하시는 분">처음 이용하시는 분</a></li>
+						<li><a href="{%SITE_SSL_URL%}privacy.php" title="개인정보 처리방침">개인정보 처리방침</a></li>
+						<li><a href="{%SITE_SSL_URL%}guideline.php" title="가이드라인">가이드라인</a></li>
+						<li><a href="{%SITE_SSL_URL%}terms.php" title="이용약관">이용약관</a></li>
+						<li><a href="{%SITE_SSL_URL%}faq.php" title="자주 묻는 질문">자주 묻는 질문</a></li>
 						<!--if:{LOGIN}-->
 							<!--if:{NAVIGATION_logout}-->
-								<li class="last"><a href="{%SITE_SSL_URL%}logout.php" title="ログアウト">ログアウト</a></li>
+								<li class="last"><a href="{%SITE_SSL_URL%}logout.php" title="로그아웃">로그아웃</a></li>
 							<!--/if:{NAVIGATION_logout}-->
 						<!--/if:{LOGIN}-->
 					</ul>
@@ -69,17 +69,17 @@
 			</div>
 
 		</div>
-		<!-- ========== /モバイル版ナビゲーション ========== -->
+		<!-- ========== /모바일 버전 내비게이션 ========== -->
 
 
-		<!-- ========== PC版ナビゲーション ========== -->
+		<!-- ========== PC 버전 내비게이션 ========== -->
 		<div class="menu-container">
 			<div class="navi pc">
 				<nav class="menu pc">
 					<ul>
-						<li class="n-navi"><a href="{%SITE_SSL_URL%}search.php" class="installation">設置機種</a></li>
+						<li class="n-navi"><a href="{%SITE_SSL_URL%}search.php" class="installation">설치 기종</a></li>
 						<!--if:{NAVIGATION_MYPAGE}-->
-							<li class="n-navi"><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">マイページ</a></li>
+							<li class="n-navi"><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">마이 페이지</a></li>
 						<!--/if:{NAVIGATION_MYPAGE}-->
 					</ul>
 				</nav>
@@ -88,22 +88,22 @@
 					<ul>
 						<!--if:{LOGIN}-->
 							<!--if:{COIN_TRADE}-->
-								<li><a href="{%SITE_SSL_URL%}wallet.php" class="walet">ウォレット</a></li>
+								<li><a href="{%SITE_SSL_URL%}wallet.php" class="walet">지갑</a></li>
 							<!--/if:{COIN_TRADE}-->
 						<!--/if:{LOGIN}-->
 						<!--if:{NON_LOGIN}-->
-							<li><a href="{%SITE_SSL_URL%}login.php" class="login">ログイン</a></li>
-							<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">新規登録</a></li>
+							<li><a href="{%SITE_SSL_URL%}login.php" class="login">로그인</a></li>
+							<li><a href="{%SITE_SSL_URL%}regist.php" class="entry">신규 등록</a></li>
 						<!--/if:{NON_LOGIN}-->
 					</ul>
 				</nav>
 			</div>
 		</div>
-		<!-- ========== /PC版ナビゲーション ========== -->
+		<!-- ========== /PC 버전 내비게이션 ========== -->
 
 	</header>
 
-	<!-- ========== ログイン後メニュー ========== -->
+	<!-- ========== 로그인 후 메뉴 ========== -->
 	<!--if:{LOGIN}-->
 	<div class="login-menu-wrapper">
 		<ul class="login-menu">
@@ -117,7 +117,7 @@
 			<!--/if:{COIN_TRADE}-->
 			<li class="login-menu-point">
 				<i class="fas fa-coins"></i> {%USER_PT%}
-				<a href="{%SITE_SSL_URL%}point_buy.php" class="btn-buy-point">{%CURRENCY_1%}購入</a>
+				<a href="{%SITE_SSL_URL%}point_buy.php" class="btn-buy-point">{%CURRENCY_1%}구매</a>
 			</li>
 			<!--if:{NAVIGATION_message}-->
 				<li class="login-menu-news">
@@ -132,7 +132,7 @@
 		</ul>
 	</div>
 	<!--/if:{LOGIN}-->
-	<!-- ========== /ログイン後メニュー ========== -->
+	<!-- ========== /로그인 후 메뉴 ========== -->
 
 	</div>
 	<!-- /Header Wrapper -->
