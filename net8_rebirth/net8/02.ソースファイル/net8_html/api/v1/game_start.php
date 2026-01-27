@@ -807,7 +807,7 @@ try {
             'session_id' => $sessionId,
             'partner_user_id' => $partnerUserId,
             'model_cd' => $modelId,
-            'machine_no' => $machineNo,
+            'machine_no' => $machine['machine_no'],
             'initial_balance' => $initialPoints,
             'currency' => $currency
         ];
@@ -817,7 +817,7 @@ try {
             'userId' => $partnerUserId,
             'initialPoints' => $initialPoints,
             'modelId' => $modelId,
-            'machineNo' => $machineNo,
+            'machineNo' => $machine['machine_no'],
             'startedAt' => date('Y-m-d H:i:s'),
             'currency' => $currency
         ]);
