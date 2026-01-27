@@ -169,12 +169,17 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PC接続状態（Chrome RD Session ID or pc_status で判定）
-        // Session IDが入っている場合は優先、なければpc_statusを使用
-        if (!empty($m['chrome_rd_session_id'])) {
-            $m['pc_connected'] = true;
-        } else {
-            $m['pc_connected'] = ($m['pc_status'] == 'online');
+        // PC接続状態を last_heartbeat で判定
+        // 5分以内（300秒）にハートビートがあれば接続中
+        $m['pc_connected'] = false;
+        if (!empty($m['last_heartbeat'])) {
+            $heartbeat_time = strtotime($m['last_heartbeat']);
+            $current_time = time();
+            $diff_seconds = $current_time - $heartbeat_time;
+
+            if ($diff_seconds <= 300) { // 5分以内
+                $m['pc_connected'] = true;
+            }
         }
 
         if ($m['pc_connected']) {
@@ -183,7 +188,7 @@ function DispMachineList($template, $message = "") {
             $pc_offline++;
         }
 
-        // PeerID接続状態チェック
+        // PeerID接続状態チェック（参考情報として保持）
         $m['peer_connected'] = false;
         if (!empty($m['camera_mac'])) {
             $peer_id = str_replace(':', '', strtolower($m['camera_mac']));
@@ -834,10 +839,20 @@ function DispMachineList($template, $message = "") {
                         ?></dd>
                         <dt>PC接続</dt>
                         <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
-                        <dt style="color: #ff0000;">🔴 Session ID</dt>
-                        <dd style="color: #ff0000; font-size: 10px; word-break: break-all;"><?= htmlspecialchars($m['chrome_rd_session_id'] ?: 'NULL') ?></dd>
+                        <dt style="color: #ff0000;">🔴 last_heartbeat</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?php
+                            if (!empty($m['last_heartbeat'])) {
+                                $hb_time = strtotime($m['last_heartbeat']);
+                                $diff = time() - $hb_time;
+                                echo htmlspecialchars($m['last_heartbeat']) . " ({$diff}秒前)";
+                            } else {
+                                echo 'NULL';
+                            }
+                        ?></dd>
+                        <dt style="color: #ff0000;">🔴 pc_connected</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE (≤300秒)' : 'FALSE (>300秒 or NULL)' ?></dd>
                         <dt style="color: #ff0000;">🔴 machine_status</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> | pc_connected: <?= $m['pc_connected'] ? 'TRUE' : 'FALSE' ?></dd>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> (0=停止, 1=稼働, 2=メンテ)</dd>
                         <dt style="color: #ff0000;">🔴 assign_flg</dt>
                         <dd style="color: #ff0000; font-size: 10px;"><?= $m['assign_flg'] ?> | playing_member: <?= $m['playing_member'] ?: 'NULL' ?></dd>
                         <dt>IP</dt>
