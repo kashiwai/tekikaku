@@ -828,6 +828,10 @@ function DispMachineList($template, $message = "") {
                         ?></dd>
                         <dt>PC接続</dt>
                         <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
+                        <dt style="color: #ff0000;">DEBUG Session</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= htmlspecialchars($m['chrome_rd_session_id'] ?: 'NULL') ?></dd>
+                        <dt style="color: #ff0000;">DEBUG machine_status</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> (<?= $m['pc_connected'] ? 'TRUE' : 'FALSE' ?>)</dd>
                         <dt>IP</dt>
                         <dd><?= htmlspecialchars($m['ip_address'] ?: '-') ?></dd>
                         <dt>MAC</dt>
