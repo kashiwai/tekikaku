@@ -120,7 +120,7 @@ try {
     echo "<div class='section'>";
     echo "<h2>📹 カメラ一覧 (mst_camera)</h2>";
     $stmt = $pdo->query("
-        SELECT camera_no, camera_name, camera_mac, created_at, updated_at
+        SELECT camera_no, camera_name, camera_mac
         FROM mst_camera
         ORDER BY camera_no
         LIMIT 20
@@ -129,13 +129,12 @@ try {
 
     if (count($cameras) > 0) {
         echo "<table>";
-        echo "<tr><th>camera_no</th><th>camera_name (PeerID)</th><th>camera_mac</th><th>updated_at</th></tr>";
+        echo "<tr><th>camera_no</th><th>camera_name (PeerID)</th><th>camera_mac</th></tr>";
         foreach ($cameras as $c) {
             echo "<tr>";
             echo "<td><strong>{$c['camera_no']}</strong></td>";
             echo "<td>{$c['camera_name']}</td>";
             echo "<td>{$c['camera_mac']}</td>";
-            echo "<td>{$c['updated_at']}</td>";
             echo "</tr>";
         }
         echo "</table>";

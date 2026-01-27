@@ -139,9 +139,7 @@ try {
         SELECT
             camera_no,
             camera_name,
-            camera_mac,
-            created_at,
-            updated_at
+            camera_mac
         FROM mst_camera
         ORDER BY camera_no
         LIMIT 20
