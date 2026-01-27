@@ -497,7 +497,8 @@ try {
     }
 
     // 機種ステータスチェック（MACHINE_STATUS_MANAGEMENT_GUIDE.md に基づく）
-    if ($environment === 'production' && isset($machine['machine_status'])) {
+    // ※ machineNoが直接指定された場合はステータスチェックをスキップ（管理者による明示的指定）
+    if ($environment === 'production' && isset($machine['machine_status']) && !$requestedMachineNo) {
         if ($machine['machine_status'] == 0) {
             http_response_code(503);
             echo json_encode([
