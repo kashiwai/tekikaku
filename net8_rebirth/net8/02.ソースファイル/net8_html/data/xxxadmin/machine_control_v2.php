@@ -704,6 +704,18 @@ function DispMachineList($template, $message = "") {
         </div>
         <?php endif; ?>
 
+        <!-- デバッグ: Signaling Server PeerID一覧 -->
+        <div style="background: #fff3cd; border: 2px solid #ff0000; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+            <h3 style="color: #ff0000; margin: 0 0 10px 0;">🔴 DEBUG: Signaling Server Active Peers (<?= count($active_peers) ?>台)</h3>
+            <div style="font-size: 11px; font-family: monospace; max-height: 150px; overflow-y: auto; background: #fff; padding: 10px; border-radius: 4px;">
+                <?php if (count($active_peers) > 0): ?>
+                    <?= implode(', ', array_map('htmlspecialchars', $active_peers)) ?>
+                <?php else: ?>
+                    <span style="color: red; font-weight: bold;">⚠️ EMPTY - Signaling Serverから取得できていません</span>
+                <?php endif; ?>
+            </div>
+        </div>
+
         <!-- 統計情報 -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -830,10 +842,22 @@ function DispMachineList($template, $message = "") {
                         ?></dd>
                         <dt>PC接続</dt>
                         <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
-                        <dt style="color: #ff0000;">🔴 Session ID</dt>
-                        <dd style="color: #ff0000; font-size: 10px; word-break: break-all;"><?= htmlspecialchars($m['chrome_rd_session_id'] ?: 'NULL') ?></dd>
+                        <dt style="color: #ff0000;">🔴 camera_mac</dt>
+                        <dd style="color: #ff0000; font-size: 10px; word-break: break-all;"><?= htmlspecialchars($m['camera_mac'] ?: 'NULL') ?></dd>
+                        <dt style="color: #ff0000;">🔴 PeerID変換後</dt>
+                        <dd style="color: #ff0000; font-size: 10px; word-break: break-all;"><?php
+                            if (!empty($m['camera_mac'])) {
+                                echo htmlspecialchars(str_replace(':', '', strtolower($m['camera_mac'])));
+                            } else {
+                                echo 'NULL';
+                            }
+                        ?></dd>
+                        <dt style="color: #ff0000;">🔴 peer_connected</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['peer_connected'] ? 'TRUE' : 'FALSE' ?></dd>
+                        <dt style="color: #ff0000;">🔴 pc_connected</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE' : 'FALSE' ?></dd>
                         <dt style="color: #ff0000;">🔴 machine_status</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> | pc_connected: <?= $m['pc_connected'] ? 'TRUE' : 'FALSE' ?></dd>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?></dd>
                         <dt style="color: #ff0000;">🔴 assign_flg</dt>
                         <dd style="color: #ff0000; font-size: 10px;"><?= $m['assign_flg'] ?> | playing_member: <?= $m['playing_member'] ?: 'NULL' ?></dd>
                         <dt>IP</dt>
