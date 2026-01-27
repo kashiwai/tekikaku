@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ完全無効化
-RUN echo "FORCE-REBUILD-2026-01-26-18-25-CRITICAL-RAILWAY-TOML-FIX" > /tmp/cache-bust
+RUN echo "FORCE-REBUILD-2026-01-27-20-50-game-start-machineNo-fix" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
