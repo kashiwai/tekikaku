@@ -1,0 +1,61 @@
+	<script>
+		// init
+		var _myDraw = Number( $('#myDraw strong').html().replace(/,/, '') );
+		$('#type_11 .card').each( function(){
+			var _price = $(this).data('price');
+			if( _price > _myDraw){
+				$(this).addClass('disabled');
+			}
+		});
+		
+		$('#back-buy').on('click', function(){
+			$('#panel-buy-price').hide();
+			$('#panel-buy-type').show();
+			$('.priceBlock').hide();
+			$('#myDraw').hide();
+		});
+
+		function setBuyType(buyType) {
+			// 
+			var _target = "#type_" + buyType;
+			$('.priceBlock').hide();
+			$(_target).show();
+			//
+			if( buyType == 11){
+				$('#myDraw').show();
+			}else{
+				$('#myDraw').hide();
+			}
+			// main
+			$('#panel-buy-type').hide();
+			$('#panel-buy-price').show();
+			// 支払い方法セット
+			$('input[name="buytype"]').val([buyType]);
+		}
+
+		function buyPoint(price, thisobj) {
+			if( $(thisobj).hasClass('disabled')){
+				chkAlert("{%U1801%}");
+				return false;
+			}
+			
+			// confirm
+			$('input[name="buyprice"]').val([price]);
+			$('#MAINFORM').submit();
+			/*
+			swal({
+				title: execTitle,
+				text: execText,
+				type: 'question',
+				showCancelButton: true
+			}).then(function(result) {
+				$('input[name="buyprice"]').val([price]);
+				// submit
+				$('#MAINFORM').submit();
+			}, function(dismiss) {
+			});
+			*/
+			
+		}
+
+	</script>

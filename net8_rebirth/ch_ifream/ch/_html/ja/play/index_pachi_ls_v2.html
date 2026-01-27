@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>PLAY GROUND</title>
+
+		<!-- Webfont -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+		<link href="https://fonts.googleapis.com/css?family=Chakra+Petch" rel="stylesheet">
+
+		<!-- New Design Play CSS -->
+		<link href="/css/play.css?{%TIMESTAMP%}" rel="stylesheet">
+
+	</head>
+	<script>
+		var languageMode   = '{%LANG%}';
+		var machineno      = '{%MACHINE_NO%}';
+		var cameraid       = '{%CAMERA_ID%}';
+		var peerjskey      = '{%PEERJSKEY%}';
+		var memberno       = '{%MEMBERNO%}';
+		var authID         = '{%AUTHID%}';
+		var sigHost        = '{%SIGHOST%}';
+		/* 2020-09-18 Port追加 */
+		var sigPort        = '{%SIGPORT%}';
+		var iceServers     = {%ICESERVERS%};
+		var autopush       = '{%AUTO_PUSH%}';
+		var purchase       = {%PURCHASE%};
+		var errorMessages  = {%ERRORMESSAGES%};
+		var layoutOption   = {%LAYOUTOPTION%};
+		var convCredit     = {%CONVCREDIT%};
+		var convPlaypoint  = {%CONVPLAYPOINT%};
+		var browserVersion = '{%BROWSERVERSION%}';
+		var username       = '{%USERNAME%}';
+		// 2021-06-04 追加
+		var closeTime      = '{%CLOSETIME%}';
+		var pachi_rate     = '{%PACHI_RATE%}';
+		// 通貨対応
+		var userCurrency   = '{%CURRENCY%}';
+		var currencySymbol = '{%CURRENCY_SYMBOL%}';
+		var currencyName   = '{%CURRENCY_NAME%}';
+	</script>
+	<script>
+		/* ピッチインピッチアウトによる拡大縮小を禁止 */
+		/*
+		document.documentElement.addEventListener('touchstart', function (e) {
+			if (e.touches.length >= 2) {e.preventDefault();}
+		}, {passive: false});
+		*/
+		/* ダブルタップによる拡大を禁止 */
+		var t = 0;
+		document.documentElement.addEventListener('touchend', function (e) {
+			var now = new Date().getTime();
+			if ((now - t) < 350){
+			e.preventDefault();
+		}
+			t = now;
+		}, false);
+	</script>
+	<body class="play-page" oncontextmenu="return false;">
+		<div id="loading">
+			<div class="loader">Loading...</div>
+			<div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
+			<div id="loading_pay">精算中です。しばらくお待ち下さい。</div>
+			<div id="loadinglost">
+				<a id="loading_cancel" class="btn btn-primary btn-loading game-after-button">Exit</a>
+				<a id="btn_reload2" class="btn btn-primary btn-loading">Reload</a>
+			</div>
+			<div id="connectlost" style="display:none;">
+				<div><span id="conn_error_message"></span></div>
+				<a class="btn btn-primary btn-loading game-after-button">Exit</a>
+				<a id="btn_reload" class="btn btn-primary btn-loading">Reload</a>
+			</div>
+		</div>
+
+
+	<!-- Navigation -->
+	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" style="display:none;">
+		<div class="container">
+			<div class="game_status">
+				<div class="machine-no">
+					<div>台番</div>
+					<span id="machine_no">99</span>
+				</div>
+				<div class="game-situation-group">
+					<div class="game-situation situation-gc">
+						<div>ゲーム数</div>
+						<span id="count">0</span>
+					</div>
+					<div class="game-situation situation-bb">
+						<div>大当り</div>
+						<span id="bb_count" basecolor="">0</span>
+					</div>
+					<div class="game-situation situation-rb" id="rb_back">
+						<div>初当り</div>
+						<span id="rb_count" basecolor="">0</span>
+					</div>
+				</div>
+			</div>
+			<div class="game_status txt-btn-group">
+				<div class="num-title">{%CURRENCY_1%}</div>
+				<div class="num-value">
+					<span id="playpoint">999999</span>
+				</div>
+				<button class="btn btn-info" id="buypt-button" data-toggle="modal" data-target="#buypt-modal">購入</button>
+			</div>
+		</div>
+	</nav>
+
+	<!-- タブレット以下サイズの場合のみ表示 -->
+	<div class="d-inline d-lg-none">
+		<div class="slidemenu-bg" style="display:none;"></div>
+		<button type="button" class="btn-slidemenu-reel"><i class="fas fa-database"></i><br /><span>リール</span></button>
+		<!--<button type="button" class="btn-slidemenu-set"><i class="fas fa-cog"></i><br /><span>設定</span></button>-->
+		<!-- リール配列 -->
+		<div id="slide-reel" class="slide-reel">
+			<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
+		</div>
+		<!-- 設定 -->
+		<div id="slide-setting" class="slide-setting">
+			<!--if:{PUSH_BONUS}-->
+			<div class="form-group push_select">
+				<label for="form-meoshi">目押し</label> <span class="semiauto_on" style="display:none;"></span><span class="semiauto_off" style="display:none;"></span><br>
+				<div class="btn-group text-dark">
+					<a id="menu_select" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown"><img id="selectedimg" width=200 src="/img/base/noselect_bonus.png"><span class="caret black"></span></a>
+					<ul class="dropdown-menu" id="menu">
+						{%BONUS_IMAGE_HTML%}
+					</ul>
+				</div>
+			</div>
+			<!--/if:{PUSH_BONUS}-->
+			<div class="mt-4">
+				<div class="mb-2">オートプレイ<span id="pushorder_sp">（押し順対応）</span><span id="nonepushorder_sp">（押し順非対応）</span></div>
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+					<label class="btn btn-secondary">
+						<input type="radio" name="ctrl-autoplay" value="1" autocomplete="off"> ON
+					</label>
+					<label class="btn btn-secondary active">
+						<input type="radio" name="ctrl-autoplay" value="0" autocomplete="off" id="changeauto" checked> OFF
+					</label>
+				</div>
+			</div>
+			<div class="mt-4" id="changePanel_sp">
+				<div class="mb-2">パネル切替</div>
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+					<label id="ctrl-panel-play" class="btn btn-secondary active">
+						<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> プレイ
+					</label>
+					<label id="ctrl-panel-menu" class="btn btn-secondary">
+						<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Page Content -->
+	<div class="container play-container">
+		<div class="row mx-0">
+			<!-- PCサイズの場合のみ表示 -->
+			<div class="col-lg-4 d-none d-lg-inline p-4">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a id="tab-reel" class="nav-link active" data-toggle="tab" href="#reel" role="tab" aria-controls="reel" aria-selected="true">リール配列</a>
+					</li>
+					<!--
+					<li class="nav-item">
+						<a id="tab-setting" class="nav-link active" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">設定</a>
+					</li>
+					-->
+				</ul>
+				<div class="tab-content">
+					<!-- リール配列タブ -->
+					<div id="reel" class="tab-pane fade show active text-center" role="tabpanel" aria-labelledby="tab-reel">
+						<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
+					</div>
+					<!-- 設定タブ -->
+					<div id="setting" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-setting">
+						<!--if:{PUSH_BONUS}-->
+						<div class="form-group push_select">
+							<label for="form-meoshi">目押し</label> <span class="semiauto_on" style="display:none;"></span><span class="semiauto_off" style="display:none;"></span><br>
+							<div class="btn-group text-dark">
+								<a id="menu2_select" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" onclick="return !meoshiFlg"><img id="selectedimg2" src="/img/base/noselect_bonus.png"><span class="caret black"></span></a>
+								<ul class="dropdown-menu" id="menu2">
+									{%BONUS_IMAGE2_HTML%}
+								</ul>
+							</div>
+						</div>
+						<!--/if:{PUSH_BONUS}-->
+						<div class="mt-4">
+							<div class="mb-2">オートプレイ<span id="pushorder_pc">（押し順対応）</span><span id="nonepushorder_pc">（押し順非対応）</span></div>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-secondary">
+									<input type="radio" name="ctrl-autoplay" value="1" autocomplete="off"> ON
+								</label>
+								<label class="btn btn-secondary active">
+									<input type="radio" name="ctrl-autoplay" value="0" autocomplete="off" id="changeauto2" checked> OFF
+								</label>
+							</div>
+						</div>
+						<div class="mt-4" id="changePanel_pc">
+							<div class="mb-2">パネル切替</div>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<label id="ctrl-panel-play" class="btn btn-secondary active">
+									<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> プレイ
+								</label>
+								<label id="ctrl-panel-menu" class="btn btn-secondary">
+									<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-8 p-0">
+				<div class="d-inline-flex play-rightframe">
+					<div>
+						<div class="playing-screen landscape">
+							<!--
+							<div style="position: absolute;">
+								{%CURRENCY_3%}:<span class="coin"></span>
+							</div>
+							<div class="continuous-bonus">
+								<span id="cb"></span><span>連チャン</span>
+							</div>
+							<div class="active-game">
+								<span>回転中</span>
+							</div>
+							-->
+							<div class="countdown-container" style="display:none;">
+								<span>残り時間:</span><span id="countdown"></span>
+							</div>
+
+							<div class="active-game">
+								<span>回転中</span><br>
+							</div>
+							<div class="link-credit">
+								<span>AUTO PLAY</span>
+							</div>
+							<div class="marquee-container">
+							</div>
+							<!-- ここにスロット画面 -->
+							<video id="video" muted="muted" width="200" autoplay="autoplay" playsinline style="display:none;" onerror="console.log('error');" onemptied="console.log('emptied');" onabort="console.log('abort');" onstalled="console.log('stalled');"></video>
+							<audio id="audio"></audio>
+							<!-- <div id="consolelog"></div> -->
+						</div>
+						<!-- プレイパネルボタン -->
+						<div id="panel-play" class="d-flex flex-column controls-area">
+							<!-- sound -->
+							<a class="btn-pressable sound-off sound-tr" id="audiostart"></a>
+
+							<div class="d-flex justify-content-between mx-2">
+								<button class="btn-pressable" id="pay-button" data-toggle="modal" data-target="#pay-modal">精算</button>
+								<div class="game_status txt-btn-group" id="creditbox">
+									<span>{%CURRENCY_2%}</span>
+									<div class="num-value">
+										<span id="credit">0</span>
+									</div>
+									<div id="animeField">
+										<span id="animeNumber">0</span>
+									</div>
+									<button class="btn btn-info" id="convcr-button" data-toggle="modal" data-target="#convcr-modal">変換</button>
+								</div>
+							</div>
+							<!-- 手動 -->
+							<div id="play-manual" class="d-flex flex-column">
+								<div class="playing-btn d-flex align-items-center mt-2 mb-3">
+									<div class="mr-2">
+										<div class="form-group row">
+											<div class="col-7 pr-1">
+												<input type="tel" id="maxpoint" class="form-control">
+											</div>
+											<label class="col-5 col-form-label pl-0 pt-0">{%CURRENCY_1%}まで<br>自動変換</label>
+										</div>
+									</div>
+									<button id="autoplay_credit" class="btn-pressable reel-start autoplay-off" startlabel="START" stoplabel="STOP" waitlabel="WAIT" bblabel="AUTO" oncontextmenu="return false" onfocus="this.blur();" >START</button>
+								</div>
+								<div class="d-flex justify-content-end align-items-center">
+									<!-- push -->
+									<button id="sendBtnsoc_2" class="btn-pressable push mr-3 sendBtn" oncontextmenu="return false" onfocus="this.blur();"></button>
+									<!-- max+ -->
+									<!--<button id="sendBtnsom_2" class="btn-pressable maxplus sendBtn" oncontextmenu="return false" onfocus="this.blur();">MAX+</button>-->
+									<!-- sound -->
+									<!-- <a class="btn-pressable sound-off" id="audiostart_auto"></a> -->
+								</div>
+
+							</div>
+							<!-- オートプレイ -->
+							<div id="play-auto" class="flex-column mx-2" style="display:none;">
+							</div>
+						</div>
+
+						<!-- メニューパネルボタン -->
+						<div id="panel-menu" class="controls-area" style="display:none;">
+							<div class="px-2 text-center">
+								<div class="d-flex align-items-center w-100 justify-content-center">
+									<div class="panel-menu-btn">
+										<button class="btn-pressable sendBtn" id="sendBtnsol" oncontextmenu="return false" onfocus="this.blur();"><i class="fas fa-caret-left"></i></button>
+									</div>
+									<div class="panel-menu-btn">
+										<button class="btn-pressable sendBtn mb-2" id="sendBtnsou" oncontextmenu="return false" onfocus="this.blur();"><i class="fas fa-caret-up"></i></button><br />
+										<button class="btn-pressable sendBtn" id="sendBtnsod" oncontextmenu="return false" onfocus="this.blur();"><i class="fas fa-caret-down"></i></button>
+									</div>
+									<div class="panel-menu-btn">
+										<button class="btn-pressable sendBtn" id="sendBtnsor" oncontextmenu="return false" onfocus="this.blur();"><i class="fas fa-caret-right"></i></button>
+									</div>
+								</div>
+								<div class="mt-3">
+									<button class="btn-pressable mr-4 mb-3 sendBtn" id="sendBtnsos" oncontextmenu="return false" onfocus="this.blur();">SELECT</button>
+									<button class="btn-pressable sendBtn mr-4 mb-3" id="sendBtnsoe" oncontextmenu="return false" onfocus="this.blur();">ENTER</button>
+									<!--<a id="sendBtnsoc_3" class="btn-pressable push mr-3 mb-3 sendBtn" href="javascript:void(0);"></a>-->
+									<button id="sendBtnsoc_3" class="btn-pressable push mr-3 mb-3 sendBtn" oncontextmenu="return false" onfocus="this.blur();"></button>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 clearfix">
+							<div id="nowclock" class="float-left"></div>
+							<div id="username" class="float-right"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /.container -->
+
+	<!-- Modal -->
+	<div id="settle-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">決済手続き</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					引き続き、決済手続きを行って処理を完了させてください。
+				</div>
+				<div class="modal-footer">
+					<form id="settleform" action="{%PAYMENT_URL%}" method="POST" target="_blank">
+						{%PAYMENT_HIDDEN%}
+						<button type="button" class="btn btn-primary" id="send_settle">決済手続きへ</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="buypt-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{%CURRENCY_1%}購入</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					{%CURRENCY_1%}の購入方法を選択してください。
+					<div>
+						所持{%CURRENCY_3%}:<span class="coin"></span>{%CURRENCY_3%}
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="conv-alert-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">注意</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<i class="fas fa-exclamation-triangle"></i>精算後、出玉は{%PACHI_RATE%}％控除されますので、ご注意ください！<br>
+					<input type="checkbox" id="conv-alert-check" value="on"> <label for="conv-alert-check">[わかりました、今日はもう表示しない]</label>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="conv-alert-ok" data-dismiss="modal">OK</button>
+					<button type="button" class="btn btn-secondary" id="conv-alert-cancel" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="convcr-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{%CURRENCY_2%}変換</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<a id="convCredit" class="btn btn-block btn-primary" data-dismiss="modal">{%CURRENCY_2%}変換 (<span id="conv_point"></span> {%CURRENCY_1%} → <span id="conv_credit"></span> {%CURRENCY_2%})</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="pay-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">精算</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>現在の{%CURRENCY_2%}を{%CURRENCY_3%}に変換してゲームを終了しますか？</p>
+					<a id="payconf" class="btn btn-block btn-primary" data-dismiss="modal">はい</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="pay-conf" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">精算確認</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>現在持っている{%CURRENCY_2%}を{%CURRENCY_3%}に変換してゲームを終了しますか？<br>※すでに投入した期間限定付き（キャンペーンなどで取得）{%CURRENCY_1%}/{%CURRENCY_3%}は差し引かれます。</p>
+					<a id="pay" class="btn btn-block btn-primary" data-dismiss="modal">同意する</a>
+					<a id="payno" class="btn btn-block btn-primary" data-dismiss="modal">キャンセルする</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="end-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">精算が完了しました。</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<ul class="list-group list-group-flush base-info mt-4">
+						<li class="list-group-item d-flex w-100 justify-content-between">
+							<span>所持{%CURRENCY_1%}：</span>
+							<span><span id="pay_play_point">1</span></span>
+						</li>
+						<li class="list-group-item d-flex w-100 justify-content-between">
+							<span>精算{%CURRENCY_2%}：</span>
+							<span><span id="pay_credit">2</span></span>
+						</li>
+						<li class="list-group-item d-flex w-100 justify-content-between">
+							<span>獲得{%CURRENCY_3%}：</span>
+							<span><span id="pay_deduction_credit"></span><span id="pay_draw_point">3</span></span>
+						</li>
+						<li id="show_autodraw" class="list-group-item d-flex w-100 justify-content-between" style="display:none;">
+							<span>自動獲得{%CURRENCY_3%}：</span>
+							<span><span id="pay_autodraw_point"></span></span>
+						</li>
+						<li class="list-group-item d-flex w-100 justify-content-between">
+							<span>合計{%CURRENCY_3%}：</span>
+							<span><span id="pay_total_draw_point">4</span></span>
+						</li>
+					</ul>
+					<a id="endgame_a" class="btn btn-block btn-primary game-after-button" href="/gameafter.php">サイトに戻る</a>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="time-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">閉店時間</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>閉店まであと{%NOTICETIME%}分です。</p>
+					<a class="btn btn-block btn-primary" data-dismiss="modal">了解</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="error-modal" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="error-modal_title">警告</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="error-modal_message"></p>
+					<a class="btn btn-block btn-primary" data-dismiss="modal">OK</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap core JavaScript -->
+	<script src="/data/play_v2/vendor/jquery/jquery-3.3.1.min.js"></script>
+	<script src="/data/play_v2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="/data/play_v2/vendor/velocity/js/Velocity.js"></script>
+	<script src="js/peer_ie.js?{%TIMESTAMP%}" type="text/javascript"></script>
+	<script src="https://cdn.temasys.com.sg/adapterjs/0.15.x/adapter.screenshare.js"></script>
+	<script src="{%JSDIR%}/view_functions.js?{%TIMESTAMP%}" type="text/javascript"></script>
+	<script src="{%JSDIR%}/view_auth_pachi.js?{%TIMESTAMP%}-{%MACHINE_NO%}-{%AUTHID%}" type="text/javascript"></script>
+	<script src="js/playground.js?{%TIMESTAMP%}" type="text/javascript"></script>
+
+  </body>
+
+</html>

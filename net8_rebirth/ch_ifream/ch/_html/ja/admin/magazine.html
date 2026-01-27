@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - メルマガ管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="far fa-fw fa-envelope"></i> メルマガ管理</h3>
+						
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">検索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信予定日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_PLAN_DT_FROM" value="{%S_PLAN_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_PLAN_DT_TO" value="{%S_PLAN_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信開始日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_SEND_START_DT_FROM" value="{%S_SEND_START_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_SEND_START_DT_TO" value="{%S_SEND_START_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">送信対象</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_SEND_TARGET" style="width:150px;">
+													{%SEL_SEND_TARGET%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">状態</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_MAGAZINE_STATE" style="width:150px;">
+													{%SEL_MAGAZINE_STATE%}
+												</select>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">検索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0">
+									<thead>
+										<tr>
+											<th>メルマガNo<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="magazine_no asc" onClick="reSort('magazine_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="magazine_no desc" onClick="reSort('magazine_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>タイトル</th>
+											<th>送信数</th>
+											<th>送信予定日時<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="plan_dt asc" onClick="reSort('plan_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="plan_dt desc" onClick="reSort('plan_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>送信開始日時<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="send_start_dt asc" onClick="reSort('send_start_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="send_start_dt desc" onClick="reSort('send_start_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>送信完了日時<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="send_end_dt asc" onClick="reSort('send_end_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="send_end_dt desc" onClick="reSort('send_end_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>送信対象</th>
+											<th>状態</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%MAGAZINE_NO%}');">{%MAGAZINE_NO_PAD%}</a></td>
+											<td class="text-left">{%TITLE%}</td>
+											<td class="text-right">{%COUNT%}</td>
+											<td class="text-center">{%PLAN_DT%}</td>
+											<td class="text-center">{%SEND_START_DT%}</td>
+											<td class="text-center">{%SEND_END_DT%}</td>
+											<td class="text-center">{%LABEL_SEND_TARGET%}</td>
+											<td class="text-center">{%STATUS_LABEL%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_date("{%A2661%}", frm["S_PLAN_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A2662%}", frm["S_PLAN_DT_TO"].value, false)) return false;
+				if (chk_indis("", frm["S_PLAN_DT_FROM"].value) && chk_indis("", frm["S_PLAN_DT_TO"].value)) {
+					if (!compare_date("{%A2663%}", frm["S_PLAN_DT_FROM"].value, frm["S_PLAN_DT_TO"].value, false)) return false;
+				}
+				if (!chk_date("{%A2664%}", frm["S_SEND_START_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A2665%}", frm["S_SEND_START_DT_TO"].value, false)) return false;
+				if (chk_indis("", frm["S_SEND_START_DT_FROM"].value) && chk_indis("", frm["S_SEND_START_DT_TO"].value)) {
+					if (!compare_date("{%A2666%}", frm["S_SEND_START_DT_FROM"].value, frm["S_SEND_START_DT_TO"].value, false)) return false;
+				}
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "magazine_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+			
+		</script>
+		
+	</body>
+</html>

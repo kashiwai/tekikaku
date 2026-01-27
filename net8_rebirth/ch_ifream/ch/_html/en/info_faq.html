@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - FAQ</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container faq-list mb-5">
+		<h1 class="h3 text-center my-4">FAQ</h1>
+		<hr>
+
+		<div class="text-center">
+			<div class="row">
+				<div class="col-md-3 col-sm-6">
+					<a href="#account" class="in-link"><button type="button" class="btn btn-faq">About the Account</button></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<a href="#play" class="in-link"><button type="button" class="btn btn-faq">About the Play</button></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<a href="#buy" class="in-link"><button type="button" class="btn btn-faq">About the Purchase</button></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<a href="#lottery" class="in-link"><button type="button" class="btn btn-faq">About the Lotteries</button></a>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="account">About the Account</h4>
+		<div class="accordion" id="faq-account">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse01">
+						Q. I forgot my password. What should I do?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse01" class="collapse" data-parent="#faq-account">
+					<div class="card-body">
+						Please reset your password from "Forgot Your Password?" on the <a href="login.php">login screen</a>.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse02">
+						Q. I haven't received my member registration email.
+						</a>
+					</h6>
+				</div>
+				<div id="collapse02" class="collapse" data-parent="#faq-account">
+					<div class="card-body">
+						Please reconfirm whether it was automatically sorted into the spam folder or it is not set to receive mails from the "<strong>{%SITE_DOMAIN%}</strong>" domain.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse03">
+						Q. I want to cancel the membership. What should I do?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse03" class="collapse" data-parent="#faq-account">
+					<div class="card-body">
+						You can cancel the membership from "<a href="leave.php">Procedures to Cancel the Membership</a>" on My Page.
+						* You need to log in.<br />
+						<br />
+						All account information once canceled will be deleted and cannot be restored.<br />
+						In addition, your owned "{%CURRENCY_1%}" and "{%CURRENCY_3%}" will also be deleted. Please consider it before proceeding to cancel the membership.<br />
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="play">About the Play</h4>
+		<div class="accordion" id="faq-play">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse11">
+						Q. Are there any restrictions on the operating environment for playing {%SITE_TITLE%}?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse11" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						Please confirm them at "Recommended Specs for {%SITE_TITLE%}" of "<a href="info.php?M=beginners">For the First Time Users</a>".<br />
+						{%SITE_TITLE%} does not work properly on IE and Edge.<br />
+						If a malfunction occurs, please use the browser listed above and confirm the operation.<br />
+						If you still have troubles when using the browser listed above, please <a href="inquiry.php">contacting us</a> by specifying your operating system and the browser.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse12">
+						Q. Can I play {%SITE_TITLE%} on my smartphone?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse12" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						You can play {%SITE_TITLE%} on both iPhone and Android with the compliant browsers.<br />
+						* For the compliant browsers, please confirm "Recommended Specs for {%SITE_TITLE%}" of "<a href="info.php?M=beginners">For the First Time Users</a>".<br />
+						If you play without Wi-Fi, be careful of packet usage.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse13">
+						Q. What happens if the business hours end during the Play?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse13" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						As soon as the round you are playing at the end of business hours is over, it will be automatically settled and you will be left.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse14">
+						Q. There is no sound. What should I do?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse14" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						Turn on the voice button in the upper right of the play screen.<br />
+						Adjust the volume with the speaker on the terminal.<br />
+						* Since the sound source is taken directly from the housing, sound cracking may occur.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse15">
+						Q. The image quality has dropped (or the image has stopped) during the Play. What should I do?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse15" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						Please reboot your browser.<br />
+						You can continue to use your {%CURRENCY_2%}, etc.<br />
+						* However, it will be automatically settled after a certain period of time without resuming the Play.  <br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse16">
+						Q. How can I avoid the lag (delay) of the button operation?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse16" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						Since the games are operated by displaying the actual pachinko / slot machines via the internet, the lag (delay) may occur due to the line conditions and terminal specifications. Please enjoy the Play on understanding this.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse17">
+						Q. What happens to my play data if the internet connection is lost during the Play?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse17" class="collapse" data-parent="#faq-play">
+					<div class="card-body">
+						If it is within 3 minutes from the disconnection, you can resume from the {%CURRENCY_2%} you had before the disconnection.<br />
+						If the internet connection is interrupted during the Play and it is difficult to reconnect for some reasons, the {%CURRENCY_2%} held before the disconnection will be automatically settled after a certain period of time.<br />
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="buy">About the Purchase</h4>
+		<div class="accordion" id="faq-buy">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse51">
+						Q. What payment methods can I use?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse51" class="collapse" data-parent="#faq-buy">
+					<div class="card-body">
+						Please use credit card or convenience store payment.<br />
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse52">
+						Q. Can I purchase {%CURRENCY_3%}?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse52" class="collapse" data-parent="#faq-buy">
+					<div class="card-body">
+						{%CURRENCY_3%} cannot be purchased directly.<br />
+						* {%CURRENCY_3%} can only be increased by the Play.
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<h4 class="multi mt-3" id="lottery">About the Lotteries</h4>
+		<div class="accordion" id="faq-lottery">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse61">
+						Q. I want to apply for the lotteries to get the item. What should I do?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse61" class="collapse" data-parent="#faq-lottery">
+					<div class="card-body">
+						You can apply using your owned {%CURRENCY_3%} at "Exchange of {%CURRENCY_3%}" -> "List of Items" in the member menu.
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0">
+						<a class="text-body" data-toggle="collapse" href="#collapse62">
+						Q. How can I increase {%CURRENCY_3%} required for application?
+						</a>
+					</h6>
+				</div>
+				<div id="collapse62" class="collapse" data-parent="#faq-lottery">
+					<div class="card-body">
+						When you “settle” the {%CURRENCY_2%} you have increased in the Play, it will be converted into {%CURRENCY_3%}.<br />
+						* {%CURRENCY_3%} cannot be purchased directly.
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}info_faq.html"-->
+	
+	</body>
+</html>

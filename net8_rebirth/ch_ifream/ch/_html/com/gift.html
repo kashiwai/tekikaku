@@ -1,0 +1,195 @@
+	<script type="text/javascript">
+	<!--
+		$('#CommArea').hide();
+		$('#sendCoinAlert').hide();
+		var _has           = {%POINT%};
+		var _min           = {%MIN_POINT%};
+		var _lot           = {%LOT%};
+		var _cmmissionRate = {%RATE%};
+		var _cmmissionType = {%ROUNDING%};
+		var _bearer        = {%BEARER%};
+		var _giftPoint     = {%GIFT_POINT%};
+		var _dayLimit      = {%GIFT_LIMIT%};
+		var _daySend       = {%DAY_SEND%};
+		var _sAgentFlg     = {%AGENT_FLG%};
+		var _rAgentFlg     = 0;
+		
+		function _calcComm( _val){
+			if (_sAgentFlg != 0 || _rAgentFlg != 0) return 0;
+			var _comm = _val * (_cmmissionRate / 100);
+			if( _cmmissionType == 1){
+				_comm = Math.floor( _comm);
+			}else if( _cmmissionType == 2){
+				_comm = Math.ceil( _comm);
+			}else if( _cmmissionType == 3){
+				_comm = Math.round( _comm);
+			}
+			return _comm;
+		}
+		
+		function _checkSendCoin(){
+			var _val = $('#sendCoin').val();
+			if( _val.search(/^[0-9]+$/) > -1){
+				if( _val > 0){
+					if( _lot > 0){
+						if( _val % _lot == 0){
+							//ok
+							$('#sendCoinAlert').hide();
+						}else{
+							//ロット倍数ではない
+							$('#sendCoinAlertMsg').html("{%U1912%}");
+							$('#sendCoinAlert').show();
+						}
+					}else{
+						$('#sendCoinAlert').hide();
+					}
+				}else{
+					//0
+					$('#sendCoinAlert').hide();
+				}
+			}else{
+				if( _val != ""){
+					$('#sendCoinAlertMsg').html("{%U1904%}");
+					$('#sendCoinAlert').show();
+				}else{
+					$('#sendCoinAlert').hide();
+				}
+			}
+		}
+		function _calcSendCoin(){
+			if (_sAgentFlg != 0 || _rAgentFlg != 0) {
+				$('#comRate').html("0");
+			} else {
+				$('#comRate').html(_cmmissionRate);
+			}
+			var _val = $('#sendCoin').val();
+			if( _val.search(/^[0-9]+$/) > -1){
+				$('#calcComm').html( _calcComm( _val));
+				$('#CommArea').show();
+			}else{
+				$('#CommArea').hide();
+			}
+		}
+		$('#sendCoin').on('blur',  _checkSendCoin);
+		$('#sendCoin').on('input', _calcSendCoin);
+		$('#invitationCode').on('blur', GetReceiver);
+		_checkSendCoin();
+		_calcSendCoin();
+		$(function(){
+			if ($('#invitationCode').val().length > 0) GetReceiver();
+		});
+		
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			if (!chk_indis("{%U1901%}", frm["INV_CODE"].value)) return false;
+			if (!chk_alnum("{%U1902%}", frm["INV_CODE"].value)) return false;
+			if (frm["INV_CODE"].value.length != {%INVITE_CODE_LENGTH%} ) {
+				chkAlert("{%U1902%}");
+				return false;
+			}
+			if (!chk_indis("{%U1903%}", frm["SEND_COIN"].value)) return false;
+			if (!chk_numeric("{%U1904%}", frm["SEND_COIN"].value, true)) return false;
+			var sendCoin = parseInt(frm["SEND_COIN"].value, 10);
+			var sendToalCoin = sendCoin;
+			if (sendCoin < _min){
+				chkAlert("{%U1910%}");
+				return false;
+			}
+			if( _bearer == 2){
+				if (sendCoin > _has){
+					chkAlert("{%U1911%}");
+					return false;
+				}
+			}else if( _bearer == 1){
+				var _comm = _calcComm(sendCoin);
+				if (sendCoin + _comm > _has){
+					chkAlert("{%U1913%}");
+					return false;
+				}
+				sendToalCoin += _comm;
+			}
+			if( _lot > 0){
+				if (sendCoin % _lot != 0){
+					chkAlert("{%U1912%}");
+					return false;
+				}
+			}
+
+			if (_sAgentFlg != 1) {	// エージェント以外
+				// 送信可能制限
+				if (sendToalCoin > _giftPoint) {
+					if (_bearer == 1) {
+					chkAlert("{%U1917%}");
+					} else {
+						chkAlert("{%U1915%}");
+					}
+					return false;
+				}
+				// 日制限
+				if (_dayLimit >= 0) {
+					if (sendToalCoin + _daySend > _dayLimit) {
+						chkAlert("{%U1916%}");
+						return false;
+					}
+				}
+			}
+
+			if (frm["AGREE"].checked==false){
+				chkAlert("{%U1990%}");
+				return false;
+			}
+			return true;
+		}
+		// 受信者取得
+		function GetReceiver(){
+			$('#invCodeAlert').hide();
+			_rAgentFlg = 0;
+			var frm = window.document.MAINFORM;
+			// 招待者コードチェック
+			var errMsg = "";
+			if (!chk_indis("", frm["INV_CODE"].value)) {
+				errMsg = "{%U1901%}";
+			} else if (!chk_alnum("", frm["INV_CODE"].value)) {
+				errMsg = "{%U1902%}";
+			} else if (frm["INV_CODE"].value.length != {%INVITE_CODE_LENGTH%} ) {
+				errMsg = "{%U1902%}";
+			}
+			if (errMsg.length > 0) {
+				$('#invCodeAlertMsg').html(errMsg);
+				$('#invCodeAlert').show();
+				_calcSendCoin();
+				return false;
+			}
+
+			// 招待者取得
+			var _sendData = {
+				"icd":frm["INV_CODE"].value
+			}
+			$.ajax({
+				url: '{%SITE_SSL_URL%}{%SELF%}?M=geticd',
+				type: 'GET',
+				data: _sendData,
+				dataType: 'json'
+			}).done(function(data, textStatus, jqXHR){
+				if(data["status"] == "ng") {
+					$('#invCodeAlertMsg').html(data["error"]);
+					$('#invCodeAlert').show();
+					_rAgentFlg = 0;
+				}else if(data["status"] == "ok") {
+					$('#invCodeAlert').hide();
+					_rAgentFlg = data["agent_flg"];
+				}
+				_calcSendCoin();
+			}).fail(function(jqXHR, textStatus, errorThrown){
+				//other error
+				$('#invCodeAlertMsg').html("{%U1914%}");
+				$('#invCodeAlert').show();
+				_rAgentFlg = 0;
+				_calcSendCoin();
+			});
+
+
+		}
+	-->
+	</script>

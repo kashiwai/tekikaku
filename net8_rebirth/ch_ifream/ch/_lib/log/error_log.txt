@@ -1,0 +1,253 @@
+2025/10/20 15:27:19
+SQLSTATE[42000]: Syntax error or access violation: 1327 Undeclared variable: INDEX_VIEW_MACHINES
+select
+dm.machine_no, dm.machine_cd, dm.model_no, dm.release_date, dm.machine_status,
+mm.category, mm.model_name, mm.model_roman, mm.model_cd, mm.maker_no, mm.type_no, mm.unit_no, mm.prizeball_data,
+mm.image_list, mm.image_detail, mm.image_reel,
+mu.unit_name, mu.unit_roman,ma.maker_no, ma.maker_name, ma.maker_roman, mcp.point, mcp.credit, mcp.draw_point, mt.type_name, mt.type_roman,
+lm.assign_flg, lm.member_no,
+dmp.total_count, dmp.count, dmp.bb_count, dmp.rb_count, dmp.hit_data,
+(IFNULL(hmp.bb_count, 0) + IFNULL(hmp.rb_count, 0)) as his_bonus
+from dat_machine dm 
+inner join dat_machinePlay dmp on dmp.machine_no = dm.machine_no 
+inner join lnk_machine lm on lm.machine_no = dm.machine_no 
+inner join mst_model mm on mm.model_no = dm.model_no and mm.del_flg <>'1' 
+inner join mst_maker ma on ma.maker_no = mm.maker_no and ma.del_flg <>'1' 
+left join mst_unit  mu on mu.unit_no  = mm.unit_no and mu.del_flg <>'1' 
+inner join mst_type mt on mt.type_no = mm.type_no and mt.del_flg <>'1' 
+inner join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1' 
+left join his_machinePlay hmp on hmp.machine_no = dm.machine_no and hmp.play_dt = '2025/10/19'
+where dm.camera_no IS NOT NULL and dm.del_flg <> 1 and dm.release_date <= '2025/10/20' and dm.end_date >= '2025/10/20' and dm.machine_status <> 0
+order by dm.release_date desc
+limit 0,INDEX_VIEW_MACHINES
+
+
+2025/10/20 15:27:58
+SQLSTATE[42000]: Syntax error or access violation: 1327 Undeclared variable: INDEX_VIEW_MACHINES
+select
+dm.machine_no, dm.machine_cd, dm.model_no, dm.release_date, dm.machine_status,
+mm.category, mm.model_name, mm.model_roman, mm.model_cd, mm.maker_no, mm.type_no, mm.unit_no, mm.prizeball_data,
+mm.image_list, mm.image_detail, mm.image_reel,
+mu.unit_name, mu.unit_roman,ma.maker_no, ma.maker_name, ma.maker_roman, mcp.point, mcp.credit, mcp.draw_point, mt.type_name, mt.type_roman,
+lm.assign_flg, lm.member_no,
+dmp.total_count, dmp.count, dmp.bb_count, dmp.rb_count, dmp.hit_data,
+(IFNULL(hmp.bb_count, 0) + IFNULL(hmp.rb_count, 0)) as his_bonus
+from dat_machine dm 
+inner join dat_machinePlay dmp on dmp.machine_no = dm.machine_no 
+inner join lnk_machine lm on lm.machine_no = dm.machine_no 
+inner join mst_model mm on mm.model_no = dm.model_no and mm.del_flg <>'1' 
+inner join mst_maker ma on ma.maker_no = mm.maker_no and ma.del_flg <>'1' 
+left join mst_unit  mu on mu.unit_no  = mm.unit_no and mu.del_flg <>'1' 
+inner join mst_type mt on mt.type_no = mm.type_no and mt.del_flg <>'1' 
+inner join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1' 
+left join his_machinePlay hmp on hmp.machine_no = dm.machine_no and hmp.play_dt = '2025/10/19'
+where dm.camera_no IS NOT NULL and dm.del_flg <> 1 and dm.release_date <= '2025/10/20' and dm.end_date >= '2025/10/20' and dm.machine_status <> 0
+order by dm.release_date desc
+limit 0,INDEX_VIEW_MACHINES
+
+
+2025/10/20 23:57:39
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'asc,
+mm.add_dt desc
+limit 0,0' at line 19
+select
+dm.machine_no, dm.machine_cd, dm.model_no, dm.release_date, dm.machine_status,
+mm.category, mm.model_name, mm.model_roman, mm.model_cd, mm.maker_no, mm.type_no, mm.unit_no, mm.prizeball_data,
+mm.image_list, mm.image_detail, mm.image_reel,
+mu.unit_name, mu.unit_roman,ma.maker_no, ma.maker_name, ma.maker_roman, mcp.point, mcp.credit, mcp.draw_point, mt.type_name, mt.type_roman,
+lm.assign_flg, lm.member_no,
+dmp.total_count, dmp.count, dmp.bb_count, dmp.rb_count, dmp.hit_data,
+(IFNULL(hmp.bb_count, 0) + IFNULL(hmp.rb_count, 0)) as his_bonus
+from dat_machine dm 
+inner join dat_machinePlay dmp on dmp.machine_no = dm.machine_no 
+inner join lnk_machine lm on lm.machine_no = dm.machine_no 
+inner join mst_model mm on mm.model_no = dm.model_no and mm.del_flg <>'1' 
+inner join mst_maker ma on ma.maker_no = mm.maker_no and ma.del_flg <>'1' 
+left join mst_unit  mu on mu.unit_no  = mm.unit_no and mu.del_flg <>'1' 
+inner join mst_type mt on mt.type_no = mm.type_no and mt.del_flg <>'1' 
+inner join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1' 
+left join his_machinePlay hmp on hmp.machine_no = dm.machine_no and hmp.play_dt = '2025/10/19'
+where dm.camera_no IS NOT NULL and dm.del_flg <> 1 and dm.release_date <= '2025/10/20' and dm.end_date >= '2025/10/20' and dm.machine_status <> 0
+order by  asc,
+mm.add_dt desc
+limit 0,0
+
+
+2025/10/21 18:42:27
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sradmin'' and del_flg = 0' at line 1
+select admin_pass from mst_admin where admin_id = ''sradmin'' and del_flg = 0
+
+2025/10/21 21:47:31
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sradmin'' and del_flg = 0' at line 1
+select admin_pass from mst_admin where admin_id = ''sradmin'' and del_flg = 0
+
+2025/10/22 03:12:04
+SQLSTATE[42000]: Syntax error or access violation: 1327 Undeclared variable: ADMIN_LIST_ROWMAX
+select
+m.member_no, m.mail, m.nickname, m.state, m.temp_dt, m.join_dt, m.login_dt ,m.point, m.draw_point, m.black_flg,
+m.tester_flg,
+mm.invite_cd, m.agent_flg,
+m.mobile, m.international_cd,
+(select count(*) from dat_request dr where dr.member_no = m.member_no) as draw_count
+from mst_member m 
+left join mst_member mm on mm.member_no = m.invite_member_no
+order by member_no desc
+limit 0,ADMIN_LIST_ROWMAX
+
+
+2025/10/22 03:12:06
+SQLSTATE[42000]: Syntax error or access violation: 1327 Undeclared variable: ADMIN_LIST_ROWMAX
+select
+da.member_no, da.seq, da.syll, da.name, da.postal, da.address1, da.address2, da.address3, da.address4, da.tel, da.upd_dt,
+mm.mail, mm.last_name, mm.first_name, mm.nickname,
+mm.black_flg, mm.tester_flg, mm.state as member_state
+from dat_address da 
+inner join mst_member mm on da.member_no = mm.member_no
+where da.del_flg <> 1 
+order by da.member_no desc
+limit 0,ADMIN_LIST_ROWMAX
+
+
+2025/10/22 03:12:07
+SQLSTATE[42000]: Syntax error or access violation: 1327 Undeclared variable: ADMIN_LIST_ROWMAX
+select
+hp.machine_no, hp.point, hp.credit, hp.draw_point, hp.in_point, hp.in_credit, hp.out_credit, hp.out_draw_point,
+hp.lost_point,
+hp.play_count, hp.bb_count, hp.rb_count,
+hp.out_action_type,
+hp.start_dt, hp.end_dt,
+mo.model_no, mo.model_name, mo.del_flg as del_model, dm.machine_corner, dm.del_flg as del_machine,
+hp.member_no, mm.nickname, mm.state, mm.tester_flg, mm.black_flg
+from his_play hp 
+inner join dat_machine dm on dm.machine_no = hp.machine_no 
+inner join mst_model mo on mo.model_no = dm.model_no 
+left join mst_member mm on mm.member_no = hp.member_no
+where ( ( hp.start_dt >= '2025/10/21 04:00:00' ) or ( hp.end_dt >= '2025/10/21 04:00:00' ) )
+order by start_dt desc
+limit 0,ADMIN_LIST_ROWMAX
+
+
+2025/10/22 03:12:08
+SQLSTATE[42000]: Syntax error or access violation: 1327 Undeclared variable: ADMIN_LIST_ROWMAX
+select
+hp.purchase_no, hp.member_no, hp.recept_dt, hp.purchase_type, hp.amount, hp.point, hp.result_status, hp.result_message, hp.purchase_dt,
+mm.mail, mm.last_name, mm.first_name, mm.nickname, mm.state, mm.tester_flg, mm.black_flg
+from his_purchase hp 
+inner join mst_member mm on mm.member_no = hp.member_no
+where hp.result_status = 1
+order by recept_dt desc
+limit 0,ADMIN_LIST_ROWMAX
+
+
+2025/10/23 16:46:19
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'asc,
+mm.add_dt desc
+limit 0,0' at line 19
+select
+dm.machine_no, dm.machine_cd, dm.model_no, dm.release_date, dm.machine_status,
+mm.category, mm.model_name, mm.model_roman, mm.model_cd, mm.maker_no, mm.type_no, mm.unit_no, mm.prizeball_data,
+mm.image_list, mm.image_detail, mm.image_reel,
+mu.unit_name, mu.unit_roman,ma.maker_no, ma.maker_name, ma.maker_roman, mcp.point, mcp.credit, mcp.draw_point, mt.type_name, mt.type_roman,
+lm.assign_flg, lm.member_no,
+dmp.total_count, dmp.count, dmp.bb_count, dmp.rb_count, dmp.hit_data,
+(IFNULL(hmp.bb_count, 0) + IFNULL(hmp.rb_count, 0)) as his_bonus
+from dat_machine dm 
+inner join dat_machinePlay dmp on dmp.machine_no = dm.machine_no 
+inner join lnk_machine lm on lm.machine_no = dm.machine_no 
+inner join mst_model mm on mm.model_no = dm.model_no and mm.del_flg <>'1' 
+inner join mst_maker ma on ma.maker_no = mm.maker_no and ma.del_flg <>'1' 
+left join mst_unit  mu on mu.unit_no  = mm.unit_no and mu.del_flg <>'1' 
+inner join mst_type mt on mt.type_no = mm.type_no and mt.del_flg <>'1' 
+inner join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1' 
+left join his_machinePlay hmp on hmp.machine_no = dm.machine_no and hmp.play_dt = '2025/10/22'
+where dm.camera_no IS NOT NULL and dm.del_flg <> 1 and dm.release_date <= '2025/10/23' and dm.end_date >= '2025/10/23' and dm.machine_status <> 0
+order by  asc,
+mm.add_dt desc
+limit 0,0
+
+
+2025/10/23 16:46:36
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'asc,
+mm.add_dt desc
+limit 0,0' at line 19
+select
+dm.machine_no, dm.machine_cd, dm.model_no, dm.release_date, dm.machine_status,
+mm.category, mm.model_name, mm.model_roman, mm.model_cd, mm.maker_no, mm.type_no, mm.unit_no, mm.prizeball_data,
+mm.image_list, mm.image_detail, mm.image_reel,
+mu.unit_name, mu.unit_roman,ma.maker_no, ma.maker_name, ma.maker_roman, mcp.point, mcp.credit, mcp.draw_point, mt.type_name, mt.type_roman,
+lm.assign_flg, lm.member_no,
+dmp.total_count, dmp.count, dmp.bb_count, dmp.rb_count, dmp.hit_data,
+(IFNULL(hmp.bb_count, 0) + IFNULL(hmp.rb_count, 0)) as his_bonus
+from dat_machine dm 
+inner join dat_machinePlay dmp on dmp.machine_no = dm.machine_no 
+inner join lnk_machine lm on lm.machine_no = dm.machine_no 
+inner join mst_model mm on mm.model_no = dm.model_no and mm.del_flg <>'1' 
+inner join mst_maker ma on ma.maker_no = mm.maker_no and ma.del_flg <>'1' 
+left join mst_unit  mu on mu.unit_no  = mm.unit_no and mu.del_flg <>'1' 
+inner join mst_type mt on mt.type_no = mm.type_no and mt.del_flg <>'1' 
+inner join mst_convertPoint mcp on mcp.convert_no = dm.convert_no and mcp.del_flg <>'1' 
+left join his_machinePlay hmp on hmp.machine_no = dm.machine_no and hmp.play_dt = '2025/10/22'
+where dm.camera_no IS NOT NULL and dm.del_flg <> 1 and dm.release_date <= '2025/10/23' and dm.end_date >= '2025/10/23' and dm.machine_status <> 0
+order by  asc,
+mm.add_dt desc
+limit 0,0
+
+
+2025/11/03 15:15:45
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'camera_ip' in 'field list'
+SELECT camera_no, camera_name, camera_ip, camera_port, stream_url, camera_type 
+        FROM mst_camera 
+        WHERE camera_no = 10000023
+
+2025/11/06 06:22:11
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'net8_dev.dat_camera' doesn't exist
+SELECT
+        camera_no, machine_no, mac_address, peer_id,
+        camera_flg, add_dt, upd_dt
+    FROM dat_camera
+    WHERE machine_no = 3
+    ORDER BY camera_no
+
+2025/11/06 06:40:45
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'machine_no' in 'field list'
+SELECT
+        machine_no, mac_address, ip_address, peer_id, license_id,
+        add_dt, upd_dt, del_flg
+    FROM mst_cameralist
+    WHERE machine_no = 3
+    ORDER BY machine_no
+
+2025/11/06 06:44:27
+SQLSTATE[HY000]: General error: 1364 Field 'camera_name' doesn't have a default value
+INSERT INTO mst_camera (camera_no, camera_mac, add_no, add_dt, upd_no, upd_dt, del_flg)
+    VALUES (3, 'MACHINE-03-MAC', 1, NOW(), 1, NOW(), 0)
+    ON DUPLICATE KEY UPDATE camera_mac='MACHINE-03-MAC', upd_dt=NOW()
+
+2025/11/06 10:51:46
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'machine_no' in 'field list'
+SELECT mac_address, license_id, ip_address, machine_no FROM mst_cameralist WHERE machine_no = 3 OR mac_address LIKE '%e0-51-d8%' OR mac_address LIKE '%E0-51-D8%'
+
+2025/11/06 12:21:35
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'member_id' in 'field list'
+SELECT member_no, member_id, nickname, state FROM mst_member WHERE member_id='player01'
+
+2026/01/08 01:46:42
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NULL
+order by started_at DESC
+limit 1' at line 4
+select
+member_no, partner_user_id, session_id, currency
+from game_sessions
+where machine_no =1 and status IN ('playing', 'pending')NULL
+order by started_at DESC
+limit 1
+
+
+2026/01/08 01:47:17
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'currency' in 'field list'
+select
+member_no, nickname, mail, point, currency
+from mst_member
+where member_no =135
+
+

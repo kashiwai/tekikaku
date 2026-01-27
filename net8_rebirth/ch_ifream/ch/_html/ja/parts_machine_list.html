@@ -1,0 +1,129 @@
+<!-- 台一覧（新デザイン） -->
+<div class="machine-list-set">
+
+<!--loop:{LIST}-->
+<!--ここから各台選択//-->
+<!--情報部分-->
+<div class="machine-list">
+
+<button type="button" id="{%NO%}" onclick="location.href='{%SITE_SSL_URL%}play_v2/?NO={%NO%}'" class="m-list-link"></button>
+<label for="{%NO%}" class="m-list-go-wrapper">
+
+<!--台番号と出玉表示//-->
+<div class="info-header">
+
+<!--遊技台の台番号//-->
+<p class="machine-number">{%NO%}</p>
+
+<!--札表示//-->
+<div class="plate">
+	<!--if:{PLATE_10000}-->
+	<img src="/content/images/play-page/plate_10000_{%PLATE_10000%}.png" class="large-plate">
+	<!--/if:{PLATE_10000}-->
+	<!--if:{PLATE_1000}-->
+	<img src="/content/images/play-page/plate_1000_{%PLATE_1000%}.png" class="small-plate">
+	<!--/if:{PLATE_1000}-->
+</div>
+<!--//札表示-->
+
+</div>
+<!--台番号と出玉表示//-->
+
+<!--データ表示//-->
+<div class="info-inner">
+
+<!--イメージ画像//-->
+<div class="list-image">
+	<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" class="machine-panel" alt="{%MODEL_NAME%}">
+</div>
+<!--//イメージ画像-->
+
+<!--データ表示セット//-->
+<div class="information-lamp">
+
+<!--メインカウンター//-->
+<table class="main-counter">
+<tr>
+<td>
+<!--左側表示//-->
+<table class="main-display">
+<tr>
+	<td>
+		<img src="/content/images/play-page/la_ch/count_big_ch.svg" class="data-title-image large pc">
+		<img src="/content/images/play-page/la_ch/count_big_ch_smp.svg" class="data-title-image large smp">
+	</td>
+	<td class="count-data big-seg">{%TOTAL_GAME_TIMES%}</td>
+</tr>
+<tr>
+	<td><img src="/content/images/play-page/la_ch/count_spin_ch.svg" class="data-title-image large game"></td>
+	<td class="count-data game">{%GAME_TIMES%}</td>
+</tr>
+</table>
+<!--//左側表示-->
+</td>
+<td>
+<!--右側表示//-->
+<table class="sub-display">
+<tr>
+	<td class="title-td-bb"><img src="/content/images/play_machine_list/m_list_bb.svg" class="data-title-image"></td>
+	<td class="bb">{%BIG_TIMES%}</td>
+</tr>
+<tr>
+	<td class="title-td-rb"><img src="/content/images/play_machine_list/m_list_rb.svg" class="data-title-image"></td>
+	<td class="rb">{%REG_TIMES%}</td>
+</tr>
+<tr>
+	<td class="title-td-total"><img src="/content/images/play_machine_list/m_list_total.svg" class="data-title-image"></td>
+	<td class="total">{%TOTAL_CREDIT%}</td>
+</tr>
+</table>
+<!--//右側表示-->
+</td>
+</tr>
+</table>
+<!--//メインカウンター-->
+
+<!--サブカウンター//-->
+<table class="sub-counter">
+<tr class="sub-counter-title">
+	<td><img src="/content/images/play-page/m_list_bb.svg"></td>
+	<td><img src="/content/images/play-page/m_list_b.svg"></td>
+	<td><img src="/content/images/play-page/m_list_today_get_max.svg"></td>
+</tr>
+<tr class="sub-counter-count">
+	<td class="counter-seg bb">{%BB_RATIO%}</td>
+	<td class="counter-seg rb">{%RB_RATIO%}</td>
+	<td class="counter-seg max">{%TODAY_MAX_CREDIT%}</td>
+</tr>
+</table>
+<!--サブカウンター//-->
+
+<!--グラフ表示//-->
+<table class="bonus-graph">
+<tr><!--グラフ表示-->
+	{%GRAPH_IMAGES%}
+</tr>
+<tr><!--回転数表示-->
+	{%GRAPH_COUNTS%}
+</tr>
+</table>
+<!--//グラフ表示-->
+
+</div>
+
+<!--履歴表示//-->
+<a href="#d{%NO%}" rel="leanModal" class="m-history"><img src="/content/images/buttons/m_list_history.png" alt="履歴"></a>
+<!--//履歴表示-->
+
+</div>
+<!--データ表示//-->
+
+</label>
+
+</div>
+<!--//ここまで各台選択-->
+
+<!--/loop:{LIST}-->
+
+</div>
+<!-- /.machine-list-set -->

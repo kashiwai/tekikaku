@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET8 SDK - 全機種テスト</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-secondary { background: #868e96; }
+        .btn-success { background: #51cf66; }
+
+        /* コントロールセクション */
+        .control-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* 結果グリッド */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .model-test-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .model-test-card.testing {
+            border-color: #ffd43b;
+            background: rgba(255, 212, 59, 0.1);
+        }
+        .model-test-card.success {
+            border-color: #51cf66;
+            background: rgba(81, 207, 102, 0.1);
+        }
+        .model-test-card.failed {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+        .model-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .model-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-pending { background: #868e96; }
+        .status-testing { background: #ffd43b; color: #333; }
+        .status-success { background: #51cf66; }
+        .status-failed { background: #ff6b6b; }
+
+        .test-details {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .test-details p {
+            margin: 5px 0;
+        }
+
+        /* 統計情報 */
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* プログレスバー */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #51cf66 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 NET8 SDK - 全機種一括テスト</h1>
+        <p class="subtitle">すべての機種に対してAPIテストを実行</p>
+
+        <!-- ナビゲーション -->
+        <div class="nav-links">
+            <a href="index.html" class="btn btn-secondary">← トップに戻る</a>
+            <a href="demo_game.html" class="btn">🎮 ゲームデモ</a>
+        </div>
+
+        <!-- コントロール -->
+        <div class="control-section">
+            <h2 style="margin-bottom: 20px;">テスト実行</h2>
+            <button class="btn btn-success" id="start-test-btn" onclick="startAllTests()">
+                🚀 全機種テスト開始
+            </button>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p id="progress-text" style="margin-top: 10px; opacity: 0.7;">テストを開始してください</p>
+        </div>
+
+        <!-- 統計情報 -->
+        <div class="stats-section" id="stats-section" style="display: none;">
+            <h2>📊 テスト結果統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">総機種数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" style="color: #51cf66;" id="stat-success">0</div>
+                    <div class="stat-label">成功</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" style="color: #ff6b6b;" id="stat-failed">0</div>
+                    <div class="stat-label">失敗</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-duration">0</div>
+                    <div class="stat-label">平均時間 (ms)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- テスト結果 -->
+        <div class="results-grid" id="results-grid"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://mgg-webservice-production.up.railway.app';
+        const API_KEY = 'pk_test_dummy_partner_2025';
+        let jwtToken = null;
+        let models = [];
+        let testResults = [];
+
+        // JWT取得
+        async function getJWT() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/auth.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apiKey: API_KEY })
+                });
+                const data = await response.json();
+                if (data.success && data.token) {
+                    jwtToken = data.token;
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('JWT取得エラー:', error);
+                return false;
+            }
+        }
+
+        // 機種一覧を取得
+        async function loadModels() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/models.php?apiKey=${API_KEY}`);
+                const data = await response.json();
+                if (data.success && data.models) {
+                    models = data.models;
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('機種一覧取得エラー:', error);
+                return false;
+            }
+        }
+
+        // テスト用カードを生成
+        function createModelCard(model) {
+            const card = document.createElement('div');
+            card.className = 'model-test-card';
+            card.id = `card-${model.id}`;
+            card.innerHTML = `
+                <div class="model-header">
+                    <div class="model-title">${model.name}</div>
+                    <span class="status-badge status-pending">待機中</span>
+                </div>
+                <div class="test-details">
+                    <p><strong>機種ID:</strong> ${model.id}</p>
+                    <p><strong>カテゴリ:</strong> ${model.category === 'slot' ? 'スロット' : 'パチンコ'}</p>
+                    <p id="result-${model.id}">-</p>
+                </div>
+            `;
+            return card;
+        }
+
+        // 単一機種をテスト
+        async function testModel(model) {
+            const card = document.getElementById(`card-${model.id}`);
+            const badge = card.querySelector('.status-badge');
+            const resultText = document.getElementById(`result-${model.id}`);
+
+            // テスト中状態
+            card.className = 'model-test-card testing';
+            badge.className = 'status-badge status-testing';
+            badge.textContent = 'テスト中...';
+
+            const startTime = performance.now();
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/game_start.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ modelId: model.id })
+                });
+
+                const data = await response.json();
+                const duration = Math.round(performance.now() - startTime);
+
+                if (data.success) {
+                    // 成功
+                    card.className = 'model-test-card success';
+                    badge.className = 'status-badge status-success';
+                    badge.textContent = '✅ 成功';
+
+                    const mode = data.mock ? 'モック' : '実機';
+                    resultText.innerHTML = `
+                        <strong>ステータス:</strong> ✅ 成功<br>
+                        <strong>モード:</strong> ${mode}<br>
+                        <strong>レスポンスタイム:</strong> ${duration}ms<br>
+                        ${data.sessionId ? `<strong>セッションID:</strong> ${data.sessionId}` : ''}
+                    `;
+
+                    return { success: true, duration, model };
+                } else {
+                    throw new Error(data.message || '不明なエラー');
+                }
+            } catch (error) {
+                // 失敗
+                card.className = 'model-test-card failed';
+                badge.className = 'status-badge status-failed';
+                badge.textContent = '❌ 失敗';
+
+                resultText.innerHTML = `
+                    <strong>ステータス:</strong> ❌ 失敗<br>
+                    <strong>エラー:</strong> ${error.message}
+                `;
+
+                return { success: false, duration: 0, model, error: error.message };
+            }
+        }
+
+        // 全機種テスト開始
+        async function startAllTests() {
+            const startBtn = document.getElementById('start-test-btn');
+            startBtn.disabled = true;
+            startBtn.textContent = '⏳ テスト実行中...';
+
+            document.getElementById('progress-text').textContent = '初期化中...';
+
+            // 機種一覧を取得
+            const modelsLoaded = await loadModels();
+            if (!modelsLoaded) {
+                alert('機種一覧の取得に失敗しました');
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 全機種テスト開始';
+                return;
+            }
+
+            // JWT取得
+            document.getElementById('progress-text').textContent = '認証中...';
+            const authSuccess = await getJWT();
+            if (!authSuccess) {
+                alert('認証に失敗しました');
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 全機種テスト開始';
+                return;
+            }
+
+            // カードを生成
+            const grid = document.getElementById('results-grid');
+            grid.innerHTML = '';
+            models.forEach(model => {
+                grid.appendChild(createModelCard(model));
+            });
+
+            // 統計セクション表示
+            document.getElementById('stats-section').style.display = 'block';
+            document.getElementById('stat-total').textContent = models.length;
+
+            // テスト実行
+            testResults = [];
+            let successCount = 0;
+            let failedCount = 0;
+            let totalDuration = 0;
+
+            for (let i = 0; i < models.length; i++) {
+                const model = models[i];
+                const progress = ((i + 1) / models.length) * 100;
+
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+                document.getElementById('progress-text').textContent =
+                    `テスト中 (${i + 1}/${models.length}): ${model.name}`;
+
+                const result = await testModel(model);
+                testResults.push(result);
+
+                if (result.success) {
+                    successCount++;
+                    totalDuration += result.duration;
+                } else {
+                    failedCount++;
+                }
+
+                // 統計更新
+                document.getElementById('stat-success').textContent = successCount;
+                document.getElementById('stat-failed').textContent = failedCount;
+                document.getElementById('stat-duration').textContent =
+                    successCount > 0 ? Math.round(totalDuration / successCount) : 0;
+
+                // 次のテストまで少し待機
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            // 完了
+            document.getElementById('progress-text').textContent =
+                `✅ テスト完了！ 成功: ${successCount} / 失敗: ${failedCount}`;
+
+            startBtn.disabled = false;
+            startBtn.textContent = '🔄 再テスト';
+        }
+
+        // ページ読み込み時
+        window.onload = () => {
+            console.log('全機種テストページ読み込み完了');
+        };
+    </script>
+</body>
+</html>

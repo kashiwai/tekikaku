@@ -13,8 +13,9 @@
  *
  * @package NET8
  * @author  AI Control System
- * @version 2.0
+ * @version 2.1
  * @since   2025/12/20
+ * @updated 2026/01/27 - PeerID接続状態チェック、メンテナンス管理機能追加
  */
 
 require_once('../../_etc/require_files_admin.php');
@@ -26,7 +27,7 @@ function main() {
     try {
         $template = new TemplateAdmin();
 
-        getData($_POST, array("M", "machine_no", "count"));
+        getData($_POST, array("M", "machine_no", "count", "machine_status"));
         getData($_GET, array("M", "export"));
 
         $mode = isset($_POST["M"]) ? $_POST["M"] : (isset($_GET["M"]) ? $_GET["M"] : "list");
@@ -46,6 +47,9 @@ function main() {
                 break;
             case "delete":
                 ProcDelete($template);
+                break;
+            case "toggle_maintenance":
+                ProcToggleMaintenance($template);
                 break;
             case "send_command":
                 ProcSendCommand($template);
@@ -69,9 +73,48 @@ function main() {
 }
 
 /**
+ * Signaling ServerからPeerID一覧を取得
+ */
+function GetSignalingPeerIds() {
+    $signaling_host = getenv('SIGNALING_HOST') ?: 'mgg-signaling-production-c1bd.up.railway.app';
+    $signaling_port = getenv('SIGNALING_PORT') ?: '443';
+    $protocol = $signaling_port == '443' ? 'https' : 'http';
+
+    $signaling_url = "{$protocol}://{$signaling_host}:{$signaling_port}/peerjs/peers";
+
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 5,
+            'ignore_errors' => true
+        ],
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false
+        ]
+    ]);
+
+    try {
+        $response = @file_get_contents($signaling_url, false, $context);
+
+        if ($response !== false) {
+            $peers = json_decode($response, true);
+            if (is_array($peers)) {
+                return $peers;
+            }
+        }
+    } catch (Exception $e) {
+        error_log("❌ Signaling Server接続エラー: " . $e->getMessage());
+    }
+
+    return [];
+}
+
+/**
  * マシン一覧表示（統合管理画面）
  */
 function DispMachineList($template, $message = "") {
+    // Signaling ServerからPeerID一覧を取得
+    $active_peers = GetSignalingPeerIds();
     // マシン一覧取得（全項目 + ゲーム機状態）
     $sql = "SELECT
                 dm.machine_no,
@@ -113,12 +156,14 @@ function DispMachineList($template, $message = "") {
         PDO::FETCH_ASSOC
     );
 
-    // 統計情報（PC状態 / ゲーム機状態）
+    // 統計情報（PC状態 / ゲーム機状態 / メンテナンス状態）
     $total = count($machines);
     $pc_online = 0;
     $pc_offline = 0;
     $game_playing = 0;
     $game_standby = 0;
+    $maintenance_count = 0;
+    $peer_connected = 0;
 
     foreach ($machines as &$m) {
         // PC状態（Chrome起動）
@@ -128,16 +173,33 @@ function DispMachineList($template, $message = "") {
             $pc_offline++;
         }
 
+        // PeerID接続状態チェック
+        $m['peer_connected'] = false;
+        if (!empty($m['camera_mac'])) {
+            $peer_id = str_replace(':', '', strtolower($m['camera_mac']));
+            if (in_array($peer_id, $active_peers)) {
+                $m['peer_connected'] = true;
+                $peer_connected++;
+            }
+        }
+
+        // メンテナンス状態チェック
+        if ($m['machine_status'] == 2) {
+            $maintenance_count++;
+        }
+
         // ゲーム機状態を判定
+        // machine_status: 0=停止中, 1=稼働中, 2=メンテナンス中
         // assign_flg: 0=空き, 1=プレイ中, 9=待機
-        // member_noがあればプレイ中
-        if (!empty($m['playing_member']) && $m['playing_member'] > 0) {
+        if ($m['machine_status'] == 2) {
+            $m['game_status'] = 'maintenance';
+        } elseif (!empty($m['playing_member']) && $m['playing_member'] > 0) {
             $m['game_status'] = 'playing';
             $game_playing++;
         } elseif ($m['assign_flg'] == 1) {
             $m['game_status'] = 'playing';
             $game_playing++;
-        } elseif ($m['pc_status'] == 'online') {
+        } elseif ($m['pc_status'] == 'online' && $m['machine_status'] == 1) {
             $m['game_status'] = 'standby';
             $game_standby++;
         } else {
@@ -265,6 +327,8 @@ function DispMachineList($template, $message = "") {
         .stat-icon.offline { background: #f1f5f9; }
         .stat-icon.playing { background: #ede9fe; }
         .stat-icon.standby { background: #d1fae5; }
+        .stat-icon.peer { background: #dbeafe; }
+        .stat-icon.maintenance { background: #fef3c7; }
 
         .stat-content h3 { font-size: 12px; color: #888; margin-bottom: 4px; font-weight: 500; }
         .stat-content p { font-size: 28px; font-weight: 700; color: #1a1a2e; }
@@ -308,6 +372,11 @@ function DispMachineList($template, $message = "") {
         .machine-card.playing {
             border-color: #8b5cf6;
             background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
+        }
+
+        .machine-card.maintenance {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
         }
 
         .machine-card-header {
@@ -381,6 +450,9 @@ function DispMachineList($template, $message = "") {
         .status-offline { background: #f1f5f9; color: #64748b; }
         .status-playing { background: #ede9fe; color: #6d28d9; }
         .status-standby { background: #d1fae5; color: #047857; }
+        .status-maintenance { background: #fef3c7; color: #92400e; }
+        .status-peer-on { background: #dbeafe; color: #075985; }
+        .status-peer-off { background: #fee2e2; color: #991b1b; }
 
         /* 入力フィールド */
         input[type="text"], input[type="number"], select {
@@ -599,8 +671,8 @@ function DispMachineList($template, $message = "") {
     <div class="container">
         <!-- ヘッダー -->
         <div class="header">
-            <h1>NET8 マシン統合管理</h1>
-            <p class="header-subtitle">全マシンの設定・状態・コマンドを一元管理</p>
+            <h1>NET8 マシン統合管理 V2.1</h1>
+            <p class="header-subtitle">全マシンの設定・状態・WebRTC接続状況を一元管理</p>
 
             <div class="header-actions">
                 <a href="index.php" class="btn btn-secondary">← ダッシュボード</a>
@@ -658,6 +730,20 @@ function DispMachineList($template, $message = "") {
                     <p><?= $game_standby ?></p>
                 </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon peer">📡</div>
+                <div class="stat-content">
+                    <h3>WebRTC接続</h3>
+                    <p><?= $peer_connected ?></p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon maintenance">🔧</div>
+                <div class="stat-content">
+                    <h3>メンテナンス</h3>
+                    <p><?= $maintenance_count ?></p>
+                </div>
+            </div>
         </div>
 
         <!-- コマンドパネル（選択時表示） -->
@@ -677,11 +763,17 @@ function DispMachineList($template, $message = "") {
             <?php if (count($machines) > 0): ?>
                 <?php foreach ($machines as $m):
                     $cardClass = '';
-                    if ($m['game_status'] == 'playing') {
+                    if ($m['game_status'] == 'maintenance') {
+                        $cardClass = 'maintenance';
+                    } elseif ($m['game_status'] == 'playing') {
                         $cardClass = 'playing';
                     } elseif ($m['pc_status'] == 'online') {
                         $cardClass = 'online';
                     }
+
+                    // メンテナンス状態の表示ラベル
+                    $machine_status_labels = ['停止中', '稼働中', 'メンテナンス中'];
+                    $machine_status_label = $machine_status_labels[$m['machine_status']] ?? '不明';
                 ?>
                 <div class="machine-card <?= $cardClass ?>">
                     <input type="checkbox" class="select-checkbox machine-checkbox-card"
@@ -691,12 +783,19 @@ function DispMachineList($template, $message = "") {
                         <div class="machine-no"><?= $m['machine_no'] ?></div>
                         <div class="machine-status">
                             <span class="status-badge status-<?= $m['pc_status'] ?: 'offline' ?>">
-                                <?= $m['pc_status'] == 'online' ? 'PC ON' : 'PC OFF' ?>
+                                <?= $m['pc_status'] == 'online' ? '💻 PC ON' : '⏸️ PC OFF' ?>
                             </span>
-                            <?php if ($m['game_status'] == 'playing'): ?>
-                            <span class="status-badge status-playing">プレイ中</span>
+                            <?php if ($m['peer_connected']): ?>
+                            <span class="status-badge status-peer-on">📡 接続中</span>
+                            <?php else: ?>
+                            <span class="status-badge status-peer-off">📡 未接続</span>
+                            <?php endif; ?>
+                            <?php if ($m['machine_status'] == 2): ?>
+                            <span class="status-badge status-maintenance">🔧 メンテ</span>
+                            <?php elseif ($m['game_status'] == 'playing'): ?>
+                            <span class="status-badge status-playing">🎮 プレイ中</span>
                             <?php elseif ($m['game_status'] == 'standby'): ?>
-                            <span class="status-badge status-standby">待機中</span>
+                            <span class="status-badge status-standby">🟢 待機中</span>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -704,12 +803,16 @@ function DispMachineList($template, $message = "") {
                     <div class="machine-model"><?= htmlspecialchars($m['model_name'] ?: '機種未設定') ?></div>
 
                     <dl class="machine-info">
+                        <dt>状態</dt>
+                        <dd><?= $machine_status_label ?></dd>
                         <dt>IP</dt>
                         <dd><?= htmlspecialchars($m['ip_address'] ?: '-') ?></dd>
                         <dt>MAC</dt>
                         <dd><?= htmlspecialchars($m['mac_address'] ?: '-') ?></dd>
                         <dt>カメラ</dt>
-                        <dd>No.<?= $m['camera_no'] ?: '-' ?></dd>
+                        <dd>No.<?= $m['camera_no'] ?: '-' ?> (<?= htmlspecialchars($m['camera_name'] ?: '-') ?>)</dd>
+                        <dt>PeerID</dt>
+                        <dd><?= $m['peer_connected'] ? '🟢 接続中' : '⚫ 未接続' ?></dd>
                         <?php if ($m['last_heartbeat']): ?>
                         <dt>最終通信</dt>
                         <dd><?= date('m/d H:i', strtotime($m['last_heartbeat'])) ?></dd>
@@ -718,7 +821,10 @@ function DispMachineList($template, $message = "") {
 
                     <div class="machine-actions">
                         <button type="button" onclick="openEditModal(<?= $m['machine_no'] ?>)" class="btn btn-outline">編集</button>
-                        <button type="button" onclick="sendCommand(<?= $m['machine_no'] ?>, 'RESTART')" class="btn btn-warning">再起動</button>
+                        <button type="button" onclick="toggleMaintenance(<?= $m['machine_no'] ?>, <?= $m['machine_status'] ?>)"
+                                class="btn <?= $m['machine_status'] == 2 ? 'btn-success' : 'btn-warning' ?>">
+                            <?= $m['machine_status'] == 2 ? '稼働に戻す' : 'メンテ' ?>
+                        </button>
                         <button type="button" onclick="deleteConfirm(<?= $m['machine_no'] ?>)" class="btn btn-danger">削除</button>
                     </div>
                 </div>
@@ -986,6 +1092,13 @@ function DispMachineList($template, $message = "") {
         <input type="hidden" name="machine_no" id="deleteMachineNo">
     </form>
 
+    <!-- メンテナンス切り替えフォーム（非表示） -->
+    <form method="POST" action="" id="maintenanceForm" style="display: none;">
+        <input type="hidden" name="M" value="toggle_maintenance">
+        <input type="hidden" name="machine_no" id="maintenanceMachineNo">
+        <input type="hidden" name="machine_status" id="maintenanceStatus">
+    </form>
+
     <!-- 編集モーダル -->
     <div class="modal" id="editModal">
         <div class="modal-content">
@@ -1153,6 +1266,18 @@ function DispMachineList($template, $message = "") {
             }
         }
 
+        // メンテナンス切り替え
+        function toggleMaintenance(machineNo, currentStatus) {
+            const newStatus = currentStatus == 2 ? 1 : 2; // 2=メンテナンス中 ⇔ 1=稼働中
+            const action = newStatus == 2 ? 'メンテナンスモードに切り替え' : '稼働中に戻す';
+
+            if (confirm(`マシン ${machineNo} を${action}ますか？`)) {
+                document.getElementById('maintenanceMachineNo').value = machineNo;
+                document.getElementById('maintenanceStatus').value = newStatus;
+                document.getElementById('maintenanceForm').submit();
+            }
+        }
+
         // 削除確認
         function deleteConfirm(machineNo) {
             if (confirm(`マシン ${machineNo} を削除しますか？この操作は取り消せません。`)) {
@@ -1170,8 +1295,8 @@ function DispMachineList($template, $message = "") {
             });
         });
 
-        // 30秒で自動リロード
-        setTimeout(() => location.reload(), 30000);
+        // 60秒（1分）で自動リロード
+        setTimeout(() => location.reload(), 60000);
     </script>
 </body>
 </html>
@@ -1355,6 +1480,30 @@ function ProcDelete($template) {
     $template->DB->query("DELETE FROM dat_machine WHERE machine_no = $machine_no");
 
     DispMachineList($template, "✅ マシン $machine_no を削除しました");
+}
+
+/**
+ * メンテナンス状態切り替え
+ */
+function ProcToggleMaintenance($template) {
+    getData($_POST, array("machine_no", "machine_status"));
+
+    $machine_no = intval($_POST["machine_no"]);
+    $new_status = intval($_POST["machine_status"]);
+
+    // machine_status: 0=停止中, 1=稼働中, 2=メンテナンス中
+    if ($new_status < 0 || $new_status > 2) {
+        DispMachineList($template, "❌ 不正な状態値です");
+        return;
+    }
+
+    $sql = "UPDATE dat_machine SET machine_status = $new_status WHERE machine_no = $machine_no";
+    $template->DB->query($sql);
+
+    $status_labels = ['停止中', '稼働中', 'メンテナンス中'];
+    $status_label = $status_labels[$new_status];
+
+    DispMachineList($template, "✅ マシン $machine_no を「{$status_label}」に変更しました");
 }
 
 /**

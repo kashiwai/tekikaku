@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 応募状況</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">応募状況</h1>
+		<hr>
+		<h4 class="text-center mt-4 mb-2">{%GOODS_NAME%}</h4>
+		<div class="head-bg-pill border mb-4">
+			{%DRAW_STATUS_LABEL%}<br />
+			<!--if:{SOLD_OUT_BLOCK}-->
+			<span class="text-primary">SOLD OUT</span>
+			<!--/if:{SOLD_OUT_BLOCK}-->
+		</div>
+		
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				応募されていません。
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		<!--if:{LISTS}-->
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>名前</th>
+					<th style="width:120px;">結果</th>
+					<th>購入日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="No." class="text-center">{%SEQ_NO%}</td>
+					<td aria-label="名前" class="text-center">{%NAME%}</td>
+					<td aria-label="結果" class="text-right">{%RESULT%}</td>
+					<td aria-label="購入日時" class="text-center">{%REQUEST_DT%}</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		<!--/if:{LISTS}-->
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	</body>
+</html>

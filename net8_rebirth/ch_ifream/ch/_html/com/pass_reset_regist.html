@@ -1,0 +1,26 @@
+	<script type="text/javascript">
+	<!--
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			
+			if (!chk_indis("{%U0427%}", frm["PASS"].value)) return false;
+			if (frm["PASS"].value.length < {%MEMBER_PASS_MIN%} ) {
+				chkAlert("{%U0447%}");
+				return false;
+			}
+			if (frm["PASS"].value.length > {%MEMBER_PASS_MAX%} ) {
+				chkAlert("{%U0430%}");
+				return false;
+			}
+			if (!chk_pattern("{%U0470%}", frm["PASS"].value, "{%MEMBER_PASS_PATTERN%}", false)) return false;		//制約
+			
+			if ( frm["PASS"].value != frm["PASS_CONF"].value) {
+				chkAlert("{%U0431%}");
+				return false;
+			}
+			
+			return true;
+		}
+	-->
+	</script>

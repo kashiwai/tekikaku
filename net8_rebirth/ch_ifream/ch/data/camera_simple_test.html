@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Camera Test</title>
+</head>
+<body>
+    <h1>Simple Camera Test</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <div id="status"></div>
+    <div id="error" style="color: red;"></div>
+
+    <script>
+        const video = document.getElementById('video');
+        const status = document.getElementById('status');
+        const errorDiv = document.getElementById('error');
+
+        status.textContent = 'Starting camera...';
+
+        // シンプルなカメラアクセス
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+        })
+        .then(stream => {
+            status.textContent = 'Camera started successfully!';
+            video.srcObject = stream;
+            console.log('Stream:', stream);
+            console.log('Video tracks:', stream.getVideoTracks());
+        })
+        .catch(err => {
+            status.textContent = 'Camera access failed';
+            errorDiv.textContent = 'Error: ' + err.name + ' - ' + err.message;
+            console.error('getUserMedia error:', err);
+        });
+
+        // デバイス一覧を表示
+        navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            console.log('Available devices:');
+            devices.forEach((device, i) => {
+                console.log(i + ': ' + device.kind + ' - ' + device.label);
+            });
+        })
+        .catch(err => {
+            console.error('enumerateDevices error:', err);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1150 @@
+/**
+ * play_embed/css/embed.css
+ * 埋め込みプレイヤー専用スタイル
+ * Version: 1.0.0
+ */
+
+/* 埋め込みモード基本設定 */
+body.embed-mode {
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    background: #000;
+    width: 100%;
+    min-height: 580px;
+}
+
+/* ローディング画面 */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 215, 0, 0.3);
+    border-top: 4px solid #ffd700;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loading_connect,
+#loading_pay {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
+#phase {
+    color: #ffd700;
+    margin-left: 8px;
+}
+
+#loadinglost,
+#connectlost {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.btn-loading {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* ビデオコンテナ - 映像エリア 300px固定 */
+.video-container {
+    width: 100%;
+    height: 300px;
+    background: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* playing-screen（play_v2互換 - setVideoWidth()が参照） */
+.playing-screen {
+    width: 100%;
+    height: 300px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playing-screen.landscape {
+    /* 横向き用 */
+}
+
+#video {
+    max-width: 100%;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    background: #000;
+    display: block;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* ナビゲーションバー - 埋め込みモードでは非表示（korea_net8frontが表示） */
+.embed-mode .navbar.fixed-top,
+.embed-mode nav.navbar {
+    display: none !important;
+}
+
+/* play_v2のナビをコンパクトに表示する場合 */
+.navbar.fixed-top {
+    background: rgba(0, 0, 0, 0.85) !important;
+    padding: 8px 15px;
+    backdrop-filter: blur(10px);
+}
+
+.game_status {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.machine-no {
+    text-align: center;
+    color: #ffd700;
+}
+
+.machine-no div {
+    font-size: 10px;
+    color: #888;
+}
+
+.machine-no span {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.game-situation-group {
+    display: flex;
+    gap: 15px;
+}
+
+.game-situation {
+    text-align: center;
+    min-width: 60px;
+}
+
+.game-situation div {
+    font-size: 10px;
+    color: #888;
+}
+
+.game-situation span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.situation-bb span {
+    color: #ff4444;
+}
+
+.situation-rb span {
+    color: #44aaff;
+}
+
+.txt-btn-group {
+    margin-left: auto;
+}
+
+.num-title {
+    font-size: 10px;
+    color: #888;
+}
+
+#point {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+#point_add {
+    font-size: 14px;
+    color: #00ff00;
+    margin-left: 5px;
+}
+
+/* コントロールパネル */
+.control-panel {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-game {
+    padding: 15px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.btn-start {
+    background: linear-gradient(145deg, #00c853, #009624);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
+}
+
+.btn-start:hover:not(:disabled) {
+    background: linear-gradient(145deg, #00e676, #00c853);
+    transform: scale(1.05);
+}
+
+.btn-stop {
+    background: linear-gradient(145deg, #ff5252, #d32f2f);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 82, 82, 0.4);
+}
+
+.btn-stop:hover:not(:disabled) {
+    background: linear-gradient(145deg, #ff6e6e, #ff5252);
+    transform: scale(1.05);
+}
+
+.btn-game:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.bet-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 30px;
+}
+
+.btn-bet {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #ffd700;
+    border-radius: 50%;
+    background: transparent;
+    color: #ffd700;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-bet:hover {
+    background: #ffd700;
+    color: #000;
+}
+
+#bet_amount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* ステータスバー */
+.status-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px 30px;
+    border-radius: 30px;
+    z-index: 100;
+}
+
+.status-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.status-label {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.status-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+/* 終了エリア */
+.exit-area {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 100;
+}
+
+.btn-exit {
+    padding: 10px 25px;
+    border: 2px solid #ff4444;
+    border-radius: 8px;
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff4444;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-exit:hover {
+    background: #ff4444;
+    color: #fff;
+}
+
+/* フッター */
+.embed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px 15px;
+    z-index: 100;
+}
+
+.model-info {
+    text-align: center;
+}
+
+.model-name {
+    color: #ffd700;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .btn-game {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+
+    .game-situation-group {
+        gap: 10px;
+    }
+
+    .game-situation {
+        min-width: 50px;
+    }
+
+    .game-situation span {
+        font-size: 16px;
+    }
+
+    .machine-no span {
+        font-size: 20px;
+    }
+}
+
+/* 親ウィンドウとの通信用メッセージ表示 */
+.parent-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 18px;
+    z-index: 10000;
+    display: none;
+}
+
+.parent-message.show {
+    display: block;
+}
+
+/* ========================================
+   play_v2互換コントロールスタイル
+   ======================================== */
+
+/* コントロールパネル（play_v2互換） */
+.playing-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+    padding: 15px;
+    z-index: 100;
+}
+
+/* ポイント残高ボックス（韓国側ポイント） */
+.pointbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 8px 15px;
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1));
+    border: 2px solid #4caf50;
+    border-radius: 10px;
+}
+
+.point-display {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.point-label {
+    font-size: 12px;
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.playpoint-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4caf50;
+    font-family: 'Chakra Petch', monospace;
+}
+
+/* クレジットボックス */
+.creditbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+}
+
+.credit-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.credit-label {
+    font-size: 12px;
+    color: #888;
+}
+
+#credit {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffd700;
+    font-family: 'Chakra Petch', monospace;
+}
+
+#animeField {
+    position: relative;
+}
+
+#animeNumber {
+    position: absolute;
+    color: #00ff00;
+    font-size: 28px;
+    font-weight: bold;
+    opacity: 0;
+}
+
+/* スロットコントロール */
+.slot-controls, .pachi-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.control-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.control-row.reel-stops {
+    gap: 10px;
+}
+
+/* btn-pressable（play_v2互換） */
+.btn-pressable {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: linear-gradient(145deg, #444, #333);
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.btn-pressable:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+}
+
+/* MAXベットボタン */
+.btn-pressable.maxbet {
+    background: linear-gradient(145deg, #ff9800, #e65100);
+    color: #fff;
+    min-width: 100px;
+}
+
+.btn-pressable.maxbet:active {
+    background: linear-gradient(145deg, #e65100, #ff9800);
+}
+
+/* スタートボタン */
+.btn-pressable.reel-start {
+    background: linear-gradient(145deg, #4caf50, #2e7d32);
+    color: #fff;
+    min-width: 120px;
+    font-size: 18px;
+}
+
+.btn-pressable.reel-start:active {
+    background: linear-gradient(145deg, #2e7d32, #4caf50);
+}
+
+/* オートプレイ */
+.btn-pressable.autoplay-off {
+    background: linear-gradient(145deg, #607d8b, #455a64);
+}
+
+.btn-pressable.autoplay-on {
+    background: linear-gradient(145deg, #f44336, #c62828);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* リールストップボタン */
+.btn-pressable.reel-stop {
+    width: 70px;
+    height: 60px;
+    background: linear-gradient(145deg, #2196f3, #1565c0);
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.btn-pressable.reel-stop:active {
+    background: linear-gradient(145deg, #1565c0, #2196f3);
+}
+
+/* 精算・変換ボタン */
+.action-buttons {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+#pay-button {
+    background: linear-gradient(145deg, #9c27b0, #6a1b9a);
+}
+
+#convcr-button {
+    background: linear-gradient(145deg, #00bcd4, #00838f);
+}
+
+/* sendBtnクラス共通 */
+.sendBtn {
+    position: relative;
+    overflow: hidden;
+}
+
+.sendBtn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.sendBtn:active::after {
+    width: 200px;
+    height: 200px;
+}
+
+/* レスポンシブ（モバイル対応） */
+@media (max-width: 480px) {
+    .btn-pressable {
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+
+    .btn-pressable.reel-stop {
+        width: 55px;
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .btn-pressable.reel-start {
+        min-width: 90px;
+        font-size: 14px;
+    }
+
+    #credit {
+        font-size: 22px;
+    }
+}
+
+/* ========================================
+   埋め込みモード専用レイアウト調整
+   映像とコントロールが被らない構成
+   ======================================== */
+
+/* play_embedのコントロールパネルを表示（ステータスバーと終了ボタンのみ非表示） */
+.embed-mode #status_bar,
+.embed-mode #exit_area {
+    display: none !important;
+}
+
+/* コントロールパネル - 2列コンパクトレイアウト */
+.embed-mode #control_panel.playing-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100px !important;
+    background: linear-gradient(to top, #0a0a0f, #151520) !important;
+    padding: 8px !important;
+    border-top: 2px solid #333 !important;
+    gap: 8px !important;
+    overflow: visible !important;
+}
+
+/* 2列コンパクトレイアウト専用 */
+.compact-2row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+/* 1列目: 情報 + ボタン（精算・変換） */
+.control-row-1 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    width: 100% !important;
+    position: static !important;
+    z-index: auto !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    padding: 5px !important;
+    border-radius: 5px !important;
+    flex-shrink: 0 !important;
+    height: 40px !important;
+    box-sizing: border-box !important;
+}
+
+/* 情報ボックス */
+.info-box {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid #444 !important;
+    border-radius: 5px !important;
+    padding: 4px 8px !important;
+    flex: 1 !important;
+}
+
+.info-box.credit-box {
+    border-color: #ffd700 !important;
+    background: rgba(255, 215, 0, 0.1) !important;
+}
+
+.info-label {
+    font-size: 10px !important;
+    color: #888 !important;
+}
+
+.info-value {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    color: #4caf50 !important;
+    font-family: 'Chakra Petch', monospace !important;
+}
+
+.credit-box .info-value {
+    color: #ffd700 !important;
+}
+
+/* コンパクトボタン */
+.btn-compact {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    border-radius: 5px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    white-space: nowrap !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    height: 30px !important;
+    min-width: 45px !important;
+}
+
+.btn-convert {
+    background: linear-gradient(145deg, #4caf50, #2e7d32) !important;
+    color: white !important;
+}
+
+.btn-convert:hover {
+    background: linear-gradient(145deg, #66bb6a, #4caf50) !important;
+}
+
+.btn-pay {
+    background: linear-gradient(145deg, #f44336, #c62828) !important;
+    color: white !important;
+}
+
+.btn-pay:hover {
+    background: linear-gradient(145deg, #ef5350, #f44336) !important;
+}
+
+/* 2列目: ゲームコントロール（BET, START, STOP等） */
+.control-row-2 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    width: 100% !important;
+    position: static !important;
+    z-index: auto !important;
+    background: rgba(20, 20, 40, 0.9) !important;
+    padding: 5px !important;
+    border-radius: 5px !important;
+    margin-top: 0 !important;
+    flex-shrink: 0 !important;
+    height: 50px !important;
+    box-sizing: border-box !important;
+}
+
+/* ゲームボタン */
+.btn-game {
+    padding: 10px 12px !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    border-radius: 5px !important;
+    border: 2px solid #555 !important;
+    background: linear-gradient(145deg, #333, #222) !important;
+    color: white !important;
+    cursor: pointer !important;
+    transition: all 0.15s !important;
+    min-width: 50px !important;
+    min-height: 40px !important;
+    flex: 1 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+}
+
+.btn-game:hover {
+    background: linear-gradient(145deg, #444, #333) !important;
+    border-color: #777 !important;
+}
+
+.btn-game:active {
+    transform: scale(0.95) !important;
+}
+
+.btn-game.maxbet {
+    background: linear-gradient(145deg, #ff9800, #e65100) !important;
+    border-color: #ff9800 !important;
+}
+
+.btn-game.start {
+    background: linear-gradient(145deg, #2196f3, #1565c0) !important;
+    border-color: #2196f3 !important;
+}
+
+.btn-game.stop {
+    background: linear-gradient(145deg, #9c27b0, #6a1b9a) !important;
+    border-color: #9c27b0 !important;
+}
+
+.btn-game.auto {
+    background: linear-gradient(145deg, #607d8b, #455a64) !important;
+    border-color: #607d8b !important;
+}
+
+/* メインコンテンツエリア */
+.embed-mode main.main-content {
+    width: 100%;
+    min-height: 400px;
+}
+
+/* play_v2のメインコントロール（#panel-play） */
+.embed-mode #panel-play,
+.embed-mode .controls-area {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    background: linear-gradient(to top, #0a0a0f, #151520) !important;
+    padding: 8px !important;
+    border-top: 2px solid #333 !important;
+}
+
+/* ローディング画面 */
+.embed-mode #loading {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+}
+
+/* play_v2のクレジットボックスをコンパクトに */
+.embed-mode #creditbox {
+    padding: 6px 12px !important;
+    margin-bottom: 8px !important;
+}
+
+.embed-mode #creditbox .num-value {
+    font-size: 20px !important;
+}
+
+/* play_v2のボタンをコンパクトに */
+.embed-mode .playing-btn {
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+}
+
+.embed-mode .btn-pressable {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+}
+
+.embed-mode .reel-stop {
+    width: 55px !important;
+    height: 45px !important;
+    font-size: 16px !important;
+}
+
+.embed-mode .reel-start {
+    min-width: 80px !important;
+    padding: 10px 20px !important;
+}
+
+.embed-mode .maxbet {
+    min-width: 80px !important;
+}
+
+/* オートプレイパネル */
+.embed-mode #play-auto {
+    padding: 8px !important;
+}
+
+.embed-mode #play-auto .form-control {
+    height: 32px !important;
+    font-size: 12px !important;
+}
+
+/* コンテナのRowレイアウト調整 */
+.embed-mode .container,
+.embed-mode .row,
+.embed-mode .col-lg-4,
+.embed-mode .col-lg-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex: none !important;
+}
+
+/* play_v2の余白調整 */
+.embed-mode .mx-2 {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+.embed-mode .my-3 {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+/* ========================================
+   埋め込み専用モーダルスタイル
+   ======================================== */
+
+.embed-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.embed-modal-content {
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    border-radius: 15px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.embed-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.embed-modal-header h3 {
+    margin: 0;
+    color: #ffd700;
+    font-size: 18px;
+}
+
+.embed-modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.embed-modal-close:hover {
+    opacity: 1;
+}
+
+.embed-modal-body {
+    padding: 20px;
+}
+
+.embed-modal-body p {
+    color: #fff;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.current-points,
+.current-credit {
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.current-points span,
+.current-credit span {
+    color: #ffd700;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.conv-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.conv-amount-btn {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #4caf50;
+    border-radius: 10px;
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1));
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.conv-amount-btn:hover {
+    background: linear-gradient(145deg, #4caf50, #2e7d32);
+    transform: scale(1.02);
+}
+
+.conv-amount-btn:active {
+    transform: scale(0.98);
+}
+
+.conv-all-btn {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #ff9800;
+    border-radius: 10px;
+    background: linear-gradient(145deg, rgba(255, 152, 0, 0.2), rgba(255, 152, 0, 0.1));
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.conv-all-btn:hover {
+    background: linear-gradient(145deg, #ff9800, #e65100);
+}
+
+.pay-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pay-confirm-btn {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #f44336, #c62828);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pay-confirm-btn:hover {
+    background: linear-gradient(145deg, #ff5252, #f44336);
+}
+
+.pay-cancel-btn {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #666;
+    border-radius: 10px;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pay-cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   音ボタン（embed-mode専用）
+   ======================================== */
+
+/* 音ボタンを映像エリアの右上に配置 */
+.embed-mode .btn-pressable.sound-tr,
+.embed-mode #audiostart {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    border: 2px solid #666 !important;
+}
+
+.embed-mode .btn-pressable.sound-off::before {
+    content: "\f6a9" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    color: #888 !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+}
+
+.embed-mode .btn-pressable.sound-on::before {
+    content: "\f028" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    color: #4caf50 !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+}
+
+.embed-mode .btn-pressable.sound-on {
+    border-color: #4caf50 !important;
+    background: rgba(76, 175, 80, 0.2) !important;
+}

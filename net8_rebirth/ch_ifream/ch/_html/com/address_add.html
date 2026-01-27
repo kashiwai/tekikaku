@@ -1,0 +1,67 @@
+	<script type="text/javascript">
+	<!--
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			
+			if (!chk_indis("{%U1601%}", frm["LASTNAME"].value)) return false;
+			if (frm["LASTNAME"].value.length > {%ADDRESS_SYLL_LIMIT%} ) {
+				chkAlert("{%U1640%}");
+				return false;
+			}
+			if (!chk_indis("{%U1602%}", frm["FIRSTNAME"].value)) return false;
+			if (frm["FIRSTNAME"].value.length > {%ADDRESS_NAME_LIMIT%} ) {
+				chkAlert("{%U1641%}");
+				return false;
+			}
+			
+			if (!chk_indis("{%U1603%}", frm["POSTAL"].value)) return false;
+			if (frm["POSTAL"].value.length > {%ADDRESS_POSTAL_LIMIT%} ) {
+				chkAlert("{%U1604%}");
+				return false;
+			}
+			if (!chk_postal("{%U1604%}", frm["POSTAL"].value, false, false)) return false;
+			
+			if (!chk_indis("{%U1611%}", frm["ADDRESS1"].value)) return false;
+			if (frm["ADDRESS1"].value.length > {%ADDRESS_1_LIMIT%} ) {
+				chkAlert("{%U1642%}");
+				return false;
+			}
+			
+			if (!chk_indis("{%U1612%}", frm["ADDRESS2"].value)) return false;
+			if (frm["ADDRESS2"].value.length > {%ADDRESS_2_LIMIT%} ) {
+				chkAlert("{%U1643%}");
+				return false;
+			}
+			if (!chk_indis("{%U1613%}", frm["ADDRESS3"].value)) return false;
+			if (frm["ADDRESS3"].value.length > {%ADDRESS_3_LIMIT%} ) {
+				chkAlert("{%U1644%}");
+				return false;
+			}
+			//if (!chk_indis("{%U1614%}", frm["ADDRESS4"].value)) return false;
+			if( frm["ADDRESS4"].value.length > {%ADDRESS_4_LIMIT%} ) {
+				chkAlert("{%U1645%}");
+				return false;
+			}
+			
+			if (!chk_indis("{%U1607%}", frm["TEL"].value)) return false;
+			if (!chk_tel("{%U1608%}", frm["TEL"].value, true, false)) return false;
+			if( frm["TEL"].value.length > {%ADDRESS_TEL_LIMIT%} ) {
+				chkAlert("{%U1608%}");
+				return false;
+			}
+			
+			swal({
+				title: execTitle,
+				text: "{%U0001%}",
+				type: 'question',
+				showCancelButton: true
+			}).then(function() {
+				// 実行
+				frm.submit();
+			});
+			
+			return false;
+		}
+	-->
+	</script>

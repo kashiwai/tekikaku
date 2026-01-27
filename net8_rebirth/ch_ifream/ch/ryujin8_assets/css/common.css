@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+/*基本*/
+/*ブラウザの標準設定解除*/
+* {
+margin: 0;
+padding: 0;
+font-size: 100%;
+font-weight: normal;
+font-style: normal;
+}
+
+/*画像でリンクを貼った場合のボーダーを消去*/
+a img{
+border-width:0;
+}
+
+html { min-width: 760px; } /* Mozillaバグ対策 */
+
+
+/*IEは6でもXHTMLにかんしては「互換」を選択するバグあり*/
+/*bosy以下の設定は基本的には各cssに記入のこと*/

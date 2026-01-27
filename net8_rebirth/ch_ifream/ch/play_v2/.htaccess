@@ -1,0 +1,31 @@
+# NET8 Play Page - X-Frame-Options and CORS Configuration
+# /ch/ サブドメイン版（iframe完全許可）
+
+# ★ iframe完全許可設定
+Header always unset X-Frame-Options
+Header always set X-Frame-Options "ALLOWALL"
+Header always set Content-Security-Policy "frame-ancestors *"
+
+# CORS headers - iFrame埋め込み対応
+# 注意: Header set (alwaysなし) を使用してPHPで上書き可能にする
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Max-Age "3600"
+
+# X-Frame-Options と Content-Security-Policy は設定しない
+# frame_security.phpでPHP側から制御
+# Apache側でヘッダーを設定しないことでPHPの制御を優先
+
+# postMessage通信のため、Referrer-Policyを緩和
+Header set Referrer-Policy "no-referrer-when-downgrade"
+
+# Security headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+
+# Handle OPTIONS pre-flight
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]

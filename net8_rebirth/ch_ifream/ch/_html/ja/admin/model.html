@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - 機種管理</title>
+
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .topbar-actions { display: flex; gap: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+        .btn-reset { background: #6c757d; color: white; }
+        .btn-search { background: var(--admin-success); color: white; }
+
+        /* 検索パネル */
+        .search-panel { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .search-panel-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--admin-border); }
+        .search-panel-header h3 { font-size: 16px; color: var(--admin-text); display: flex; align-items: center; gap: 10px; }
+        .search-panel-header i { color: var(--admin-primary); transition: transform 0.3s; }
+        .search-panel.collapsed .search-panel-body { display: none; }
+        .search-panel.collapsed .search-panel-header i { transform: rotate(180deg); }
+        .search-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .search-field { display: flex; flex-direction: column; gap: 5px; }
+        .search-field label { font-size: 13px; color: var(--admin-text-muted); font-weight: 500; }
+        .search-field input, .search-field select { padding: 8px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); outline: none; font-size: 14px; }
+        .search-field input:focus, .search-field select:focus { border-color: var(--admin-primary); }
+        .search-field small { color: var(--admin-text-muted); font-size: 12px; }
+        .search-actions { display: flex; justify-content: center; gap: 10px; padding-top: 15px; border-top: 1px solid var(--admin-border); }
+
+        /* データテーブル */
+        .data-table-wrapper { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .data-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .pagination-info { color: var(--admin-text-muted); font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--admin-darker); }
+        th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: var(--admin-text-muted); white-space: nowrap; border-bottom: 2px solid var(--admin-border); }
+        th.text-center { text-align: center; }
+        td { padding: 12px; border-top: 1px solid var(--admin-border); color: var(--admin-text); font-size: 14px; }
+        td.text-center { text-align: center; }
+        tbody tr:hover { background: rgba(3, 118, 201, 0.05); }
+        td a { color: var(--admin-primary); text-decoration: none; transition: color 0.3s; }
+        td a:hover { color: var(--admin-info); text-decoration: underline; }
+        .sort-controls { display: flex; flex-direction: column; gap: 2px; margin-left: 5px; display: inline-flex; }
+        .sort-controls a { color: var(--admin-text-muted); font-size: 10px; }
+        .sort-controls a:hover { color: var(--admin-primary); }
+
+        /* ページネーション */
+        .pagination { display: flex; gap: 5px; list-style: none; margin: 0; padding: 0; }
+        .pagination li a { padding: 6px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 4px; color: var(--admin-text); text-decoration: none; transition: all 0.3s; }
+        .pagination li a:hover { background: var(--admin-primary); color: white; }
+        .pagination li.active a { background: var(--admin-primary); color: white; border-color: var(--admin-primary); }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .search-row { grid-template-columns: 1fr; }
+            .data-table-wrapper { overflow-x: auto; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2><i class="fas fa-dragon"></i> MillionNet8 管理画面</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.php"><i class="fas fa-tachometer-alt"></i> ダッシュボード</a></li>
+            <li><a href="member.php"><i class="fas fa-users"></i> 会員管理</a></li>
+            <li><a href="model.php" class="active"><i class="fas fa-gamepad"></i> 機種管理</a></li>
+            <li><a href="machines.php"><i class="fas fa-desktop"></i> 台管理</a></li>
+            <li><a href="camera.php"><i class="fas fa-video"></i> カメラ管理</a></li>
+            <li><a href="camera_settings.php"><i class="fas fa-cog"></i> カメラ割り当て</a></li>
+            <li><a href="signaling.php"><i class="fas fa-server"></i> シグナリング</a></li>
+            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> 配信管理</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-wrench"></i> 機種管理</h1>
+            <div class="topbar-actions">
+                <a href="javascript:void(0);" onclick="openDetail('');" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> 新規登録
+                </a>
+            </div>
+        </div>
+
+        <form action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+        <input type="hidden" name="ODR" value="{%ODR%}">
+        <input type="hidden" name="P" value="{%P%}">
+
+        <!-- 検索パネル -->
+        <div class="search-panel {%S_OPEN%}">
+            <div class="search-panel-header" onclick="this.parentElement.classList.toggle('collapsed');">
+                <h3><i class="fas fa-search"></i> 検索条件指定</h3>
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <div class="search-panel-body">
+                <div class="search-row">
+                    <div class="search-field">
+                        <label>機種No <small>（完全一致　※0埋め不要）</small></label>
+                        <input type="text" name="S_MODEL_NO" value="{%S_MODEL_NO%}">
+                    </div>
+                    <div class="search-field">
+                        <label>機種CD <small>（部分一致）</small></label>
+                        <input type="text" name="S_MODEL_CD" value="{%S_MODEL_CD%}">
+                    </div>
+                    <div class="search-field">
+                        <label>機種名 <small>（部分一致）</small></label>
+                        <input type="text" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}">
+                    </div>
+                    <div class="search-field">
+                        <label>カテゴリ</label>
+                        <select name="S_CATEGORY">
+                            {%SEL_CATEGORY%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>メーカー</label>
+                        <select name="S_MAKER_NO">
+                            {%SEL_MAKER%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>タイプ</label>
+                        <select name="S_TYPE_NO">
+                            {%SEL_TYPE%}
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>号機</label>
+                        <select name="S_UNIT_NO">
+                            {%SEL_UNIT%}
+                        </select>
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <a href="javascript:void(0);" class="btn btn-reset" onclick="reset();">
+                        <i class="fas fa-undo"></i> リセット
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-search" onclick="reSearch();">
+                        <i class="fas fa-search"></i> 検索
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- データテーブル -->
+        <div class="data-table-wrapper">
+            <div class="data-table-header">
+                <div class="pagination-info">
+                    Page {%P%} / {%ALLP%} (全{%ALLROW%}件)
+                </div>
+                <ul class="pagination" id="PAGEMOVE_TOP">
+                    {%PAGING%}
+                </ul>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width:100px;">
+                            機種No
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('model_no asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('model_no desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th style="width:100px;">
+                            機種CD
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('model_cd asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('model_cd desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th style="width:100px;">カテゴリ</th>
+                        <th>機種名</th>
+                        <th>機種名（英）</th>
+                        <th style="width:100px;">
+                            タイプ
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('type_name asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('type_name desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th style="width:100px;">
+                            号機
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('unit_name asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('unit_name desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th>メーカー</th>
+                        <th class="text-center" style="width:80px;">実機リスト</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--loop:{LIST}-->
+                    <tr>
+                        <td class="text-center"><a href="javascript:void(0);" onclick="openDetail('{%MODEL_NO%}');">{%MODEL_NO_PAD%}</a></td>
+                        <td>{%MODEL_CD%}</td>
+                        <td>{%CATEGORY_LABEL%}</td>
+                        <td>{%MODEL_NAME%}</td>
+                        <td>{%MODEL_ROMAN%}</td>
+                        <td>{%TYPE_NAME%}</td>
+                        <td>{%UNIT_NAME%}</td>
+                        <td>{%MAKER_NAME%}</td>
+                        <td class="text-center">
+                            <!--if:{EXISTS_LIST}--><a href="search.php?S_MODEL_NO={%MODEL_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
+                            <!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
+                        </td>
+                    </tr>
+                    <!--/loop:{LIST}-->
+                </tbody>
+            </table>
+
+            <div class="data-table-header" style="margin-top: 20px;">
+                <div class="pagination-info">
+                    Page {%P%} / {%ALLP%} (全{%ALLROW%}件)
+                </div>
+                <ul class="pagination" id="PAGEMOVE_BTM">
+                    {%PAGING%}
+                </ul>
+            </div>
+        </div>
+
+        </form>
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+
+<script src="js/list.js"></script>
+<script type="text/javascript">
+    // 検索実行
+    function reSearch() {
+        var frm = window.document.MAINFORM;
+
+        if (!chk_number("{%A1458%}", frm["S_MODEL_NO"].value, false)) return false;
+
+        // クリア
+        frm["P"].value = "1";
+        trans();
+    }
+
+    // ソート
+    function reSort(sort) {
+        var frm = window.document.MAINFORM;
+        frm["ODR"].value = sort;
+        frm["P"].value = "1";
+        trans();
+    }
+
+    // 詳細画面Open
+    function openDetail(key) {
+        win_open("{%SELF%}", "M=detail&NO=" + key, "model_detail", 820, 900);
+    }
+
+    // リセット
+    function reset() {
+        var frm = window.document.MAINFORM;
+        frm.reset();
+        frm.submit();
+    }
+
+    // フォーム送信
+    function trans() {
+        var frm = window.document.MAINFORM;
+        frm.submit();
+    }
+
+    // 初期処理
+    function init() {
+        sortImageActive();
+    }
+
+    window.onload = init;
+</script>
+
+</body>
+</html>

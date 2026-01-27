@@ -306,14 +306,43 @@ try {
 
     if ($partnerUserId && $apiKeyId) {
         // ユーザーを取得または作成（mst_memberと紐づけ）
-        // ★ 韓国側で残高管理をしているため、Net8側ではデフォルト値を使用
-        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId);
+        // ★ 修正: initialPoints > 0 の場合のみ初期残高として渡す（0の場合はデフォルト10000pt）
+        $userData = [];
+        if ($initialPoints > 0) {
+            $userData['initialBalance'] = $initialPoints;
+        }
+        $user = getOrCreateUser($pdo, $apiKeyId, $partnerUserId, $userData);
         $userId = $user['id'];
         $memberNo = $user['member_no']; // mst_member.member_noを取得
 
-        // 韓国側で残高管理をしているため、Net8側では残高を更新しない
-        // initialPointsはゲームセッション用の一時ポイントとしてのみ使用
-        error_log("💰 Korea manages balance. Using initialPoints={$initialPoints} for game session only.");
+        // 韓国側からのポイント処理（Case 1: balanceMode対応）
+        if ($initialPoints > 0) {
+            if ($balanceMode === 'set') {
+                // setモード: 既存残高を無視して新しい値を設定
+                error_log("💰 Setting balance (set mode): user_id={$userId}, amount={$initialPoints}, currency={$currency}");
+                $stmt = $pdo->prepare("
+                    INSERT INTO user_balances (user_id, balance, currency, created_at, updated_at)
+                    VALUES (?, ?, ?, NOW(), NOW())
+                    ON DUPLICATE KEY UPDATE balance = ?, currency = ?, updated_at = NOW()
+                ");
+                $stmt->execute([$userId, $initialPoints, $currency, $initialPoints, $currency]);
+
+                // mst_member.point も同期
+                $stmt = $pdo->prepare("UPDATE mst_member SET point = ? WHERE member_no = ?");
+                $stmt->execute([$initialPoints, $memberNo]);
+
+                error_log("✅ Balance set to {$initialPoints} (set mode)");
+            } else {
+                // addモード: 既存残高に加算（従来の動作）
+                error_log("💰 Depositing Korea points (add mode): user_id={$userId}, amount={$initialPoints}");
+                $depositResult = depositPoints($pdo, $userId, $initialPoints, 'Korea initial points deposit');
+                // depositPointsでmember_noが作成/更新された場合、それを使用
+                if ($depositResult['member_no']) {
+                    $memberNo = $depositResult['member_no'];
+                    error_log("✅ Using member_no from deposit: {$memberNo}");
+                }
+            }
+        }
 
         // 残高チェック
         $userBalance = getUserBalance($pdo, $userId);
@@ -740,11 +769,12 @@ try {
         error_log("✅ Currency mode ({$currency}): Using play_v2");
     } else {
         // 韓国側 → play_embed（従来通り）
-        // ★ 修正: initialPointsをURLパラメータとして渡す（500pt→1000pt問題の根本原因対応）
-        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&points={$initialPoints}";
+        // ★ 修正: initialPointsをURLパラメータとして渡す（0の場合はデフォルト10000pt）
+        $pointsToPass = $initialPoints > 0 ? $initialPoints : 10000;
+        $playEmbedUrl = "/play_embed/?sessionId={$sessionId}&NO={$machine['machine_no']}&points={$pointsToPass}";
         $gameUrl = "https://mgg-webservice-production.up.railway.app{$playEmbedUrl}";
         $playUrl = "/data/play_v2/index.php?NO={$machine['machine_no']}"; // 互換性のため
-        error_log("✅ Legacy mode (JPY): Using play_embed with initialPoints={$initialPoints}");
+        error_log("✅ Legacy mode (JPY): Using play_embed with points={$pointsToPass} (initial={$initialPoints})");
     }
 
     $response = [

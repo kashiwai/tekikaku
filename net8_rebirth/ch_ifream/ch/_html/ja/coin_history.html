@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - コイン取引記録</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">コイン取引記録</h1>
+		<hr>
+		<div class="alert alert-primary now-point">
+			所持：<strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
+		</div>
+
+		<div class="d-flex w-100 justify-content-end">
+			<div class="input-group input-group-sm w-auto mb-3">
+				<div class="input-group-prepend">
+					<label class="input-group-text" for="listType">種別</label>
+				</div>
+				<select class="custom-select" id="listType" name="TYPE">
+					{%SEL_TYPE%}
+				</select>
+				<div class="input-group-append">
+					<button id="typeselect" class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+				</div>
+			</div>
+		</div>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				{%CURRENCY_1%} 履歴はありません。
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th style="vertical-align:middle;">日時</th>
+					<th style="vertical-align:middle;">種別</th>
+					<th style="width:150px; vertical-align:middle;">消費</th>
+					<th style="width:150px; vertical-align:middle;">増加<br />(有効期限)</th>
+					<th style="width:150px; vertical-align:middle;">残高</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="日時" class="text-center" style="vertical-align:middle;">{%PROC_DT%}</td>
+					<td aria-label="種別" class="text-center" style="vertical-align:middle;">{%TYPE_LABEL%}</td>
+					<td aria-label="消費" class="text-right" style="vertical-align:middle;">{%POINT_SUM%}</td>
+					<td aria-label="増加(有効期限)" class="text-right" style="vertical-align:middle;">{%POINT_ADD%}<br />(<!--if:{LIMIT_DT}-->{%LIMIT_DT%}<!--/if:{LIMIT_DT}-->)</td>
+					<td aria-label="残高" class="text-right" style="vertical-align:middle;">{%AFTER_POINT%}</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}point.html"-->
+	
+	</body>
+</html>

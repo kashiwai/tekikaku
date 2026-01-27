@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - メールアドレス再設定</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">メールアドレス再設定</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="proc">
+			<div class="input-form mb-5">
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				<div class="alert alert-secondary">
+					<small>下記に入力したメールアドレス宛にメールアドレス再設定情報を送信します。</small>
+				</div>
+				<!--if:{OVERMAIL}-->
+				<div class="alert alert-danger">
+					現在のメールアドレス（{%NMAIL%}）は送信エラー回数が規定数を超えています。
+				</div>
+				<!--/if:{OVERMAIL}-->
+				
+				<div class="form-group">
+					<label class="col-form-label" for="mail">メールアドレス<span class="badge badge-indis">必須</span></label>
+					<input type="text" class="form-control" placeholder="" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="mailConf">メールアドレス(確認)<span class="badge badge-indis">必須</span></label>
+					<input type="text" class="form-control" placeholder="上と同じメールアドレスを入力してください" id="mailConf" name="MAILCONF" value="{%MAILCONF%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　送信する</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}mail.html"-->
+	
+	</body>
+</html>

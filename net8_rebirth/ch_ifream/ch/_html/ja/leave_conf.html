@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 退会手続き</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">退会手続き</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="PASS" value="{%PASS%}">
+			<input type="hidden" name="REASON" value="{%REASON%}">
+			<div class="input-form mb-5">
+				
+				<div class="alert alert-danger">
+					本当に退会しますか？
+				</div>
+				<div class="alert alert-secondary text-center">
+					<small>※退会手続きをされますと所持{%CURRENCY_1%}、および所持{%CURRENCY_3%}が全て失効されます。</small>
+				</div>
+				<hr>
+				
+				<div class="form-group">
+					<label class="col-form-label" for="reason">退会理由</label>
+					<div class="panel-body">
+						{%DISP_REASON%}
+					</div>
+				</div>
+				<hr>
+				
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="changeInput(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　入力内容を修正する</a>
+				</div>
+				<br>
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="document.MAINFORM.submit(); return false;" class="btn btn-block btn-primary">退会する</a>
+				</div>
+				
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}leave_conf.html"-->
+	
+	</body>
+</html>

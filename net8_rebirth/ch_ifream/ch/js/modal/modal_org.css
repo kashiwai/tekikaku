@@ -1,0 +1,165 @@
+/*---------------------------------------
+
+	LEAN MODAL
+
+-----------------------------------------*/
+
+#lean_overlay{
+    position: fixed;
+    z-index: 10000;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width:100%;
+    background: #000;
+    display: none;
+}
+
+
+/*---------------------------------------
+
+	EXAMPLES
+
+-----------------------------------------*/
+.modal-window{
+    /*width: 660px;*/
+    padding: 10px;
+    display:none;
+    /*height:60%;*/
+    background:#fff;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.7);
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,0.7);
+    -moz-box-shadow: 0 0px 4px rgba(0,0,0,0.7);
+    overflow: hidden;
+}
+
+/*トップページのサンプル*/
+.modal-sample{
+    padding: 5px;
+    display:none;
+    background:#fff;
+    border-radius: 55px;
+    -moz-border-radius: 55px;
+    -webkit-border-radius: 55px;
+    -ms-border-radius: 55px;
+}
+
+.modal-sample img{
+    border-radius: 55px;
+    -moz-border-radius: 55px;
+    -webkit-border-radius: 55px;
+}
+
+.modal-sample img.sample-frame{
+	margin: -620px 0 0;
+}
+
+.modal-sample .sample-hype{
+	position: absolute;
+	margin: 110px 0 0 28px;
+}
+
+
+/*small-test*/
+
+
+.modal-sample img.sample-frame-small {
+		margin: -499px 0 0;
+}
+
+.modal-sample .sample-hype-small{
+	position: absolute;
+	margin: 89px 0 0 22px;
+}
+
+/*デザインサンプル・デザイン選択*/
+.design-select-view{
+	text-align: center;
+	padding: 70px 90px;
+    border-radius: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -ms-border-radius: 0px;
+}
+
+.design-select-view img,
+.design-select-view span{
+	display: block;
+	margin: 0 auto 20px;
+	text-align: center;
+	color: #999;
+}
+
+.design-select-view img{
+	padding: 7px 5px;
+	border: 1px solid #ccc;
+}
+
+.design-select-view span{
+	font-size: 18px;
+	margin: 0 auto;
+}
+
+.design-select-view input.select{
+	width: 215px;
+	height: 32px;
+	margin: 10px 0 0;
+	padding: 3px 0 0 0;
+	color: #999;
+	cursor: pointer;
+	border: 1px solid #999;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-ms-border-radius: 5px;
+	border-radius: 5px;
+
+	/* IE */ 
+	background: url(../../img/bigArrow.png) no-repeat right center , -ms-linear-gradient(top, #ffffff, #ffffff 50%, #CCCCCC) ;
+	/* Mozilla */ 
+	background:  url(../../img/bigArrow.png) no-repeat right center , -moz-linear-gradient(top, #ffffff, #ffffff 50%, #CCCCCC) ;
+	/* Opera */ 
+	background:  url(../../img/bigArrow.png) no-repeat right center , -o-linear-gradient(top, #ffffff, #ffffff 50%, #CCCCCC) ;
+	/* Webkit */ 
+	background: url(../../img/bigArrow.png)  no-repeat right center, -webkit-linear-gradient(top, #ffffff, #ffffff 50%, #CCCCCC) ;
+	/* W3C */ 
+	background: url(../../img/bigArrow.png) no-repeat right center ,linear-gradient(top, #ffffff, #ffffff 50%, #CCCCCC) ;
+
+}
+
+.design-select-view input:hover{
+	filter: alpha(opacity=80);
+	-moz-opacity:0.8;
+	-webkit-opacity:0.8;
+	-ms-opacity:0.8;
+	opacity:0.8;	
+}
+
+/*クローズボタン*/
+
+.modal-window .modal_close,
+.design-select-view .modal_close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: block;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	background: url(../../img/cross.png) no-repeat 0 0;
+	z-index: 2;
+}
+
+
+.modal-sample .modal_close {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(modal-close.png) no-repeat center;
+	z-index: 2;
+}

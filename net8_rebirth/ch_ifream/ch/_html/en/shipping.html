@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - Shipping Procedures</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">Shipping Procedures</h1>
+		<hr>
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				There is no shipping procedures.
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		
+		<table class="table table-bordered table-striped table-recomb mb-2">
+			<thead>
+				<tr>
+					<th>Name of Items</th>
+					<th>Date of Winning</th>
+					<th>Status</th>
+					<th>Shipping Number</th>
+					<th>Address</th>
+					<th>Name</th>
+					<th>Phone Number</th>
+					<th>Shipping address</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--loop:{LIST}-->
+				<tr>
+					<td aria-label="Name of Items" class="text-center">{%GOODS_NAME%}</td>
+					<td aria-label="Date of Winning" class="text-center">{%DISP_ADD_DT%}</td>
+					<td aria-label="Status" class="text-center">{%STATE%}</td>
+					<td aria-label="発送番号" class="text-center">{%SHIPPING_NO%}</td>
+					<td aria-label="Address" class="text-left"><!--if:{POSTAL}-->〒<!--/if:{POSTAL}-->{%POSTAL%} {%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}</td>
+					<td aria-label="Name" class="text-left">{%SYLL%} {%NAME%}</td>
+					<td aria-label="Phone Number" class="text-left">{%TEL%}</td>
+					<td class="text-center">
+						<!--if:{EDIT}-->
+						<a href="{%SELF%}?M=select&SEQ={%SEQ%}&NO={%GOODS_NO%}">Selection</a>
+						<!--/if:{EDIT}-->
+						<!--if:{NOEDIT}-->
+						-
+						<!--/if:{NOEDIT}-->
+					</td>
+				</tr>
+				<!--/loop:{LIST}-->
+			</tbody>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	</body>
+</html>

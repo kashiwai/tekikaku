@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - メーカー管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> メーカー管理</h3>
+						
+						<div class="card">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新規登録</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0">
+									<thead>
+										<tr>
+											<th>メーカーNo<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="maker_no asc" onClick="reSort('maker_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="maker_no desc" onClick="reSort('maker_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>メーカー名<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="maker_name asc" onClick="reSort('maker_name asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="maker_name desc" onClick="reSort('maker_name desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>メーカー名（英）<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="maker_roman asc" onClick="reSort('maker_roman asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="maker_roman desc" onClick="reSort('maker_roman desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<!--if:{CATEGORY_USE_PACH}-->
+											<th>パチンコ<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="pachi_flg asc" onClick="reSort('pachi_flg asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="pachi_flg desc" onClick="reSort('pachi_flg desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<!--/if:{CATEGORY_USE_PACH}-->
+											<!--if:{CATEGORY_USE_SLOT}-->
+											<th>スロット<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="slot_flg asc" onClick="reSort('slot_flg asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="slot_flg desc" onClick="reSort('slot_flg desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<!--/if:{CATEGORY_USE_SLOT}-->
+											<th>表示<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="disp_flg asc" onClick="reSort('disp_flg asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="disp_flg desc" onClick="reSort('disp_flg desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>実機リスト</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%MAKER_NO%}');">{%MAKER_NO_PAD%}</a></td>
+											<td>{%MAKER_NAME%}</td>
+											<td>{%MAKER_ROMAN%}</td>
+											<!--if:{CATEGORY_USE_PACH}-->
+											<td class="text-center">{%PACH_FLG_LABEL%}</td>
+											<!--/if:{CATEGORY_USE_PACH}-->
+											<!--if:{CATEGORY_USE_SLOT}-->
+											<td class="text-center">{%SLOT_FLG_LABEL%}</td>
+											<!--/if:{CATEGORY_USE_SLOT}-->
+											<td class="text-center">{%DISP_FLG_LABEL%}</td>
+											<td class="text-center">
+												<!--if:{EXISTS_LIST}--><a href="search.php?S_MAKER_NO={%MAKER_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
+												<!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
+											</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 検索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "maker_detail", 820, 700);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>
