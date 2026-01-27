@@ -169,8 +169,14 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PC接続状態（Chrome Remote Desktop Session IDで判定）
-        $m['pc_connected'] = !empty($m['chrome_rd_session_id']);
+        // PC接続状態（Chrome RD Session ID or pc_status で判定）
+        // Session IDが入っている場合は優先、なければpc_statusを使用
+        if (!empty($m['chrome_rd_session_id'])) {
+            $m['pc_connected'] = true;
+        } else {
+            $m['pc_connected'] = ($m['pc_status'] == 'online');
+        }
+
         if ($m['pc_connected']) {
             $pc_online++;
         } else {
