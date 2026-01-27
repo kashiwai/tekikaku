@@ -169,22 +169,14 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PC接続状態を last_heartbeat で判定
-        // 5分以内（300秒）にハートビートがあれば接続中
-        $m['pc_connected'] = false;
-        if (!empty($m['last_heartbeat'])) {
-            $heartbeat_time = strtotime($m['last_heartbeat']);
-            $current_time = time();
-            $diff_seconds = $current_time - $heartbeat_time;
-
-            if ($diff_seconds <= 300) { // 5分以内
-                $m['pc_connected'] = true;
-            }
-        }
-
-        if ($m['pc_connected']) {
+        // PC接続状態を machine_status で判定（シンプル版）
+        // machine_status: 0=停止中, 1=稼働中, 2=メンテナンス中
+        // 稼働中(1)のみPC接続中として扱う
+        if ($m['machine_status'] == 1) {
+            $m['pc_connected'] = true;
             $pc_online++;
         } else {
+            $m['pc_connected'] = false;
             $pc_offline++;
         }
 
@@ -839,20 +831,10 @@ function DispMachineList($template, $message = "") {
                         ?></dd>
                         <dt>PC接続</dt>
                         <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
-                        <dt style="color: #ff0000;">🔴 last_heartbeat</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?php
-                            if (!empty($m['last_heartbeat'])) {
-                                $hb_time = strtotime($m['last_heartbeat']);
-                                $diff = time() - $hb_time;
-                                echo htmlspecialchars($m['last_heartbeat']) . " ({$diff}秒前)";
-                            } else {
-                                echo 'NULL';
-                            }
-                        ?></dd>
-                        <dt style="color: #ff0000;">🔴 pc_connected</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE (≤300秒)' : 'FALSE (>300秒 or NULL)' ?></dd>
                         <dt style="color: #ff0000;">🔴 machine_status</dt>
                         <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> (0=停止, 1=稼働, 2=メンテ)</dd>
+                        <dt style="color: #ff0000;">🔴 pc_connected</dt>
+                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE (status=1)' : 'FALSE (status≠1)' ?></dd>
                         <dt style="color: #ff0000;">🔴 assign_flg</dt>
                         <dd style="color: #ff0000; font-size: 10px;"><?= $m['assign_flg'] ?> | playing_member: <?= $m['playing_member'] ?: 'NULL' ?></dd>
                         <dt>IP</dt>
