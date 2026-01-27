@@ -7,10 +7,10 @@
 
 // サイト基本情報
 define('SITE_NAME', getenv('SITE_NAME') ?: 'NET8 System');
-define('SITE_URL', getenv('SITE_URL') ?: 'https://mgg-webservice-production.up.railway.app/');
+define('SITE_URL', getenv('SITE_URL') ?: 'https://ifreamnet8-development.up.railway.app/');
 define('ADMIN_EMAIL', getenv('ADMIN_EMAIL') ?: 'admin@example.com');
-define('DOMAIN', getenv('DOMAIN') ?: 'mgg-webservice-production.up.railway.app');
-define('URL_SSL_SITE', getenv('URL_SSL_SITE') ?: 'https://mgg-webservice-production.up.railway.app/data/'); // Railway本番環境
+define('DOMAIN', getenv('DOMAIN') ?: 'ifreamnet8-development.up.railway.app');
+define('URL_SSL_SITE', getenv('URL_SSL_SITE') ?: 'https://ifreamnet8-development.up.railway.app/data/'); // Railway開発環境
 
 // 管理画面URL設定
 define('URL_ADMIN', getenv('URL_ADMIN') ?: '/xxxadmin/'); // 管理画面パス

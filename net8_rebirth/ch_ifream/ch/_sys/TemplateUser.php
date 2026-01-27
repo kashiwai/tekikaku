@@ -194,6 +194,12 @@ class TemplateUser extends SmartTemplate {
 		$this->assign("DEFAULT_LANG" , DEFAULT_LANG);				// デフォルト言語
 		$this->assign("CLIENT_CODE"  , CLIENT_CODE);				// 顧客コード
 
+		// ★多言語対応: 現在の言語パラメータをテンプレート変数に追加
+		$currentLang = defined('FOLDER_LANG') ? FOLDER_LANG : DEFAULT_LANG;
+		$this->assign("CURRENT_LANG", $currentLang);					// 現在の言語コード
+		$this->assign("LANG_PARAM", "?lang=" . $currentLang);			// URLパラメータ (例: ?lang=zh)
+		$this->assign("LANG_PARAM_AMP", "&lang=" . $currentLang);		// URLパラメータ (例: &lang=zh)
+
 		// インクルード日時
 		if ( DOMAIN == DOMAIN_DEVELOPMENT ) {	// 開発環境
 			$sysDate = date("Ymd");

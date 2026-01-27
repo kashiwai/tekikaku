@@ -1068,7 +1068,7 @@
 		<div class="machine-grid">
 			<!--loop:{LIST}-->
 			<div class="machine-card machine-card-status-{%MACHINE_STATUS%}" data-status="{%MACHINE_STATUS%}">
-				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="machine-card-link">
+				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}{%LANG_PARAM_AMP%}" class="machine-card-link">
 					<!-- Machine Type Badge -->
 					<span class="machine-card-badge badge-slot">{%GENERATION%}</span>
 
@@ -1111,7 +1111,7 @@
 	<!-- Fixed Footer Actions -->
 	<div class="footer-actions">
 		<a href="./" class="footer-btn btn-secondary">機体選択</a>
-		<a href="search.php" class="footer-btn btn-primary">始める</a>
+		<a href="search.php{%LANG_PARAM%}" class="footer-btn btn-primary">始める</a>
 	</div>
 
 	</div>

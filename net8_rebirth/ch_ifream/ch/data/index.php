@@ -217,6 +217,12 @@ function DispTop($template) {
 	// 画面表示開始
 	$template->open(PRE_HTML . ".html");
 	$template->assignCommon();
+
+	// ★多言語対応: 現在の言語をテンプレートに渡す
+	$template->assign("CURRENT_LANG", FOLDER_LANG);
+	$template->assign("LANG_PARAM", "?lang=" . FOLDER_LANG);
+	$template->assign("LANG_PARAM_AMP", "&lang=" . FOLDER_LANG);
+
 	// ページング
 	$queryString = $_SERVER['QUERY_STRING'] ?? "";
 	$template->assign("PAGING"        , HtmlPagingTag( (($queryString!="")? "?".$queryString."&":"?"), $_GET["P"], $allpage) );
