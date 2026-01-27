@@ -428,8 +428,10 @@ try {
                         m.machine_no,
                         m.signaling_id,
                         m.camera_no,
-                        m.machine_status
+                        m.machine_status,
+                        mc.camera_name
                     FROM dat_machine m
+                    LEFT JOIN mst_camera mc ON m.camera_no = mc.camera_no
                     WHERE m.machine_no = :machine_no
                     AND m.del_flg = 0
                     LIMIT 1";
@@ -464,8 +466,10 @@ try {
                         m.machine_no,
                         m.signaling_id,
                         m.camera_no,
-                        m.machine_status
+                        m.machine_status,
+                        mc.camera_name
                     FROM dat_machine m
+                    LEFT JOIN mst_camera mc ON m.camera_no = mc.camera_no
                     WHERE m.model_no = :model_no
                     AND m.del_flg = 0
                     AND m.end_date >= CURDATE()
@@ -725,32 +729,33 @@ try {
     }
 
     // 5. カメラ情報（WebRTC用・環境別）
+    // オリジナルnet8と同じく、データベースから直接camera_nameを取得（シグナリングサーバー経由不要）
     $cameraInfo = null;
 
     if ($environment === 'test' || $environment === 'staging') {
         // モック環境：テスト用カメラ情報
         $cameraInfo = [
             'cameraNo' => 9999,
+            'peerId' => 'test_mock_camera_9999',
             'streamUrl' => 'mock://camera.net8.test/stream/' . $modelId,
+            'source' => 'mock',
+            'active' => true,
             'mock' => true
         ];
+        error_log("🎭 Using mock camera: test_mock_camera_9999");
     } else {
-        // 本番環境：シグナリングサーバーから動的にPeerIDを取得
-        if ($machine['camera_no']) {
-            error_log("🔍 Fetching camera info from signaling server for camera_no={$machine['camera_no']}");
-
-            $cameraInfo = getCameraInfo(
-                $machine['camera_no'],
-                SIGNALING_HOST,
-                SIGNALING_PORT,
-                $pdo
-            );
-
-            if ($cameraInfo) {
-                error_log("✅ Camera info: camera_no={$cameraInfo['cameraNo']}, peerId={$cameraInfo['peerId']}, mac={$cameraInfo['cameraMac']}, source={$cameraInfo['source']}, active=" . ($cameraInfo['active'] ? 'true' : 'false'));
-            } else {
-                error_log("⚠️  No camera info found for camera_no={$machine['camera_no']}");
-            }
+        // 本番環境：データベースから直接camera_nameを取得（オリジナルnet8方式）
+        if ($machine['camera_no'] && !empty($machine['camera_name'])) {
+            $cameraInfo = [
+                'cameraNo' => $machine['camera_no'],
+                'peerId' => $machine['camera_name'],  // データベースから直接取得
+                'cameraName' => $machine['camera_name'],
+                'source' => 'database',
+                'active' => true  // データベースに登録されている = アクティブと判断
+            ];
+            error_log("✅ Camera info (from DB): camera_no={$machine['camera_no']}, peerId={$machine['camera_name']}");
+        } else {
+            error_log("⚠️  No camera info found for camera_no={$machine['camera_no']}");
         }
     }
 
