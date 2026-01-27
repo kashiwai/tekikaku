@@ -156,7 +156,10 @@ function DispMachineList($template, $message = "") {
         PDO::FETCH_ASSOC
     );
 
-    // 統計情報（PC状態 / ゲーム機状態 / メンテナンス状態）
+    // Signaling ServerからアクティブなPeerID一覧を取得
+    $active_peers = GetSignalingPeerIds();
+
+    // 統計情報（PC状態 / ゲーム機状態 / WebRTC / メンテナンス）
     $total = count($machines);
     $pc_online = 0;
     $pc_offline = 0;
