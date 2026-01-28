@@ -12,11 +12,11 @@
  * @since    2025/12/17 初版作成
  */
 
-// 言語設定（URL lang パラメータから取得）
-$lang = isset($_GET['lang']) ? $_GET['lang'] : 'ja';
+// 言語設定（URL lang パラメータから取得）デフォルト: 中国語
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'zh';
 $allowedLangs = ['zh', 'ko', 'en', 'ja'];
 if (!in_array($lang, $allowedLangs)) {
-	$lang = 'ja';
+	$lang = 'zh';
 }
 if (!defined('FOLDER_LANG')) {
 	define("FOLDER_LANG", $lang);

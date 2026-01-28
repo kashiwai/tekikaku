@@ -23,18 +23,24 @@
  * @since    2019/09/06 表示形態諸々の大幅改修 鶴野
  */
 
-// ★多言語対応: 言語検出（require_files.phpより前に定義必須）
+// インクルード
+require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
+
+// ★多言語対応: 言語検出とテンプレートディレクトリ設定
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'zh'; // デフォルトは中国語
 $allowedLangs = ['zh', 'ko', 'en', 'ja'];
 if (!in_array($lang, $allowedLangs)) {
     $lang = 'zh'; // 無効な言語コードはデフォルトに
 }
 
-// require_files.phpで使用される言語設定
-define("FOLDER_LANG", $lang);
+// FOLDER_LANG 定数を設定（データベースクエリで使用）
+if (!defined('FOLDER_LANG')) {
+    define("FOLDER_LANG", $lang);
+}
 
-// インクルード
-require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
+// 言語別テンプレートディレクトリを設定
+define("LANG_CODE", $lang);
+define("TEMPLATE_LANG_DIR", "../_html/{$lang}/");
 
 // 項目定義
 define("PRE_HTML", basename(get_self(), ".php"));	// テンプレートHTMLプレフィックス
@@ -217,12 +223,6 @@ function DispTop($template) {
 	// 画面表示開始
 	$template->open(PRE_HTML . ".html");
 	$template->assignCommon();
-
-	// ★多言語対応: 現在の言語をテンプレートに渡す
-	$template->assign("CURRENT_LANG", FOLDER_LANG);
-	$template->assign("LANG_PARAM", "?lang=" . FOLDER_LANG);
-	$template->assign("LANG_PARAM_AMP", "&lang=" . FOLDER_LANG);
-
 	// ページング
 	$queryString = $_SERVER['QUERY_STRING'] ?? "";
 	$template->assign("PAGING"        , HtmlPagingTag( (($queryString!="")? "?".$queryString."&":"?"), $_GET["P"], $allpage) );
