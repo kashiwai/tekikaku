@@ -21,6 +21,10 @@ if (!in_array($lang, $allowedLangs)) {
 if (!defined('FOLDER_LANG')) {
 	define("FOLDER_LANG", $lang);
 }
+// DIR_HTML を require_files.php より前に定義（TemplateUser が使用）
+if (!defined('DIR_HTML')) {
+	define('DIR_HTML', __DIR__ . '/../_html/' . $lang . '/');
+}
 
 // インクルード
 require_once('../_etc/require_files.php');			// requireファイル
