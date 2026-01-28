@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 我的页面</title>
+	</head>
+
+	<body id="my_page" class="ip-page after-login">
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/account_icon.svg" class="page-icon">我的页面</h2>
+	<div class="contents">
+
+	<!-- 我的页面コンテンツ -->
+	<div class="my-page-wrapper">
+		<div class="user-info">
+			<div class="user-image">
+				<img src="/content/images/user/user_photo.png" alt="ユーザー画像">
+			</div>
+
+			<div class="status">
+				<p class="user-name">
+					<img src="/content/images/icon/id_icon.svg" class="page-icon">
+					<span class="user-neme">{%DISP_NAME%}</span>
+					<a href="#" onclick="navigator.clipboard.writeText('{%DISP_NAME%}'); alert('ユーザー名をコピーしました'); return false;">
+						<img src="/content/images/icon/link_icon.svg" class="page-icon">
+					</a>
+				</p>
+				<p>
+					<img src="/content/images/icon/user_corde_icon.svg" class="page-icon">
+					<span class="user-code">{%INV_CODE%}</span>
+					<a href="#" onclick="navigator.clipboard.writeText('{%INV_CODE%}'); alert('邀请码をコピーしました'); return false;">
+						<img src="/content/images/icon/link_icon.svg" class="page-icon">
+					</a>
+				</p>
+				<img src="/content/images/icon/medal_5_icon.svg" class="page-icon medal" alt="メダル">
+			</div>
+
+			<div class="ryu-coins hold">
+				<div class="hold-ryu">
+					<h4>保有RYU</h4>
+					<p>
+						<img src="/content/images/icon/coin-yen.svg" alt="RYU">
+						<span class="stock">{%HOLD_RYU%}</span>
+					</p>
+				</div>
+
+				<div class="hold-coins">
+					<h4>保有金币</h4>
+					<p>
+						<img src="/content/images/icon/solid_coins.svg" alt="金币">
+						<span class="stock">{%HOLD_COINS%}</span>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="my-page-list">
+			<h3>密码</h3>
+			<p><a href="{%SITE_SSL_URL%}pass_reset.php">密码の更改</a></p>
+
+			<h3>会員情報</h3>
+			<p><a href="{%SITE_SSL_URL%}profile_detail.php">会員情報の设置・更改</a></p>
+
+			<h3>ウォレット（入出金）</h3>
+			<p><a href="{%SITE_SSL_URL%}point_buy.php">💰 购买点数（入金）</a></p>
+			<p><a href="{%SITE_SSL_URL%}withdraw.php">💳 出金申請</a></p>
+			<p><a href="{%SITE_SSL_URL%}point.php">📊 点数履歴</a></p>
+			<p><a href="{%SITE_SSL_URL%}withdrawal_history.php">📝 出金履歴</a></p>
+
+			<h3>消息BOX</h3>
+			<p>
+				<!--if:{NOTICE_COUNT}-->
+				<span class="mess_badge">{%NOTICE_COUNT%}</span>
+				<!--/if:{NOTICE_COUNT}-->
+				<a href="{%SITE_SSL_URL%}notice.php">お知らせ</a>
+			</p>
+
+			<h3>履歴</h3>
+			<p><a href="{%SITE_SSL_URL%}play_history.php">玩履歴</a></p>
+			<p><a href="{%SITE_SSL_URL%}coin_history.php">金币取引記録</a></p>
+			<p><a href="{%SITE_SSL_URL%}ryu_history.php">RYU取引履歴</a></p>
+
+			<h3>その他</h3>
+			<p><a href="{%SITE_SSL_URL%}leave.php">退会</a></p>
+			<p><a href="{%SITE_SSL_URL%}inquiry.php">联系我们</a></p>
+		</div>
+
+		<button type="button" onclick="history.back()">返回</button>
+
+	</div>
+	<!-- //我的页面コンテンツ -->
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	</body>
+</html>

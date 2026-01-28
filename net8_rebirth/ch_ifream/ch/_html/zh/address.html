@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 発送先确认・设置</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+
+		<h1 class="h3 text-center my-4">発送先确认・设置</h1>
+		<hr>
+		
+		<!--if:{LIMIT}-->
+		<div class="w-100 text-right mb-2">
+			<a href="address_add.php" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> 発送先を添加</a>
+		</div>
+		<!--/if:{LIMIT}-->
+		
+		<!--if:{NONE}-->
+		<div class="row">
+			<div class="col-md-6">
+				発送先情報が注册されていません。
+			</div>
+		</div>
+		<!--/if:{NONE}-->
+		
+		<!--if:{LISTS}-->
+		<div class="row mb-2">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-0">
+					{%PAGING%}
+				</ul>
+			</div>
+			<div class="col-md-6 text-right text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+		</div>
+		
+		<div class="row">
+			<!--loop:{LIST}-->
+			<div class="col-md-6 mb-2">
+				<div class="card" data-no="{%SEQ%}">
+					<div class="card-header d-flex w-100 justify-content-between">
+						<h5>{%LASTNAME%} {%FIRSTNAME%}</h5>
+						<!--if:{SELECTED}-->
+						<div><span class="badge-primary btn-sm selectedaddress">选择中</span></div>
+						<!--/if:{SELECTED}-->
+						<!--if:{NOT_SELECT}-->
+						<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".detail-modal" onClick="change_address(this);">発送先に设置する</button>
+						<!--/if:{NOT_SELECT}-->
+					</div>
+					<div class="card-body">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">〒{%POSTAL%}<br />
+								{%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}
+							</li>
+							<li class="list-group-item">{%TEL%}</li>
+						</ul>
+					</div>
+					<div class="card-footer d-flex w-100 justify-content-between">
+						<a href="address_add.php?NO={%SEQ%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> 編集</a>
+						<a href="javaScript:void(0);" onClick="del_address(this); return false;" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target=".detail-modal"><i class="far fa-trash-alt"></i> 删除</a>
+					</div>
+				</div>
+			</div>
+			<!--/loop:{LIST}-->
+		</div>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<ul class="pagination pagination-sm mb-2">
+					{%PAGING%}
+				</ul>
+			</div>
+		</div>
+		<!--/if:{LISTS}-->
+		
+	</div>
+	<!-- /.container -->
+	
+	<!-- Modal -->
+	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作を添加する -->
+	<div class="modal fade detail-modal base-detail modata_mt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">発送先设置</h5>
+				</div>
+				<div class="modal-body">
+					<div class="card-subtitle text-left address_data">
+						<h5></h5>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item"><span></span><br />
+								<span></span>
+							</li>
+							<li class="list-group-item"></li>
+						</ul>
+					</div>
+					<div class="card-subtitle text-center mt-2">
+						<div class="btn_area address_select">
+							この発送先を选择しますか？
+							<br>
+							<br>
+							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">选择する</a>
+						</div>
+						<div class="btn_area address_delete">
+							この発送先を删除しますか？
+							<br>
+							<br>
+							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">删除する</a>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}address.html"-->
+	
+	</body>
+</html>

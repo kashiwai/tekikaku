@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - アカウント设置</title>
+
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .topbar-actions { display: flex; gap: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+
+        /* データテーブル */
+        .data-table-wrapper { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .data-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .pagination-info { color: var(--admin-text-muted); font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--admin-darker); }
+        th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: var(--admin-text-muted); white-space: nowrap; border-bottom: 2px solid var(--admin-border); }
+        th.text-center { text-align: center; }
+        td { padding: 12px; border-top: 1px solid var(--admin-border); color: var(--admin-text); font-size: 14px; }
+        td.text-center { text-align: center; }
+        tbody tr:hover { background: rgba(3, 118, 201, 0.05); }
+        td a { color: var(--admin-primary); text-decoration: none; transition: color 0.3s; }
+        td a:hover { color: var(--admin-info); text-decoration: underline; }
+        .sort-controls { display: flex; flex-direction: column; gap: 2px; margin-left: 5px; display: inline-flex; }
+        .sort-controls a { color: var(--admin-text-muted); font-size: 10px; }
+        .sort-controls a:hover { color: var(--admin-primary); }
+
+        /* ページネーション */
+        .pagination { display: flex; gap: 5px; list-style: none; margin: 0; padding: 0; }
+        .pagination li a { padding: 6px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 4px; color: var(--admin-text); text-decoration: none; transition: all 0.3s; }
+        .pagination li a:hover { background: var(--admin-primary); color: white; }
+        .pagination li.active a { background: var(--admin-primary); color: white; border-color: var(--admin-primary); }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .data-table-wrapper { overflow-x: auto; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+
+<!--#include file="navigation.html"-->
+
+<div class="admin-layout">
+    <!--#include file="sidebar.html"-->
+
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-user-cog"></i> アカウント设置</h1>
+            <div class="topbar-actions">
+                <!--if:{OVER_ADMIN}-->
+                <a href="javascript:void(0);" onclick="openDetail('');" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> 新用户注册
+                </a>
+                <!--/if:{OVER_ADMIN}-->
+            </div>
+        </div>
+
+        <form action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+        <input type="hidden" name="ODR" value="{%ODR%}">
+        <input type="hidden" name="P" value="{%P%}">
+
+        <!-- データテーブル -->
+        <div class="data-table-wrapper">
+            <div class="data-table-header">
+                <div class="pagination-info">
+                    Page {%P%} / {%ALLP%} (全{%ALLROW%}件)
+                    <ul class="pagination" id="PAGEMOVE_TOP">
+                        {%PAGING%}
+                    </ul>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            管理者名
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('admin_name asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('admin_name desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th>アカウントID</th>
+                        <th>
+                            管理権限
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('auth_flg asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('auth_flg desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                        <th class="text-center">
+                            最終登录
+                            <div class="sort-controls">
+                                <a href="javascript:void(0);" onclick="reSort('login_dt asc');"><i class="fas fa-angle-up"></i></a>
+                                <a href="javascript:void(0);" onclick="reSort('login_dt desc');"><i class="fas fa-angle-down"></i></a>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--loop:{LIST}-->
+                    <tr>
+                        <td><a href="javascript:void(0);" onclick="openDetail('{%ADMIN_NO%}');">{%ADMIN_NAME%}</a></td>
+                        <td>{%ADMIN_ID%}</td>
+                        <td>{%AUTH_FLG%}</td>
+                        <td class="text-center">{%LOGIN_DT%}</td>
+                    </tr>
+                    <!--/loop:{LIST}-->
+                </tbody>
+            </table>
+
+            <div class="data-table-header" style="margin-top: 20px;">
+                <div class="pagination-info">
+                    Page {%P%} / {%ALLP%} (全{%ALLROW%}件)
+                    <ul class="pagination" id="PAGEMOVE_BTM">
+                        {%PAGING%}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </form>
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+
+<script src="js/list.js"></script>
+<script type="text/javascript">
+// ソート
+function reSort(sort) {
+    var frm = window.document.MAINFORM;
+    frm["ODR"].value = sort;
+    frm["P"].value = "1";
+    trans();
+}
+
+// 詳細画面Open
+function openDetail(key) {
+    win_open("{%SELF%}", "M=detail&NO=" + key, "admin_detail", 820, 900);
+}
+
+// フォーム发送
+function trans() {
+    var frm = window.document.MAINFORM;
+    frm.submit();
+}
+
+// 初期処理
+function init() {
+    sortImageActive();
+}
+
+window.onload = init;
+</script>
+
+</body>
+</html>

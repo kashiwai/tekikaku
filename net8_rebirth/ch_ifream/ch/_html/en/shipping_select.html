@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Selection of the Shipping Address</title>
+		<title>{%SITE_TITLE%} - 発送先Select</title>
 	</head>
 
 	<body>
@@ -12,19 +12,19 @@
 	<!-- Page Content -->
 	<div class="container mb-5">
 
-		<h1 class="h3 text-center my-4">Selection of the Shipping Address</h1>
+		<h1 class="h3 text-center my-4">発送先Select</h1>
 		<hr>
 		
 		<!--if:{LIMIT}-->
 		<div class="w-100 text-right mb-2">
-			<a href="address_add.php?B=select&T={%SEQ%}-{%GOODS_NO%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> Add shipping address.</a>
+			<a href="address_add.php?B=select&T={%SEQ%}-{%GOODS_NO%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> 発送先をAdd</a>
 		</div>
 		<!--/if:{LIMIT}-->
 		
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				Shipping address information has not registered.
+				発送先情報がRegisterされていません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -37,7 +37,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
@@ -47,18 +47,18 @@
 				<div class="card" data-no="{%SEQ%}" data-goods_no="{%GOODS_NO%}" data-aseq="{%ADDRESS_SEQ%}">
 					<div class="card-header d-flex w-100 justify-content-between">
 						<h5>{%LASTNAME%} {%FIRSTNAME%}</h5>
-						<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".detail-modal" onClick="change_address(this);">Deliver to this Shipping Address</button>
+						<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".detail-modal" onClick="change_address(this);">この発送先に届ける</button>
 					</div>
 					<div class="card-body">
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item">{%POSTAL%}<br />
+							<li class="list-group-item">〒{%POSTAL%}<br />
 								{%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}
 							</li>
 							<li class="list-group-item">{%TEL%}</li>
 						</ul>
 					</div>
 					<div class="card-footer d-flex w-100 justify-content-between">
-						<a href="address_add.php?NO={%ADDRESS_SEQ%}&B=select&T={%SEQ%}-{%GOODS_NO%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> Edit</a>
+						<a href="address_add.php?NO={%ADDRESS_SEQ%}&B=select&T={%SEQ%}-{%GOODS_NO%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> 編集</a>
 					</div>
 				</div>
 			</div>
@@ -78,12 +78,12 @@
 	<!-- /.container -->
 	
 	<!-- Modal -->
-	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作を追加する -->
+	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作をAddする -->
 	<div class="modal fade detail-modal base-detail modata_mt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Shipping address setting</h5>
+					<h5 class="modal-title">発送先Settings</h5>
 				</div>
 				<div class="modal-body">
 					<div class="card-subtitle text-left address_data">
@@ -97,16 +97,16 @@
 					</div>
 					<div class="card-subtitle text-center mt-2">
 						<div class="btn_area address_select">
-							この発送先を選択しますか？
+							この発送先をSelectしますか？
 							<br>
 							<br>
-							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">選択する</a>
+							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Selectする</a>
 						</div>
 						<div class="btn_area address_delete">
-							この発送先を削除しますか？
+							この発送先をDeleteしますか？
 							<br>
 							<br>
-							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">削除する</a>
+							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Deleteする</a>
 						</div>
 					</div>
 				</div>

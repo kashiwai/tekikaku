@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 出金申請完了</title>
+		<style>
+			/* パチンコ台風 完了画面デザイン */
+			.withdraw-end-container {
+				max-width: 700px;
+				margin: 40px auto;
+				padding: 20px;
+			}
+
+			.end-header {
+				text-align: center;
+				margin-bottom: 40px;
+			}
+
+			.end-header h2 {
+				font-size: 2rem;
+				color: #00ff00;
+				text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+				text-transform: uppercase;
+				letter-spacing: 3px;
+				animation: successGlow 2s ease-in-out infinite;
+			}
+
+			@keyframes successGlow {
+				0%, 100% {
+					text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+				}
+				50% {
+					text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00, 0 0 60px #00ff00;
+				}
+			}
+
+			.success-icon {
+				text-align: center;
+				font-size: 5rem;
+				margin-bottom: 30px;
+				animation: bounce 1s ease-in-out;
+			}
+
+			@keyframes bounce {
+				0%, 20%, 50%, 80%, 100% {
+					transform: translateY(0);
+				}
+				40% {
+					transform: translateY(-30px);
+				}
+				60% {
+					transform: translateY(-15px);
+				}
+			}
+
+			.success-panel {
+				background: linear-gradient(135deg, #001a00 0%, #002d00 50%, #001a00 100%);
+				border: 3px solid #00ff00;
+				border-radius: 15px;
+				padding: 40px;
+				box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 30px rgba(0, 255, 0, 0.1);
+				margin-bottom: 30px;
+			}
+
+			.success-message {
+				color: #00ff00;
+				font-size: 1.3rem;
+				text-align: center;
+				margin-bottom: 30px;
+				line-height: 2;
+			}
+
+			.detail-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 15px 0;
+				border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+			}
+
+			.detail-row:last-child {
+				border-bottom: none;
+			}
+
+			.detail-label {
+				font-size: 1.1rem;
+				color: #aaa;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+			}
+
+			.detail-value {
+				font-size: 1.3rem;
+				color: #00ff00;
+				font-weight: bold;
+				text-align: right;
+				font-family: 'Chakra Petch', sans-serif;
+				text-shadow: 0 0 5px #00ff00;
+			}
+
+			.info-box {
+				background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+				border: 2px solid #ffd700;
+				border-radius: 10px;
+				padding: 25px;
+				margin-bottom: 30px;
+			}
+
+			.info-box h3 {
+				color: #ffd700;
+				font-size: 1.3rem;
+				margin-bottom: 15px;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+			}
+
+			.info-box p {
+				color: #ccc;
+				line-height: 1.8;
+				margin: 10px 0;
+			}
+
+			.btn-group {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 20px;
+			}
+
+			.btn-primary {
+				padding: 20px;
+				background: linear-gradient(135deg, #ffd700, #ffaa00);
+				border: 3px solid #ff0000;
+				border-radius: 10px;
+				color: #000;
+				font-size: 1.3rem;
+				font-weight: bold;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+				cursor: pointer;
+				box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+				transition: all 0.3s ease;
+				text-decoration: none;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.btn-primary:hover {
+				background: linear-gradient(135deg, #ffdd33, #ffd700);
+				box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+				transform: scale(1.05);
+			}
+
+			.btn-secondary {
+				padding: 20px;
+				background: linear-gradient(135deg, #333, #1a1a1a);
+				border: 2px solid #666;
+				border-radius: 10px;
+				color: #aaa;
+				font-size: 1.2rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				text-decoration: none;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.btn-secondary:hover {
+				border-color: #ffd700;
+				color: #ffd700;
+			}
+		</style>
+	</head>
+
+	<body id="withdraw_end_page" class="ip-page after-login">
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+		<div class="withdraw-end-container">
+
+			<div class="end-header">
+				<h2>🎉 出金申請完了 🎉</h2>
+			</div>
+
+			<div class="success-icon">
+				✅
+			</div>
+
+			<!-- 成功パネル -->
+			<div class="success-panel">
+				<p class="success-message">
+					出金申請が正常に完了しました<br>
+					管理者による承認をお待ちください
+				</p>
+
+				<div class="detail-row">
+					<span class="detail-label">申請番号</span>
+					<span class="detail-value">#{%WITHDRAWAL_NO%}</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">出金点数</span>
+					<span class="detail-value">{%WITHDRAW_POINT%} pt</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">出金金額</span>
+					<span class="detail-value">¥ {%WITHDRAW_AMOUNT%}</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">申請日時</span>
+					<span class="detail-value">{%REQUEST_DT%}</span>
+				</div>
+			</div>
+
+			<!-- 次のステップ -->
+			<div class="info-box">
+				<h3>📋 今後の流れ</h3>
+				<p><strong>1. 管理者による審査</strong><br>
+				　　申請内容を确认し、承認処理を行います（通常1営業日以内）</p>
+				<p><strong>2. 振込手続き</strong><br>
+				　　承認後、指定された口座へ振込を実施します（1-3営業日）</p>
+				<p><strong>3. 完了通知</strong><br>
+				　　振込完了後、メールにてお知らせいたします</p>
+			</div>
+
+			<!-- ボタングループ -->
+			<div class="btn-group">
+				<a href="{%SITE_SSL_URL%}withdrawal_history.php" class="btn-secondary">出金履歴を見る</a>
+				<a href="{%SITE_SSL_URL%}profile.php" class="btn-primary">我的页面へ</a>
+			</div>
+
+		</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	<!--#include file="inc_footer.html"-->
+
+	</div>
+	<!-- /wrapper -->
+
+	</body>
+</html>

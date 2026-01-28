@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - アカウント情報詳細</title>
+
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+        .btn-danger { background: var(--admin-danger); color: white; }
+        .btn-danger:hover { background: #ff3d5a; transform: translateY(-2px); }
+
+        /* フォームカード */
+        .form-card { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; color: var(--admin-text-muted); margin-bottom: 8px; font-weight: 500; }
+        .form-group label .required { color: var(--admin-danger); margin-left: 5px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); outline: none; font-size: 14px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--admin-primary); }
+        .form-group input[readonly] { background: rgba(255,255,255,0.05); cursor: not-allowed; }
+        .alert { padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+        .alert-danger { background: rgba(255, 100, 124, 0.1); border: 1px solid var(--admin-danger); color: var(--admin-danger); }
+        .alert-light { background: rgba(255, 162, 107, 0.1); border: 1px solid var(--admin-warning); color: var(--admin-warning); }
+        .form-actions { display: flex; justify-content: space-between; gap: 10px; padding-top: 20px; border-top: 1px solid var(--admin-border); }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        .custom-checkbox { display: flex; align-items: center; gap: 5px; }
+        .custom-checkbox input[type="checkbox"] { width: auto; }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .main-content { margin-left: 0; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+
+<!--#include file="navigation_sub.html"-->
+
+<div class="admin-layout">
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-user-cog"></i> アカウント情報詳細</h1>
+        </div>
+
+        <form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+        <input type="hidden" name="SAVE_AUTH_FLG" value="{%SAVE_AUTH_FLG%}">
+        <input type="hidden" name="LOGIN_DT" value="{%LOGIN_DT%}">
+        <input type="hidden" name="LOGIN_UA" value="{%LOGIN_UA%}">
+
+        <!--if:{ERRMSG}-->
+        <div class="alert alert-danger">
+            {%ERRMSG%}
+        </div>
+        <!--/if:{ERRMSG}-->
+
+        <div class="form-card">
+            <div class="form-group">
+                <label>管理者名 <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="ADMIN_NAME" value="{%ADMIN_NAME%}" maxlength="30"<!--if:{EDIT_NO_AUTH}--> readonly<!--/if:{EDIT_NO_AUTH}-->>
+            </div>
+
+            <div class="form-group">
+                <label>アカウントID <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="ADMIN_ID" value="{%ADMIN_ID%}" maxlength="20"<!--if:{EDIT_NO_AUTH}--> readonly<!--/if:{EDIT_NO_AUTH}-->>
+            </div>
+
+            <div class="form-group">
+                <label>密码<!--if:{NEW}--> <span class="required"><i class="fa fa-asterisk"></i></span><!--/if:{NEW}--></label>
+                <input type="password" name="ADMIN_PASS" value="" maxlength="20" placeholder="{%ADMIN_PASS_MIN%}个字符以上">
+                <!--if:{UPD}-->
+                <div class="alert alert-light" style="margin-top: 10px;">
+                    <i class="fas fa-fw fa-exclamation-triangle"></i> 密码を更改する場合のみ请输入
+                </div>
+                <!--/if:{UPD}-->
+            </div>
+
+            <!--if:{EDIT_AUTH}-->
+            <div class="form-group">
+                <label>管理権限</label>
+                <div>{%AUTH_LIST%}</div>
+            </div>
+            <!--/if:{EDIT_AUTH}-->
+
+            <!--if:{EDIT_AUTH}-->
+            <div class="form-group">
+                <label>
+                    許可メニュー
+                    <div class="custom-checkbox" style="display: inline-flex; margin-left: 15px;">
+                        <input type="checkbox" id="AllDenyMenuCheck" name="ALL_DENY_MENU" value="" checked onClick="AllMenuCheckChg(this.checked);">
+                        <label for="AllDenyMenuCheck" style="margin-bottom: 0;">一括On/Off</label>
+                    </div>
+                </label>
+                <div class="checkbox-group">{%DENY_MENU%}</div>
+            </div>
+            <!--/if:{EDIT_AUTH}-->
+
+            <!--if:{UPD}-->
+            <div class="form-group">
+                <label>最終登录日時</label>
+                <div>
+                    {%LOGIN_DT%}<br />
+                    {%LOGIN_UA%}
+                </div>
+            </div>
+            <!--/if:{UPD}-->
+
+            <div class="form-actions">
+                <!--if:{DEL}-->
+                <!--if:{EDIT}-->
+                <a href="javascript:void(0);" class="btn btn-danger" onClick="del();">
+                    <i class="fas fa-trash"></i> 删除
+                </a>
+                <!--/if:{EDIT}-->
+                <!--/if:{DEL}-->
+                <button type="submit" class="btn btn-primary" style="margin-left: auto;">
+                    <i class="fas fa-save"></i> 注册
+                </button>
+            </div>
+        </div>
+        </form>
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+
+<script type="text/javascript">
+<!--
+// 入力チェック
+function check() {
+    var frm = window.document.MAINFORM;
+
+    // 姓名
+    if (!chk_indis("{%A0301%}", frm["ADMIN_NAME"].value)) return false;
+    // ユーザID
+    if (!chk_indis("{%A0302%}", frm["ADMIN_ID"].value)) return false;
+    if (!chk_alnum("{%A0304%}", frm["ADMIN_ID"].value)) return false;
+    // 密码
+    <!--if:{NEW}-->
+    if (!chk_indis("{%A0303%}", frm["ADMIN_PASS"].value)) return false;
+    <!--/if:{NEW}-->
+    if (frm["ADMIN_PASS"].value.length > 0) {
+        if (!chk_alnum("{%A0305%}", frm["ADMIN_PASS"].value)) return false;
+        if (frm["ADMIN_PASS"].value.length < {%ADMIN_PASS_MIN%}) {
+            chkAlert("{%A0307%}");
+            return false;
+        }
+        if (frm["ADMIN_PASS"].value.length > 20) {
+            chkAlert("{%A0306%}");
+            return false;
+        }
+    }
+
+    swal({
+        title: 'アカウント情報注册',
+        text: "{%A0001%}",
+        type: 'question',
+        showCancelButton: true
+    }).then(function() {
+        // 実行
+        frm.submit();
+    });
+    return false;
+}
+
+// 删除
+function del() {
+    var frm = window.document.MAINFORM;
+    swal({
+        title: 'アカウント情報删除',
+        text: "{%A0002%}",
+        type: 'warning',
+        showCancelButton: true
+    }).then(function() {
+        // 実行
+        location.href = frm.action + "&ACT=del&NO={%NO%}";
+    });
+    return;
+}
+
+// 使用メニュー一括On/Off
+function AllMenuCheckChg(setVal) {
+    $('input[name="DENY_MENU[]"]').prop('checked', setVal);
+}
+-->
+</script>
+
+</body>
+</html>

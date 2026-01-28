@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Shipping address information</title>
+		<title>{%SITE_TITLE%} - 発送先情報</title>
 	</head>
 
 	<body>
@@ -12,7 +12,7 @@
 	<!-- Page Content -->
 	<div class="container">
 		
-		<h1 class="h3 text-center my-4">Shipping address information</h1>
+		<h1 class="h3 text-center my-4">発送先情報</h1>
 		
 		<form action="{%SITE_SSL_URL%}{%SELF%}?M={%REGISTTYPE%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
 			<input type="hidden" name="SEQ" value="{%SEQ%}">
@@ -28,56 +28,56 @@
 				
 				<div class="form-row">
 					<div class="form-group col-md-6">
-						<label for="lastname">Last name<span class="badge badge-indis">Required</span></label>
+						<label for="lastname">苗字<span class="badge badge-indis">Required</span></label>
 						<input type="text" class="form-control" id="lastname" placeholder=""  name="LASTNAME" value="{%LASTNAME%}" maxlength="{%ADDRESS_SYLL_LIMIT%}">
 					</div>
 					<div class="form-group col-md-6">
-						<label for="firstname">First name<span class="badge badge-indis">Required</span></label>
+						<label for="firstname">名前<span class="badge badge-indis">Required</span></label>
 						<input type="text" class="form-control" id="firstname" placeholder="" name="FIRSTNAME" value="{%FIRSTNAME%}" maxlength="{%ADDRESS_NAME_LIMIT%}">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-form-label" for="postal">Postal Code<span class="badge badge-indis">Required</span></label>
-					<input type="text" class="form-control" placeholder="No hyphen is needed" id="postal" name="POSTAL" value="{%POSTAL%}" maxlength="{%ADDRESS_POSTAL_LIMIT%}">
+					<input type="text" class="form-control" placeholder="ハイフンは必要ありません" id="postal" name="POSTAL" value="{%POSTAL%}" maxlength="{%ADDRESS_POSTAL_LIMIT%}">
 				</div>
 				<div class="form-row">
-					<div class="form-group col-md-4">
-						<label for="pref">Prefecture<span class="badge badge-indis">Required</span></label>
-						<input type="text" class="form-control" id="pref" placeholder="Prefecture" name="ADDRESS1" value="{%ADDRESS1%}" maxlength="{%ADDRESS_1_LIMIT%}">
+					<div class="form-group col-md-3">
+						<label for="pref">都道府県<span class="badge badge-indis">Required</span></label>
+						<input type="text" class="form-control" id="pref" placeholder="都道府県" name="ADDRESS1" value="{%ADDRESS1%}" maxlength="{%ADDRESS_1_LIMIT%}">
 					</div>
-					<div class="form-group col-md-8">
-						<label for="address2">Address 2<span class="badge badge-indis">Required</span></label>
-						<input type="text" class="form-control" id="address2" placeholder="Municipalities" name="ADDRESS2" value="{%ADDRESS2%}" maxlength="{%ADDRESS_2_LIMIT%}">
+					<div class="form-group col-md-9">
+						<label for="address2">Address2<span class="badge badge-indis">Required</span></label>
+						<input type="text" class="form-control" id="address2" placeholder="市町村" name="ADDRESS2" value="{%ADDRESS2%}" maxlength="{%ADDRESS_2_LIMIT%}">
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-form-label" for="address3">Address 3<span class="badge badge-indis">Required</span></label>
-					<input type="text" class="form-control" placeholder="Block number" id="address3" name="ADDRESS3" value="{%ADDRESS3%}" maxlength="{%ADDRESS_3_LIMIT%}">
+					<label class="col-form-label" for="address3">Address3<span class="badge badge-indis">Required</span></label>
+					<input type="text" class="form-control" placeholder="番地" id="address3" name="ADDRESS3" value="{%ADDRESS3%}" maxlength="{%ADDRESS_3_LIMIT%}">
 				</div>
 				<div class="form-group">
-					<label class="col-form-label" for="address4">Address 4</label>
-					<input type="text" class="form-control" placeholder="Building Name, etc." id="address4" name="ADDRESS4" value="{%ADDRESS4%}" maxlength="{%ADDRESS_4_LIMIT%}">
+					<label class="col-form-label" for="address4">Address4</label>
+					<input type="text" class="form-control" placeholder="ビル名等" id="address4" name="ADDRESS4" value="{%ADDRESS4%}" maxlength="{%ADDRESS_4_LIMIT%}">
 				</div>
 				
 				<div class="form-group">
 					<label class="col-form-label" for="tel">Phone Number<span class="badge badge-indis">Required</span></label>
-					<input type="text" class="form-control" placeholder="No hyphen is needed" id="tel" name="TEL" value="{%TEL%}" maxlength="{%ADDRESS_TEL_LIMIT%}">
+					<input type="text" class="form-control" placeholder="ハイフンは必要ありません" id="tel" name="TEL" value="{%TEL%}" maxlength="{%ADDRESS_TEL_LIMIT%}">
 				</div>
 				<hr>
 				<div class="text-center">
 					<div class="form-group">
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" id="customCheck" name="USEADDRESS" value="1" {%CHK_USEADDRESS%}>
-							<label class="custom-control-label" for="customCheck">Select this shipping address when winning.</label>
+							<label class="custom-control-label" for="customCheck">当選時にこの発送先をSelectする</label>
 						</div>
 					</div>
-					<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i> Registration</a>
+					<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>登　録</a>
 					<hr>
 					<!--if:{IN_NAV}-->
-					<a href="address.php{%LANG_PARAM%}" class="btn btn-block btn-secondary">Return</a>
+					<a href="address.php" class="btn btn-block btn-secondary">Back</a>
 					<!--/if:{IN_NAV}-->
 					<!--if:{IN_SHIP}-->
-					<a href="shipping.php?M=select&SEQ={%SEQ%}&NO={%GOODSNO%}" class="btn btn-block btn-secondary">Return</a>
+					<a href="shipping.php?M=select&SEQ={%SEQ%}&NO={%GOODSNO%}" class="btn btn-block btn-secondary">Back</a>
 					<!--/if:{IN_SHIP}-->
 				</div>
 			</div>
@@ -91,7 +91,7 @@
 	<!--#include file="inc_script.html"-->
 	<!-- Page script -->
 	<script type="text/javascript">
-		var execTitle = 'Shipping address information registration';
+		var execTitle = '発送先情報Register';
 	</script>
 <!--#include file="{%PAGESCRIPT%}address_add.html"-->
 	

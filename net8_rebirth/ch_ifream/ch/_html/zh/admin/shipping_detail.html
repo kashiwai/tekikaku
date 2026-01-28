@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 発送情報詳細</title>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation_sub.html"-->
+
+		<div id="wrapper">
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist" method="POST" class="form-inline" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+				<input type="hidden" name="SEQ" value="{%SEQ%}">
+				<input type="hidden" name="NO" value="{%NO%}">
+				<input type="hidden" name="OLD_STATE" value="{%OLD_STATE%}">
+					<div class="container-fluid">
+						<h3 class="page-header mt-2"><i class="fas fa-users"></i> 発送情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+
+						<table class="table table-bordered table-list th-center-bg mt-3" style="min-width:100%;">
+							<tbody>
+								<tr>
+									<th style="width:120px;">商品No</th>
+									<td>{%GOODS_NO_PAD%}</td>
+									<th style="width:120px;">商品CD</th>
+									<td>{%GOODS_CD%}</td>
+								</tr>
+								<tr>
+									<th>商品名</th>
+									<td colspan="3">{%GOODS_NAME%}</td>
+								</tr>
+								<tr>
+									<th>会員</th>
+									<td colspan="3">[{%MEMBER_NO_PAD%}]&nbsp;
+										{%NICKNAME%}
+										<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+										<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+										<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>当選日</th>
+									<td colspan="3">{%ADD_DT%}</td>
+								</tr>
+								<tr>
+									<th>状態<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<select class="custom-select custom-select-sm" id="STATE" name="STATE">
+											{%SEL_STATE%}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th class="required">発送日</th>
+									<td>
+										<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+											<input type="text" class="form-control" data-altinput=true data-input name="SHIPPING_DT" value="{%SHIPPING_DT%}" maxlength="10" placeholder="例：2000/01/01">
+											<div class="input-group-append">
+												<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+											</div>
+										</div>
+									</td>
+									<th>発送No</th>
+									<td><input type="text" class="form-control" name="SHIPPING_NO" value="{%SHIPPING_NO%}" maxlength="20" style="width:150px;"></td>
+								</tr>
+								<tr>
+									<th>内部備考</th>
+									<td colspan="3"><textarea class="form-control" rows="4" name="IN_REMARKS">{%IN_REMARKS%}</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<h5 class="mt-5">発送先</h5>
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th class="required">名前</th>
+									<td colspan="3">
+										<div class="form-group col-md-12">
+											<label for="syll">姓</label>　
+											<input type="text" class="form-control" id="syll" placeholder=""  name="SYLL" value="{%SYLL%}" maxlength="20">　　
+											<label for="name">名</label>　
+											<input type="text" class="form-control" id="name" placeholder="" name="NAME" value="{%NAME%}" maxlength="20">
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th class="required">地址</th>
+									<td colspan="3">
+										<div class="form-group col-md-12">
+											<label class="col-form-label" for="postal" style="width:80px;">邮政编码</label>　
+											<input type="text" class="form-control" placeholder="ハイフン無し" id="postal" name="POSTAL" value="{%POSTAL%}" maxlength="9" style="width:200px;">
+										</div>
+										<div class="form-group col-md-12">
+											<label class="col-form-label" for="address1" style="width:80px;">地址 1</label>　
+											<input type="text" class="form-control" placeholder="都道府県" id="address1" name="ADDRESS1" value="{%ADDRESS1%}" maxlength="100" style="width:300px;">
+										</div>
+										<div class="form-group col-md-12">
+											<label class="col-form-label" for="address2" style="width:80px;">地址 2</label>　
+											<input type="text" class="form-control" id="address2" placeholder="市区町村" name="ADDRESS2" value="{%ADDRESS2%}" maxlength="100" style="width:300px;">
+										</div>
+										<div class="form-group col-md-12">
+											<label class="col-form-label" for="address3" style="width:80px;">地址 3</label>　
+											<input type="text" class="form-control" placeholder="番地・号" id="address3" name="ADDRESS3" value="{%ADDRESS3%}" maxlength="100" style="width:300px;">
+										</div>
+										<div class="form-group col-md-12">
+											<label class="col-form-label" for="address4" style="width:80px;">地址 4</label>　
+											<input type="text" class="form-control" placeholder="ビル名等" id="address4" name="ADDRESS4" value="{%ADDRESS4%}" maxlength="100" style="width:300px;">
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th class="required">电话号码</th>
+									<td colspan="3">
+										<input type="text" class="form-control" placeholder="ハイフン無し" id="tel" name="TEL" value="{%TEL%}" maxlength="20" style="width:200px;">
+									</td>
+								</tr>
+								<tr>
+									<th>備考</th>
+									<td colspan="3"><textarea class="form-control" rows="4" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<!--if:{EDIT}-->
+						<div class="row">
+							<!--if:{IS_WARNING}-->
+							<div class="col-12">
+								<div class="text-danger text-right mb-2">
+									<i class="fas fa-fw fa-exclamation-triangle h6"></i> <strong>この会員は現在</strong>
+									<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+									<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+									<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+									<strong>会員です。</strong>
+								</div>
+							</div>
+							<!--/if:{IS_WARNING}-->
+							<div class="col-12 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+						<!--/if:{EDIT}-->
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+
+		<!--#include file="inc_script.html"-->
+
+	<script type="text/javascript">
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+			var indis_address = false;
+			
+			if (frm["STATE"].value == "3") {
+				// 発送済
+				if (!chk_indis("{%A2302%}", frm["SHIPPING_DT"].value)) return false;
+				if (!chk_indis("{%A2304%}", frm["SHIPPING_NO"].value)) return false;
+			}
+			if (frm["SHIPPING_DT"].value.length > 0) if (!chk_date("{%A2303%}", frm["SHIPPING_DT"].value, false)) return false;
+			if (frm["SHIPPING_NO"].value.length > 0) if (!chk_alnum("{%A2305%}", frm["SHIPPING_NO"].value, false, "\-")) return false;
+			
+			if (parseInt(frm["STATE"].value, 10) > 0 && parseInt(frm["STATE"].value, 10) < 9) indis_address = true;
+			// 発送先入力必填
+			if (indis_address) {
+				if (!chk_indis("{%A2306%}", frm["SYLL"].value)) return false;
+				if (!chk_indis("{%A2308%}", frm["NAME"].value)) return false;
+				if (!chk_indis("{%A2310%}", frm["POSTAL"].value)) return false;
+				if (!chk_indis("{%A2312%}", frm["ADDRESS1"].value)) return false;
+				if (!chk_indis("{%A2313%}", frm["ADDRESS2"].value)) return false;
+				if (!chk_indis("{%A2314%}", frm["ADDRESS3"].value)) return false;
+				if (!chk_indis("{%A2315%}", frm["TEL"].value)) return false;
+			}
+			if (frm["POSTAL"].value.length > 0) if (!chk_number("{%A2311%}", frm["POSTAL"].value, false)) return false;
+			if (frm["TEL"].value.length > 0) if (!chk_number("{%A2316%}", frm["TEL"].value, false)) return false;
+
+			var msg = '{%A0001%}';
+			if (frm["OLD_STATE"].value.length > 0 && parseInt(frm["OLD_STATE"].value, 10) < 3 && parseInt(frm["STATE"].value, 10) < 3) {
+				if (frm["SHIPPING_DT"].value.length > 0 && frm["SHIPPING_NO"].value.length > 0) msg = '{%A2318%}';
+			}
+			if (parseInt(frm["OLD_STATE"].value, 10) < 9 && frm["STATE"].value == "9") {
+				msg = '{%A2319%}';
+			}
+			
+			swal({
+				title: '発送情報注册',
+				text: msg,
+				type: 'question',
+				showCancelButton: true
+			}).then(function() {
+				// 実行
+				frm.submit();
+			});
+			return false;
+		}
+		
+	</script>
+	</body>
+
+</html>

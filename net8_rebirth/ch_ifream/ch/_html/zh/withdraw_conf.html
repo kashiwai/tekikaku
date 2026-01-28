@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 出金申請确认</title>
+		<style>
+			/* パチンコ台風 确认画面デザイン */
+			.withdraw-conf-container {
+				max-width: 700px;
+				margin: 40px auto;
+				padding: 20px;
+			}
+
+			.conf-header {
+				text-align: center;
+				margin-bottom: 40px;
+			}
+
+			.conf-header h2 {
+				font-size: 2rem;
+				color: #ffd700;
+				text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+				text-transform: uppercase;
+				letter-spacing: 3px;
+			}
+
+			.conf-panel {
+				background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+				border: 3px solid #ffd700;
+				border-radius: 15px;
+				padding: 40px;
+				box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 30px rgba(255, 215, 0, 0.1);
+				margin-bottom: 30px;
+			}
+
+			.conf-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 20px 0;
+				border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+			}
+
+			.conf-row:last-child {
+				border-bottom: none;
+			}
+
+			.conf-label {
+				font-size: 1.1rem;
+				color: #aaa;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+			}
+
+			.conf-value {
+				font-size: 1.3rem;
+				color: #ffd700;
+				font-weight: bold;
+				text-align: right;
+				font-family: 'Chakra Petch', sans-serif;
+			}
+
+			.conf-value.highlight {
+				font-size: 2rem;
+				color: #00ff00;
+				text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+			}
+
+			.warning-box {
+				background: linear-gradient(135deg, #2d0000 0%, #1a0000 100%);
+				border: 2px solid #ff0000;
+				border-radius: 10px;
+				padding: 20px;
+				margin-bottom: 30px;
+				box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+			}
+
+			.warning-box p {
+				color: #ff6666;
+				margin: 10px 0;
+				line-height: 1.8;
+			}
+
+			.warning-box strong {
+				color: #ff0000;
+				text-shadow: 0 0 5px #ff0000;
+			}
+
+			.btn-group {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 20px;
+			}
+
+			.btn-submit {
+				padding: 20px;
+				background: linear-gradient(135deg, #ff0000, #cc0000);
+				border: 3px solid #ffd700;
+				border-radius: 10px;
+				color: white;
+				font-size: 1.5rem;
+				font-weight: bold;
+				text-transform: uppercase;
+				letter-spacing: 3px;
+				cursor: pointer;
+				box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+				transition: all 0.3s ease;
+			}
+
+			.btn-submit:hover {
+				background: linear-gradient(135deg, #ff3333, #ff0000);
+				box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+				transform: scale(1.05);
+			}
+
+			.btn-back {
+				padding: 20px;
+				background: linear-gradient(135deg, #333, #1a1a1a);
+				border: 2px solid #666;
+				border-radius: 10px;
+				color: #aaa;
+				font-size: 1.2rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+			.btn-back:hover {
+				border-color: #ffd700;
+				color: #ffd700;
+			}
+		</style>
+	</head>
+
+	<body id="withdraw_conf_page" class="ip-page after-login">
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+		<div class="withdraw-conf-container">
+
+			<div class="conf-header">
+				<h2>✅ 出金申請内容确认 ✅</h2>
+			</div>
+
+			<!-- 确认パネル -->
+			<div class="conf-panel">
+				<div class="conf-row">
+					<span class="conf-label">出金点数</span>
+					<span class="conf-value highlight">{%WITHDRAW_POINT%} pt</span>
+				</div>
+				<div class="conf-row">
+					<span class="conf-label">出金金額</span>
+					<span class="conf-value highlight">¥ {%WITHDRAW_AMOUNT%}</span>
+				</div>
+				<div class="conf-row">
+					<span class="conf-label">銀行名</span>
+					<span class="conf-value">{%BANK_NAME%}</span>
+				</div>
+				<div class="conf-row">
+					<span class="conf-label">支店名</span>
+					<span class="conf-value">{%BRANCH_NAME%}</span>
+				</div>
+				<div class="conf-row">
+					<span class="conf-label">口座種別</span>
+					<span class="conf-value">{%ACCOUNT_TYPE%}</span>
+				</div>
+				<div class="conf-row">
+					<span class="conf-label">口座番号</span>
+					<span class="conf-value">{%ACCOUNT_NUMBER%}</span>
+				</div>
+				<div class="conf-row">
+					<span class="conf-label">口座名義</span>
+					<span class="conf-value">{%ACCOUNT_HOLDER%}</span>
+				</div>
+			</div>
+
+			<!-- 注意事項 -->
+			<div class="warning-box">
+				<p><strong>⚠️ 出金申請に関する注意事項 ⚠️</strong></p>
+				<p>・申請後の取消はできません</p>
+				<p>・申請した点数は即座に減算されます</p>
+				<p>・管理者による承認後、1-3営業日以内に振込が行われます</p>
+				<p>・振込手数料は当社負担となります</p>
+				<p>・銀行口座情報に誤りがある場合、出金が遅れる可能性があります</p>
+			</div>
+
+			<!-- ボタングループ -->
+			<form action="withdraw.php?M=proc" method="POST">
+				<div class="btn-group">
+					<button type="button" class="btn-back" onclick="history.back()">返回</button>
+					<button type="submit" class="btn-submit" onclick="return confirm('この内容で出金申請を行います。よろしいですか？')">申請する</button>
+				</div>
+			</form>
+
+		</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	<!--#include file="inc_footer.html"-->
+
+	</div>
+	<!-- /wrapper -->
+
+	</body>
+</html>

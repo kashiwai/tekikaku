@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - 発送先情報詳細</title>
+
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); }
+        .btn-danger { background: var(--admin-danger); color: white; }
+        .btn-danger:hover { background: #ff3d5a; transform: translateY(-2px); }
+
+        /* フォームカード */
+        .form-card { background: var(--admin-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; color: var(--admin-text-muted); margin-bottom: 8px; font-weight: 500; }
+        .form-group label .required { color: var(--admin-danger); margin-left: 5px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); outline: none; font-size: 14px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--admin-primary); }
+        .form-group input[readonly] { background: rgba(255,255,255,0.05); cursor: not-allowed; }
+        .alert { padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+        .alert-danger { background: rgba(255, 100, 124, 0.1); border: 1px solid var(--admin-danger); color: var(--admin-danger); }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 5px; }
+        .badge-black { background: rgba(255, 100, 124, 0.2); color: var(--admin-danger); }
+        .badge-tester { background: rgba(61, 217, 235, 0.2); color: var(--admin-info); }
+        .form-actions { display: flex; justify-content: space-between; gap: 10px; padding-top: 20px; border-top: 1px solid var(--admin-border); }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+
+<!--#include file="navigation_sub.html"-->
+
+<div class="admin-layout">
+    <main class="main-content" style="margin-left: 0;">
+        <div class="topbar">
+            <h1><i class="fas fa-address-card"></i> 発送先情報詳細</h1>
+        </div>
+
+        <form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+        <input type="hidden" name="SEQ" value="{%SEQ%}">
+        <input type="hidden" name="MEMBER_NO" value="{%MEMBER_NO%}">
+        <input type="hidden" name="NICKNAME" value="{%NICKNAME%}">
+        <input type="hidden" name="UPD_DT" value="{%UPD_DT%}">
+        <input type="hidden" name="BLACK_FLG" value="{%BLACK_FLG%}">
+        <input type="hidden" name="TESTER_FLG" value="{%TESTER_FLG%}">
+        <input type="hidden" name="MEMBER_STATE" value="{%MEMBER_STATE%}">
+
+        <!--if:{ERRMSG}-->
+        <div class="alert alert-danger">
+            {%ERRMSG%}
+        </div>
+        <!--/if:{ERRMSG}-->
+
+        <div class="form-card">
+            <div class="form-group">
+                <label>会員No</label>
+                <input type="text" value="{%MEMBER_NO_PAD%}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>昵称</label>
+                <div>
+                    {%NICKNAME%}
+                    <!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+                    <!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+                    <!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>名前（姓） <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="SYLL" value="{%SYLL%}" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label>名前（名） <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="NAME" value="{%NAME%}" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label>邮政编码 <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="POSTAL" value="{%POSTAL%}" maxlength="9" placeholder="ハイフン無し">
+            </div>
+
+            <div class="form-group">
+                <label>都道府県 <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="ADDRESS1" value="{%ADDRESS1%}" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>市区町村 <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="ADDRESS2" value="{%ADDRESS2%}" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>番地・号 <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="ADDRESS3" value="{%ADDRESS3%}" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>ビル名等</label>
+                <input type="text" name="ADDRESS4" value="{%ADDRESS4%}" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>电话号码 <span class="required"><i class="fa fa-asterisk"></i></span></label>
+                <input type="text" name="TEL" value="{%TEL%}" maxlength="20" placeholder="ハイフン無し">
+            </div>
+
+            <div class="form-actions">
+                <a href="javascript:void(0);" class="btn btn-danger" onClick="del();">
+                    <i class="fas fa-trash"></i> 删除
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 注册
+                </button>
+            </div>
+        </div>
+        </form>
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+<script type="text/javascript">
+<!--
+    // 入力チェック
+    function check() {
+        var frm = window.document.MAINFORM;
+
+        if (!chk_indis("{%A2402%}", frm["SYLL"].value)) return false;
+        if (!chk_indis("{%A2403%}", frm["NAME"].value)) return false;
+        if (!chk_indis("{%A2404%}", frm["POSTAL"].value)) return false;
+        if (!chk_number("{%A2405%}", frm["POSTAL"].value)) return false;
+        if (!chk_indis("{%A2406%}", frm["ADDRESS1"].value)) return false;
+        if (!chk_indis("{%A2407%}", frm["ADDRESS2"].value)) return false;
+        if (!chk_indis("{%A2408%}", frm["ADDRESS3"].value)) return false;
+        if (!chk_indis("{%A2409%}", frm["TEL"].value)) return false;
+        if (!chk_number("{%A2410%}", frm["TEL"].value)) return false;
+
+        //
+        swal({
+            title: '発送先情報注册',
+            text: "{%A0001%}",
+            type: 'question',
+            showCancelButton: true
+        }).then(function() {
+            // 実行
+            frm.submit();
+        });
+        return false;
+    }
+
+    // 删除
+    function del() {
+        var frm = window.document.MAINFORM;
+        swal({
+            title: '発送先情報删除',
+            text: "{%A0002%}",
+            type: 'warning',
+            showCancelButton: true
+        }).then(function() {
+            // 実行
+            location.href = frm.action + "&ACT=del&SEQ={%SEQ%}&NO={%NO%}";
+        });
+        return;
+    }
+-->
+</script>
+
+</body>
+</html>

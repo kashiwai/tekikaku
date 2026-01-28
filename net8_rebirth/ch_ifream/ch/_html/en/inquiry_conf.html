@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Contact Us confirmation</title>
+		<title>{%SITE_TITLE%} - Contact Us 入力Confirm</title>
 	</head>
 
 	<body>
@@ -12,7 +12,7 @@
 	<!-- Page Content -->
 	<div class="container">
 
-		<h1 class="h3 text-center my-4">Contact Us confirmation</h1>
+		<h1 class="h3 text-center my-4">Contact Us 入力Confirm</h1>
 		<hr>
 		
 		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM">
@@ -24,22 +24,22 @@
 			
 			<div class="input-form mb-5">
 				<div class="alert alert-secondary text-center">
-					Service Hours --- 10:00-18:00 on Weekdays<br />
-					<small>We will respond on or after the next business day.</small>
+					対応時間 平日 10:00～18:00<br />
+					<small>翌営業日以降に対応いたします</small>
 				</div>
 				<div class="alert alert-danger">
-					<p><small>* For inquiries about the machine you played, you need a machine ID. Please select the inquires from the <a href="playlist.php{%LANG_PARAM%}">Play history</a>.</small></p>
-					<p class="mb-0"><small>If the machine has been settled due to a communication failure, etc. without finishing the Play, the Point that has been settled has arrived at <a href="message.php{%LANG_PARAM%}">Contact BOX</a> in My Page. Please confirm it.</small></p>
+					<p><small>※PlayしたMachineに関するContact Usは、Machine番号が必要ですので、<a href="playlist.php">Play履歴</a>から、Contact Usをお選びください。</small></p>
+					<p class="mb-0"><small>※Play終了を行わず、通信障害などで、Machineが精算されてしまった場合、精算されたPointsはMy Pageの<a href="message.php">連絡BOX</a>に届いております。ごConfirmください</small></p>
 				</div>
 				<hr>
 				<div class="form-group">
-					<label for="inquirySubject">Your Email Address</label>
+					<label for="inquirySubject">連絡先Email Address</label>
 					<div class="panel-body">
 						{%MAIL%}
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inquirySubject">Type of Inquiries</label>
+					<label for="inquirySubject">Contact Us種別</label>
 					<div class="panel-body">
 						{%DISP_INQUIRY_TITLE%}
 					</div>
@@ -47,7 +47,7 @@
 				<!--if:{LOGIN}-->
 				<!--if:{MACHINENO_BLOCK}-->
 				<div class="form-group">
-					<label class="col-form-label" for="baseid">Machine ID</label>
+					<label class="col-form-label" for="baseid">Machine番号</label>
 					<div class="panel-body">
 						{%MACHINENO%}
 					</div>
@@ -55,7 +55,7 @@
 				<!--/if:{MACHINENO_BLOCK}-->
 				<!--if:{DATE_BLOCK}-->
 				<div class="form-group">
-					<label class="col-form-label" for="targetDate">Target Date and Time</label>
+					<label class="col-form-label" for="targetDate">対象日時</label>
 					<div class="panel-body">
 						{%TGDATE%}
 					</div>
@@ -63,7 +63,7 @@
 				<!--/if:{DATE_BLOCK}-->
 				<!--/if:{LOGIN}-->
 				<div class="form-group">
-					<label class="col-form-label" for="inquiryBody">Contents of Inquiries</label>
+					<label class="col-form-label" for="inquiryBody">Contact Us内容</label>
 					<div class="panel-body">
 						{%DISP_INQUIRY_BODY%}
 					</div>
@@ -71,11 +71,11 @@
 				<hr>
 				
 				<div class="text-center">
-					<a href="javascript:void(0);" onclick="changeInput(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i> Correct the entry.</a>
+					<a href="javascript:void(0);" onclick="changeInput(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　入力内容を修正する</a>
 				</div>
 				<br>
 				<div class="text-center">
-					<a href="javascript:void(0);" onclick="document.MAINFORM.submit(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i> Send</a>
+					<a href="javascript:void(0);" onclick="document.MAINFORM.submit(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　Submitする</a>
 				</div>
 				
 			</div>

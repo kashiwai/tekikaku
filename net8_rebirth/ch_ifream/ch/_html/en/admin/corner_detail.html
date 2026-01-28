@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{%SITE_TITLE%} - コーナー詳細</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+	<style>
+		:root {
+			--admin-primary: #0376C9;
+			--admin-dark: #1a1d2e;
+			--admin-darker: #0f1117;
+			--admin-card: #252839;
+			--admin-success: #00C48C;
+			--admin-danger: #FF647C;
+			--admin-warning: #FFA26B;
+			--admin-info: #3DD9EB;
+			--admin-text: #E5E9F2;
+			--admin-text-muted: #99A1B7;
+			--admin-border: #2e3447;
+		}
+
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+
+		#wrapper { min-height: 100vh; }
+		#content-wrapper { padding: 20px; }
+
+		.container-fluid { max-width: 1200px; margin: 0 auto; }
+
+		.page-header { font-size: 28px; font-weight: 600; color: var(--admin-text); margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid var(--admin-border); display: flex; align-items: center; gap: 10px; }
+		.page-header i { color: var(--admin-primary); }
+
+		.alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+		.alert-danger { background: rgba(255, 100, 124, 0.1); border-left: 4px solid var(--admin-danger); color: var(--admin-danger); }
+
+		.table-input { width: 100%; background: var(--admin-card); border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; }
+		.table-input th, .table-input td { padding: 20px; border-bottom: 1px solid var(--admin-border); }
+		.table-input th { background: rgba(3, 118, 201, 0.1); color: var(--admin-text); font-weight: 600; width: 200px; vertical-align: top; }
+		.table-input td { color: var(--admin-text); }
+		.table-input tr:last-child th, .table-input tr:last-child td { border-bottom: none; }
+
+		.form-control { width: 100%; padding: 10px 15px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); font-size: 14px; transition: all 0.3s; }
+		.form-control:focus { outline: none; border-color: var(--admin-primary); box-shadow: 0 0 0 3px rgba(3, 118, 201, 0.1); }
+
+		textarea.form-control { resize: vertical; min-height: 100px; font-family: inherit; }
+
+		.custom-control { position: relative; display: block; min-height: 1.5rem; padding-left: 1.5rem; }
+		.custom-control-input { position: absolute; left: 0; z-index: -1; width: 1rem; height: 1.25rem; opacity: 0; }
+		.custom-control-input:checked ~ .custom-control-label::before { background-color: var(--admin-primary); border-color: var(--admin-primary); }
+		.custom-control-label { position: relative; margin-bottom: 0; vertical-align: top; }
+		.custom-control-label::before { position: absolute; top: 0.25rem; left: -1.5rem; display: block; width: 1rem; height: 1rem; pointer-events: none; content: ""; background-color: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 3px; }
+		.custom-control-input:checked ~ .custom-control-label::after { position: absolute; top: 0.25rem; left: -1.5rem; display: block; width: 1rem; height: 1rem; content: ""; background: no-repeat 50% / 50% 50%; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e"); }
+
+		.text-danger { color: var(--admin-danger) !important; }
+		.ml-2 { margin-left: 8px; }
+
+		hr { border: none; border-top: 1px solid var(--admin-border); margin: 30px 0; }
+
+		.row { display: flex; margin: 0 -10px; }
+		.col-6 { flex: 0 0 50%; padding: 0 10px; }
+		.text-right { text-align: right; }
+
+		.btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+		.btn-primary { background: var(--admin-primary); color: white; }
+		.btn-primary:hover { background: #0261a8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(3, 118, 201, 0.3); }
+		.btn-danger { background: var(--admin-danger); color: white; }
+		.btn-danger:hover { background: #e54d63; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 100, 124, 0.3); }
+
+		@media (max-width: 768px) {
+			.page-header { font-size: 20px; }
+			.table-input th { width: 120px; font-size: 12px; padding: 15px; }
+			.table-input td { padding: 15px; }
+			.row { flex-direction: column; }
+			.col-6 { flex: 0 0 100%; margin-bottom: 10px; }
+			.text-right { text-align: left; }
+		}
+	</style>
+</head>
+<body id="page-top">
+	<!--#include file="navigation_sub.html"-->
+
+	<div id="wrapper">
+		<div id="content-wrapper">
+			<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+				<input type="hidden" name="CORNER_NO" value="{%CORNER_NO%}">
+
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fas fa-wrench"></i> コーナー詳細</h3>
+					<!--if:{ERRMSG}-->
+					<div class="alert alert-danger">
+						{%ERRMSG%}
+					</div>
+					<!--/if:{ERRMSG}-->
+					<table class="table-input">
+						<tbody>
+							<tr>
+								<th>コーナー名<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+								<td>
+									<input type="text" class="form-control" name="CORNER_NAME" value="{%CORNER_NAME%}" maxlength="20" style="width:300px;" placeholder="例: パチスロ">
+								</td>
+							</tr>
+							<tr>
+								<th>コーナー名（英語）</th>
+								<td>
+									<input type="text" class="form-control" name="CORNER_ROMAN" value="{%CORNER_ROMAN%}" maxlength="50" style="width:300px;" placeholder="例: pachislot">
+								</td>
+							</tr>
+							<tr>
+								<th>お知らせ表示</th>
+								<td>
+									<div class="custom-control custom-checkbox custom-control-inline">
+										<input type="checkbox" class="custom-control-input" id="customCheck" name="NOTICE_FLG" value="1"{%CHK_NOTICE_FLG%}>
+										<label class="custom-control-label" for="customCheck">表示する</label>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th>備考</th>
+								<td><textarea class="form-control" rows="6" name="REMARKS" placeholder="コーナーに関する備考をPlease enter">{%REMARKS%}</textarea></td>
+							</tr>
+						</tbody>
+					</table>
+					<hr>
+					<div class="row">
+						<div class="col-6">
+							<!--if:{UPD}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">Delete</a><!--/if:{UPD}-->
+						</div>
+						<div class="col-6 text-right">
+							<input type="submit" class="btn btn-primary" value="Register">
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!--#include file="inc_script.html"-->
+	<script type="text/javascript">
+	<!--
+		function check() {
+			var frm = window.document.MAINFORM;
+
+			if (!chk_indis("コーナー名をPlease enter。", frm["CORNER_NAME"].value)) return false;
+			if (frm["CORNER_NAME"].value.length > 20) {
+				chkAlert("コーナー名は20文字以内でPlease enter。");
+				return false;
+			}
+			if (frm["CORNER_ROMAN"].value.length > 50) {
+				chkAlert("コーナー名（英語）は50文字以内でPlease enter。");
+				return false;
+			}
+
+			var isUpdate = frm["CORNER_NO"].value !== "";
+			Swal.fire({
+				title: isUpdate ? 'コーナー情報を更新' : 'コーナーをSign Up',
+				text: isUpdate ? "「" + frm["CORNER_NAME"].value + "」の情報を更新してもよろしいですか？" : "「" + frm["CORNER_NAME"].value + "」をSign Upしてもよろしいですか？",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: isUpdate ? '更新' : 'Register',
+				cancelButtonText: 'Cancel'
+			}).then(function(result) {
+				if (result.isConfirmed) {
+					frm.submit();
+				}
+			});
+			return false;
+		}
+
+		function del() {
+			var frm = window.document.MAINFORM;
+			Swal.fire({
+				title: 'コーナーをDelete',
+				text: "「" + frm["CORNER_NAME"].value + "」をDeleteしてもよろしいですか？\nこの操作は取り消せません。",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Delete',
+				cancelButtonText: 'Cancel'
+			}).then(function(result) {
+				if (result.isConfirmed) {
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				}
+			});
+			return;
+		}
+	-->
+	</script>
+</body>
+</html>

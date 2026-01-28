@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Purchase of {%CURRENCY_1%}</title>
+		<title>{%SITE_TITLE%} - {%CURRENCY_1%}Purchase</title>
 	</head>
 
 	<body>
@@ -11,13 +11,13 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Purchase of {%CURRENCY_1%}</h1>
+		<h1 class="h3 text-center my-4">{%CURRENCY_1%}Purchase</h1>
 		<hr>
 		<div class="alert alert-primary now-point">
-			Your Currently Owned {%CURRENCY_1%} : <strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
+			所持{%CURRENCY_1%}：<strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
 		</div>
 		<div id="myDraw" class="alert alert-primary now-point" style="display:none;">
-			Your Currently Owned {%CURRENCY_3%} : <strong>{%MILE%}</strong> <small>{%CURRENCY_3%}</small>
+			所持{%CURRENCY_3%}：<strong>{%MILE%}</strong> <small>{%CURRENCY_3%}</small>
 		</div>
 
 		<hr>
@@ -28,13 +28,13 @@
 
 			<div id="panel-buy-type">
 				<div class="d-flex flex-column panel-buy-point">
-					<p>Please select the purchase method.</p>
+					<p>Purchase方法をPlease select</p>
 					<div class="card bg-light mb-3" onClick="setBuyType(12);">
 						<div class="card-body">
-							<h4 class="card-title"><i class="far fa-credit-card"></i> Credit Card</h4>
+							<h4 class="card-title"><i class="far fa-credit-card"></i> クレジットカード</h4>
 							<hr>
 							<div class="card-text">
-								<p>Accepted Credit Cards</p>
+								<p>ご利用可能なクレジットカード</p>
 								<i class="fab fa-cc-visa"></i>
 								<i class="fab fa-cc-mastercard"></i>
 								<i class="fab fa-cc-jcb"></i>
@@ -45,19 +45,19 @@
 					</div>
 					<div class="card bg-light mb-3" onClick="setBuyType(13);">
 						<div class="card-body">
-							<h4 class="card-title"><i class="fas fa-store-alt"></i> Convenience Store Payment</h4>
+							<h4 class="card-title"><i class="fas fa-store-alt"></i> コンビニCheckout</h4>
 							<hr>
 							<div class="card-text">
-								<p>Accepted Convenience Stores</p>
+								<p>ご利用可能なコンビニエンスストア</p>
 							</div>
 						</div>
 					</div>
 					<div class="card bg-light mb-3" onClick="setBuyType(11);">
 						<div class="card-body">
-							<h4 class="card-title"><i class="fas fa-coins"></i> Exchange of {%CURRENCY_3%}</h4>
+							<h4 class="card-title"><i class="fas fa-coins"></i> {%CURRENCY_3%}交換</h4>
 							<hr>
 							<div class="card-text">
-								Your Currently Owned {%CURRENCY_3%} : {%MILE%} {%CURRENCY_3%}
+								現在の所持{%CURRENCY_3%}：{%MILE%} {%CURRENCY_3%}
 							</div>
 						</div>
 					</div>
@@ -66,7 +66,7 @@
 			
 			<div id="panel-buy-price" style="display:none;">
 				<div class="d-flex flex-column panel-buy-point">
-					<p>Please select the purchase price.</p>
+					<p>Purchase金額をPlease select</p>
 					<!--loop:{LIST}-->
 					<div class="priceBlock" id="type_{%PURCHASE_TYPE%}">
 						<!--loop:{VALUELIST}-->
@@ -79,7 +79,7 @@
 					</div>
 					<!--/loop:{LIST}-->
 					<div class="mt-4">
-						<button type="button" id="back-buy" class="btn btn-primary btn-block">Return</button>
+						<button type="button" id="back-buy" class="btn btn-primary btn-block">Back</button>
 					</div>
 				</div>
 			</div>
@@ -137,8 +137,8 @@
 			$('#MAINFORM').submit();
 			/*
 			swal({
-				title: 'ポイント購入',
-				text: '確認画面に進む',
+				title: 'Purchase Points',
+				text: 'Confirm画面に進む',
 				type: 'question',
 				showCancelButton: true
 			}).then(function(result) {

@@ -17,34 +17,34 @@
 		<div class="text-center">
 			<div class="row">
 				<div class="col-md-3 col-sm-6">
-					<a href="#account" class="in-link"><button type="button" class="btn btn-faq">About the Account</button></a>
+					<a href="#account" class="in-link"><button type="button" class="btn btn-faq">アカウントについて</button></a>
 				</div>
 				<div class="col-md-3 col-sm-6">
-					<a href="#play" class="in-link"><button type="button" class="btn btn-faq">About the Play</button></a>
+					<a href="#play" class="in-link"><button type="button" class="btn btn-faq">Playについて</button></a>
 				</div>
 				<div class="col-md-3 col-sm-6">
-					<a href="#buy" class="in-link"><button type="button" class="btn btn-faq">About the Purchase</button></a>
+					<a href="#buy" class="in-link"><button type="button" class="btn btn-faq">Purchaseについて</button></a>
 				</div>
 				<div class="col-md-3 col-sm-6">
-					<a href="#lottery" class="in-link"><button type="button" class="btn btn-faq">About the Lotteries</button></a>
+					<a href="#lottery" class="in-link"><button type="button" class="btn btn-faq">抽選について</button></a>
 				</div>
 			</div>
 		</div>
 		<hr>
 
-		<h4 class="multi mt-3" id="account">About the Account</h4>
+		<h4 class="multi mt-3" id="account">アカウントについて</h4>
 		<div class="accordion" id="faq-account">
 			<div class="card">
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse01">
-						Q. I forgot my password. What should I do?
+						Q. Passwordを忘れてしまったのですが、どうすればいいですか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse01" class="collapse" data-parent="#faq-account">
 					<div class="card-body">
-						Please reset your password from "Forgot Your Password?" on the <a href="login.php{%LANG_PARAM%}">login screen</a>.<br />
+						<a href="login.php">Login画面</a> の「Forgot password? Click here」からPasswordの再Settingsを行ってください。<br />
 					</div>
 				</div>
 			</div>
@@ -52,13 +52,13 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse02">
-						Q. I haven't received my member registration email.
+						Q. 会員Registerのメールが届きません
 						</a>
 					</h6>
 				</div>
 				<div id="collapse02" class="collapse" data-parent="#faq-account">
 					<div class="card-body">
-						Please reconfirm whether it was automatically sorted into the spam folder or it is not set to receive mails from the "<strong>{%SITE_DOMAIN%}</strong>" domain.<br />
+						迷惑メールフォルダに自動振分けされていないか、または <strong>{%SITE_DOMAIN%}</strong>ドメインからのメールを受信するSettingsになっていないか再度ごConfirmをお願い致します。<br />
 					</div>
 				</div>
 			</div>
@@ -66,39 +66,39 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse03">
-						Q. I want to cancel the membership. What should I do?
+						Q. 退会したいのですが、どうすればいいですか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse03" class="collapse" data-parent="#faq-account">
 					<div class="card-body">
-						You can cancel the membership from "<a href="leave.php{%LANG_PARAM%}">Procedures to Cancel the Membership</a>" on My Page.
-						* You need to log in.<br />
+						My Pageの <a href="leave.php">退会手続き</a> から行う事ができます。<br />
+						※Loginが必要となります <br />
 						<br />
-						All account information once canceled will be deleted and cannot be restored.<br />
-						In addition, your owned "{%CURRENCY_1%}" and "{%CURRENCY_3%}" will also be deleted. Please consider it before proceeding to cancel the membership.<br />
+						一度退会されたアカウントの情報はすべてDeleteされ、復元はできません。<br />
+						また、保有されている「{%CURRENCY_1%}」や「{%CURRENCY_3%}」もDeleteされますので、あらかじめご検討の上、退会手続きを行ってください。<br />
 					</div>
 				</div>
 			</div>
 		</div>
 		<hr>
 
-		<h4 class="multi mt-3" id="play">About the Play</h4>
+		<h4 class="multi mt-3" id="play">Playについて</h4>
 		<div class="accordion" id="faq-play">
 			<div class="card">
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse11">
-						Q. Are there any restrictions on the operating environment for playing {%SITE_TITLE%}?
+						Q. Playするための動作環境に制約はありますか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse11" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						Please confirm them at "Recommended Specs for {%SITE_TITLE%}" of "<a href="info.php?M=beginners">For the First Time Users</a>".<br />
-						{%SITE_TITLE%} does not work properly on IE and Edge.<br />
-						If a malfunction occurs, please use the browser listed above and confirm the operation.<br />
-						If you still have troubles when using the browser listed above, please <a href="inquiry.php{%LANG_PARAM%}">contacting us</a> by specifying your operating system and the browser.<br />
+						<a href="info.php?M=beginners">「はじめての方へ」</a>の「{%SITE_TITLE%} 推奨スペック」にてごConfirmください。<br />
+						IEおよびEdgeには対応しておりません。<br />
+						動作に不具合が生じる場合は上記に記載されているブラウザをご利用いただき、動作をPlease confirm。<br />
+						上記に記載されているブラウザを利用しても不具合が生じる場合は、ご利用のOSとブラウザを必ず明記した上で<a href="inquiry.php">Contact Us</a>よりご連絡ください。<br />
 					</div>
 				</div>
 			</div>
@@ -106,15 +106,15 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse12">
-						Q. Can I play {%SITE_TITLE%} on my smartphone?
+						Q. スマホからPlayできますか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse12" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						You can play {%SITE_TITLE%} on both iPhone and Android with the compliant browsers.<br />
-						* For the compliant browsers, please confirm "Recommended Specs for {%SITE_TITLE%}" of "<a href="info.php?M=beginners">For the First Time Users</a>".<br />
-						If you play without Wi-Fi, be careful of packet usage.<br />
+						対応ブラウザであれば iPhone、Android ともにPlayできます。<br />
+						※対応ブラウザにつきましては、<a href="info.php?M=beginners">「はじめての方へ」</a>の「{%SITE_TITLE%} 推奨スペック」にてごConfirmください。<br />
+						Wi-Fiをご利用でない環境の場合は、パケットの使用量にご注意ください。<br />
 					</div>
 				</div>
 			</div>
@@ -122,13 +122,13 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse13">
-						Q. What happens if the business hours end during the Play?
+						Q. Play中に営業時間が終了したら、どうなりますか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse13" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						As soon as the round you are playing at the end of business hours is over, it will be automatically settled and you will be left.<br />
+						営業時間終了時の回転が終わり次第、自動精算され退室となります。<br />
 					</div>
 				</div>
 			</div>
@@ -136,15 +136,15 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse14">
-						Q. There is no sound. What should I do?
+						Q. 音が出ないのですが、どうしたらいいですか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse14" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						Turn on the voice button in the upper right of the play screen.<br />
-						Adjust the volume with the speaker on the terminal.<br />
-						* Since the sound source is taken directly from the housing, sound cracking may occur.<br />
+						Play画面右上にある音声ボタンをONにしてください。<br />
+						音量は端末側のスピーカーで調整してください。<br />
+						※音源を筐体から直接とっているため、音割れが発生する場合があります。<br />
 					</div>
 				</div>
 			</div>
@@ -152,15 +152,15 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse15">
-						Q. The image quality has dropped (or the image has stopped) during the Play. What should I do?
+						Q. Play中に映像の画質が落ちた(または止まった)のですが、どうしたらいいですか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse15" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						Please reboot your browser.<br />
-						You can continue to use your {%CURRENCY_2%}, etc.<br />
-						* However, it will be automatically settled after a certain period of time without resuming the Play.  <br />
+						お手数ですが、ブラウザを再起動してください。<br />
+						所持{%CURRENCY_2%}等は引き続き使用できます。<br />
+						※ただし、Playを再開しないまま一定時間経過すると自動精算されます<br />
 					</div>
 				</div>
 			</div>
@@ -168,13 +168,14 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse16">
-						Q. How can I avoid the lag (delay) of the button operation?
+						Q. ボタン操作のラグ（遅延）はどうにかなりませんか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse16" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						Since the games are operated by displaying the actual pachinko / slot machines via the internet, the lag (delay) may occur due to the line conditions and terminal specifications. Please enjoy the Play on understanding this.<br />
+						インターネットを通じてパチンコ・パチスロの実機を映しゲームを操作しているため、回線状況や端末のスペックなどの影響でラグ（遅延）が発生してしまいます。 
+						ご承知おきの上でPlayをお楽しみ下さい。<br />
 					</div>
 				</div>
 			</div>
@@ -182,33 +183,33 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse17">
-						Q. What happens to my play data if the internet connection is lost during the Play?
+						Q. Play中にインターネット接続が切れた場合は、Playデータはどうなりますか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse17" class="collapse" data-parent="#faq-play">
 					<div class="card-body">
-						If it is within 3 minutes from the disconnection, you can resume from the {%CURRENCY_2%} you had before the disconnection.<br />
-						If the internet connection is interrupted during the Play and it is difficult to reconnect for some reasons, the {%CURRENCY_2%} held before the disconnection will be automatically settled after a certain period of time.<br />
+						切断から3分以内であれば切断前に保有していたクレジットから再開できます。<br />
+						何らかの原因で、Play中にインターネット回線が遮断され再接続が困難な場合、直前まで保有していた所持クレジットは一定時間で自動精算されます。<br />
 					</div>
 				</div>
 			</div>
 		</div>
 		<hr>
 
-		<h4 class="multi mt-3" id="buy">About the Purchase</h4>
+		<h4 class="multi mt-3" id="buy">Purchaseについて</h4>
 		<div class="accordion" id="faq-buy">
 			<div class="card">
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse51">
-						Q. What payment methods can I use?
+						Q. Checkout方法は何が利用できますか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse51" class="collapse" data-parent="#faq-buy">
 					<div class="card-body">
-						Please use credit card or convenience store payment.<br />
+						クレジットカードまたは、コンビニCheckoutをご利用ください。<br />
 					</div>
 				</div>
 			</div>
@@ -216,33 +217,33 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse52">
-						Q. Can I purchase {%CURRENCY_3%}?
+						Q. {%CURRENCY_3%}のPurchaseはできますか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse52" class="collapse" data-parent="#faq-buy">
 					<div class="card-body">
-						{%CURRENCY_3%} cannot be purchased directly.<br />
-						* {%CURRENCY_3%} can only be increased by the Play.
+						{%CURRENCY_3%}の直接Purchaseはできません。<br />
+						※{%CURRENCY_3%}はPlayでのみ増やせます
 					</div>
 				</div>
 			</div>
 		</div>
 		<hr>
 
-		<h4 class="multi mt-3" id="lottery">About the Lotteries</h4>
+		<h4 class="multi mt-3" id="lottery">抽選について</h4>
 		<div class="accordion" id="faq-lottery">
 			<div class="card">
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse61">
-						Q. I want to apply for the lotteries to get the item. What should I do?
+						Q. 商品抽選に応募したいのですが、どうすればいいですか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse61" class="collapse" data-parent="#faq-lottery">
 					<div class="card-body">
-						You can apply using your owned {%CURRENCY_3%} at "Exchange of {%CURRENCY_3%}" -> "List of Items" in the member menu.
+						会員メニューの「Coins交換」→「商品一覧」にて所持Coinsを利用して応募できます。
 					</div>
 				</div>
 			</div>
@@ -250,14 +251,14 @@
 				<div class="card-header">
 					<h6 class="mb-0">
 						<a class="text-body" data-toggle="collapse" href="#collapse62">
-						Q. How can I increase {%CURRENCY_3%} required for application?
+						Q. 応募に必要な{%CURRENCY_3%}を増やすには、どうすればいいですか？
 						</a>
 					</h6>
 				</div>
 				<div id="collapse62" class="collapse" data-parent="#faq-lottery">
 					<div class="card-body">
-						When you “settle” the {%CURRENCY_2%} you have increased in the Play, it will be converted into {%CURRENCY_3%}.<br />
-						* {%CURRENCY_3%} cannot be purchased directly.
+						Playで増やした{%CURRENCY_2%}を「精算」すると{%CURRENCY_3%}に変換されます。<br />
+						※{%CURRENCY_3%}の直接Purchaseはできません
 					</div>
 				</div>
 			</div>

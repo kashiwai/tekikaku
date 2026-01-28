@@ -15,7 +15,7 @@
  * @author  AI Control System
  * @version 2.1
  * @since   2025/12/20
- * @updated 2026/01/27 - PeerID接続状態チェック、メンテナンス管理機能追加
+ * @updated 2026/01/28 - WebSocket接続状態による自動判定実装（0=故障, 1=稼働, 2=使用, 3=メンテ）
  */
 
 require_once('../../_etc/require_files_admin.php');
@@ -169,26 +169,7 @@ function DispMachineList($template, $message = "") {
     $peer_connected = 0;
 
     foreach ($machines as &$m) {
-        // PC接続状態を last_heartbeat で判定
-        // 5分以内（300秒）にハートビートがあれば接続中
-        $m['pc_connected'] = false;
-        if (!empty($m['last_heartbeat'])) {
-            $heartbeat_time = strtotime($m['last_heartbeat']);
-            $current_time = time();
-            $diff_seconds = $current_time - $heartbeat_time;
-
-            if ($diff_seconds <= 300) { // 5分以内
-                $m['pc_connected'] = true;
-            }
-        }
-
-        if ($m['pc_connected']) {
-            $pc_online++;
-        } else {
-            $pc_offline++;
-        }
-
-        // PeerID接続状態チェック（参考情報として保持）
+        // WebSocket接続状態をチェック（PeerID接続）
         $m['peer_connected'] = false;
         if (!empty($m['camera_mac'])) {
             $peer_id = str_replace(':', '', strtolower($m['camera_mac']));
@@ -198,31 +179,56 @@ function DispMachineList($template, $message = "") {
             }
         }
 
-        // メンテナンス状態チェック
-        if ($m['machine_status'] == 2) {
+        // machine_status自動更新ロジック
+        // machine_status: 0=故障中, 1=稼働中, 2=使用中, 3=メンテナンス中
+        // メンテナンス中(3)は手動設定なので維持、それ以外は自動判定
+        if ($m['machine_status'] != 3) {
+            $new_status = null;
+
+            // プレイ中判定（lnk_machine.assign_flg == 1 または playing_member > 0）
+            if ($m['assign_flg'] == 1 || (!empty($m['playing_member']) && $m['playing_member'] > 0)) {
+                $new_status = 2; // 使用中
+            } elseif ($m['peer_connected']) {
+                $new_status = 1; // 稼働中（WebSocket接続あり）
+            } else {
+                $new_status = 0; // 故障中（WebSocket未接続）
+            }
+
+            // 変更があった場合のみDB更新
+            if ($new_status !== null && $new_status != $m['machine_status']) {
+                $template->DB->query("UPDATE dat_machine SET machine_status = $new_status WHERE machine_no = {$m['machine_no']}");
+                $m['machine_status'] = $new_status;
+            }
+        }
+
+        // PC接続状態を判定（WebSocket接続 = PC接続）
+        if ($m['peer_connected']) {
+            $m['pc_connected'] = true;
+            $pc_online++;
+        } else {
+            $m['pc_connected'] = false;
+            $pc_offline++;
+        }
+
+        // メンテナンス状態カウント
+        if ($m['machine_status'] == 3) {
             $maintenance_count++;
         }
 
         // ゲーム機状態を判定（実際の使用可否）
-        // machine_status: 0=停止中, 1=稼働中, 2=メンテナンス中
-        // assign_flg: 0=空き, 1=プレイ中, 9=待機
-        if ($m['machine_status'] == 2) {
+        if ($m['machine_status'] == 3) {
             // メンテナンス中
             $m['game_status'] = 'maintenance';
-        } elseif (!empty($m['playing_member']) && $m['playing_member'] > 0) {
-            // プレイ中（使用不可）
+        } elseif ($m['machine_status'] == 2) {
+            // 使用中（プレイ中）
             $m['game_status'] = 'playing';
             $game_playing++;
-        } elseif ($m['assign_flg'] == 1) {
-            // プレイ中（使用不可）
-            $m['game_status'] = 'playing';
-            $game_playing++;
-        } elseif ($m['pc_connected'] && $m['machine_status'] == 1) {
-            // 待機中（使用可）
+        } elseif ($m['machine_status'] == 1) {
+            // 稼働中（待機中）
             $m['game_status'] = 'standby';
             $game_standby++;
         } else {
-            // オフライン（PC未接続）
+            // 故障中（オフライン）
             $m['game_status'] = 'offline';
         }
     }
@@ -791,8 +797,13 @@ function DispMachineList($template, $message = "") {
                         $cardClass = 'online';
                     }
 
-                    // メンテナンス状態の表示ラベル
-                    $machine_status_labels = ['停止中', '稼働中', 'メンテナンス中'];
+                    // マシン状態の表示ラベル
+                    $machine_status_labels = [
+                        0 => '故障中',
+                        1 => '稼働中',
+                        2 => '使用中',
+                        3 => 'メンテナンス中'
+                    ];
                     $machine_status_label = $machine_status_labels[$m['machine_status']] ?? '不明';
                 ?>
                 <div class="machine-card <?= $cardClass ?>">
@@ -839,22 +850,12 @@ function DispMachineList($template, $message = "") {
                         ?></dd>
                         <dt>PC接続</dt>
                         <dd><?= $m['pc_connected'] ? '💻 接続中' : '⏸️ 未接続' ?></dd>
-                        <dt style="color: #ff0000;">🔴 last_heartbeat</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?php
-                            if (!empty($m['last_heartbeat'])) {
-                                $hb_time = strtotime($m['last_heartbeat']);
-                                $diff = time() - $hb_time;
-                                echo htmlspecialchars($m['last_heartbeat']) . " ({$diff}秒前)";
-                            } else {
-                                echo 'NULL';
-                            }
-                        ?></dd>
-                        <dt style="color: #ff0000;">🔴 pc_connected</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['pc_connected'] ? 'TRUE (≤300秒)' : 'FALSE (>300秒 or NULL)' ?></dd>
-                        <dt style="color: #ff0000;">🔴 machine_status</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['machine_status'] ?> (0=停止, 1=稼働, 2=メンテ)</dd>
-                        <dt style="color: #ff0000;">🔴 assign_flg</dt>
-                        <dd style="color: #ff0000; font-size: 10px;"><?= $m['assign_flg'] ?> | playing_member: <?= $m['playing_member'] ?: 'NULL' ?></dd>
+                        <dt style="color: #0066ff;">🔵 machine_status</dt>
+                        <dd style="color: #0066ff; font-size: 10px;"><?= $m['machine_status'] ?> (0=故障, 1=稼働, 2=使用, 3=メンテ)</dd>
+                        <dt style="color: #0066ff;">🔵 WebSocket</dt>
+                        <dd style="color: #0066ff; font-size: 10px;"><?= $m['peer_connected'] ? 'CONNECTED' : 'DISCONNECTED' ?></dd>
+                        <dt style="color: #0066ff;">🔵 assign_flg</dt>
+                        <dd style="color: #0066ff; font-size: 10px;"><?= $m['assign_flg'] ?> | playing_member: <?= $m['playing_member'] ?: 'NULL' ?></dd>
                         <dt>IP</dt>
                         <dd><?= htmlspecialchars($m['ip_address'] ?: '-') ?></dd>
                         <dt>MAC</dt>
@@ -872,8 +873,8 @@ function DispMachineList($template, $message = "") {
                     <div class="machine-actions">
                         <button type="button" onclick="openEditModal(<?= $m['machine_no'] ?>)" class="btn btn-outline">編集</button>
                         <button type="button" onclick="toggleMaintenance(<?= $m['machine_no'] ?>, <?= $m['machine_status'] ?>)"
-                                class="btn <?= $m['machine_status'] == 2 ? 'btn-success' : 'btn-warning' ?>">
-                            <?= $m['machine_status'] == 2 ? '稼働に戻す' : 'メンテ' ?>
+                                class="btn <?= $m['machine_status'] == 3 ? 'btn-success' : 'btn-warning' ?>">
+                            <?= $m['machine_status'] == 3 ? '稼働に戻す' : 'メンテ' ?>
                         </button>
                         <button type="button" onclick="deleteConfirm(<?= $m['machine_no'] ?>)" class="btn btn-danger">削除</button>
                     </div>
@@ -1322,8 +1323,8 @@ function DispMachineList($template, $message = "") {
 
         // メンテナンス切り替え
         function toggleMaintenance(machineNo, currentStatus) {
-            const newStatus = currentStatus == 2 ? 1 : 2; // 2=メンテナンス中 ⇔ 1=稼働中
-            const action = newStatus == 2 ? 'メンテナンスモードに切り替え' : '稼働中に戻す';
+            const newStatus = currentStatus == 3 ? 1 : 3; // 3=メンテナンス中 ⇔ 1=稼働中（自動判定に戻す）
+            const action = newStatus == 3 ? 'メンテナンスモードに切り替え' : '稼働中に戻す（自動判定）';
 
             if (confirm(`マシン ${machineNo} を${action}ますか？`)) {
                 document.getElementById('maintenanceMachineNo').value = machineNo;
@@ -1545,8 +1546,8 @@ function ProcToggleMaintenance($template) {
     $machine_no = intval($_POST["machine_no"]);
     $new_status = intval($_POST["machine_status"]);
 
-    // machine_status: 0=停止中, 1=稼働中, 2=メンテナンス中
-    if ($new_status < 0 || $new_status > 2) {
+    // machine_status: 0=故障中, 1=稼働中, 2=使用中, 3=メンテナンス中
+    if ($new_status < 0 || $new_status > 3) {
         DispMachineList($template, "❌ 不正な状態値です");
         return;
     }
@@ -1554,7 +1555,12 @@ function ProcToggleMaintenance($template) {
     $sql = "UPDATE dat_machine SET machine_status = $new_status WHERE machine_no = $machine_no";
     $template->DB->query($sql);
 
-    $status_labels = ['停止中', '稼働中', 'メンテナンス中'];
+    $status_labels = [
+        0 => '故障中',
+        1 => '稼働中（自動判定）',
+        2 => '使用中',
+        3 => 'メンテナンス中'
+    ];
     $status_label = $status_labels[$new_status];
 
     DispMachineList($template, "✅ マシン $machine_no を「{$status_label}」に変更しました");

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%}</title>
+	</head>
+
+	<body id="index" class="ip-page">
+
+	<!-- ローディング表示 -->
+	<div id="pageLoading" class="loading-overlay">
+		<div class="loading-container">
+			<div class="loading-spinner-double"></div>
+			<div class="loading-text">加载中...</div>
+			<div class="loading-progress">
+				<div class="loading-progress-bar"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<div class="contents">
+
+	<!-- Top Visual -->
+	<section id="index-visual">
+		<picture>
+			<img src="/content/images/index/top.jpg" sizes="(max-width: 4368px) 100vw, 4368px" decoding="async" alt="MillionNet8">
+		</picture>
+	</section>
+
+	<!-- Corner Tabs -->
+	<section class="corner-tabs">
+		<div class="tab-container">
+			<!--loop:{FLOW_CORNER}-->
+			<!--if:{FLOW_LINK}-->
+			<a href="./?CN={%CNO%}" class="tab-item{%FLOW_ACTIVE%}">
+				<span>{%CORNER_NAME%}</span>
+			</a>
+			<!--/if:{FLOW_LINK}-->
+			<!--if_not:{FLOW_LINK}-->
+			<span class="tab-item{%FLOW_ACTIVE%}">
+				<span>{%CORNER_NAME%}</span>
+			</span>
+			<!--/if_not:{FLOW_LINK}-->
+			<!--/loop:{FLOW_CORNER}-->
+		</div>
+	</section>
+
+	<!-- Slick Slider -->
+	<section>
+		<div class="slider">
+			<!--loop:{SLIDER_LIST}-->
+			<div class="item">
+				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
+					<span class="image-wrapper">
+						<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}">
+					</span>
+					<span class="m-type">{%GENERATION%}</span>
+					<span class="p-postList__title">{%MODEL_NAME%}</span>
+				</a>
+			</div>
+			<!--/loop:{SLIDER_LIST}-->
+		</div>
+	</section>
+
+	<!-- Content Sections -->
+	<div class="index-contents">
+
+		<!-- 設置机型 -->
+		<section class="rec-list">
+			<h4>設置机型</h4>
+			<ul>
+				<!--loop:{LIST}-->
+				<li>
+					<!-- ステータスバッジ -->
+					<!--if:{CLOSED}-->
+					<div class="machine-status-badge status-closed">営業時間外</div>
+					<!--/if:{CLOSED}-->
+					<!--if:{LINK_MAINTENANCE}-->
+					<div class="machine-status-badge status-maintenance">メンテナンス中</div>
+					<!--/if:{LINK_MAINTENANCE}-->
+					<!--if:{MAINTENANCE}-->
+					<div class="machine-status-badge status-maintenance">メンテナンス中</div>
+					<!--/if:{MAINTENANCE}-->
+					<!--if:{IN_PREPARATION}-->
+					<div class="machine-status-badge status-preparation">准备中</div>
+					<!--/if:{IN_PREPARATION}-->
+					<!--if:{IS_OPEN}-->
+						<!--if:{IS_NORMAL}-->
+							<!--if:{AVAILABLE}-->
+							<div class="machine-status-badge status-available">空き</div>
+							<!--/if:{AVAILABLE}-->
+							<!--if:{NOAVAIABLE}-->
+							<div class="machine-status-badge status-playing">稼働中</div>
+							<!--/if:{NOAVAIABLE}-->
+						<!--/if:{IS_NORMAL}-->
+					<!--/if:{IS_OPEN}-->
+
+					<div class="m-type"><span>{%GENERATION%}</span></div>
+					<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
+						<span class="image-wrapper">
+							<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}">
+						</span>
+					</a>
+					<span class="m-list-title">{%MODEL_NAME%}</span>
+				</li>
+				<!--/loop:{LIST}-->
+			</ul>
+		</section>
+
+		<!-- お知らせ -->
+		<section class="site-info">
+			<h4>お知らせ</h4>
+			<ul class="p-postList -type-simple">
+				<!--loop:{NOTICE_LIST2}-->
+				<li class="p-postList__item">
+					<a href="{%LINK_URL%}"{%OTHER_LINK%}>
+						<span class="new-date" aria-label="公開日">{%DISP_DT%}</span>
+						<span class="new-m-type">{%CATEGORY%}</span>
+						<div class="m-list-title">
+							<p>{%TITLE%}</p>
+						</div>
+					</a>
+				</li>
+				<!--/loop:{NOTICE_LIST2}-->
+			</ul>
+		</section>
+
+	</div>
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	<style>
+	/* 机型ステータス表示 */
+	.rec-list li {
+		position: relative;
+	}
+	.machine-status-badge {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		padding: 5px 12px;
+		border-radius: 50px;
+		font-size: 11px;
+		font-weight: bold;
+		z-index: 10;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+		white-space: nowrap;
+	}
+	.status-available {
+		background: #4ade80;
+		color: white;
+	}
+	.status-playing {
+		background: #f59e0b;
+		color: white;
+	}
+	.status-maintenance {
+		background: #ef4444;
+		color: white;
+	}
+	.status-closed {
+		background: #6b7280;
+		color: white;
+	}
+	.status-preparation {
+		background: #3b82f6;
+		color: white;
+	}
+	@media (max-width: 768px) {
+		.machine-status-badge {
+			font-size: 10px;
+			padding: 4px 10px;
+			top: 5px;
+			right: 5px;
+		}
+	}
+	</style>
+
+	<script>
+	$(document).ready(function(){
+		// Slick Slider初期化
+		$('.slider').slick({
+			autoplay: true,
+			autoplaySpeed: 3000,
+			dots: true,
+			arrows: true,
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			responsive: [
+				{
+					breakpoint: 600,
+					settings: {
+						slidesToShow: 1,
+						slidesToScroll: 1
+					}
+				}
+			]
+		});
+
+		// スライダー初期化完了後、ローディング非表示
+		setTimeout(function() {
+			hideLoading();
+		}, 300);
+	});
+
+	// ローディング非表示関数
+	function hideLoading() {
+		var loading = document.getElementById('pageLoading');
+		if (loading) {
+			loading.classList.add('hidden');
+		}
+	}
+
+	// 画像読み込み完了後にもローディング非表示
+	window.addEventListener('load', function() {
+		hideLoading();
+	});
+
+	// 机型选择リンククリック時にローディング表示
+	document.addEventListener('DOMContentLoaded', function() {
+		var machineLinks = document.querySelectorAll('.p-postList__link');
+		machineLinks.forEach(function(link) {
+			link.addEventListener('click', function() {
+				var loading = document.getElementById('pageLoading');
+				if (loading) {
+					loading.classList.remove('hidden');
+					document.querySelector('#pageLoading .loading-text').textContent = '机型情報を加载中...';
+				}
+			});
+		});
+	});
+	</script>
+
+	</body>
+</html>

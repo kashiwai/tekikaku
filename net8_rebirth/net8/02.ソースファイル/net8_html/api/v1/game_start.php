@@ -26,6 +26,7 @@ require_once('../../_etc/require_files.php');
 require_once(__DIR__ . '/helpers/user_helper.php');
 require_once(__DIR__ . '/helpers/camera_helper.php');
 require_once(__DIR__ . '/helpers/currency_helper.php');
+require_once(__DIR__ . '/helpers/callback_helper.php');
 
 // 認証ヘッダー確認（複数ソース対応）
 $authHeader = '';
@@ -807,7 +808,7 @@ try {
             'session_id' => $sessionId,
             'partner_user_id' => $partnerUserId,
             'model_cd' => $modelId,
-            'machine_no' => $machineNo,
+            'machine_no' => $machine['machine_no'],
             'initial_balance' => $initialPoints,
             'currency' => $currency
         ];
@@ -817,7 +818,7 @@ try {
             'userId' => $partnerUserId,
             'initialPoints' => $initialPoints,
             'modelId' => $modelId,
-            'machineNo' => $machineNo,
+            'machineNo' => $machine['machine_no'],
             'startedAt' => date('Y-m-d H:i:s'),
             'currency' => $currency
         ]);

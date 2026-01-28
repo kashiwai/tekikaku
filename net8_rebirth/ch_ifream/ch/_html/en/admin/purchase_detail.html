@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - Purchase PointsSettings詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="DEL_FLG" value="{%DEL_FLG%}">
+					<!--if:{UPD_EDIT}-->
+					<input type="hidden" name="PURCHASE_TYPE" value="{%PURCHASE_TYPE%}">
+					<input type="hidden" name="AMOUNT" value="{%AMOUNT%}">
+					<input type="hidden" name="UPD_DT" value="{%UPD_DT%}">
+					<!--/if:{UPD_EDIT}-->
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-yen-sign"></i> Purchase PointsSettings詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<!--if:{UPD_EDIT}-->
+								<tr>
+									<th>Purchase方法</th>
+									<td>
+										{%TYPE_LABEL%}
+									</td>
+								</tr>
+								<tr>
+									<th>金額</th>
+									<td>
+										{%DISP_AMOUNT%} {%VIEWAMOUNT%}
+									</td>
+								</tr>
+								<!--/if:{UPD_EDIT}-->
+								<!--if:{NEW_EDIT}-->
+								<tr>
+									<th>Purchase方法<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										{%RD_PURCHASE_TYPE%}
+									</td>
+								</tr>
+								<tr>
+									<th>金額<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="AMOUNT" value="{%AMOUNT%}" maxlength="7">
+									</td>
+								</tr>
+								<!--/if:{NEW_EDIT}-->
+								<tr>
+									<th>Points<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="POINT" value="{%POINT%}" maxlength="7">
+									</td>
+								</tr>
+								<!--if:{UPD_EDIT}-->
+								<tr>
+									<th>更新日時</th>
+									<td>{%UPD_DT%}</td>
+								</tr>
+								<!--/if:{UPD_EDIT}-->
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{UPD_EDIT}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{UPD_EDIT}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				
+				//金額
+				if (!chk_indis("{%A2801%}", frm["AMOUNT"].value)) return false;
+				if (!chk_numeric("{%A2802%}", frm["AMOUNT"].value, false)) return false;
+				//Points
+				if (!chk_indis("{%A2803%}", frm["POINT"].value)) return false;
+				if (!chk_numeric("{%A2804%}", frm["POINT"].value, false)) return false;
+				
+				//
+				swal({
+					title: 'Purchase PointsRegister',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// Delete
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: 'Purchase Points情報Delete',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&PT={%PURCHASE_TYPE%}&AM={%AMOUNT%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

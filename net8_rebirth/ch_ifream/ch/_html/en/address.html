@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Shipping Address Confirmation / Setting</title>
+		<title>{%SITE_TITLE%} - 発送先Confirm・Settings</title>
 	</head>
 
 	<body>
@@ -12,19 +12,19 @@
 	<!-- Page Content -->
 	<div class="container mb-5">
 
-		<h1 class="h3 text-center my-4">Shipping Address Confirmation / Setting</h1>
+		<h1 class="h3 text-center my-4">発送先Confirm・Settings</h1>
 		<hr>
 		
 		<!--if:{LIMIT}-->
 		<div class="w-100 text-right mb-2">
-			<a href="address_add.php{%LANG_PARAM%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> Add shipping address.</a>
+			<a href="address_add.php" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> 発送先をAdd</a>
 		</div>
 		<!--/if:{LIMIT}-->
 		
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				Shipping address information has not registered.
+				発送先情報がRegisterされていません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -37,7 +37,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
@@ -48,22 +48,22 @@
 					<div class="card-header d-flex w-100 justify-content-between">
 						<h5>{%LASTNAME%} {%FIRSTNAME%}</h5>
 						<!--if:{SELECTED}-->
-						<div><span class="badge-primary btn-sm selectedaddress">Now Selecting</span></div>
+						<div><span class="badge-primary btn-sm selectedaddress">Select中</span></div>
 						<!--/if:{SELECTED}-->
 						<!--if:{NOT_SELECT}-->
-						<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".detail-modal" onClick="change_address(this);">Set as the shipping address</button>
+						<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".detail-modal" onClick="change_address(this);">発送先にSettingsする</button>
 						<!--/if:{NOT_SELECT}-->
 					</div>
 					<div class="card-body">
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item">{%POSTAL%}<br />
+							<li class="list-group-item">〒{%POSTAL%}<br />
 								{%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}
 							</li>
 							<li class="list-group-item">{%TEL%}</li>
 						</ul>
 					</div>
 					<div class="card-footer d-flex w-100 justify-content-between">
-						<a href="address_add.php?NO={%SEQ%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> Edit</a>
+						<a href="address_add.php?NO={%SEQ%}" class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> 編集</a>
 						<a href="javaScript:void(0);" onClick="del_address(this); return false;" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target=".detail-modal"><i class="far fa-trash-alt"></i> Delete</a>
 					</div>
 				</div>
@@ -84,12 +84,12 @@
 	<!-- /.container -->
 	
 	<!-- Modal -->
-	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作を追加する -->
+	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作をAddする -->
 	<div class="modal fade detail-modal base-detail modata_mt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Setting of the Shipping Address</h5>
+					<h5 class="modal-title">発送先Settings</h5>
 				</div>
 				<div class="modal-body">
 					<div class="card-subtitle text-left address_data">
@@ -103,16 +103,16 @@
 					</div>
 					<div class="card-subtitle text-center mt-2">
 						<div class="btn_area address_select">
-							Will you select this shipping address?
+							この発送先をSelectしますか？
 							<br>
 							<br>
-							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Select</a>
+							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Selectする</a>
 						</div>
 						<div class="btn_area address_delete">
-							Will you delete this shipping address?
+							この発送先をDeleteしますか？
 							<br>
 							<br>
-							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Delete</a>
+							<a href="" class="address_sned_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Deleteする</a>
 						</div>
 					</div>
 				</div>

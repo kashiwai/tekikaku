@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Contact BOX</title>
+		<title>{%SITE_TITLE%} - 連絡BOX</title>
 	</head>
 
 	<body>
@@ -12,14 +12,14 @@
 	<!-- Page Content -->
 	<div class="container mb-5">
 
-		<h1 class="h3 text-center my-4">Contact BOX</h1>
+		<h1 class="h3 text-center my-4">連絡BOX</h1>
 		
 		<hr>
 		
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				There is no notification.
+				通知はありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -32,7 +32,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
@@ -40,9 +40,9 @@
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>Type</th>
-					<th>Contents</th>
-					<th>Delivery Date and Time</th>
+					<th>種別</th>
+					<th>内容</th>
+					<th>配信日時</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -55,9 +55,9 @@
 						<!--if:{LINK_DRAW}--><a href="draw.php{%LANG_PARAM%}">{%SEQ_PAD%}</a><!--/if:{LINK_DRAW}-->
 						<!--if:{NOLINK}-->{%SEQ_PAD%}<!--/if:{NOLINK}-->
 					</td>
-					<td aria-label="Type" class="text-center">{%TYPE_LABEL%}</td>
-					<td aria-label="Contents">{%MESSAGE%}<!--if:{LINK_MODAL}--> <span class="couponinfo badge badge-indis btn" data-title="<!--if:{IS_COUPON}-->Coupon information<!--/if:{IS_COUPON}--><!--if:{IS_MAGAZINE}-->Email magazine information<!--/if:{IS_MAGAZINE}-->" data-contents="{%MODAL_CONTENTS%}">Details</span><!--/if:{LINK_MODAL}--></td>
-					<td aria-label="Delivery Date and Time" class="text-center">{%DELIVERY_DT%}</td>
+					<td aria-label="種別" class="text-center">{%TYPE_LABEL%}</td>
+					<td aria-label="内容">{%MESSAGE%}<!--if:{LINK_MODAL}--> <span class="couponinfo badge badge-indis btn" data-title="<!--if:{IS_COUPON}-->クーポン情報<!--/if:{IS_COUPON}--><!--if:{IS_MAGAZINE}-->メルマガ情報<!--/if:{IS_MAGAZINE}-->" data-contents="{%MODAL_CONTENTS%}">詳細</span><!--/if:{LINK_MODAL}--></td>
+					<td aria-label="配信日時" class="text-center">{%DELIVERY_DT%}</td>
 				</tr>
 				<!--/loop:{LIST}-->
 			</tbody>
@@ -70,7 +70,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		<!--/if:{LISTS}-->
@@ -83,7 +83,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Coupon information</h5>
+					<h5 class="modal-title">クーポン情報</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>

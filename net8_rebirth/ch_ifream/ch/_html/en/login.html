@@ -2,55 +2,124 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Login</title>
+		<title>{%SITE_TITLE%} - Login Page</title>
 	</head>
 
-	<body>
+	<body id="login" class="ip-page">
+
+	<!-- ローディング表示 -->
+	<div id="loginLoading" class="loading-overlay hidden">
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+			<div class="loading-text">Logging in...</div>
+			<div class="loading-dots">
+				<div class="loading-dot"></div>
+				<div class="loading-dot"></div>
+				<div class="loading-dot"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
 
-	<!-- Page Content -->
-	<div class="container">
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
 
-		<h1 class="h3 text-center my-4">Login</h1>
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/login_icon.svg" class="page-icon">Login</h2>
+	<div class="contents">
 
-		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
-			<input type="hidden" name="M" value="proc">
-			<input type="hidden" name="NO" value="{%NO%}">
-			<input type="hidden" name="TRANS" value="{%TRANS%}">
-			
-			<div class="input-form mb-5">
-				<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
-				<div class="form-group">
-					<label class="col-form-label" for="mail">Email Address</label>
-					<input type="text" class="form-control" id="mail" name="MAIL" value="{%MAIL%}">
-				</div>
-				<div class="form-group">
-					<label class="col-form-label" for="password">Password</label>
-					<input type="password" class="form-control" id="password" name="PASS">
-				</div>
-				<input type="checkbox" placeholder="Save the email address." id="cmail" name="CMAIL" value="1" {%CMAIL_CHECKED%}>
-				<label class="col-form-label" for="cmail">Save the email address.</label>
-				<hr>
-				<div class="text-center">
-					<button type="submit" class="btn btn-block btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
-					<hr>
-					<a href="{%SITE_SSL_URL%}pass_reset.php{%LANG_PARAM%}" class="btn btn-sm btn-secondary">If you forgot your password, click here.</a>
-					<hr>
-					For the first time users, click here. <br />
-					<a href="{%SITE_SSL_URL%}regist.php{%LANG_PARAM%}" class="btn btn-sm btn-secondary mt-2">Account Creation</a>
-				</div>
-			</div>
-		</form>
+	<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+		<input type="hidden" name="M" value="proc">
+		<input type="hidden" name="NO" value="{%NO%}">
+		<input type="hidden" name="TRANS" value="{%TRANS%}">
+
+		<!--if:{ERRMSG}-->
+		<div class="alert-error" style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 4px; margin-bottom: 20px; color: #c62828;">
+			{%ERRMSG%}
+		</div>
+		<!--/if:{ERRMSG}-->
+
+		<label for="mail">Email Address<span class="required">Required</span></label>
+		<input type="email" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}" placeholder="Please enter your email address.">
+
+		<label for="password">Password<span class="required">Required</span></label>
+		<input type="password" id="password" name="PASS" maxlength="{%MEMBER_PASS_MAX%}" placeholder="Please enter your password.">
+
+		<label class="pw-memory">
+			<input type="checkbox" id="cmail" name="CMAIL" value="1" {%CMAIL_CHECKED%}>
+			Save email address
+		</label>
+
+		<button type="submit">Login</button>
+	</form>
+
+	<a href="{%SITE_SSL_URL%}pass_reset.php" class="center" style="display: block; text-align: center; margin: 20px 0;">Forgot password? Click here</a>
+
+	<div class="sign-up-set">
+		<p>New users click here→<a href="{%SITE_SSL_URL%}regist.php">Sign Up</a></p>
+	</div>
 
 	</div>
-	<!-- /.container -->
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
 
 	<!--#include file="inc_footer.html"-->
 
 	<!--#include file="inc_script.html"-->
 	<!-- Page script -->
-<!--#include file="{%PAGESCRIPT%}login.html"-->
-	
+	<!--#include file="{%PAGESCRIPT%}login.html"-->
+
+	<script>
+	// フォームバリデーション関数
+	function check() {
+		var mail = document.getElementById('mail').value;
+		var pass = document.getElementById('password').value;
+
+		if (mail == '') {
+			alert('Please enter your email address');
+			return false;
+		}
+		if (pass == '') {
+			alert('Please enter your password');
+			return false;
+		}
+
+		// バリデーション通過後、ローディング表示
+		showLoading();
+		return true;
+	}
+
+	// ローディング表示関数
+	function showLoading() {
+		var loading = document.getElementById('loginLoading');
+		if (loading) {
+			loading.classList.remove('hidden');
+		}
+	}
+
+	// ローディング非表示関数
+	function hideLoading() {
+		var loading = document.getElementById('loginLoading');
+		if (loading) {
+			loading.classList.add('hidden');
+		}
+	}
+
+	// ページ読み込み完了時にローディング非表示
+	window.addEventListener('load', function() {
+		hideLoading();
+	});
+	</script>
+
 	</body>
 </html>

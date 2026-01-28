@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 実機セッティングChange</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();" enctype="multipart/form-data">
+					<input type="hidden" name="NO" value="{%NO%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> 実機セッティングChange</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>状態</th>
+									<td>
+										{%ROD_MACHINE_STATUS%}
+									</td>
+								</tr>
+								<tr>
+									<th>実機のSettingsChange</th>
+									<td>
+										{%ROD_RESET_BONUS%}
+									</td>
+								</tr>
+								<tr>
+									<th>対象Model</th>
+									<td>
+										{%MACHINE_LIST%}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="設　定">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			
+			$(function(){
+				
+				
+				
+			});
+			
+			
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '実機セッティングChange',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// Delete
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '実機情報Delete',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

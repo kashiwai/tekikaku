@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Purchase of {%CURRENCY_1%} Confirmation</title>
+		<title>{%SITE_TITLE%} - Purchase PointsConfirm</title>
 	</head>
 
 	<body>
@@ -11,10 +11,10 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Purchase of {%CURRENCY_1%} Confirmation</h1>
+		<h1 class="h3 text-center my-4">Purchase PointsConfirm</h1>
 		<hr>
 		<div class="alert alert-primary now-point">
-			Your Currently Owned {%CURRENCY_1%} : <strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
+			所持Points：<strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
 		</div>
 		<hr>
 		
@@ -29,7 +29,7 @@
 		<!--/if:{CHARGE}-->
 			<div>
 				<div class="d-flex flex-column w-50 mx-auto">
-					<p>Please select the purchase price.</p>
+					<p>Purchase金額をPlease confirm</p>
 					
 					<div class="card bg-light mb-3">
 						<div class="card-body">
@@ -46,16 +46,16 @@
 					
 					<!--if:{EXCHANGE}-->
 					<div class="card mb-3">
-						<button type="submit" class="btn btn-primary" id="send_settle">Confirmation of the Purchase of {%CURRENCY_1%}</button>
+						<button type="submit" class="btn btn-primary" id="send_settle">Purchase Points</button>
 					</div>
 					
 					<!--/if:{EXCHANGE}-->
 					<!--if:{CHARGE}-->
 					<div class="card mb-1">
-						<button type="submit" class="btn btn-primary" id="send_settle">Go to payment procedures.</button>
+						<button type="submit" class="btn btn-primary" id="send_settle">Checkout手続きへ</button>
 					</div>
 					<div class="mx-auto">
-						Another window will be opened.
+						別ウィンドウが開きます
 					</div>
 					<!--/if:{CHARGE}-->
 				</div>

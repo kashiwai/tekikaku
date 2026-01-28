@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 礼物发送</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">礼物发送</h1>
+		
+		<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
+		<div class="alert alert-primary now-point">
+			所持：<strong>{%POINT_LABEL%}</strong> <small>{%CURRENCY_3%}</small>
+			<!--if:{NONE_AGENT}-->
+			<br />
+			<strong>礼物发送可能{%CURRENCY_3%} {%DSP_GIFT_POINT%}</strong><br />
+			<small>※礼物发送実施で、发送分は減算されます。</small>
+			<!--if:{EXIST_LIMIT}-->
+			<br /><strong>現在累積{%CURRENCY_3%} {%DSP_TOTAL_GIFT_POINT%}</strong><br />
+			<!--if:{EXIST_SEND}-->
+			※本日发送{%CURRENCY_3%} {%DSP_DAY_SEND%}<br />
+			<!--/if:{EXIST_SEND}-->
+			<!--loop:{GIFT_LIMIT}-->
+			累積{%SET_TOTAL_GIFT_POINT%}{%CURRENCY_3%}以下 日发送最大{%SET_GIFT_LIMIT%}<br />
+			<!--/loop:{GIFT_LIMIT}-->
+			<small>※累積が上記を超える場合は日发送最大無制限</small>
+			<!--/if:{EXIST_LIMIT}-->
+			<!--/if:{NONE_AGENT}-->
+		</div>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=conf" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<div class="input-form">
+				<div class="form-group row">
+					<label for="invitationCode" class="col-sm-4 col-form-label">发送先邀请码</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" name="INV_CODE" id="invitationCode" value="{%INV_CODE%}" maxlength="{%INVITE_CODE_LENGTH%}">
+					</div>
+				</div>
+				<div id="invCodeAlert" class="alert alert-primary" style="display:none;">
+					<strong id="invCodeAlertMsg"></strong>
+				</div>
+				
+				<div class="form-group row">
+					<label for="sendCoin" class="col-sm-4 col-form-label">发送{%CURRENCY_3%}</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" name="SEND_COIN" id="sendCoin" value="{%SEND_COIN%}" placeholder="" maxlength="7">
+					</div>
+				</div>
+				<div id="sendCoinAlert" class="alert alert-primary" style="display:none;">
+					<strong id="sendCoinAlertMsg"></strong>
+				</div>
+				
+				<div class="form-group row">
+					 ＊ <!--if:{ENABLE_MIN}-->最低：{%DISP_MIN_POINT%}、<!--/if:{ENABLE_MIN}--><!--if:{ENABLE_LOT}-->ロット単位：{%DISP_LOT%} 、<!--/if:{ENABLE_LOT}-->手数料：<span id="comRate">{%RATE%}</span>% （{%DISP_BEARER%}）
+				</div>
+				
+				<div id="CommArea" class="alert alert-primary" style="display:none;">
+					手数料：<strong id="calcComm"></strong> <small>{%CURRENCY_3%}</small>
+				</div>
+				
+				<div class="form-group text-center">
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="AGREE" name="AGREE" value="1" {%CHK_AGREE%}>
+						<label class="custom-control-label" for="AGREE">上記内容で礼物发送します</label>
+					</div>
+				</div>
+					
+				<div class="input-form">
+					<div class="text-center">
+						<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary">確　認</a>
+					</div>
+				</div>
+				<br>
+				
+			</div>
+		</form>
+		
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}gift.html"-->
+	
+	</body>
+</html>

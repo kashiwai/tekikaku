@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 登录页面</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">登录</h1>
+
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="check_pin">
+			<input type="hidden" name="NO" value="{%NO%}">
+			<input type="hidden" name="TRANS" value="{%TRANS%}">
+			<input type="hidden" name="MNO" value="{%MNO%}">
+			
+			<div class="input-form">
+				<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
+				<div class="alert alert-secondary">
+					<small id="info">注册携帯番号[{%INTERNATIONAL_CD%}]{%HID_TEL%}にPINコードを已发送</small>
+				</div>
+				<div class="form-group row">
+					<label for="pin_no" class="col-sm-4 col-form-label">PINコード<span class="badge badge-indis">必填</span></label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" name="PIN" id="pin_no" value="{%PIN%}" maxlength="{%SMS_PINCODE_LENGTH%}" placeholder="">
+						</div>
+				</div>
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary">确认</button>
+					<hr>
+					<a href="{%SITE_SSL_URL%}inquiry.php" class="btn btn-sm btn-secondary">PINコードが届かない方はこちら</a>
+					<hr>
+					<a href="javascript:void(0);" onclick="requestPinCode();" class="btn btn-block btn-primary">PINコードを再送する</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}login_pin.html"-->
+	
+	</body>
+</html>

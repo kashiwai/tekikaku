@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 売上管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				
+				<form class="form-inline" role="form" action="{%SELF%}" method="POST" name="MAINFORM" id="MAINFORM">
+				
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fas fa-chart-area"></i> 売上管理</h3>
+					
+					<div class="card">
+						<div class="card-header d-flex justify-content-between" role="tab" id="headingOne">
+							<span class="panel-title">表示条件指定</span>
+						</div>
+						<div>
+							<div class="card-body">
+								<div class="row search">
+									<div class="col-lg-6 d-flex align-items-center">
+										<div class="search-title">対象年月</div>
+										<div class="d-flex flex-row align-items-center">
+											<select class="custom-select custom-select-sm" name="YEAR" style="width:200px;">
+												{%SEL_YEAR%}
+											</select>
+											<div class="px-2">年</div>
+											<select class="custom-select custom-select-sm" name="MONTH" style="width:150px;">
+												{%SEL_MONTH%}
+											</select>
+											<div class="px-2">月</div>
+										</div>
+									</div>
+									<div class="col-12 text-center border-top">
+										<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+										<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">Search</a>
+									</div>
+								</div>
+							</div><!-- /.panel-body -->
+						</div>
+					</div>
+					
+					<!--if:{GRAPH_AREA}-->
+					<div class="card mt-3">
+						<div class="card-header d-flex justify-content-between">
+							<span class="panel-title">売上金額</span>
+						</div>
+						<div class="chart" id="AmountGraph" style="height: 350px; width: 100%;"></div>
+					</div><!-- /.card -->
+					<!--/if:{GRAPH_AREA}-->
+					
+					<div class="card mt-3">
+						<div class="table-responsive">
+							<table class="table table-bordered table-list th-center-bg mb-0" style="min-width:980px;">
+								<thead>
+									<tr>
+										<th rowspan="2" style="width:100px;">日付</th>
+										<th colspan="2">合計</th>
+										<!--loop:{PURCHASE_NAME}-->
+										<th colspan="2">{%PURCHASE_NAME%}</th>
+										<!--/loop:{PURCHASE_NAME}-->
+									</tr>
+									<tr>
+										<th>件数</th>
+										<th>金額</th>
+										<!--block:{PURCHASE_NAME2}-->
+										<!--loop:{PURCHASE_NAME2}-->
+										<th>件数</th>
+										<th>金額</th>
+										<!--/loop:{PURCHASE_NAME2}-->
+										<!--/block:{PURCHASE_NAME2}-->
+									</tr>
+								</thead>
+								<tbody>
+									<!--loop:{LIST}-->
+									<tr class="{%WEEK_CLASS%}">
+										<td class="text-right"><a href="purchasehistory.php?{%PICKDATE%}">{%DISP_DAYS%}</a></td>
+										<td class="text-right">{%DISP_TOTAL_COUNT%}</td>
+										<td class="text-right">{%DISP_TOTAL_AMOUNT%}</td>
+										<!--loop:{PURCHASE_TYPE}-->
+										<td class="text-right">{%DISP_TYPE_COUNT%}</td>
+										<td class="text-right">{%DISP_TYPE_AMOUNT%}</td>
+										<!--/loop:{PURCHASE_TYPE}-->
+									</tr>
+									<!--/loop:{LIST}-->
+									<tr class="totalrow">
+										<td class="text-right"><a href="purchasehistory.php?{%MONTH_TOTAL_PICKDATE%}">合計</a></td>
+										<td class="text-right">{%DISP_MONTH_TOTAL_COUNT%}</td>
+										<td class="text-right">{%DISP_MONTH_TOTAL_AMOUNT%}</td>
+										<!--loop:{PURCHASE_TYPE_TOTAL}-->
+										<td class="text-right">{%DISP_MONTH_TYPE_COUNT%}</td>
+										<td class="text-right">{%DISP_MONTH_TYPE_AMOUNT%}</td>
+										<!--/loop:{PURCHASE_TYPE_TOTAL}-->
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- /.table-responsive -->
+					</div><!-- /.card -->
+					
+				</div><!-- /.container-fluid -->
+				
+				</form>
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript">
+			// Search実行
+			function reSearch() {
+				trans();
+			}
+			
+			// 表示期間
+			var countDt = [new Date(){%DAYS_DATE%}];
+			countDt.shift();
+			// 
+			var purchaseList = [{%PURCHASE_LIST%}];
+			var Click = Array({%DAYS_COUNT%});
+			{%DATALIST%}
+			
+			var daysFormat = "MM/dd";	// 月日書式
+			// グラフ描画
+			function drawTotalChart( noneAnimation) {
+				var duration = 0;
+				if (!noneAnimation) duration = 1000;
+				// Define the chart to be drawn.
+				var data = new google.visualization.DataTable();
+				data.addColumn('date', 'Day');		// 先頭が文字列だと棒グラフ扱いになりXY両方にグリッドラインがつかない
+				// Checkout種別分値カラムAdd
+				for (var i = 0; i < purchaseList.length; ++i) {
+					data.addColumn('number', purchaseList[i]);
+				}
+				// 値Add
+				data.addRows( Click);
+				// オプションSettings
+				var options = {
+					 pointSize: 6
+					,lineWidth: 2
+					,curveType: 'none'
+					,hAxis: {
+						format: daysFormat
+						,minorGridlines: {
+							color:'transparent'
+						}
+						,ticks: countDt
+					}
+					, vAxis: {	// Y軸
+						viewWindow: {
+							 min: 0
+							//,max:20
+						}
+						,format: '0'
+						,minValue: 1
+					}
+					, chartArea: {
+							left: 70
+							, width: '90%'
+							}
+					,legend: {
+							position: 'top'
+							}
+					,animation: {
+								startup: true
+								, duration: duration
+								, easing:'in'
+								}
+					,focusTarget: 'category'
+				}
+				var chart = new google.visualization.LineChart(document.getElementById('AmountGraph'));
+				var formatter = new google.visualization.DateFormat({pattern: daysFormat});
+				formatter.format(data, 0);
+				chart.draw(data, options);
+			}
+			
+			//グラフ描画時リサイズされたら再描画
+			$(window).resize(function() {
+				drawTotalChart(true);
+			});
+			
+			google.charts.load('46', {packages: ['corechart']});
+			google.charts.setOnLoadCallback( drawTotalChart);
+			
+		</script>
+		
+	</body>
+</html>

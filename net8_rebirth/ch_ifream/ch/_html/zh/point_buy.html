@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 购买点数</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container mb-5">
+		<h1 class="h3 text-center my-4">购买点数</h1>
+		<hr>
+		<div class="alert alert-primary now-point">
+			所持点数：<strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
+		</div>
+		<div id="myDraw" class="alert alert-primary now-point" style="display:none;">
+			所持金币：<strong>{%MILE%}</strong> <small>{%CURRENCY_3%}</small>
+		</div>
+
+		<hr>
+
+		<form method="post" action="{%SELF%}?M=conf" id="MAINFORM" name="MAINFORM">
+			<input type="hidden" name="buytype" value="">
+			<input type="hidden" name="buyprice" value="">
+
+			<div id="panel-buy-type">
+				<div class="d-flex flex-column panel-buy-point">
+					<p>购买方法を请选择</p>
+					<div class="card bg-light mb-3" onClick="setBuyType(12);">
+						<div class="card-body">
+							<h4 class="card-title"><i class="far fa-credit-card"></i> クレジットカード</h4>
+							<hr>
+							<div class="card-text">
+								<p>ご利用可能なクレジットカード</p>
+								<i class="fab fa-cc-visa"></i>
+								<i class="fab fa-cc-mastercard"></i>
+								<i class="fab fa-cc-jcb"></i>
+								<i class="fab fa-cc-diners-club"></i>
+								<i class="fab fa-cc-amex"></i>
+							</div>
+						</div>
+					</div>
+					<div class="card bg-light mb-3" onClick="setBuyType(13);">
+						<div class="card-body">
+							<h4 class="card-title"><i class="fas fa-store-alt"></i> コンビニ结算</h4>
+							<hr>
+							<div class="card-text">
+								<p>ご利用可能なコンビニエンスストア</p>
+							</div>
+						</div>
+					</div>
+					<div class="card bg-light mb-3" onClick="setBuyType(11);">
+						<div class="card-body">
+							<h4 class="card-title"><i class="fas fa-coins"></i> 金币交換</h4>
+							<hr>
+							<div class="card-text">
+								現在の所持金币：{%MILE%} {%CURRENCY_3%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="panel-buy-price" style="display:none;">
+				<div class="d-flex flex-column panel-buy-point">
+					<p>购买金額を请选择</p>
+					<!--loop:{LIST}-->
+					<div class="priceBlock" id="type_{%PURCHASE_TYPE%}">
+						<!--loop:{VALUELIST}-->
+						<div class="card bg-light mb-3" data-price="{%PURCHASE_AMOUNT%}" onClick="buyPoint({%PURCHASE_AMOUNT%}, this);">
+							<div class="card-body">
+								<h4 class="card-title m-0"><i class="fas fa-money-bill"></i> {%DISP_PURCHASE_AMOUNT%} {%CURRENCY%} <small>→ {%DISP_PURCHASE_POINT%} {%CURRENCY_1%}</small></h4>
+							</div>
+						</div>
+						<!--/loop:{VALUELIST}-->
+					</div>
+					<!--/loop:{LIST}-->
+					<div class="mt-4">
+						<button type="button" id="back-buy" class="btn btn-primary btn-block">返回</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+	<script type="text/javascript">
+		var execTitle = '购买点数';
+		var execText = '确认画面に進む';
+	</script>
+<!--#include file="{%PAGESCRIPT%}point_buy.html"-->
+
+	</body>
+</html>

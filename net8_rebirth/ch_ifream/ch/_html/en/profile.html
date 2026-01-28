@@ -2,94 +2,116 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Profile Confirmation / Setting</title>
+		<title>{%SITE_TITLE%} - My Page</title>
 	</head>
 
-	<body>
+	<body id="my_page" class="ip-page after-login">
+
+	<div id="wrapper">
 
 	<!--#include file="inc_navigation.html"-->
 
-	<!-- Page Content -->
-	<div class="container">
-		
-		<h1 class="h3 text-center my-4">Profile Confirmation / Setting</h1>
-		
-		<hr>
-		
-		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
-			<input type="hidden" name="M" value="regist">
-			
-			<div class="input-form">
-				<div class="form-group row">
-					<label for="invitationCode" class="col-sm-3 col-form-label text-secondary">Invitation Code</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" name="INV_CODE" id="invitationCode" value="{%INV_CODE%}" placeholder="1234567890" readonly>
-					</div>
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/account_icon.svg" class="page-icon">My Page</h2>
+	<div class="contents">
+
+	<!-- My Pageコンテンツ -->
+	<div class="my-page-wrapper">
+		<div class="user-info">
+			<div class="user-image">
+				<img src="/content/images/user/user_photo.png" alt="ユーザー画像">
+			</div>
+
+			<div class="status">
+				<p class="user-name">
+					<img src="/content/images/icon/id_icon.svg" class="page-icon">
+					<span class="user-neme">{%DISP_NAME%}</span>
+					<a href="#" onclick="navigator.clipboard.writeText('{%DISP_NAME%}'); alert('ユーザー名をコピーしました'); return false;">
+						<img src="/content/images/icon/link_icon.svg" class="page-icon">
+					</a>
+				</p>
+				<p>
+					<img src="/content/images/icon/user_corde_icon.svg" class="page-icon">
+					<span class="user-code">{%INV_CODE%}</span>
+					<a href="#" onclick="navigator.clipboard.writeText('{%INV_CODE%}'); alert('Invitation Codeをコピーしました'); return false;">
+						<img src="/content/images/icon/link_icon.svg" class="page-icon">
+					</a>
+				</p>
+				<img src="/content/images/icon/medal_5_icon.svg" class="page-icon medal" alt="メダル">
+			</div>
+
+			<div class="ryu-coins hold">
+				<div class="hold-ryu">
+					<h4>保有RYU</h4>
+					<p>
+						<img src="/content/images/icon/coin-yen.svg" alt="RYU">
+						<span class="stock">{%HOLD_RYU%}</span>
+					</p>
 				</div>
-				
-				<div class="alert alert-secondary">
-					<small class="text-muted">
-						Invitation code is a code used to invite a friend.
-						When the invited friend enters your invitation code and registers for membership, both you and your friend will receive {%CURRENCY_1%} as a gift.
-					</small>
+
+				<div class="hold-coins">
+					<h4>保有Coins</h4>
+					<p>
+						<img src="/content/images/icon/solid_coins.svg" alt="Coins">
+						<span class="stock">{%HOLD_COINS%}</span>
+					</p>
 				</div>
 			</div>
-			<hr>
-			<div class="input-form">
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">Full Name</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="name" value="{%DISP_NAME%}" placeholder="None" readonly>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">Date of Birth</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="birthday" value="{%DISP_BIRTHDAY%}" placeholder="None" readonly>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">Sex</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="sex" value="{%DISP_SEX%}" placeholder="None" readonly>
-					</div>
-				</div>
-				
-				<!--if:{PROFILE_EDIT}-->
-				<div class="alert alert-secondary text-center text-muted">
-					<small>Profile not being set up</small>
-				</div>
-				<!--/if:{PROFILE_EDIT}-->
-				
-			</div>
-			
-			<hr>
-			<div class="input-form">
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label text-secondary">Receive the information on the Setting 6 events and the new machine introduction.</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control-plaintext" id="magazine" value="{%DISP_MAGAZINE%}" placeholder="None" readonly>
-					</div>
-				</div>
-			</div>
-			
-		</form>
-		<hr>
-		<div class="text-center">
-			<a href="profile_detail.php{%LANG_PARAM%}" class="btn btn-primary">Set up your profile</a>
 		</div>
-		
-		<hr>
-		<div class="text-center mb-5">
-			<a href="leave.php{%LANG_PARAM%}"  class="btn btn-danger">Procedures to Cancel the Membership</a>
+
+		<div class="my-page-list">
+			<h3>Password</h3>
+			<p><a href="{%SITE_SSL_URL%}pass_reset.php">PasswordのChange</a></p>
+
+			<h3>会員情報</h3>
+			<p><a href="{%SITE_SSL_URL%}profile_detail.php">会員情報のSettings・Change</a></p>
+
+			<h3>ウォレット（入出金）</h3>
+			<p><a href="{%SITE_SSL_URL%}point_buy.php">💰 Purchase Points（入金）</a></p>
+			<p><a href="{%SITE_SSL_URL%}withdraw.php">💳 出金申請</a></p>
+			<p><a href="{%SITE_SSL_URL%}point.php">📊 Points履歴</a></p>
+			<p><a href="{%SITE_SSL_URL%}withdrawal_history.php">📝 出金履歴</a></p>
+
+			<h3>MessagesBOX</h3>
+			<p>
+				<!--if:{NOTICE_COUNT}-->
+				<span class="mess_badge">{%NOTICE_COUNT%}</span>
+				<!--/if:{NOTICE_COUNT}-->
+				<a href="{%SITE_SSL_URL%}notice.php">お知らせ</a>
+			</p>
+
+			<h3>履歴</h3>
+			<p><a href="{%SITE_SSL_URL%}play_history.php">Play履歴</a></p>
+			<p><a href="{%SITE_SSL_URL%}coin_history.php">Coins取引記録</a></p>
+			<p><a href="{%SITE_SSL_URL%}ryu_history.php">RYU取引履歴</a></p>
+
+			<h3>その他</h3>
+			<p><a href="{%SITE_SSL_URL%}leave.php">退会</a></p>
+			<p><a href="{%SITE_SSL_URL%}inquiry.php">Contact Us</a></p>
 		</div>
-		
+
+		<button type="button" onclick="history.back()">Back</button>
+
 	</div>
-	<!-- /.container -->
-	
+	<!-- //My Pageコンテンツ -->
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
+
 	<!--#include file="inc_footer.html"-->
-	
+
 	<!--#include file="inc_script.html"-->
-	
+
 	</body>
 </html>

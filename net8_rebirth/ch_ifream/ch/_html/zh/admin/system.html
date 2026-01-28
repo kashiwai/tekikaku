@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - システム设置</title>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation.html"-->
+
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-cog"></i> システム设置</h3>
+
+						<div class="card">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th style="width:150px;">種別</th>
+											<th>項目名</th>
+											<th>设置Key</th>
+											<th>设置値</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td>{%SETTING_TYPE%}</td>
+											<td><a href="javascript:void(0);" onClick="openDetail('{%SETTING_NO%}');">{%SETTING_NAME%}</a></td>
+											<td>{%SETTING_KEY%}</td>
+											<td>{%SETTING_VAL%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+
+				<!--#include file="footer.html"-->
+
+			</div><!-- /#content-wrapper -->
+
+		</div><!-- /#wrapper -->
+
+		<!--#include file="inc_script.html"-->
+
+	<script src="js/list.js"></script>
+	<script type="text/javascript">
+	// 詳細画面Open
+	function openDetail(key) {
+		win_open("{%SELF%}", "M=detail&NO=" + key, "system_detail", 820, 680);
+	}
+	</script>
+
+	</body>
+</html>

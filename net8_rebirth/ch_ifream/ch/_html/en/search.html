@@ -2,119 +2,1095 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Look for a Machine</title>
+		<title>{%SITE_TITLE%} - 機体Select</title>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+		<style>
+		/* ================================================
+		   Machine Selection Page - Mobile First Design
+		   ================================================ */
+
+		:root {
+			--primary-purple: #1a0a2e;
+			--secondary-purple: #2d1b4e;
+			--accent-gold: #ffd700;
+			--accent-blue: #4a90d9;
+			--accent-green: #4ade80;
+			--accent-orange: #f59e0b;
+			--accent-red: #ef4444;
+			--text-white: #ffffff;
+			--text-gray: #b8b8c8;
+			--card-bg: rgba(255, 255, 255, 0.95);
+			--gradient-cosmic: linear-gradient(180deg, #1a0a2e 0%, #0d0618 100%);
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body#search-page {
+			background: var(--gradient-cosmic) !important;
+			min-height: 100vh;
+			min-width: auto !important;
+			font-family: 'Noto Sans JP', sans-serif;
+			color: var(--text-white);
+			overflow-x: hidden;
+		}
+
+		body#search-page::before {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-image:
+				radial-gradient(circle at 20% 30%, rgba(74, 144, 217, 0.15) 0%, transparent 40%),
+				radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 40%);
+			pointer-events: none;
+			z-index: 0;
+		}
+
+		#wrapper {
+			background: transparent !important;
+			min-height: 100vh;
+			position: relative;
+			z-index: 1;
+		}
+
+		/* Override ip.css restrictions */
+		body#search-page #content {
+			max-width: 100% !important;
+			width: 100%;
+		}
+
+		/* ================================================
+		   Header
+		   ================================================ */
+		.search-page-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 15px 20px;
+			background: rgba(26, 10, 46, 0.9);
+			backdrop-filter: blur(10px);
+			position: sticky;
+			top: 0;
+			z-index: 100;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.header-back {
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: transparent;
+			border: none;
+			color: var(--text-white);
+			font-size: 1.5rem;
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.header-title {
+			font-size: 1.2rem;
+			font-weight: 700;
+		}
+
+		.header-search {
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: transparent;
+			border: none;
+			color: var(--text-white);
+			font-size: 1.2rem;
+			cursor: pointer;
+		}
+
+		/* ================================================
+		   Search Bar
+		   ================================================ */
+		.search-bar-container {
+			padding: 20px;
+		}
+
+		.search-bar {
+			display: flex;
+			align-items: center;
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			border-radius: 30px;
+			padding: 12px 20px;
+			transition: all 0.3s;
+		}
+
+		.search-bar:focus-within {
+			border-color: var(--accent-gold);
+			box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+		}
+
+		.search-bar input {
+			flex: 1;
+			background: transparent;
+			border: none;
+			outline: none;
+			color: var(--text-white);
+			font-size: 1rem;
+			padding: 0 10px;
+		}
+
+		.search-bar input::placeholder {
+			color: rgba(255, 255, 255, 0.5);
+		}
+
+		.search-bar-icon {
+			color: rgba(255, 255, 255, 0.5);
+			font-size: 1.2rem;
+		}
+
+		/* ================================================
+		   Filter Tabs
+		   ================================================ */
+		.filter-section {
+			padding: 0 20px 20px;
+		}
+
+		.filter-label {
+			font-size: 0.85rem;
+			color: var(--text-gray);
+			margin-right: 10px;
+		}
+
+		.filter-tabs {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			overflow-x: auto;
+			scrollbar-width: none;
+		}
+
+		.filter-tabs::-webkit-scrollbar {
+			display: none;
+		}
+
+		.filter-tab {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 10px 18px;
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			border-radius: 25px;
+			color: var(--text-white);
+			font-size: 0.9rem;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s;
+			white-space: nowrap;
+			text-decoration: none;
+		}
+
+		.filter-tab:hover {
+			background: rgba(255, 215, 0, 0.2);
+			border-color: var(--accent-gold);
+		}
+
+		.filter-tab.active {
+			background: linear-gradient(135deg, var(--accent-gold), #ffed4a);
+			border-color: var(--accent-gold);
+			color: var(--primary-purple);
+			font-weight: 700;
+		}
+
+		.filter-tab-icon {
+			font-size: 1rem;
+		}
+
+		/* ================================================
+		   Machine Grid
+		   ================================================ */
+		.machine-grid-container {
+			padding: 0 15px 100px;
+		}
+
+		.machine-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 15px;
+		}
+
+		.machine-card {
+			background: var(--card-bg);
+			border-radius: 20px;
+			overflow: hidden;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+			transition: all 0.3s;
+			cursor: pointer;
+			position: relative;
+		}
+
+		.machine-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+		}
+
+		.machine-card-badge {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			padding: 5px 12px;
+			border-radius: 20px;
+			font-size: 0.7rem;
+			font-weight: 700;
+			z-index: 5;
+		}
+
+		.badge-popular {
+			background: linear-gradient(135deg, #4ade80, #22c55e);
+			color: white;
+		}
+
+		.badge-new {
+			background: linear-gradient(135deg, #667eea, #764ba2);
+			color: white;
+		}
+
+		.badge-event {
+			background: linear-gradient(135deg, #f59e0b, #d97706);
+			color: white;
+		}
+
+		/* 機体状態バッジ（3状態: Available・In Use・Preparing） */
+		.machine-status-badge {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			padding: 6px 12px;
+			border-radius: 20px;
+			font-size: 0.75rem;
+			font-weight: 700;
+			z-index: 6;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.status-available {
+			background: linear-gradient(135deg, #22c55e, #16a34a);
+			color: white;
+			box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+		}
+
+		.status-inuse {
+			background: linear-gradient(135deg, #ef4444, #dc2626);
+			color: white;
+			box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+		}
+
+		.status-preparing {
+			background: linear-gradient(135deg, #f59e0b, #d97706);
+			color: white;
+			box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+		}
+
+		.machine-card-image {
+			width: 100%;
+			aspect-ratio: 1;
+			object-fit: cover;
+		}
+
+		.machine-card-info {
+			padding: 15px;
+			background: white;
+		}
+
+		.machine-card-name {
+			font-size: 0.9rem;
+			font-weight: 700;
+			color: #1a1a2e;
+			line-height: 1.4;
+			margin-bottom: 12px;
+			min-height: 2.8em;
+		}
+
+		.machine-card-stats {
+			display: flex;
+			justify-content: space-between;
+			gap: 5px;
+			font-size: 0.7rem;
+		}
+
+		.stat-item {
+			text-align: center;
+			flex: 1;
+		}
+
+		.stat-label {
+			color: #6b7280;
+			margin-bottom: 3px;
+		}
+
+		.stat-value {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 3px;
+			font-weight: 700;
+		}
+
+		.stat-value.bb {
+			color: var(--accent-gold);
+		}
+
+		.stat-value.rb {
+			color: var(--accent-blue);
+		}
+
+		.stat-value.total {
+			color: #10b981;
+		}
+
+		.stat-icon {
+			font-size: 0.9rem;
+		}
+
+		/* ================================================
+		   Pagination
+		   ================================================ */
+		.pagination-footer {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 15px 20px;
+			padding-bottom: calc(15px + env(safe-area-inset-bottom));
+			background: linear-gradient(180deg, transparent, rgba(13, 6, 24, 0.98) 30%);
+			z-index: 100;
+		}
+
+		.page-info {
+			font-size: 1rem;
+			color: var(--text-white);
+		}
+
+		.next-btn {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 12px 25px;
+			background: linear-gradient(135deg, var(--accent-blue), #3b7dd8);
+			border: none;
+			border-radius: 25px;
+			color: white;
+			font-size: 1rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.3s;
+			text-decoration: none;
+		}
+
+		.next-btn:hover {
+			transform: scale(1.05);
+			box-shadow: 0 5px 20px rgba(74, 144, 217, 0.4);
+		}
+
+		.next-btn svg {
+			width: 20px;
+			height: 20px;
+		}
+
+		/* ================================================
+		   Machine Detail Modal
+		   ================================================ */
+		.machine-detail-modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1000;
+			background: var(--gradient-cosmic);
+			overflow-y: auto;
+		}
+
+		.machine-detail-modal.active {
+			display: block;
+		}
+
+		.detail-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 15px 20px;
+			background: rgba(26, 10, 46, 0.9);
+			backdrop-filter: blur(10px);
+			position: sticky;
+			top: 0;
+			z-index: 10;
+		}
+
+		.detail-back {
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: rgba(255, 255, 255, 0.1);
+			border: none;
+			border-radius: 50%;
+			color: var(--text-white);
+			font-size: 1.2rem;
+			cursor: pointer;
+		}
+
+		.detail-title {
+			font-size: 1.1rem;
+			font-weight: 700;
+		}
+
+		.detail-share {
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: transparent;
+			border: none;
+			color: var(--text-white);
+			font-size: 1.2rem;
+			cursor: pointer;
+		}
+
+		.detail-content {
+			padding: 20px;
+			padding-bottom: 120px;
+		}
+
+		.detail-image-container {
+			position: relative;
+			margin-bottom: 20px;
+			border-radius: 20px;
+			overflow: hidden;
+			background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(138, 43, 226, 0.3));
+			padding: 20px;
+		}
+
+		.detail-image {
+			width: 100%;
+			max-width: 300px;
+			margin: 0 auto;
+			display: block;
+			border-radius: 15px;
+		}
+
+		.detail-machine-name {
+			text-align: center;
+			margin-bottom: 5px;
+		}
+
+		.detail-machine-name h2 {
+			font-size: 1.5rem;
+			font-weight: 900;
+			background: linear-gradient(135deg, var(--accent-gold), #fff5cc);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		.detail-machine-type {
+			text-align: center;
+			margin-bottom: 25px;
+		}
+
+		.machine-type-badge {
+			display: inline-block;
+			padding: 6px 16px;
+			background: rgba(255, 255, 255, 0.15);
+			border-radius: 20px;
+			font-size: 0.85rem;
+			color: var(--text-gray);
+		}
+
+		.detail-section {
+			margin-bottom: 25px;
+		}
+
+		.detail-section-title {
+			font-size: 1rem;
+			font-weight: 700;
+			margin-bottom: 15px;
+			color: var(--text-white);
+		}
+
+		.game-info-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+		}
+
+		.game-info-item {
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 12px;
+			padding: 12px 15px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.game-info-icon {
+			font-size: 1.2rem;
+		}
+
+		.game-info-content {
+			flex: 1;
+		}
+
+		.game-info-label {
+			font-size: 0.75rem;
+			color: var(--text-gray);
+		}
+
+		.game-info-value {
+			font-size: 1rem;
+			font-weight: 700;
+			color: var(--accent-gold);
+		}
+
+		.features-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+		}
+
+		.feature-item {
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 12px;
+			padding: 12px 15px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			font-size: 0.9rem;
+		}
+
+		.feature-icon {
+			font-size: 1rem;
+			color: var(--text-gray);
+		}
+
+		.description-box {
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 12px;
+			padding: 15px;
+			font-size: 0.9rem;
+			line-height: 1.6;
+			color: var(--text-gray);
+		}
+
+		.detail-footer {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 15px 20px;
+			padding-bottom: calc(15px + env(safe-area-inset-bottom));
+			background: linear-gradient(180deg, transparent, rgba(13, 6, 24, 0.98) 30%);
+			text-align: center;
+		}
+
+		.play-btn {
+			width: 100%;
+			max-width: 400px;
+			padding: 18px;
+			background: linear-gradient(135deg, var(--accent-gold), #ffed4a);
+			border: none;
+			border-radius: 30px;
+			font-size: 1.1rem;
+			font-weight: 700;
+			color: var(--primary-purple);
+			cursor: pointer;
+			transition: all 0.3s;
+			margin-bottom: 10px;
+		}
+
+		.play-btn:hover {
+			transform: scale(1.02);
+			box-shadow: 0 5px 25px rgba(255, 215, 0, 0.4);
+		}
+
+		.play-btn:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			transform: none;
+		}
+
+		.other-machines-link {
+			display: block;
+			color: var(--text-gray);
+			font-size: 0.85rem;
+			text-decoration: none;
+			margin-bottom: 10px;
+		}
+
+		.recommended-link {
+			color: var(--accent-gold);
+			text-decoration: underline;
+			font-size: 0.85rem;
+		}
+
+		/* ================================================
+		   Responsive - Tablet & Desktop
+		   ================================================ */
+		@media (min-width: 768px) {
+			.machine-grid {
+				grid-template-columns: repeat(3, 1fr);
+				gap: 20px;
+			}
+
+			.machine-card-name {
+				font-size: 1rem;
+			}
+
+			.pagination-footer {
+				justify-content: center;
+				gap: 30px;
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.machine-grid {
+				grid-template-columns: repeat(4, 1fr);
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.search-bar-container,
+			.filter-section {
+				max-width: 800px;
+				margin: 0 auto;
+			}
+		}
+
+		/* Large Desktop - 1400px+ */
+		@media (min-width: 1400px) {
+			.machine-grid {
+				grid-template-columns: repeat(5, 1fr);
+				max-width: 1600px;
+				gap: 25px;
+			}
+
+			.machine-grid-container {
+				padding: 0 40px 100px;
+			}
+
+			.search-bar-container,
+			.filter-section {
+				max-width: 1000px;
+			}
+
+			.search-page-header {
+				padding: 20px 40px;
+			}
+
+			.header-title {
+				font-size: 1.5rem;
+			}
+
+			.machine-card-name {
+				font-size: 1.1rem;
+			}
+
+			.machine-card-stats {
+				font-size: 0.8rem;
+			}
+		}
+
+		/* Extra Large Desktop - 1800px+ */
+		@media (min-width: 1800px) {
+			.machine-grid {
+				grid-template-columns: repeat(6, 1fr);
+				max-width: 2000px;
+				gap: 30px;
+			}
+
+			.machine-grid-container {
+				padding: 0 60px 100px;
+			}
+
+			.search-bar-container,
+			.filter-section {
+				max-width: 1200px;
+			}
+
+			.search-page-header {
+				padding: 25px 60px;
+			}
+
+			.header-title {
+				font-size: 1.6rem;
+			}
+
+			.machine-card {
+				border-radius: 24px;
+			}
+
+			.machine-card-info {
+				padding: 20px;
+			}
+
+			.machine-card-name {
+				font-size: 1.2rem;
+				margin-bottom: 15px;
+			}
+		}
+
+		/* Hide original elements */
+		.search-form-wrapper,
+		.search-controls,
+		.data-counter-grid,
+		.search-header,
+		.pagination-wrapper {
+			display: none !important;
+		}
+		</style>
 	</head>
 
-	<body>
+	<body id="search-page">
 
-	<!--#include file="inc_navigation.html"-->
+	<div id="wrapper">
 
-	<!-- Page Content -->
-	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Look for a Machine</h1>
-		<hr>
-		<div class="input-form">
-			<form action="{%SITE_SSL_URL%}{%SELF%}" method="GET" class="form-horizontal" name="MAINFORM" id="MAINFORM">
-				<input type="hidden" name="ODR" value="{%ODR%}">
-				<input type="hidden" name="VIEW" value="{%VIEW%}">
+	<!-- Custom Header -->
+	<header class="search-page-header">
+		<a href="/data/" class="header-back">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M15 18l-6-6 6-6"/>
+			</svg>
+		</a>
+		<h1 class="header-title">機体Select</h1>
+		<button class="header-search" onclick="toggleSearch()">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<circle cx="11" cy="11" r="8"/>
+				<path d="M21 21l-4.35-4.35"/>
+			</svg>
+		</button>
+	</header>
 
-				<div class="form-group row">
-					<label for="searchName" class="col-sm-3 col-form-label col-form-label-sm">Model Name</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control form-control-sm" id="searchName" placeholder="Enter Model Name" name="NAME" value="{%NAME%}" maxlength="100">
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="searchMaker" class="col-sm-3 col-form-label col-form-label-sm">Manufacturer</label>
-					<div class="col-sm-3">
-						<select class="custom-select custom-select-sm" id="searchMaker" name="MAKER">
-							{%SEL_MAKER%}
-						</select>
-					</div>
-					<label for="searchGeneration" class="col-sm-2 col-form-label col-form-label-sm">Generation</label>
-					<div class="col-sm-4">
-						<select class="custom-select custom-select-sm" id="searchGeneration" name="GENERATION">
-							{%SEL_GENERATION%}
-						</select>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label col-form-label-sm">Machine Status</label>
-					<div class="col-sm-5">
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="searchFree" value="1" name="FREE" {%CHK_FREE%}>
-							<label class="custom-control-label" for="searchFree"><small>Vacant Machines Only</small></label>
+	<!-- Search Bar -->
+	<div class="search-bar-container">
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="GET" id="searchForm">
+			<input type="hidden" name="ODR" value="{%ODR%}">
+			<input type="hidden" name="VIEW" value="{%VIEW%}">
+			<div class="search-bar">
+				<span class="search-bar-icon">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="11" cy="11" r="8"/>
+						<path d="M21 21l-4.35-4.35"/>
+					</svg>
+				</span>
+				<input type="text" name="NAME" value="{%NAME%}" placeholder="機体名を入力" maxlength="50">
+			</div>
+		</form>
+	</div>
+
+	<!-- Filter Tabs -->
+	<div class="filter-section">
+		<div class="filter-tabs">
+			<span class="filter-label">フィルタ</span>
+			<a href="?ODR=mm.add_dt+desc" class="filter-tab active">
+				<span class="filter-tab-icon">+</span>
+				人気順
+			</a>
+			<a href="?ODR=mm.add_dt+asc" class="filter-tab">
+				<span class="filter-tab-icon">+</span>
+				新規
+			</a>
+			<a href="?" class="filter-tab">
+				<span class="filter-tab-icon">+</span>
+				イベント
+			</a>
+		</div>
+	</div>
+
+	<!-- Machine Grid -->
+	<div class="machine-grid-container">
+		<div class="machine-grid">
+			<!--loop:{LIST}-->
+			<a href="model_detail.php?NO={%NO%}" class="machine-card" style="text-decoration: none; color: inherit;">
+				<!-- Status Badge (3状態: Available・In Use・Preparing) -->
+				<!--if:{STATUS_AVAILABLE}-->
+				<span class="machine-status-badge status-available">🟢 Available</span>
+				<!--/if:{STATUS_AVAILABLE}-->
+				<!--if:{STATUS_INUSE}-->
+				<span class="machine-status-badge status-inuse">🔴 In Use</span>
+				<!--/if:{STATUS_INUSE}-->
+				<!--if:{STATUS_PREPARING}-->
+				<span class="machine-status-badge status-preparing">🟡 Preparing</span>
+				<!--/if:{STATUS_PREPARING}-->
+
+				<!-- Image -->
+				<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}" class="machine-card-image">
+
+				<!-- Info -->
+				<div class="machine-card-info">
+					<div class="machine-card-name">{%MODEL_NAME%}</div>
+					<div class="machine-card-stats">
+						<div class="stat-item">
+							<div class="stat-label">昨日 BB:</div>
+							<div class="stat-value bb">
+								<span class="stat-icon">🟡</span>
+								{%BIG_TIMES%}
+							</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-label">昨日 RB:</div>
+							<div class="stat-value rb">
+								<span class="stat-icon">🔵</span>
+								{%REG_TIMES%}
+							</div>
+						</div>
+						<div class="stat-item">
+							<div class="stat-label">総合計数:</div>
+							<div class="stat-value total">{%TOTAL_GAME_TIMES%}</div>
 						</div>
 					</div>
-					<div class="col-sm-4 text-right">
-						<button class="btn btn-sm btn-outline-secondary" type="button" id="clearFormBtn">Clear</button>
-						<button class="btn btn-sm btn-outline-info" type="submit"><i class="fas fa-search"></i> Search</button>
-					</div>
 				</div>
 
-			</form>
+			</a>
+			<!--/loop:{LIST}-->
 		</div>
-		<hr>
-		<div class="row justify-content-end mb-4">
-			<div class="col-7 col-md-5 col-lg-3">
-				<div class="input-group input-group-sm mb-3">
-					<select class="custom-select" id="ORDERTYPE" name="ORDERTYPE">
-						{%SEL_ODR%}
-					</select>
-					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="ascBtn"><i class="fas fa-sort-alpha-down"></i> Asc</button>
-					</div>
-					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="descBtn"><i class="fas fa-sort-alpha-up"></i> Desc</button>
-					</div>
-				</div>
-			</div>
-			<div class="col-5 col-md-3 col-lg-3">
-				<div class="input-group input-group-sm mb-3">
-					<select class="custom-select" id="VIEW" name="VIEW">
-						{%SEL_VIEW%}
-					</select>
-					<div class="input-group-append">
-						<label class="input-group-text" for="inputGroupSelect02"> items </label>
-					</div>
-					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="viewBtn">View</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6">
-				<ul class="pagination pagination-sm mb-0">
-					{%PAGING%}
-				</ul>
-			</div>
-			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
-			</div>
-		</div>
-		<hr class="mt-2">
-		<!--#include file="parts_machine_list.html"-->
+	</div>
 
-		<hr class="mb-0">
-		<div class="row mt-2 mb-4">
-			<div class="col-md-6">
-				<ul class="pagination pagination-sm mb-2">
-					{%PAGING%}
-				</ul>
-			</div>
-		</div>
+	<!-- Pagination Footer -->
+	<div class="pagination-footer">
+		<div class="page-info">{%P%}/{%ALLP%}</div>
+		<!--if:{ALLP > 1}-->
+		<a href="{%CURL%}P=<!--if:{P < ALLP}-->{%P+1%}<!--/if:{P < ALLP}--><!--if_not:{P < ALLP}-->1<!--/if_not:{P < ALLP}-->" class="next-btn">
+			Next
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M9 18l6-6-6-6"/>
+			</svg>
+		</a>
+		<!--/if:{ALLP > 1}-->
+	</div>
 
 	</div>
-	<!-- /.container -->
+	<!-- /wrapper -->
 
-	<!--#include file="parts_machine_modal.html"-->
+	<!-- Machine Detail Modal -->
+	<div id="machineDetailModal" class="machine-detail-modal">
+		<header class="detail-header">
+			<button class="detail-back" onclick="closeMachineDetail()">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M15 18l-6-6 6-6"/>
+				</svg>
+			</button>
+			<h1 class="detail-title">機体詳細</h1>
+			<button class="detail-share">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+					<polyline points="16,6 12,2 8,6"/>
+					<line x1="12" y1="2" x2="12" y2="15"/>
+				</svg>
+			</button>
+		</header>
+
+		<div class="detail-content">
+			<!-- Machine Image -->
+			<div class="detail-image-container">
+				<img id="detailImage" src="" alt="" class="detail-image">
+			</div>
+
+			<!-- Machine Name -->
+			<div class="detail-machine-name">
+				<h2 id="detailName"></h2>
+			</div>
+
+			<!-- Machine Type -->
+			<div class="detail-machine-type">
+				<span class="machine-type-badge" id="detailType">パチスロ</span>
+			</div>
+
+			<!-- Game Info Section -->
+			<div class="detail-section">
+				<h3 class="detail-section-title">ゲーム情報</h3>
+				<div class="game-info-grid">
+					<div class="game-info-item">
+						<span class="game-info-icon">⚡</span>
+						<div class="game-info-content">
+							<div class="game-info-label">最大連チャン:</div>
+							<div class="game-info-value">1000連</div>
+						</div>
+					</div>
+					<div class="game-info-item">
+						<span class="game-info-icon">🎯</span>
+						<div class="game-info-content">
+							<div class="game-info-label">ボーナス確率:</div>
+							<div class="game-info-value">1/100</div>
+						</div>
+					</div>
+					<div class="game-info-item">
+						<span class="game-info-icon">💰</span>
+						<div class="game-info-content">
+							<div class="game-info-label">最大賞金:</div>
+							<div class="game-info-value">100万円</div>
+						</div>
+					</div>
+					<div class="game-info-item">
+						<span class="game-info-icon">⏱</span>
+						<div class="game-info-content">
+							<div class="game-info-label">時短確率:</div>
+							<div class="game-info-value">1/10</div>
+						</div>
+					</div>
+					<div class="game-info-item">
+						<span class="game-info-icon">📊</span>
+						<div class="game-info-content">
+							<div class="game-info-label">平均還元率:</div>
+							<div class="game-info-value">98.5%</div>
+						</div>
+					</div>
+					<div class="game-info-item">
+						<span class="game-info-icon">⚙️</span>
+						<div class="game-info-content">
+							<div class="game-info-label">ART確率:</div>
+							<div class="game-info-value">1/300</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Features Section -->
+			<div class="detail-section">
+				<h3 class="detail-section-title">特徴</h3>
+				<div class="features-grid">
+					<div class="feature-item">
+						<span class="feature-icon">⚙️</span>
+						<span>ART機能あり</span>
+					</div>
+					<div class="feature-item">
+						<span class="feature-icon">⏱</span>
+						<span>時短機能あり</span>
+					</div>
+					<div class="feature-item">
+						<span class="feature-icon">🎯</span>
+						<span>ボーナス機能あり</span>
+					</div>
+					<div class="feature-item">
+						<span class="feature-icon">⭐</span>
+						<span>特殊モードあり</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Description Section -->
+			<div class="detail-section">
+				<h3 class="detail-section-title">説明</h3>
+				<div class="description-box" id="detailDescription">
+					外部APIから取得する説明文が表示されます。<br>
+					(データ取得中...)
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer Actions -->
+		<div class="detail-footer">
+			<button class="play-btn" id="playBtn" onclick="startGame()">ゲームを始める</button>
+			<a href="#" class="other-machines-link" onclick="closeMachineDetail(); return false;">または他の機体を選ぶ</a>
+			<a href="/data/" class="recommended-link">おすすめ機体</a>
+		</div>
+	</div>
 
 	<!--#include file="inc_footer.html"-->
-
 	<!--#include file="inc_script.html"-->
-	<!-- Page script -->
-<!--#include file="{%PAGESCRIPT%}search.html"-->
-	
+
+	<script>
+	// Current machine data
+	let currentMachine = null;
+
+	// Open machine detail modal
+	function openMachineDetail(machineNo) {
+		const card = document.querySelector(`.machine-card input[data-no="${machineNo}"]`);
+		if (!card) return;
+
+		currentMachine = {
+			no: card.dataset.no,
+			name: card.dataset.name,
+			image: card.dataset.image,
+			maker: card.dataset.maker,
+			generation: card.dataset.generation,
+			bb: card.dataset.bb,
+			rb: card.dataset.rb,
+			total: card.dataset.total,
+			available: card.dataset.available === '1'
+		};
+
+		// Update modal content
+		document.getElementById('detailImage').src = currentMachine.image;
+		document.getElementById('detailImage').alt = currentMachine.name;
+		document.getElementById('detailName').textContent = currentMachine.name;
+		document.getElementById('detailType').textContent = currentMachine.generation || 'パチスロ';
+
+		// Update play button
+		const playBtn = document.getElementById('playBtn');
+		if (currentMachine.available) {
+			playBtn.disabled = false;
+			playBtn.textContent = 'ゲームを始める';
+		} else {
+			playBtn.disabled = true;
+			playBtn.textContent = '現在In Useです';
+		}
+
+		// Show modal
+		document.getElementById('machineDetailModal').classList.add('active');
+		document.body.style.overflow = 'hidden';
+	}
+
+	// Close machine detail modal
+	function closeMachineDetail() {
+		document.getElementById('machineDetailModal').classList.remove('active');
+		document.body.style.overflow = '';
+		currentMachine = null;
+	}
+
+	// Start game
+	function startGame() {
+		if (currentMachine && currentMachine.available) {
+			window.location.href = '{%SITE_SSL_URL%}play_v2/?NO=' + currentMachine.no;
+		}
+	}
+
+	// Toggle search (for header icon)
+	function toggleSearch() {
+		const searchInput = document.querySelector('.search-bar input');
+		searchInput.focus();
+	}
+
+	// Handle back button
+	window.addEventListener('popstate', function() {
+		if (document.getElementById('machineDetailModal').classList.contains('active')) {
+			closeMachineDetail();
+		}
+	});
+
+	// Close modal on escape key
+	document.addEventListener('keydown', function(e) {
+		if (e.key === 'Escape') {
+			closeMachineDetail();
+		}
+	});
+	</script>
+
 	</body>
 </html>

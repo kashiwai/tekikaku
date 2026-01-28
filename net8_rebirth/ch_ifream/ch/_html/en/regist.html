@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Account Creation</title>
+		<title>{%SITE_TITLE%} - Create Account</title>
 	</head>
 
 	<body>
@@ -12,7 +12,7 @@
 	<!-- Page Content -->
 	<div class="container">
 
-		<h1 class="h3 text-center my-4">Account Creation</h1>
+		<h1 class="h3 text-center my-4">Create Account</h1>
 
 		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
 			<div class="input-form mb-5">
@@ -26,19 +26,19 @@
 				<div class="form-group">
 					<label class="col-form-label" for="nickname">Nickname<span class="badge badge-indis">Required</span></label>
 					<input type="text" class="form-control" placeholder="" id="nickname" name="NICKNAME" value="{%NICKNAME%}" maxlength="{%NICKNAME_LIMIT%}">
-					<small class="form-text text-muted">Nickname cannot be changed later.</small>
+					<small class="form-text text-muted">※Nickname cannot be changed later</small>
 				</div>
 				<div class="form-group">
 					<label class="col-form-label" for="mail">Email Address<span class="badge badge-indis">Required</span></label>
 					<input type="text" class="form-control" placeholder="" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}">
 				</div>
 				<div class="form-group">
-					<label class="col-form-label" for="mailConf">Email address (Confirmation)<span class="badge badge-indis">Required</span></label>
-					<input type="text" class="form-control" placeholder="Enter the same email address as above." id="mailConf" name="MAILCONF" value="{%MAILCONF%}" maxlength="{%MAIL_LIMIT%}">
+					<label class="col-form-label" for="mailConf">Email Address (Confirm)<span class="badge badge-indis">Required</span></label>
+					<input type="text" class="form-control" placeholder="Please enter the same email address as above" id="mailConf" name="MAILCONF" value="{%MAILCONF%}" maxlength="{%MAIL_LIMIT%}">
 				</div>
 				<div class="form-group">
 					<label class="col-form-label" for="password">Password<span class="badge badge-indis">Required</span></label>
-					<input type="password" class="form-control" placeholder="{%MEMBER_PASS_MIN%} Alphanumeric Characters or More (Both alphabets and numbers should be used in it.)" id="password" name="PASS" value="{%PASS%}" maxlength="{%MEMBER_PASS_MAX%}">
+					<input type="password" class="form-control" placeholder="Alphanumeric mixed{%MEMBER_PASS_MIN%} characters or more" id="password" name="PASS" value="{%PASS%}" maxlength="{%MEMBER_PASS_MAX%}">
 				</div>
 				<div class="form-group">
 					<label class="col-form-label" for="code">Invitation Code</label>
@@ -46,38 +46,38 @@
 				</div>
 				<!--if:{MEMBER_BENEFITS}-->
 				<div class="form-group">
-					<label class="col-form-label" for="benefits_cd">privilege code</label>
+					<label class="col-form-label" for="benefits_cd">Benefit Code</label>
 					<input type="text" class="form-control" placeholder="" id="benefits_cd" name="BENEFITS_CD" value="{%BENEFITS_CD%}" maxlength="{%BENEFITS_CODE_LENGTH%}">
 				</div>
 				<!--/if:{MEMBER_BENEFITS}-->
 				<div class="form-group">
-					<label class="col-form-label" for="magazine">Receive the information on the Setting 6 events and the new machine introduction.</label><br>
+					<label class="col-form-label" for="magazine">Receive setting 6 events and new machine information</label><br>
 					{%RDO_MAGAZINE%}
 				</div>
 				<hr>
 				<div class="text-center">
 					<div class="mb-2">
-						<!--if:{FOOTER_DISP_TERMS}--><button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalTerms">Confirm the Terms of Service</button><!--/if:{FOOTER_DISP_TERMS}-->
-						<!--if:{FOOTER_DISP_POLICY}--><button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalPolicy">Confirm the Privacy Policy</button><!--/if:{FOOTER_DISP_POLICY}-->
+						<!--if:{FOOTER_DISP_TERMS}--><button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalTerms">View Terms of Service</button><!--/if:{FOOTER_DISP_TERMS}-->
+						<!--if:{FOOTER_DISP_POLICY}--><button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalPolicy">Privacy PolicyをConfirm</button><!--/if:{FOOTER_DISP_POLICY}-->
 					</div>
 					<div class="form-group">
 						<!--if:{FOOTER_DISP_TERMS}-->
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" id="customCheck1" name="CHECK1" value="1" {%CHK_CHECK1%}>
-							<label class="custom-control-label" for="customCheck1">I agree with the Terms of Service.</label>
+							<label class="custom-control-label" for="customCheck1">Terms of ServiceにAgree</label>
 						</div>
 						<!--/if:{FOOTER_DISP_TERMS}-->
 						<!--if:{FOOTER_DISP_POLICY}-->
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" id="customCheck2" name="CHECK2" value="1" {%CHK_CHECK2%}>
-							<label class="custom-control-label" for="customCheck2">I agree with the Privacy Policy.</label>
+							<label class="custom-control-label" for="customCheck2">Privacy PolicyにAgree</label>
 						</div>
 						<!--/if:{FOOTER_DISP_POLICY}-->
 					</div>
-					<button type="submit" class="btn btn-block btn-primary">Registration</button>
+					<button type="submit" class="btn btn-block btn-primary">登　録</button>
 					<hr>
-					Log in here If you have already registered.<br />
-					<a href="login.php{%LANG_PARAM%}" class="btn btn-sm btn-secondary"><i class="fas fa-sign-in-alt"></i> Login</a>
+					Register済の方はこちらからLoginを行ってください<br />
+					<a href="login.php" class="btn btn-sm btn-secondary"><i class="fas fa-sign-in-alt"></i> Login</a>
 				</div>
 			</div>
 		</form>

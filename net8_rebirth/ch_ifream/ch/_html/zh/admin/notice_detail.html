@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - お知らせ情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NOTICE_NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();" enctype="multipart/form-data">
+					<input type="hidden" name="NOTICE_NO" value="{%NOTICE_NO%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-bell"></i> お知らせ情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+							<br>
+							 ※エラーが出た場合、画像の选择が解除されていますのでご注意ください。
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							
+							<tbody>
+								<tr>
+									<th>お知らせ名称&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td><input type="text" class="form-control" name="NOTICE_NAME" value="{%NOTICE_NAME%}" maxlength="50" style="width:400px;"></td>
+								</tr>
+								
+								<tr>
+									<th>リンクタイプ&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" id="LINK_TYPE" name="LINK_TYPE">
+											{%SEL_LINK_TYPE%}
+										</select>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>リンクURL</th>
+									<td><input type="text" class="form-control" name="LINK_URL" value="{%LINK_URL%}" maxlength="100" style="width:400px;"></td>
+								</tr>
+								
+								<tr>
+									<th>表示優先度&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" id="DISP_ORDER" name="DISP_ORDER">
+											{%SEL_DISP_ORDER%}
+										</select>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>公開期間&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<table class="table-inner">
+											<tr>
+												<td>
+													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+														<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_START_DT" value="{%RELEASE_START_DT%}">
+														<div class="input-group-append">
+															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+														</div>
+													</div>
+												</td>
+												<td class="px-2">～</td>
+												<td>
+													<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+														<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_END_DT" value="{%RELEASE_END_DT%}">
+														<div class="input-group-append">
+															<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+														</div>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs">
+								<!--loop:{LIST_TAB}-->
+								<li class="{%LANG_ACT%}"><a href="#tab_{%LANG%}">{%LANG_NAME%}</a></li>
+								<!--/loop:{LIST_TAB}-->
+							</ul>
+							<div class="tab-content">
+								<!--loop:{LIST_LANG}-->
+								<div class="tab-pane {%LANG_ACT%}" id="tab_{%LANG%}">
+									<table class="table table-input">
+										<tbody>
+											
+											<tr>
+												<th>お知らせ画像<!--if:{DEF_LANG}--> <span class="text-danger"><i class="fa fa-asterisk"></i></span><!--/if:{DEF_LANG}--></th>
+												<td>
+													<div id="preview1_{%LANG%}">
+														<!--if:{EDIT_IMG}--><img src="{%TOP_IMAGE_URL%}" width="300"><!--/if:{EDIT_IMG}-->
+													</div>
+													<!--if:{UPD}-->新しい画像を选择<br /><!--/if:{UPD}-->
+													<input type="hidden" name="MAX_FILE_SIZE" value="{%UPFILE_IMG_MAXBYTE%}">
+													<input type="file" name="TOP_IMAGE_{%LANG%}_NEW" id="upimg1_{%LANG%}" data-target="#preview1_{%LANG%}" accept="{%IMG_EXT%}">
+													<input type="hidden" name="TOP_IMAGE_{%LANG%}" value="{%TOP_IMAGE%}">
+													<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+														<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 推奨サイズ：縦500px × 横1900px<br />
+														<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> ファイルサイズ <strong class="text-danger">{%UPFILE_IMG_MAX%}MBまでの「{%UPFILE_IMG_EXT%}」形式</strong> の画像ファイルのみアップロード可能です。
+													</div>
+												</td>
+											</tr>
+											
+											<tr>
+												<th>タイトル</th>
+												<td>
+													<input class="form-control" name="TITLE[{%LANG%}]" type="text" value="{%TITLE%}" maxlength="{%NOTICE_TITLE_MAX%}">
+												</td>
+											</tr>
+											<tr>
+												<th>サブタイトル</th>
+												<td>
+													<input class="form-control" name="SUB_TITLE[{%LANG%}]" type="text" value="{%SUB_TITLE%}" maxlength="{%NOTICE_SUB_TITLE_MAX%}">
+												</td>
+											</tr>
+											<tr>
+												<th>一覧タイトル</th>
+												<td>
+													<input class="form-control" name="LIST_TITLE[{%LANG%}]" type="text" value="{%LIST_TITLE%}" maxlength="{%NOTICE_LIST_TITLE_MAX%}" style="width:450px;">
+												</td>
+											</tr>
+											<tr>
+												<th>お知らせ内容</th>
+												<td>
+													<textarea class="editor form-control" id="editor_{%LANG%}" name="CONTENTS[{%LANG%}]" rows="10" cols="80">{%CONTENTS%}</textarea>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!--/loop:{LIST_LANG}-->
+								
+							</div>
+							<!-- /.tab-content -->
+						</div>
+						
+						
+						
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{DEL}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<!-- CK Editor -->
+		<script type="text/javascript">
+			var adminPath = '{%ADMIN_PATH%}';
+		</script>
+		<script src="systemjs/ckeditor/ckeditor.js" ></script>
+		<script type="text/javascript">
+		<!--
+			var _ckEditors = new Array();
+			$(function(){
+				// Replace the <textarea id="editor1"> with a CKEditor
+				// instance, using default configuration.
+				$('.editor').each(function(){
+					var _elm = $(this).attr('id');
+					_ckEditors[_elm] = CKEDITOR.replace(_elm);
+				});
+				
+				//タブ切り替え
+				$('.nav-tabs-custom .nav-tabs li').each(function(){
+					$(this).find('a').on('click',function(){
+						//tab
+						$('.nav-tabs-custom .nav-tabs li').removeClass('active');
+						$(this).parents('li').addClass('active');
+						//contents
+						var _target = $($(this).attr('href'));
+						$('.tab-content>div').hide().removeClass('active');
+						_target.show().addClass('active');
+						//
+						return false;
+					});
+				});
+
+				//画像ファイルプレビュー表示
+				var img_exts = [{%UPFILE_IMG_TYPE%}];
+				$('form input[type=file]').each( function(){
+					$(this).on('change', function(e){
+						var file = e.target.files[0],
+							reader = new FileReader(),
+							$preview = $($(this).data('target'));
+
+						// 拡張子チェック
+						if (img_exts.indexOf(file.type) < 0) {
+							$preview.empty();
+							$(this).val('');
+							chkAlert("{%A2013%}");
+							return false;
+						}
+						// サイズチェック
+						if (file.size > parseInt('{%UPFILE_IMG_MAXBYTE%}', 10)) {
+							$preview.empty();
+							$(this).val('');
+							chkAlert("{%A2014%}");
+							return false;
+						}
+
+						// ファイル読み込みが完了した際のイベント注册
+						reader.onload = (function(file) {
+							return function(e) {
+								//既存のプレビューを删除
+								$preview.empty();
+								// .prevewの領域の中にロードした画像を表示するimageタグを添加
+								$preview.append($('<img>').attr({
+									src: e.target.result,
+									width: "300px",
+									class: "preview",
+									title: file.name
+								}));
+							};
+						})(file);
+						reader.readAsDataURL(file);
+					});
+				});
+			});
+			
+			// 入力チェック
+			function check() {
+				
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_indis("{%A2001%}", frm["NOTICE_NAME"].value)) return false;
+				if (frm["LINK_TYPE"].value == 1) {	// URL指定時
+					if (!chk_indis("{%A2005%}", frm["LINK_URL"].value)) return false;
+				}
+				if (chk_indis("", frm["LINK_URL"].value)) {
+					if (!chk_url("{%A2006%}", frm["LINK_URL"].value, false)) return false;
+				}
+				//公開開始日
+				if (!chk_indis("{%A2007%}", frm["RELEASE_START_DT"].value)) return false;
+				if (!chk_date("{%A2008%}", frm["RELEASE_START_DT"].value, false)) return false;
+				//公開終了日
+				if (chk_indis("", frm["RELEASE_END_DT"].value)) {
+					if (!chk_date("{%A2010%}", frm["RELEASE_END_DT"].value, false)) return false;
+					if (!compare_date("{%A2015%}", frm["RELEASE_START_DT"].value, frm["RELEASE_END_DT"].value, false)) return false;
+				}
+				
+				if (!chk_indis("{%A2016%}", frm["TOP_IMAGE_{%DEF_LANG_S%}_NEW"].value + frm["TOP_IMAGE_{%DEF_LANG_S%}"].value)) return false;
+				if( frm["LINK_TYPE"].value == 2) {	// ページ作成時
+					if (!chk_indis("{%A2020%}", _ckEditors["editor_{%DEF_LANG_S%}"].getData())) return false;
+				}
+				//
+				Swal.fire({
+					title: 'お知らせ注册',
+					text: "{%A0001%}",
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonText: '注册',
+					cancelButtonText: '取消'
+				}).then(function(result) {
+					if (result.isConfirmed) {
+						// 実行
+						frm.submit();
+					}
+				});
+				return false;
+			}
+			
+			// 删除
+			function del() {
+				var frm = window.document.MAINFORM;
+				Swal.fire({
+					title: 'お知らせ删除',
+					text: "{%A0002%}",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: '删除',
+					cancelButtonText: '取消'
+				}).then(function(result) {
+					if (result.isConfirmed) {
+						// 実行
+						location.href = frm.action + "&ACT=del&NO={%NOTICE_NO%}";
+					}
+				});
+				return;
+			}
+			
+			
+		-->
+		</script>
+		
+	</body>
+</html>

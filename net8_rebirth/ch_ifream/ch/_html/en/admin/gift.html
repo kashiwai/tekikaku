@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%SITE_TITLE%} - Point Gift Settings</title>
+
+    <style>
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-info: #3DD9EB;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--admin-darker); border-right: 1px solid var(--admin-border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--admin-border); margin-bottom: 20px; }
+        .sidebar-logo h2 { color: var(--admin-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--admin-text-muted); text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(3, 118, 201, 0.1); color: var(--admin-primary); border-left: 3px solid var(--admin-primary); }
+        .main-content { margin-left: 260px; flex: 1; padding: 20px; }
+        .topbar { background: var(--admin-card); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .topbar h1 { font-size: 20px; color: var(--admin-text); display: flex; align-items: center; gap: 10px; }
+
+        /* Settingsカード */
+        .settings-card { background: var(--admin-card); border-radius: 12px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 680px; }
+        .settings-header { padding-bottom: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--admin-border); }
+        .settings-header h3 { font-size: 16px; color: var(--admin-text); }
+
+        /* テーブル */
+        table.settings-table { width: 100%; border-collapse: collapse; }
+        table.settings-table th { padding: 15px; text-align: left; font-weight: 600; color: var(--admin-text-muted); background: var(--admin-darker); border-bottom: 1px solid var(--admin-border); width: 180px; }
+        table.settings-table td { padding: 15px; border-bottom: 1px solid var(--admin-border); color: var(--admin-text); }
+        table.settings-table tr:last-child td { border-bottom: none; }
+
+        /* ボタン */
+        .btn { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+        .btn-primary { background: var(--admin-primary); color: white; }
+        .btn-primary:hover { background: #025fa1; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(3, 118, 201, 0.3); }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .settings-card { padding: 15px; }
+            table.settings-table th, table.settings-table td { display: block; width: 100%; padding: 10px; }
+            table.settings-table th { background: transparent; border-bottom: none; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <!--#include file="head.html"-->
+</head>
+<body id="page-top">
+
+<!--#include file="navigation.html"-->
+
+<div class="admin-layout">
+    <!--#include file="sidebar.html"-->
+
+    <main class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-gift"></i> Point Gift Settings</h1>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-header">
+                <h3>Configuration</h3>
+            </div>
+            <table class="settings-table">
+                <tbody>
+                    <tr>
+                        <th>Minimum Points</th>
+                        <td>{%DISP_POINT%} {%CURRENCY_3%}</td>
+                    </tr>
+                    <tr>
+                        <th>Lot Unit</th>
+                        <td>
+                            <!--if:{LOT}-->{%DISP_LOT%}<!--/if:{LOT}-->
+                            <!--if:{NO_LOT}-->No Limit<!--/if:{NO_LOT}-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Commission Rate</th>
+                        <td>{%RATE%} %</td>
+                    </tr>
+                    <tr>
+                        <th>Rounding Method</th>
+                        <td>{%DISP_ROUNDING%}</td>
+                    </tr>
+                    <tr>
+                        <th>Fee Bearer</th>
+                        <td>{%DISP_BEARER%}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: right; padding-top: 20px;">
+                            <a href="javascript:void(0);" onClick="openDetail();" class="btn btn-primary"><i class="fas fa-edit"></i> Edit Settings</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--#include file="footer.html"-->
+
+    </main>
+</div>
+
+<!--#include file="inc_script.html"-->
+<script src="js/list.js"></script>
+<script type="text/javascript">
+    // 詳細画面Open
+    function openDetail(key) {
+        win_open("{%SELF%}", "M=detail", "admin_detail", 820, 580);
+    }
+</script>
+
+</body>
+</html>

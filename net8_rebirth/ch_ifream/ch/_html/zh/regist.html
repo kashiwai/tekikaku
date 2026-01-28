@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 创建账户</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">创建账户</h1>
+
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<div class="input-form mb-5">
+
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+
+				<div class="form-group">
+					<label class="col-form-label" for="nickname">昵称<span class="badge badge-indis">必填</span></label>
+					<input type="text" class="form-control" placeholder="" id="nickname" name="NICKNAME" value="{%NICKNAME%}" maxlength="{%NICKNAME_LIMIT%}">
+					<small class="form-text text-muted">※昵称之后无法更改</small>
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="mail">电子邮件地址<span class="badge badge-indis">必填</span></label>
+					<input type="text" class="form-control" placeholder="" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="mailConf">电子邮件地址（确认）<span class="badge badge-indis">必填</span></label>
+					<input type="text" class="form-control" placeholder="请输入与上面相同的电子邮件地址" id="mailConf" name="MAILCONF" value="{%MAILCONF%}" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="password">密码<span class="badge badge-indis">必填</span></label>
+					<input type="password" class="form-control" placeholder="字母和数字混合{%MEMBER_PASS_MIN%}个字符以上" id="password" name="PASS" value="{%PASS%}" maxlength="{%MEMBER_PASS_MAX%}">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="code">邀请码</label>
+					<input type="text" class="form-control" placeholder="" id="code" name="CODE" value="{%CODE%}" maxlength="{%INVITE_CODE_LENGTH%}">
+				</div>
+				<!--if:{MEMBER_BENEFITS}-->
+				<div class="form-group">
+					<label class="col-form-label" for="benefits_cd">特典代码</label>
+					<input type="text" class="form-control" placeholder="" id="benefits_cd" name="BENEFITS_CD" value="{%BENEFITS_CD%}" maxlength="{%BENEFITS_CODE_LENGTH%}">
+				</div>
+				<!--/if:{MEMBER_BENEFITS}-->
+				<div class="form-group">
+					<label class="col-form-label" for="magazine">接收设置6活动和新机型信息</label><br>
+					{%RDO_MAGAZINE%}
+				</div>
+				<hr>
+				<div class="text-center">
+					<div class="mb-2">
+						<!--if:{FOOTER_DISP_TERMS}--><button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalTerms">查看使用条款</button><!--/if:{FOOTER_DISP_TERMS}-->
+						<!--if:{FOOTER_DISP_POLICY}--><button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalPolicy">隐私政策を确认</button><!--/if:{FOOTER_DISP_POLICY}-->
+					</div>
+					<div class="form-group">
+						<!--if:{FOOTER_DISP_TERMS}-->
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="customCheck1" name="CHECK1" value="1" {%CHK_CHECK1%}>
+							<label class="custom-control-label" for="customCheck1">使用条款に同意</label>
+						</div>
+						<!--/if:{FOOTER_DISP_TERMS}-->
+						<!--if:{FOOTER_DISP_POLICY}-->
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="customCheck2" name="CHECK2" value="1" {%CHK_CHECK2%}>
+							<label class="custom-control-label" for="customCheck2">隐私政策に同意</label>
+						</div>
+						<!--/if:{FOOTER_DISP_POLICY}-->
+					</div>
+					<button type="submit" class="btn btn-block btn-primary">登　録</button>
+					<hr>
+					注册済の方はこちらから登录を行ってください<br />
+					<a href="login.php" class="btn btn-sm btn-secondary"><i class="fas fa-sign-in-alt"></i> 登录</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!-- modal -->
+	<!--if:{FOOTER_DISP_TERMS}-->
+	<div class="modal fade" id="modalTerms" tabindex="-1" role="dialog" aria-labelledby="modalTermsTitle" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTermsTitle">使用条款</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+				<!--#include file="inc_terms.html"-->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--/if:{FOOTER_DISP_TERMS}-->
+	<!--if:{FOOTER_DISP_POLICY}-->
+	<div class="modal fade" id="modalPolicy" tabindex="-1" role="dialog" aria-labelledby="modalPolicyTitle" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalPolicyTitle">隐私政策</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+				<!--#include file="inc_policy.html"-->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--/if:{FOOTER_DISP_POLICY}-->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}regist.html"-->
+	
+	</body>
+</html>

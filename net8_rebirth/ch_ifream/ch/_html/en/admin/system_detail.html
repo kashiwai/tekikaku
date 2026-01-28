@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - システムSettings詳細</title>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation_sub.html"-->
+
+		<div id="wrapper">
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="SETTING_TYPE" value="{%SETTING_TYPE%}">
+					<input type="hidden" name="SETTING_FORMAT" value="{%SETTING_FORMAT%}">
+					<input type="hidden" name="" value="{%%}">
+
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-cog"></i> システムSettings詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>種別</th>
+									<td>
+										{%TXT_SETTING_TYPE%}
+									</td>
+								</tr>
+								<tr>
+									<th>項目名</th>
+									<td>
+										<input type="text" class="form-control" name="SETTING_NAME" value="{%SETTING_NAME%}" style="width:300px;" readonly>
+									</td>
+								</tr>
+								<tr>
+									<th>SettingsKey</th>
+									<td>
+										<input type="text" class="form-control" name="SETTING_KEY" value="{%SETTING_KEY%}" style="width:300px;" readonly>
+									</td>
+								</tr>
+								<tr>
+									<th>Settings値の書式</th>
+									<td>{%TXT_SETTING_FORMAT%}</td>
+								</tr>
+								<tr>
+									<th>Settings値&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="SETTING_VAL" value="{%SETTING_VAL%}" maxlength="200">
+									</td>
+								</tr>
+								<tr>
+									<th>備考</th>
+									<td>
+										<textarea class="form-control" name="REMARKS" rows="4" readonly>{%REMARKS%}</textarea>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="text-right">
+							<input type="submit" class="btn btn-primary" value="登　録">
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+
+		<!--#include file="inc_script.html"-->
+
+	<script>
+	// 入力チェック
+	function check() {
+		var frm = window.document.MAINFORM;
+
+		// Requiredチェックのみ
+		if (!chk_indis("{%A3101%}", frm["SETTING_VAL"].value)) return false;
+
+		swal({
+			title: 'システムSettingsRegister',
+			text: "{%A0001%}",
+			type: 'question',
+			showCancelButton: true
+		}).then(function() {
+			// 実行
+			frm.submit();
+		});
+		return false;
+	}
+
+	// Delete
+	function del() {
+		var frm = window.document.MAINFORM;
+		swal({
+			title: 'システムSettingsDelete',
+			text: "{%A0002%}",
+			type: 'warning',
+			showCancelButton: true
+		}).then(function() {
+			// 実行
+			location.href = frm.action + "&ACT=del&NO={%NO%}";
+		});
+		return;
+	}
+
+	</script>
+
+	</body>
+
+</html>

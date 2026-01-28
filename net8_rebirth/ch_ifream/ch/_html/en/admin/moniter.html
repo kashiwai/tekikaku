@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - モニタリング</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				
+				<div class="container-fluid">
+					<h3 class="page-header">
+						<i class="fas fa-desktop"></i> モニタリング
+						<div class="send_button">
+							<div class="btn btn-info button_label">全体操作Select</div>
+							<ul class="send_select" data-machine="all">
+								<!--loop:{EMGLIST}-->
+								<li class="btn btn-info" data-code="{%KEY%}">{%BTN%}</li>
+								<!--/loop:{EMGLIST}-->
+							</ul>
+						</div>
+						<div class="connect_status">
+							<i class="fas fa-comment-slash"></i>
+						</div>
+						<div class="machine_filter">
+							<div class="btn-group" data-toggle="buttons">
+								<!--
+								<label class="btn btn-info">
+									<input type="checkbox" autocomplete="off" value="alive"> メンテMachineを除く
+								</label>
+								-->
+								<label class="btn btn-info">
+									<input type="checkbox" autocomplete="off" value="active"> In UseのMachineのみ
+								</label>
+							</div>
+						</div>
+					</h3>
+					
+					<div class="row">
+						<!--loop:{LIST}-->
+						<div class="col-4 monitering_item">
+							<div class="card mt-3">
+								<div class="card-header d-flex justify-content-between position-relative">
+									<span class="panel-title"><a href="playhistory.php?NO={%MACHINE_NO%}">{%MODEL_NAME%}</a></span>
+									<div class="send_button">
+										<div class="btn btn-info button_label">操作Select</div>
+										<ul class="send_select" data-machine="{%MACHINE_NO%}">
+											<!--loop:{SUBEMGLIST}-->
+											<li class="btn btn-info" data-code="{%KEY%}">{%BTN%}</li>
+											<!--/loop:{SUBEMGLIST}-->
+										</ul>
+									</div>
+								</div><!-- /#headingOne -->
+								<div class="card-body machine_moniter machine_moniter_deactive" id="machine_{%MACHINE_NO%}">
+									<div class="moniter_inner">
+										
+										<table class="row_count">
+											<tr>
+												<td>
+													総G : <span class="game_t"></span>
+												</td>
+												<td>
+													G : <span class="game"></span>
+												</td>
+												<td>
+													RG : <span class="rbcount"></span>
+												</td>
+												<td>
+													BB : <span class="bbcount"></span>
+												</td>
+											</tr>
+										</table>
+												
+										<table class="row_machine">
+											<tr>
+												<td>
+													<i class="far fa-hand-point-up"></i>&nbsp;&nbsp;<span class="mode"></span>
+												</td>
+												<td>
+													<i class="far fa-eye"></i>&nbsp;&nbsp;<span class="bonus"></span>
+												</td>
+												<td>
+													<span class="reel reel1">●</span><span class="reel reel2">●</span><span class="reel reel3">●</span>
+												</td>
+												<td>
+													<div class="status_reg">REG</div><div class="status_bb">BIG</div>
+												</td>
+											</tr>
+										</table>
+										
+										<table class="row_user">
+											<tr>
+												<td>
+													<i class="fas fa-user"></i>&nbsp;&nbsp;<span class="member_no"></span>
+												</td>
+												<td>
+													<i class="fas fa-copyright"></i>&nbsp;&nbsp;<span class="credit"></span> <span class="increase"></span>
+												</td>
+												<td>
+													<i class="fas fa-desktop"></i>&nbsp;&nbsp;<span class="pycommand"></span>
+												</td>
+											</tr>
+										</table>
+										
+									</div>
+								</div>
+							</div><!-- /.card -->
+						</div>
+						<!--/loop:{LIST}-->
+					</div>
+					
+				</div><!-- /.container-fluid -->
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script>
+			var _emg_msg = [];
+			<!--loop:{JSEMGLIST}-->
+			_emg_msg[{%KEY%}] = "{%MSG%}";
+			<!--/loop:{JSEMGLIST}-->
+		</script>
+		
+		<script src="js/moniter.js"></script>
+		
+	</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 制造商情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="MAKER_NO" value="{%MAKER_NO%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> 制造商情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>制造商名&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MAKER_NAME" value="{%MAKER_NAME%}" maxlength="20">
+									</td>
+								</tr>
+								<tr>
+									<th>制造商名（英語）&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MAKER_ROMAN" value="{%MAKER_ROMAN%}" maxlength="50">
+									</td>
+								</tr>
+								<!--if:{CATEGORY_USE_PACH}-->
+								<tr>
+									<th>パチンコ</th>
+									<td>{%PACH_FLG_RADIO%}</td>
+								</tr>
+								<!--/if:{CATEGORY_USE_PACH}-->
+								<!--if:{CATEGORY_USE_SLOT}-->
+								<tr>
+									<th>スロット</th>
+									<td>{%SLOT_FLG_RADIO%}</td>
+								</tr>
+								<!--/if:{CATEGORY_USE_SLOT}-->
+								<tr>
+									<th>表示</th>
+									<td>{%DISP_FLG_RADIO%}</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{CAN_DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{CAN_DEL}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			// 入力チェック
+			function check() {
+				
+				var frm = window.document.MAINFORM;
+				//制造商名
+				if (!chk_indis("{%A1301%}", frm["MAKER_NAME"].value)) return false;
+				if (frm["MAKER_NAME"].value.length > 20) {
+					chkAlert("{%A1302%}");
+					return false;
+				}
+				//制造商名（英語）
+				if (!chk_indis("{%A1303%}", frm["MAKER_ROMAN"].value)) return false;
+				if (frm["MAKER_ROMAN"].value.length > 50) {
+					chkAlert("{%A1304%}");
+					return false;
+				}
+				//フラグ
+				var useCnt = 0;
+				<!--if:{CATEGORY_USE_PACH}-->
+				var _pach = $("input[name='PACH_FLG']:checked").val();
+				if (!chk_indis("{%A1305%}", _pach)) return false;
+				useCnt += parseInt(_pach);
+				<!--/if:{CATEGORY_USE_PACH}-->
+				<!--if:{CATEGORY_USE_SLOT}-->
+				var _slot = $("input[name='SLOT_FLG']:checked").val();
+				if (!chk_indis("{%A1306%}", _slot)) return false;
+				useCnt += parseInt(_slot);
+				<!--/if:{CATEGORY_USE_SLOT}-->
+				if (useCnt <= 0) {
+					chkAlert("{%A1307%}");
+					return false;
+				}
+				
+				//
+				swal({
+					title: '制造商情報注册',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					$("input[name='PACH_FLG']").prop("disabled", false);
+					$("input[name='SLOT_FLG']").prop("disabled", false);
+					$("input[name='DISP_FLG']").prop("disabled", false);
+					// 実行
+					frm.submit();
+				});
+				return false;
+			}
+			
+			// 删除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '制造商情報删除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

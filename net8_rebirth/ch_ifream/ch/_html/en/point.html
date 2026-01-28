@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - {%CURRENCY_1%} history</title>
+		<title>{%SITE_TITLE%} - {%CURRENCY_1%} 履歴</title>
 	</head>
 
 	<body>
@@ -11,16 +11,16 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">{%CURRENCY_1%} history</h1>
+		<h1 class="h3 text-center my-4">{%CURRENCY_1%} 履歴</h1>
 		<hr>
 		<div class="alert alert-primary now-point">
-			Possession :<strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
+			所持：<strong>{%POINT%}</strong> <small>{%CURRENCY_1%}</small>
 		</div>
 
 		<div class="d-flex w-100 justify-content-end">
 			<div class="input-group input-group-sm w-auto mb-3">
 				<div class="input-group-prepend">
-					<label class="input-group-text" for="listType">Type</label>
+					<label class="input-group-text" for="listType">種別</label>
 				</div>
 				<select class="custom-select" id="listType" name="TYPE">
 					{%SEL_TYPE%}
@@ -34,7 +34,7 @@
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				There is no {%CURRENCY_1%} history.
+				{%CURRENCY_1%} 履歴はありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -47,28 +47,28 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
 		<table class="table table-bordered table-striped table-recomb mb-2">
 			<thead>
 				<tr>
-					<th style="vertical-align:middle;">Date and time</th>
-					<th style="vertical-align:middle;">Type</th>
-					<th style="width:150px; vertical-align:middle;">Consumption</th>
-					<th style="width:150px; vertical-align:middle;">Increase<br />(Expired)</th>
-					<th style="width:150px; vertical-align:middle;">Balance</th>
+					<th style="vertical-align:middle;">日時</th>
+					<th style="vertical-align:middle;">種別</th>
+					<th style="width:150px; vertical-align:middle;">消費</th>
+					<th style="width:150px; vertical-align:middle;">増加<br />(有効期限)</th>
+					<th style="width:150px; vertical-align:middle;">残高</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--loop:{LIST}-->
 				<tr>
-					<td aria-label="Date and tim" class="text-center" style="vertical-align:middle;">{%PROC_DT%}</td>
-					<td aria-label="Type" class="text-center" style="vertical-align:middle;">{%TYPE_LABEL%}</td>
-					<td aria-label="Consumption" class="text-right" style="vertical-align:middle;">{%POINT_SUM%}</td>
-					<td aria-label="Increase(Expired)" class="text-right" style="vertical-align:middle;">{%POINT_ADD%}<br />(<!--if:{LIMIT_DT}-->{%LIMIT_DT%}<!--/if:{LIMIT_DT}-->)</td>
-					<td aria-label="Balance" class="text-right" style="vertical-align:middle;">{%AFTER_POINT%}</td>
+					<td aria-label="日時" class="text-center" style="vertical-align:middle;">{%PROC_DT%}</td>
+					<td aria-label="種別" class="text-center" style="vertical-align:middle;">{%TYPE_LABEL%}</td>
+					<td aria-label="消費" class="text-right" style="vertical-align:middle;">{%POINT_SUM%}</td>
+					<td aria-label="増加(有効期限)" class="text-right" style="vertical-align:middle;">{%POINT_ADD%}<br />(<!--if:{LIMIT_DT}-->{%LIMIT_DT%}<!--/if:{LIMIT_DT}-->)</td>
+					<td aria-label="残高" class="text-right" style="vertical-align:middle;">{%AFTER_POINT%}</td>
 				</tr>
 				<!--/loop:{LIST}-->
 			</tbody>
@@ -81,7 +81,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		<!--/if:{LISTS}-->

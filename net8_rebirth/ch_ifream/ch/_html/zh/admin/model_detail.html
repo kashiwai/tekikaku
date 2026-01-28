@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 机型情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();" enctype="multipart/form-data">
+					<input type="hidden" name="MODEL_NO" value="{%MODEL_NO%}">
+					<input type="hidden" name="OLD_CATEGORY" value="{%OLD_CATEGORY%}">
+					<input type="hidden" name="IMAGE_REEL" value="{%IMAGE_REEL%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-wrench"></i> 机型情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>カテゴリ<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>{%RDO_CATEGORY%}</td>
+								</tr>
+								<tr>
+									<th>机型CD<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MODEL_CD" value="{%MODEL_CD%}" maxlength="20">
+									</td>
+								</tr>
+								<tr>
+									<th>机型名<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MODEL_NAME" value="{%MODEL_NAME%}" maxlength="50" style="width:100%;">
+									</td>
+								</tr>
+								<tr>
+									<th>机型名（英語）<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MODEL_ROMAN" value="{%MODEL_ROMAN%}" maxlength="200" style="width:100%;">
+									</td>
+								</tr>
+								<tr>
+									<th>タイプ<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select custom-select-sm" id="TYPE_NO" name="TYPE_NO">
+											{%SEL_TYPE%}
+										</select>
+									</td>
+								</tr>
+								<tr class="slot">
+									<th>号機<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select custom-select-sm" id="UNIT_NO" name="UNIT_NO">
+											{%SEL_UNIT%}
+										</select>
+									</td>
+								</tr>
+								<!--if:{TRACK_BONUS_BREAKDOWN}-->
+								<tr>
+									<th>連チャンゲーム数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="RENCHAN_GAMES" value="{%RENCHAN_GAMES%}" maxlength="4" style="width:20%;">
+									</td>
+								</tr>
+								<tr>
+									<th>天井ゲーム数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="TENJO_GAMES" value="{%TENJO_GAMES%}" maxlength="4" style="width:20%;">
+									</td>
+								</tr>
+								<!--/if:{TRACK_BONUS_BREAKDOWN}-->
+								<tr>
+									<th>制造商<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select custom-select-sm" id="MAKER_NO" name="MAKER_NO">
+											{%SEL_MAKER%}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>リスト画像<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div id="preview1">
+											<!--if:{EDIT_IMG}--><img src="../img/base/{%IMAGE_LIST%}" width="150"><!--/if:{EDIT_IMG}-->
+										</div>
+										<div class="mt-2">
+											<!--if:{EDIT_IMG}-->新しい画像を选择<br><!--/if:{EDIT_IMG}-->
+											<input type="file" name="IMAGE_LIST_NEW" id="upimg1" data-target="#preview1" data-type="list" accept="{%IMG_EXT%}">
+											<input type="hidden" name="IMAGE_LIST" value="{%IMAGE_LIST%}">
+											<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 推奨サイズ：縦150px × 横150px 以上<br />
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> ファイルサイズ <strong class="text-danger">{%UPFILE_IMG_MAX%}MBまでの「{%UPFILE_IMG_EXT%}」形式</strong> の画像ファイルのみアップロード可能です。
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>詳細画像<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div id="preview2">
+											<!--if:{EDIT_IMG}--><img src="../img/base/{%IMAGE_DETAIL%}" width="150"><!--/if:{EDIT_IMG}-->
+										</div>
+										<div class="mt-2">
+											<!--if:{EDIT_IMG}-->新しい画像を选择<br><!--/if:{EDIT_IMG}-->
+											<input type="file" name="IMAGE_DETAIL_NEW" id="upimg2" data-target="#preview2" data-type="detail" accept="{%IMG_EXT%}">
+											<input type="hidden" name="IMAGE_DETAIL" value="{%IMAGE_DETAIL%}">
+											<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 推奨サイズ：縦460px × 横300px 以上<br />
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> ファイルサイズ <strong class="text-danger">{%UPFILE_IMG_MAX%}MBまでの「{%UPFILE_IMG_EXT%}」形式</strong> の画像ファイルのみアップロード可能です。
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>机型情報画像<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div id="preview3">
+											<!--if:{EDIT_IMG_REEL}--><img src="../img/base/{%IMAGE_REEL%}" width="150"><!--/if:{EDIT_IMG_REEL}-->
+										</div>
+										<div class="mt-2">
+											<!--if:{EDIT_IMG_REEL}-->新しい画像を选择<br><!--/if:{EDIT_IMG_REEL}-->
+											<input type="file" name="IMAGE_REEL_NEW" id="upimg3" data-target="#preview3" data-type="reel" accept="{%IMG_EXT%}">
+											<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 推奨サイズ：縦500px × 横280px 以上<br />
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> ファイルサイズ <strong class="text-danger">{%UPFILE_IMG_MAX%}MBまでの「{%UPFILE_IMG_EXT%}」形式</strong> の画像ファイルのみアップロード可能です。
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr class="pachi">
+									<th>賞球设置データ</th>
+									<td>
+										<ul class="prizeball_setting">
+											<li><span>保留数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_MAX" value="{%PRIZEBALL_DATA_MAX%}" maxlength="1"></li>
+											<li><span>最大保留入賞率<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_MAX_RATE" value="{%PRIZEBALL_DATA_MAX_RATE%}" maxlength="3"> %</li>
+											<li><span>へそ賞球<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_NAVEL" value="{%PRIZEBALL_DATA_NAVEL%}" maxlength="4"></li>
+											<li><span>電チュー賞球<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_TULIP" value="{%PRIZEBALL_DATA_TULIP%}" maxlength="4"></li>
+											<li><span>アタッカー1賞球<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_ATTACKER1" value="{%PRIZEBALL_DATA_ATTACKER1%}" maxlength="20"></li>
+											<li><span>アタッカー2賞球<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_ATTACKER2" value="{%PRIZEBALL_DATA_ATTACKER2%}" maxlength="20"></li>
+											<li><span>V入賞モード<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: {%RDO_PRIZEBALL_DATA_V_PRIZE%}</li>
+											<li><span>自動チャンスボタン<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></span>: {%RDO_PRIZEBALL_DATA_AUTOCHANCE%}</li>
+											<li><span>電チュー賞球回転数</span>: <input type="text" class="form-control" name="PRIZEBALL_DATA_TULIP_COUNT" value="{%PRIZEBALL_DATA_TULIP_COUNT%}" maxlength="2"></li>
+											<li><span>特殊賞球処理</span>: {%RDO_PRIZEBALL_DATA_ATTACKER2NOT%}</li>
+										</ul>
+									</td>
+								</tr>
+								<tr class="slot">
+									<th>非表示項目
+										<div class="custom-control custom-checkbox custom-control-inline">
+											<input type="checkbox" class="custom-control-input" id="clsLayoutName" value="" onClick="AllCheckChg(1, 'clsLayoutName', this.checked);">
+											<label class="custom-control-label" for="clsLayoutName">一括On/Off</label>
+										</div>
+									</th>
+									<td>
+										<!--loop:{LAYOUTLIST}-->
+										<div class="custom-control custom-checkbox custom-control-inline">
+											<input type="checkbox" class="custom-control-input clsLayoutName" id="{%LAYOUT_NAME%}" name="{%LAYOUT_NAME%}" value="1" {%LAYOUT_CHECK%}>
+											<label class="custom-control-label" for="{%LAYOUT_NAME%}">{%LAYOUT_LABEL%}</label>
+										</div>
+										<!--/loop:{LAYOUTLIST}-->
+									</td>
+								</tr>
+								
+								
+								<tr class="slot">
+									<th>基盤バージョン<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select custom-select-sm" id="boarde_ver" name="BOARD_VER">
+											{%SEL_BOARD%}
+										</select>
+										
+									</td>
+								</tr>
+								
+								<tr class="pushorder settinglist">
+									<th>设置値リスト
+										<div class="custom-control custom-checkbox custom-control-inline">
+											<input type="checkbox" class="custom-control-input" id="clsSettingList" value="" checked onClick="AllCheckChg(2, 'SETTING_LIST', this.checked);">
+											<label class="custom-control-label" for="clsSettingList">一括On/Off</label>
+										</div>
+									</th>
+									<td>{%CHK_SETTING_LIST%}</td>
+								</tr>
+								
+								<tr class="pushorder">
+									<th>強制払出クレジット</th>
+									<td>
+										<input type="text" class="form-control" name="LIMITCREDIT" value="{%LIMITCREDIT%}" maxlength="7" style="width:20%;">
+									</td>
+								</tr>
+								
+								<tr class="pushorder">
+									<th>制限時間</th>
+									<td>
+										<input type="text" class="form-control" name="LIMITTIME" value="{%LIMITTIME%}" maxlength="5" style="width:20%;">
+									</td>
+								</tr>
+								
+								<tr class="pushorder pushorder_img">
+									<th>プッシュオーダー画像<br />
+										<span class="text-danger">※ラベル名重複不可</span>
+									</th>
+									<td>
+										<div class="row">
+											<!--loop:{PUSHORDERLIST}-->
+											<div class="col-sm-6 pb-3 mb-2 border-bottom">
+												<div class="text-primary"><strong>画像 {%PUSH_NO%}</strong></div>
+												<div>
+													ラベル名 : <input type="text" class="form-control" name="PUSH_LABEL[{%PUSH_NO%}]" value="{%PUSH_LABEL%}" maxlength="20" style="width:60%;">
+												</div>
+												<div id="preview_push{%PUSH_NO%}" class="mt-2">
+													<!--if:{EDIT_IMG_PUSH}--><img src="../img/base/{%IMG_PUSH%}" width="150"><!--/if:{EDIT_IMG_PUSH}-->
+												</div>
+												<div class="mt-2">
+													<!--if:{EDIT_IMG_PUSH}-->新しい画像を选择<br><!--/if:{EDIT_IMG_PUSH}-->
+													<input type="file" name="IMAGE_PUSH_NEW[{%PUSH_NO%}]" id="upimg_push{%PUSH_NO%}" data-target="#preview_push{%PUSH_NO%}" data-type="pushorder" accept="{%IMG_EXT%}">
+													<input type="hidden" name="IMAGE_PUSH[{%PUSH_NO%}]" value="{%IMG_PUSH%}">
+													<div class="mt-1"><button type="button" class="btn btn-secondary btn-sm deletePushImg" data-target="{%PUSH_NO%}">选择画像クリア</button></div>
+												</div>
+											</div>
+											<!--/loop:{PUSHORDERLIST}-->
+										</div>
+										<div class="alert alert-light border border-secondary py-2 mt-0 mb-0">
+											<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 推奨サイズ：縦30px × 横200px 以上<br />
+											<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 1ファイル <strong class="text-danger">{%PUSHORDER_IMG_MAX%}KBまでの「{%UPFILE_IMG_EXT%}」形式</strong> の画像ファイルのみアップロード可能です。
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>備考</th>
+									<td><textarea class="form-control" rows="4" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+								<tr>
+									<th>レイアウトデータ (JSON)<br>
+										<span class="text-muted small">※机型固有の设置（カメラ、ボタン等）</span>
+									</th>
+									<td>
+										<textarea class="form-control" rows="10" name="LAYOUT_DATA" id="LAYOUT_DATA" style="font-family: monospace; font-size: 12px;">{%LAYOUT_DATA%}</textarea>
+										<div class="alert alert-info mt-2 mb-0">
+											<strong>JSON形式で请输入</strong><br>
+											<small>
+												例: <code>{"video_portrait":0,"video_mode":4,"drum":0,"bonus_push":[{"label":"select","path":"noselect_bonus.png"}],"version":1,"hide":[]}</code><br>
+												<strong>主要パラメータ:</strong><br>
+												・video_mode: カメラ画質モード (1-5)<br>
+												・drum: ドラム表示 (0=非表示, 1=表示)<br>
+												・bonus_push: ボーナスボタン设置<br>
+												・version: 基板バージョン (1=旧, 2=新, 3=ROM)<br>
+												・lightsofftime: ボタン点灯タイムアウト(ms)<br>
+												・orderretry: リトライ回数
+											</small>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{UPD}--><!--if:{DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{DEL}--><!--/if:{UPD}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			$(function(){
+				// カテゴリ初期表示時
+				changeCategory($('input[name="CATEGORY"]:checked').val(), false);
+				// カテゴリ切替時
+				$('form input[name="CATEGORY"]').on('change', function(){
+					changeCategory($(this).val(), true);
+				});
+				function changeCategory(cat, clr) {
+					if (cat == 1) {
+						// パチンコ
+						$('.slot').hide();
+						$('.pachi').show();
+						$('*[data-type="slot"]').hide();
+						$('*[data-type="pachi"]').show();
+						$('.slot').prop("disabled", true);
+						$('.pachi').prop("disabled", false);
+					} else {
+						// スロット
+						$('.slot').show();
+						$('.pachi').hide();
+						$('*[data-type="slot"]').show();
+						$('*[data-type="pachi"]').hide();
+						$('.slot').prop("disabled", false);
+						$('.pachi').prop("disabled", true);
+					}
+					if ($('[name="OLD_CATEGORY"]').val().length == 0 || clr) {
+						//选择解除
+						$("#TYPE_NO").val("");
+						$("#MAKER_NO").val("");
+						$('select[name="BOARD_VER"]').val("");
+						changeBoard();
+					}
+				}
+
+				// 基盤バージョン初期表示時
+				changeBoard();
+				// 基盤バージョン更改時
+				$('select[name="BOARD_VER"]').on('change', function(){
+					changeBoard();
+				});
+				function changeBoard() {
+					if ($('select[name="BOARD_VER"] option:selected').data("add") == "1") {
+						$('.pushorder').show();
+						<!--if:{USE_ADD_SPECIAL}-->
+						var spec = $('select[name="BOARD_VER"] option:selected').data("spec")
+						var specAry = spec.split(",");
+						for (var i = 0; i < specAry.length; i++) {
+							var specItem = specAry[i].split("-");
+							if (specItem[1] == "1") {
+								$('.' + specItem[0]).show();
+							} else {
+								$('.' + specItem[0]).hide();
+							}
+						}
+						<!--/if:{USE_ADD_SPECIAL}-->
+					} else {
+						$('.pushorder').hide();
+					}
+				}
+				
+				//画像ファイルプレビュー表示
+				var img_exts = [{%UPFILE_IMG_TYPE%}];
+				$('form input[type=file]').each( function(){
+					$(this).on('change', function(e){
+						var file = e.target.files[0],
+							reader = new FileReader(),
+							imgType = $(this).data("type"),
+							maxsize = "{%UPFILE_IMG_MAXBYTE%}",
+							errmsg = {ext : '', size : ''},
+							$preview = $($(this).data('target'));
+						
+						switch (imgType) {
+							case 'detail':
+								errmsg.ext = "{%A1445%}";
+								errmsg.size = "{%A1446%}";
+								break;
+							case 'reel':
+								errmsg.ext = "{%A1447%}";
+								errmsg.size = "{%A1448%}";
+								break;
+							case 'pushorder':
+								errmsg.ext = "{%A1449%}";
+								errmsg.size = "{%A1450%}";
+								maxsize = "{%PUSHORDER_IMG_MAXBYTE%}";
+								break;
+							default:
+								errmsg.ext = "{%A1443%}";
+								errmsg.size = "{%A1444%}";
+						}
+						// 拡張子チェック
+						if (img_exts.indexOf(file.type) < 0) {
+							$preview.empty();
+							$(this).val('');
+							chkAlert(errmsg.ext);
+							return false;
+						}
+						// サイズチェック
+						if (file.size > parseInt(maxsize, 10)) {
+							$preview.empty();
+							$(this).val('');
+							chkAlert(errmsg.size);
+							return false;
+						}
+
+						// ファイル読み込みが完了した際のイベント注册
+						reader.onload = (function(file) {
+							return function(e) {
+								//既存のプレビューを删除
+								$preview.empty();
+								// .prevewの領域の中にロードした画像を表示するimageタグを添加
+								$preview.append($('<img>').attr({
+									src: e.target.result,
+									width: "150px",
+									class: "preview",
+									title: file.name
+								}));
+							};
+						})(file);
+						reader.readAsDataURL(file);
+					});
+				});
+				
+				// 画像解除
+				$('.deletePushImg').on('click', function(){
+					var _target = parseInt($(this).data("target"), 10);
+					$('#preview_push'+_target).find('img').remove();
+					$('input[name="PUSH_LABEL['+_target+']"]').val("");
+					$('input[name="IMAGE_PUSH['+_target+']"]').val("");
+					$('input[name="IMAGE_PUSH_NEW['+_target+']"]').val("");
+					return false;
+				});
+			});
+			
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				
+				//机型コード
+				if (!chk_indis("{%A1420%}", frm["MODEL_CD"].value)) return false;
+				if (!chk_alnum("{%A1454%}", frm["MODEL_CD"].value, false, "-\_")) return false;
+				//机型名
+				if (!chk_indis("{%A1402%}", frm["MODEL_NAME"].value)) return false;
+				if (frm["MODEL_NAME"].value.length > 50) {
+					chkAlert("{%A1403%}");
+					return false;
+				}
+				//机型名（英語）
+				if (!chk_indis("{%A1404%}", frm["MODEL_ROMAN"].value)) return false;
+				if (frm["MODEL_ROMAN"].value.length > 200) {
+					chkAlert("{%A1405%}");
+					return false;
+				}
+				
+				var category;
+				if ($("input[name='CATEGORY']").prop("disabled")) {
+					$("input[name='CATEGORY']").prop("disabled", false);
+					category = $("input[name='CATEGORY']:checked").val();
+					$("input[name='CATEGORY']").prop("disabled", true);
+				} else {
+					category = $("input[name='CATEGORY']:checked").val();
+				}
+				
+				//タイプ
+				if (!chk_indis("{%A1406%}", frm["TYPE_NO"].value)) return false;
+				if( category == 1){
+					if( frm["TYPE_NO"].value > 4){
+						chkAlert("{%A1421%}");
+					}
+				}else if(category == 2){
+					if( frm["TYPE_NO"].value < 5){
+						chkAlert("{%A1422%}");
+					}
+				}
+				//号機
+				if( category == 2){
+					if (!chk_indis("{%A1407%}", frm["UNIT_NO"].value)) return false;
+				}
+				<!--if:{TRACK_BONUS_BREAKDOWN}-->
+				// 連チャンゲーム数
+				if (!chk_indis("{%A1468%}", frm["RENCHAN_GAMES"].value)) return false;
+				if (!chk_numeric("{%A1467%}", frm["RENCHAN_GAMES"].value, false)) return false;
+				// 天井ゲーム数
+				if (!chk_indis("{%A1475%}", frm["TENJO_GAMES"].value)) return false;
+				if (!chk_numeric("{%A1469%}", frm["TENJO_GAMES"].value, false)) return false;
+				if (chk_indis("", frm["TENJO_GAMES"].value)) {
+					if (parseInt(frm["TENJO_GAMES"].value, 10) < 1) {
+						chkAlert("{%A1470%}");
+						return false;
+					}
+				}
+				<!--/if:{TRACK_BONUS_BREAKDOWN}-->
+				//制造商
+				if (!chk_indis("{%A1409%}", frm["MAKER_NO"].value)) return false;
+				//リスト画像
+				if (!chk_indis("{%A1410%}", frm["IMAGE_LIST_NEW"].value + frm["IMAGE_LIST"].value)) return false;
+				//詳細画像
+				if (!chk_indis("{%A1412%}", frm["IMAGE_DETAIL_NEW"].value + frm["IMAGE_DETAIL"].value)) return false;
+				//リール画像
+				if (!chk_indis("{%A1414%}", frm["IMAGE_REEL_NEW"].value + frm["IMAGE_REEL"].value)) return false;
+				// 基盤バージョン
+				if( category == 2){
+					if (!chk_indis("{%A1459%}", frm["BOARD_VER"].value)) return false;
+				}
+				//賞球设置データ
+				if( category == 1){
+					if (!chk_indis("{%A1423%}", frm["PRIZEBALL_DATA_MAX"].value)) return false;
+					if (!chk_numeric("{%A1424%}", frm["PRIZEBALL_DATA_MAX"].value)) return false;
+					if (!chk_indis("{%A1425%}", frm["PRIZEBALL_DATA_MAX_RATE"].value)) return false;
+					if (!chk_numeric("{%A1426%}", frm["PRIZEBALL_DATA_MAX_RATE"].value)) return false;
+					pMaxRate = parseInt(frm["PRIZEBALL_DATA_MAX_RATE"].value, 10);
+					if (pMaxRate < 0 || 100 < pMaxRate) {
+						chkAlert("{%A1471%}");
+						return false;
+					}
+					if (!chk_indis("{%A1427%}", frm["PRIZEBALL_DATA_NAVEL"].value)) return false;
+					if (!chk_numericEx("{%A1428%}", frm["PRIZEBALL_DATA_NAVEL"].value)) return false;
+					if (!chk_indis("{%A1429%}", frm["PRIZEBALL_DATA_TULIP"].value)) return false;
+					if (!chk_numericEx("{%A1430%}", frm["PRIZEBALL_DATA_TULIP"].value)) return false;
+					if (!chk_indis("{%A1431%}", frm["PRIZEBALL_DATA_ATTACKER1"].value)) return false;
+					if (!chk_numericEx("{%A1432%}", frm["PRIZEBALL_DATA_ATTACKER1"].value)) return false;
+					if (!chk_indis("{%A1433%}", frm["PRIZEBALL_DATA_ATTACKER2"].value)) return false;
+					if (!chk_numericEx("{%A1434%}", frm["PRIZEBALL_DATA_ATTACKER2"].value)) return false;
+					if (!chk_indis("{%A1472%}", frm["PRIZEBALL_DATA_V_PRIZE"].value)) return false;
+					if (!chk_indis("{%A1473%}", frm["PRIZEBALL_DATA_AUTOCHANCE"].value)) return false;
+					if (!chk_numeric("{%A1474%}", frm["PRIZEBALL_DATA_TULIP_COUNT"].value)) return false;
+				}
+
+				// レイアウトデータ（JSON形式チェック）
+				if (frm["LAYOUT_DATA"].value != "" && frm["LAYOUT_DATA"].value.trim() != ""){
+					try{
+						var layoutData = JSON.parse(frm["LAYOUT_DATA"].value);
+						// 基本的な構造チェック（可选）
+						console.log("Layout Data parsed successfully:", layoutData);
+					}catch(e){
+						alert("レイアウトデータのJSON形式が正しくありません。\n\nエラー: " + e.message + "\n\n正しいJSON形式で请输入。");
+						return false;
+					}
+				}
+
+				//基盤系チェック
+				if( category == 2){
+					var labelname = [];		// ラベル名重複チェック用
+					if ($('select[name="BOARD_VER"] option:selected').data("add") == "1") {
+						<!--if:{USE_ADD_SPECIAL}-->
+						// 基盤別特殊添加设置
+						var spec = $('select[name="BOARD_VER"] option:selected').data("spec")
+						var specAry = spec.split(",");
+						for (var i = 0; i < specAry.length; i++) {
+							var specItem = specAry[i].split("-");
+							if (specItem[1] != "1") continue;
+							switch (specItem[0]) {
+								case "settinglist":		// 设置リスト
+									var isChk = false;
+									for (var j = 0; j < frm["SETTING_LIST[]"].length; j++) {
+										if (frm["SETTING_LIST[]"][j].checked) {
+											isChk = true;
+											break;
+										}
+									}
+									if (!isChk) {
+										chkAlert("{%A1466%}");
+										return false;
+									}
+									break;
+							}
+						}
+						<!--/if:{USE_ADD_SPECIAL}-->
+
+						if (!chk_numeric("{%A1436%}", frm["LIMITCREDIT"].value, false)) return false;
+						if (!chk_numeric("{%A1437%}", frm["LIMITTIME"].value, false)) return false;
+						//画像個別チェック
+						for( var i=1; i<={%PUSH_ORDER_COUNT%}; i++){
+							if( frm["PUSH_LABEL[" + i + "]"].value != ""){
+								var _er = "{%A1441%}".replace("%i%", i);
+								if (!chk_indis( _er, frm["IMAGE_PUSH_NEW[" + i + "]"].value + frm["IMAGE_PUSH[" + i + "]"].value)) return false;
+								labelname.push(frm["PUSH_LABEL[" + i + "]"].value);
+							}
+							if( frm["IMAGE_PUSH_NEW[" + i + "]"].value + frm["IMAGE_PUSH[" + i + "]"].value != ""){
+								var _er = "{%A1440%}".replace("%i%", i);
+								if (!chk_indis( _er, frm["PUSH_LABEL[" + i + "]"].value)) return false;
+							}
+						}
+						//画像間抜けチェック
+						for( var i=({%PUSH_ORDER_COUNT%}-1); i>1; i--){
+							if( frm["IMAGE_PUSH_NEW[" + i + "]"].value + frm["IMAGE_PUSH[" + i + "]"].value != "" && frm["PUSH_LABEL[" + i + "]"].value != ""){
+								var _bi   = i - 1;
+								var _er_l = "{%A1440%}".replace("%i%", _bi);
+								var _er_i = "{%A1441%}".replace("%i%", _bi);
+								if (!chk_indis( _er_l, frm["PUSH_LABEL[" + _bi + "]"].value)) return false;
+								if (!chk_indis( _er_i, frm["IMAGE_PUSH_NEW[" + _bi + "]"].value + frm["IMAGE_PUSH[" + _bi + "]"].value)) return false;
+							}
+						}
+						// ラベル名重複チェック
+						if (labelname.length > 0) {
+							var overlap = labelname.filter(function (x, i, self) {
+								return self.indexOf(x) === i && i !== self.lastIndexOf(x);
+							});
+							if (overlap.length > 0) {
+								chkAlert("{%A1453%}");
+								return false;
+							}
+						}
+					}
+				}
+				
+				//
+				swal({
+					title: '机型情報注册',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					$("input[name='CATEGORY']").prop("disabled", false);
+					// 実行
+					frm.submit();
+				});
+				return false;
+			}
+			
+			// 删除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '机型情報删除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+			
+			// 一括On/Off
+			function AllCheckChg(trgType, trgItem, setVal) {
+				if (trgType == 1) {
+					$('.' + trgItem).prop('checked', setVal);
+				} else {
+					$('input[name="' + trgItem + '[]"]').prop('checked', setVal);
+				}
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

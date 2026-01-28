@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Play history</title>
+		<title>{%SITE_TITLE%} - Play履歴</title>
 	</head>
 
 	<body>
@@ -11,13 +11,13 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Play history</h1>
+		<h1 class="h3 text-center my-4">Play履歴</h1>
 		<hr>
 		
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				There is no Play history.
+				Play履歴はありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -30,45 +30,45 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
 		<table class="table table-bordered table-striped table-recomb mb-2">
 			<thead>
 				<tr>
-					<th rowspan="2" style="width:100px;">Start Date and Time</th>
-					<th rowspan="2" style="width:100px;">End Date and Time</th>
-					<th rowspan="2">Model Name</th>
+					<th rowspan="2" style="width:100px;">開始日時</th>
+					<th rowspan="2" style="width:100px;">終了日時</th>
+					<th rowspan="2">Model名</th>
 					<th colspan="3">{%CURRENCY_2%}</th>
 					<th colspan="3">{%CURRENCY_1%}</th>
 					<th style="width:100px;">{%CURRENCY_3%}</th>
-					<th rowspan="2" style="width:60px;">Inquiries</th>
+					<th rowspan="2" style="width:60px;">問合せ</th>
 				</tr>
 				<tr class="table-subhead">
-					<th style="width:50px;">Consumption</th>
-					<th style="width:50px;">Defrayment</th>
-					<th style="width:50px;">Difference</th>
-					<th style="width:50px;">Consumption</th>
-					<th style="width:50px;">Defrayment</th>
-					<th style="width:50px;">Difference</th>
-					<th>Defrayment</th>
+					<th style="width:50px;">消費</th>
+					<th style="width:50px;">払出</th>
+					<th style="width:50px;">差分</th>
+					<th style="width:50px;">消費</th>
+					<th style="width:50px;">払出</th>
+					<th style="width:50px;">差分</th>
+					<th>払出</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--loop:{LIST}-->
 				<tr>
-					<td aria-label="Start Date and Time" class="text-center">{%START_DT%}</td>
-					<td aria-label="End Date and Time" class="text-center">{%END_DT%}</td>
-					<td aria-label="Model Name">{%MODEL_NAME%}</td>
-					<td aria-label="{%CURRENCY_2%} Consumption" class="text-right">{%IN_CREDIT%}</td>
-					<td aria-label="{%CURRENCY_2%} Defrayment" class="text-right">{%OUT_CREDIT%}</td>
-					<td aria-label="{%CURRENCY_2%} Difference" class="text-right">{%CREDIT_DIFFERENCE%}</td>
-					<td aria-label="{%CURRENCY_1%} Consumption" class="text-right">{%IN_POINT%}</td>
-					<td aria-label="{%CURRENCY_1%} Defrayment" class="text-right">{%OUT_POINT%}</td>
-					<td aria-label="{%CURRENCY_1%} Difference" class="text-right">{%POINT_DIFFERENCE%}</td>
-					<td aria-label="Defrayment" class="text-right">{%OUT_DRAW_POINT%}</td>
-					<td aria-label="Inquiries" class="text-center"><button type="button" class="btn btn-outline-info btn-inner-tbl" onclick="location.href='{%SITE_SSL_URL%}inquiry.php?MACHINENO={%MACHINE_NO%}&DATE={%DATE%}';"><i class="far fa-envelope"></i></button></td>
+					<td aria-label="開始日時" class="text-center">{%START_DT%}</td>
+					<td aria-label="終了日時" class="text-center">{%END_DT%}</td>
+					<td aria-label="Model名">{%MODEL_NAME%}</td>
+					<td aria-label="メダル消費" class="text-right">{%IN_CREDIT%}</td>
+					<td aria-label="メダル払出" class="text-right">{%OUT_CREDIT%}</td>
+					<td aria-label="メダル差分" class="text-right">{%CREDIT_DIFFERENCE%}</td>
+					<td aria-label="LP消費" class="text-right">{%IN_POINT%}</td>
+					<td aria-label="LP払出" class="text-right">{%OUT_POINT%}</td>
+					<td aria-label="LP差分" class="text-right">{%POINT_DIFFERENCE%}</td>
+					<td aria-label="払出" class="text-right">{%OUT_DRAW_POINT%}</td>
+					<td aria-label="問い合わせ" class="text-center"><button type="button" class="btn btn-outline-info btn-inner-tbl" onclick="location.href='{%SITE_SSL_URL%}inquiry.php?MACHINENO={%MACHINE_NO%}&DATE={%DATE%}';"><i class="far fa-envelope"></i></button></td>
 				</tr>
 				<!--/loop:{LIST}-->
 			</tbody>
@@ -81,7 +81,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		<!--/if:{LISTS}-->

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%}</title>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation_sub.html"-->
+
+		<div id="wrapper">
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<div class="container-fluid">
+					<h3 class="page-header mt-2">{%TITLE%}</h3>
+					<!--if:{STRONG_MESSAGE}-->
+					<div class="alert alert-secondary">
+						<h4 class="alert-heading">{%STRONG_MESSAGE%}</h4>
+					</div>
+					<!--/if:{STRONG_MESSAGE}-->
+
+					<div class="card">
+						<div class="card-body">
+							{%MESSAGE%}
+						</div>
+						<div class="card-footer text-right">
+							<a href="javascript:window.close();" class="btn btn-secondary">关闭</a>
+						</div>
+					</div>
+				</div><!-- /.container-fluid -->
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+
+		<!--#include file="inc_script.html"-->
+
+	<script type="text/javascript">
+	// ウィンドウClose
+	function mainReload(reload) {
+		if (reload) reload_mainwin(false);
+	}
+	// 初期処理
+	function init() {
+		mainReload({%RELOAD%});
+	}
+
+	window.onload=init
+	</script>
+
+	</body>
+
+</html>

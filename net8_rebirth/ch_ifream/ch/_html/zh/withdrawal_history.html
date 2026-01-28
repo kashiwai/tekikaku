@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 出金履歴</title>
+		<style>
+			/* パチンコ台風 出金履歴デザイン */
+			.withdrawal-history-container {
+				max-width: 1000px;
+				margin: 40px auto;
+				padding: 20px;
+			}
+
+			.history-header {
+				text-align: center;
+				margin-bottom: 40px;
+			}
+
+			.history-header h2 {
+				font-size: 2rem;
+				color: #ffd700;
+				text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+				text-transform: uppercase;
+				letter-spacing: 3px;
+			}
+
+			.filter-section {
+				background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+				border: 2px solid #ffd700;
+				border-radius: 10px;
+				padding: 20px;
+				margin-bottom: 30px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: 15px;
+			}
+
+			.filter-label {
+				color: #ffd700;
+				font-size: 1.1rem;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+			}
+
+			.filter-buttons {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+			}
+
+			.filter-btn {
+				padding: 10px 20px;
+				background: linear-gradient(135deg, #333, #1a1a1a);
+				border: 2px solid #666;
+				border-radius: 8px;
+				color: #aaa;
+				font-size: 1rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				text-decoration: none;
+				display: inline-block;
+			}
+
+			.filter-btn:hover {
+				border-color: #ffd700;
+				color: #ffd700;
+			}
+
+			.filter-btn.active {
+				background: linear-gradient(135deg, #ffd700, #ffaa00);
+				border-color: #ff0000;
+				color: #000;
+				font-weight: bold;
+			}
+
+			.total-count {
+				color: #00ff00;
+				font-size: 1.2rem;
+				text-align: center;
+				margin-bottom: 20px;
+			}
+
+			.withdrawal-card {
+				background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+				border: 2px solid #ffd700;
+				border-radius: 10px;
+				padding: 20px;
+				margin-bottom: 20px;
+				box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+				transition: all 0.3s ease;
+			}
+
+			.withdrawal-card:hover {
+				box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+				transform: translateY(-2px);
+			}
+
+			.withdrawal-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 15px;
+				padding-bottom: 10px;
+				border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+			}
+
+			.withdrawal-no {
+				color: #aaa;
+				font-size: 0.9rem;
+			}
+
+			.withdrawal-status {
+				font-size: 1.1rem;
+				font-weight: bold;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				padding: 5px 15px;
+				background: rgba(0, 0, 0, 0.5);
+				border-radius: 5px;
+				text-shadow: 0 0 5px currentColor;
+			}
+
+			.withdrawal-body {
+				display: grid;
+				gap: 10px;
+			}
+
+			.withdrawal-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 10px 0;
+			}
+
+			.withdrawal-row .label {
+				color: #aaa;
+				font-size: 1rem;
+			}
+
+			.withdrawal-row .value {
+				color: #ffd700;
+				font-size: 1.1rem;
+				font-weight: bold;
+				font-family: 'Chakra Petch', sans-serif;
+				text-align: right;
+			}
+
+			.withdrawal-row .value.highlight {
+				color: #00ff00;
+				font-size: 1.3rem;
+				text-shadow: 0 0 5px #00ff00;
+			}
+
+			.reject-reason {
+				margin-top: 15px;
+				padding: 15px;
+				background: linear-gradient(135deg, #2d0000 0%, #1a0000 100%);
+				border: 2px solid #ff0000;
+				border-radius: 8px;
+				color: #ff6666;
+				line-height: 1.6;
+			}
+
+			.no-data {
+				text-align: center;
+				padding: 60px 20px;
+				color: #aaa;
+				font-size: 1.3rem;
+				background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+				border: 2px solid #666;
+				border-radius: 10px;
+			}
+
+			.pagination {
+				display: flex;
+				justify-content: center;
+				gap: 10px;
+				margin-top: 30px;
+				flex-wrap: wrap;
+			}
+
+			.page-link {
+				padding: 10px 20px;
+				background: linear-gradient(135deg, #333, #1a1a1a);
+				border: 2px solid #666;
+				border-radius: 8px;
+				color: #aaa;
+				font-size: 1rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				text-decoration: none;
+			}
+
+			.page-link:hover {
+				border-color: #ffd700;
+				color: #ffd700;
+			}
+
+			.page-link.active {
+				background: linear-gradient(135deg, #ffd700, #ffaa00);
+				border-color: #ff0000;
+				color: #000;
+				font-weight: bold;
+			}
+
+			.btn-new-withdrawal {
+				width: 100%;
+				max-width: 400px;
+				margin: 30px auto;
+				display: block;
+				padding: 20px;
+				background: linear-gradient(135deg, #ff0000, #cc0000);
+				border: 3px solid #ffd700;
+				border-radius: 10px;
+				color: white;
+				font-size: 1.3rem;
+				font-weight: bold;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+				cursor: pointer;
+				box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+				transition: all 0.3s ease;
+				text-decoration: none;
+				text-align: center;
+			}
+
+			.btn-new-withdrawal:hover {
+				background: linear-gradient(135deg, #ff3333, #ff0000);
+				box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+				transform: scale(1.05);
+			}
+
+			.btn-back {
+				width: 100%;
+				max-width: 400px;
+				margin: 20px auto;
+				display: block;
+				padding: 15px;
+				background: linear-gradient(135deg, #333, #1a1a1a);
+				border: 2px solid #666;
+				border-radius: 10px;
+				color: #aaa;
+				font-size: 1.1rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+			.btn-back:hover {
+				border-color: #ffd700;
+				color: #ffd700;
+			}
+		</style>
+	</head>
+
+	<body id="withdrawal_history_page" class="ip-page after-login">
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+		<div class="withdrawal-history-container">
+
+			<div class="history-header">
+				<h2>📋 出金履歴 📋</h2>
+			</div>
+
+			<!-- フィルターセクション -->
+			<div class="filter-section">
+				<span class="filter-label">ステータス:</span>
+				<div class="filter-buttons">
+					<a href="withdrawal_history.php" class="filter-btn <!--if:{STATUS_FILTER}--><!--else:{STATUS_FILTER}-->active<!--/if:{STATUS_FILTER}-->">全て</a>
+					<a href="withdrawal_history.php?STATUS=0" class="filter-btn <!--if:{STATUS_FILTER}--><!--if_eq:{STATUS_FILTER}|0-->active<!--/if_eq:{STATUS_FILTER}|0--><!--/if:{STATUS_FILTER}-->">申請中</a>
+					<a href="withdrawal_history.php?STATUS=1" class="filter-btn <!--if:{STATUS_FILTER}--><!--if_eq:{STATUS_FILTER}|1-->active<!--/if_eq:{STATUS_FILTER}|1--><!--/if:{STATUS_FILTER}-->">承認済</a>
+					<a href="withdrawal_history.php?STATUS=9" class="filter-btn <!--if:{STATUS_FILTER}--><!--if_eq:{STATUS_FILTER}|9-->active<!--/if_eq:{STATUS_FILTER}|9--><!--/if:{STATUS_FILTER}-->">送金完了</a>
+					<a href="withdrawal_history.php?STATUS=2" class="filter-btn <!--if:{STATUS_FILTER}--><!--if_eq:{STATUS_FILTER}|2-->active<!--/if_eq:{STATUS_FILTER}|2--><!--/if:{STATUS_FILTER}-->">却下</a>
+				</div>
+			</div>
+
+			<!-- 総件数表示 -->
+			<div class="total-count">
+				全 <strong>{%TOTAL_COUNT%}</strong> 件
+			</div>
+
+			<!-- 出金履歴一覧 -->
+			{%WITHDRAWAL_HTML%}
+
+			<!-- ページネーション -->
+			{%PAGINATION_HTML%}
+
+			<!-- 新規出金申請ボタン -->
+			<a href="{%SITE_SSL_URL%}withdraw.php" class="btn-new-withdrawal">新規出金申請</a>
+
+			<!-- 返回ボタン -->
+			<button type="button" class="btn-back" onclick="history.back()">返回</button>
+
+		</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	<!--#include file="inc_footer.html"-->
+
+	</div>
+	<!-- /wrapper -->
+
+	</body>
+</html>

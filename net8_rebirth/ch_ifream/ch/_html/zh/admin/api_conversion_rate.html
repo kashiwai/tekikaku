@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>API専用点数変換レート管理 - NET8管理画面</title>
+	<link rel="stylesheet" href="/data/xxxadmin/css/admin.css">
+	<style>
+		.stats-panel {
+			background: #f8f9fa;
+			border: 1px solid #dee2e6;
+			border-radius: 5px;
+			padding: 20px;
+			margin-bottom: 20px;
+		}
+		.stats-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 15px;
+		}
+		.stat-card {
+			background: white;
+			border: 1px solid #dee2e6;
+			border-radius: 5px;
+			padding: 15px;
+			text-align: center;
+		}
+		.stat-value {
+			font-size: 2rem;
+			font-weight: bold;
+			color: #007bff;
+		}
+		.stat-label {
+			font-size: 0.9rem;
+			color: #6c757d;
+			margin-top: 5px;
+		}
+		.rate-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+		}
+		.rate-table th,
+		.rate-table td {
+			padding: 10px;
+			text-align: left;
+			border: 1px solid #dee2e6;
+		}
+		.rate-table th {
+			background-color: #007bff;
+			color: white;
+			font-weight: bold;
+		}
+		.rate-table tr:nth-child(even) {
+			background-color: #f8f9fa;
+		}
+		.rate-table tr:hover {
+			background-color: #e9ecef;
+		}
+		.api-rate-badge {
+			background-color: #28a745;
+			color: white;
+			padding: 3px 8px;
+			border-radius: 3px;
+			font-size: 0.8rem;
+		}
+		.normal-rate-badge {
+			background-color: #6c757d;
+			color: white;
+			padding: 3px 8px;
+			border-radius: 3px;
+			font-size: 0.8rem;
+		}
+		.section-title {
+			background: #007bff;
+			color: white;
+			padding: 10px 15px;
+			margin-top: 30px;
+			margin-bottom: 15px;
+			border-radius: 5px;
+		}
+		.btn {
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 1rem;
+			transition: all 0.3s;
+		}
+		.btn-primary {
+			background-color: #007bff;
+			color: white;
+		}
+		.btn-primary:hover {
+			background-color: #0056b3;
+		}
+		.btn-success {
+			background-color: #28a745;
+			color: white;
+		}
+		.btn-success:hover {
+			background-color: #218838;
+		}
+		.btn-warning {
+			background-color: #ffc107;
+			color: #212529;
+		}
+		.btn-warning:hover {
+			background-color: #e0a800;
+		}
+		.action-panel {
+			background: #fff3cd;
+			border: 1px solid #ffc107;
+			border-radius: 5px;
+			padding: 20px;
+			margin-bottom: 20px;
+		}
+		.machine-list {
+			max-height: 400px;
+			overflow-y: auto;
+			border: 1px solid #dee2e6;
+			border-radius: 5px;
+		}
+		.checkbox-label {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>🌐 API専用点数変換レート管理</h1>
+		<p>韓国パチンコプラットフォーム統合のための変換レート设置</p>
+
+		<hr>
+
+		<!-- 統計パネル -->
+		<div class="stats-panel">
+			<h3>📊 現在の状況</h3>
+			<div class="stats-grid">
+				<div class="stat-card">
+					<div class="stat-value">{%TOTAL_MACHINES%}</div>
+					<div class="stat-label">総台数</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" style="color: #28a745;">{%API_MACHINES%}</div>
+					<div class="stat-label">API用レート (1:1)</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" style="color: #6c757d;">{%NORMAL_MACHINES%}</div>
+					<div class="stat-label">通常レート</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 変換レート一覧 -->
+		<div class="section-title">
+			<h2>📋 注册済み変換レート一覧</h2>
+		</div>
+
+		<table class="rate-table">
+			<thead>
+				<tr>
+					<th>convert_no</th>
+					<th>変換名</th>
+					<th>点数</th>
+					<th>クレジット</th>
+					<th>抽選点数</th>
+					<th>変換レート</th>
+					<th>種別</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN CONVERT_RATE -->
+				<tr>
+					<td>{%CONVERT_NO%}</td>
+					<td>{%CONVERT_NAME%}</td>
+					<td>{%POINT%}</td>
+					<td>{%CREDIT%}</td>
+					<td>{%DRAW_POINT%}</td>
+					<td><strong>1:{%RATIO%}</strong></td>
+					<td>
+						<!-- IF IS_API_RATE -->
+						<span class="api-rate-badge">API用 (1:1)</span>
+						<!-- ELSE -->
+						<span class="normal-rate-badge">通常</span>
+						<!-- ENDIF -->
+					</td>
+				</tr>
+				<!-- END CONVERT_RATE -->
+			</tbody>
+		</table>
+
+		<!-- アクションパネル -->
+		<div class="action-panel">
+			<h3>⚙️ 操作</h3>
+
+			<!-- API用レート作成 -->
+			<form method="POST" action="{%SELF%}?M=apply" style="margin-bottom: 20px;">
+				<input type="hidden" name="action" value="create_api_rate">
+				<h4>1. API用変換レート (1:1) を作成</h4>
+				<p>まだAPI用の1:1変換レートが存在しない場合、新規作成します。</p>
+				<button type="submit" class="btn btn-success" {%HAS_API_RATE%}>
+					✅ API用レート作成済み
+				</button>
+				<button type="submit" class="btn btn-primary" style="display: {%HAS_API_RATE%};">
+					➕ API用レート (1:1) を作成
+				</button>
+			</form>
+
+			<hr>
+
+			<!-- 台への適用 -->
+			<form method="POST" action="{%SELF%}?M=apply" id="applyForm">
+				<input type="hidden" name="action" value="apply_to_machines">
+				<h4>2. 変換レートを台に適用</h4>
+
+				<div style="margin-bottom: 15px;">
+					<label>
+						<strong>適用する変換レート:</strong>
+						<select name="target_convert_no" required style="padding: 5px; font-size: 1rem;">
+							<option value="">-- 请选择 --</option>
+							<!-- BEGIN CONVERT_RATE -->
+							<option value="{%CONVERT_NO%}">
+								convert_no: {%CONVERT_NO%} - {%CONVERT_NAME%} (1:{%RATIO%})
+							</option>
+							<!-- END CONVERT_RATE -->
+						</select>
+					</label>
+				</div>
+
+				<div style="margin-bottom: 15px;">
+					<label class="checkbox-label">
+						<input type="checkbox" name="apply_all" value="1" id="applyAllCheckbox" onclick="toggleMachineSelection()">
+						<strong>全台に一括適用</strong>
+					</label>
+				</div>
+
+				<div id="machineSelectionArea" style="margin-bottom: 15px;">
+					<p><strong>または、個別に台を选择:</strong></p>
+					<div class="machine-list">
+						<table class="rate-table">
+							<thead>
+								<tr>
+									<th width="50">选择</th>
+									<th>台番号</th>
+									<th>机型名</th>
+									<th>現在のレート</th>
+									<th>状態</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- BEGIN MACHINE -->
+								<tr>
+									<td>
+										<input type="checkbox" name="machine_nos[]" value="{%MACHINE_NO%}" class="machine-checkbox">
+									</td>
+									<td><strong>{%MACHINE_NO%}</strong></td>
+									<td>{%MODEL_NAME%}</td>
+									<td>1:{%CURRENT_RATIO%}</td>
+									<td>
+										<!-- IF IS_API_MODE -->
+										<span class="api-rate-badge">API</span>
+										<!-- ELSE -->
+										<span class="normal-rate-badge">通常</span>
+										<!-- ENDIF -->
+									</td>
+								</tr>
+								<!-- END MACHINE -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">
+					🚀 適用実行
+				</button>
+			</form>
+		</div>
+
+		<!-- 説明パネル -->
+		<div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 5px; padding: 20px; margin-top: 30px;">
+			<h3>💡 使い方</h3>
+			<ol>
+				<li><strong>API用レート作成:</strong> 最初に「API用レート (1:1) を作成」ボタンをクリックして、1:1変換レートを作成します。</li>
+				<li><strong>台への適用:</strong> 作成したAPI用レートを选择し、「全台に一括適用」または個別の台を选择して適用します。</li>
+				<li><strong>确认:</strong> 適用後、統計パネルでAPI用レートが適用された台数を确认できます。</li>
+			</ol>
+
+			<h4>🎯 期待される動作</h4>
+			<ul>
+				<li>韓国側から发送: <strong>12,000pt</strong></li>
+				<li>NET8受信: <strong>12,000pt</strong></li>
+				<li>玩画面表示: <strong>12,000クレジット = 12,000pt (1:1変換)</strong></li>
+			</ul>
+		</div>
+
+		<hr>
+		<p><a href="/data/xxxadmin/" class="btn btn-warning">← 管理画面首页に返回</a></p>
+	</div>
+
+	<script>
+		function toggleMachineSelection() {
+			const applyAll = document.getElementById('applyAllCheckbox').checked;
+			const machineArea = document.getElementById('machineSelectionArea');
+			const checkboxes = document.querySelectorAll('.machine-checkbox');
+
+			if (applyAll) {
+				machineArea.style.opacity = '0.5';
+				machineArea.style.pointerEvents = 'none';
+				checkboxes.forEach(cb => cb.checked = false);
+			} else {
+				machineArea.style.opacity = '1';
+				machineArea.style.pointerEvents = 'auto';
+			}
+		}
+
+		// フォーム发送前のバリデーション
+		document.getElementById('applyForm').addEventListener('submit', function(e) {
+			const applyAll = document.getElementById('applyAllCheckbox').checked;
+			const checkboxes = document.querySelectorAll('.machine-checkbox:checked');
+			const targetConvertNo = document.querySelector('select[name="target_convert_no"]').value;
+
+			if (!targetConvertNo) {
+				e.preventDefault();
+				alert('適用する変換レートを请选择。');
+				return;
+			}
+
+			if (!applyAll && checkboxes.length === 0) {
+				e.preventDefault();
+				alert('「全台に一括適用」を选择するか、個別に台を请选择。');
+				return;
+			}
+
+			if (applyAll) {
+				if (!confirm('全台の変換レートを更改します。よろしいですか？')) {
+					e.preventDefault();
+					return;
+				}
+			} else {
+				if (!confirm(`选择した${checkboxes.length}台の変換レートを更改します。よろしいですか？`)) {
+					e.preventDefault();
+					return;
+				}
+			}
+		});
+	</script>
+</body>
+</html>
