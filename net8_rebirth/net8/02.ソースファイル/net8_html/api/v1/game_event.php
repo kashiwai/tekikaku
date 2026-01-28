@@ -56,12 +56,12 @@ if (!$sessionId) {
     exit;
 }
 
-if (!in_array($eventType, ['bet', 'win'])) {
+if (!in_array($eventType, ['bet', 'win', 'round_end'])) {
     http_response_code(400);
     echo json_encode([
         'success' => false,
         'error' => 'INVALID_EVENT_TYPE',
-        'message' => 'eventType must be "bet" or "win"'
+        'message' => 'eventType must be "bet", "win", or "round_end"'
     ]);
     exit;
 }
@@ -162,6 +162,21 @@ try {
         ]);
 
         $callbackEventType = 'game.win';
+
+    } elseif ($eventType === 'round_end') {
+        // ラウンド終了イベント（スロット専用：毎スピン終了時）
+        // 勝ち/負け両方で送信される
+        $roundResult = $input['result'] ?? 'lose'; // 'win' or 'lose'
+
+        $eventData = buildRoundEndCallbackData($session, [
+            'result' => $roundResult,
+            'betAmount' => $betAmount,
+            'winAmount' => $winAmount ?? 0,
+            'creditBefore' => $creditBefore,
+            'creditAfter' => $creditAfter
+        ]);
+
+        $callbackEventType = 'game.round_end';
     }
 
     // 韓国チームへリアルタイムコールバック送信

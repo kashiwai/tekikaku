@@ -229,6 +229,33 @@ function buildWinCallbackData($session, $winData) {
 }
 
 /**
+ * ラウンド終了イベントコールバックデータ構築（スロット専用）
+ * 毎スピン終了時に呼ばれる（勝ち/負け両方）
+ *
+ * @param array $session ゲームセッション情報
+ * @param array $roundData ラウンド情報
+ * @return array コールバックペイロード
+ */
+function buildRoundEndCallbackData($session, $roundData) {
+    return [
+        'sessionId' => $session['session_id'],
+        'memberNo' => $session['member_no'],
+        'userId' => $session['partner_user_id'] ?? $session['user_id'],
+        'modelId' => $session['model_cd'],
+        'machineNo' => $session['machine_no'],
+
+        'roundResult' => $roundData['result'], // 'win' or 'lose'
+        'betAmount' => $roundData['betAmount'],
+        'winAmount' => $roundData['winAmount'] ?? 0,
+        'creditBefore' => $roundData['creditBefore'],
+        'creditAfter' => $roundData['creditAfter'],
+
+        'timestamp' => date('c'), // ISO 8601
+        'currency' => $session['currency'] ?? 'JPY'
+    ];
+}
+
+/**
  * コールバックデータ構築（game.ended用）
  * 韓国チーム対応: 正確なポイントデータ構造
  *
