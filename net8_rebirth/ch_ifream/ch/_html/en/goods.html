@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - List of Items</title>
+		<title>{%SITE_TITLE%} - 商品一覧</title>
 	</head>
 
 	<body>
@@ -11,12 +11,12 @@
 	
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">List of Items</h1>
+		<h1 class="h3 text-center my-4">商品一覧</h1>
 		<hr>
 		
 		<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
 		<div class="alert alert-primary now-point">
-			Possession :<strong>{%POINT_LABEL%}</strong> <small>{%CURRENCY_3%}</small>
+			所持：<strong>{%POINT_LABEL%}</strong> <small>{%CURRENCY_3%}</small>
 		</div>
 		
 		<hr>
@@ -27,10 +27,10 @@
 						{%SEL_ODR%}
 					</select>
 					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="ascBtn"><i class="fas fa-sort-alpha-down"></i> Asc</button>
+						<button class="btn btn-sm btn-outline-primary" type="button" id="ascBtn"><i class="fas fa-sort-alpha-down"></i> 昇順</button>
 					</div>
 					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="descBtn"><i class="fas fa-sort-alpha-up"></i> Desc</button>
+						<button class="btn btn-sm btn-outline-primary" type="button" id="descBtn"><i class="fas fa-sort-alpha-up"></i> 降順</button>
 					</div>
 				</div>
 			</div>
@@ -40,10 +40,10 @@
 						{%SEL_VIEW%}
 					</select>
 					<div class="input-group-append">
-						<label class="input-group-text" for="inputGroupSelect02">Items</label>
+						<label class="input-group-text" for="inputGroupSelect02">件</label>
 					</div>
 					<div class="input-group-append">
-						<button class="btn btn-sm btn-outline-primary" type="button" id="viewBtn">View</button>
+						<button class="btn btn-sm btn-outline-primary" type="button" id="viewBtn">表示</button>
 					</div>
 				</div>
 			</div>
@@ -55,18 +55,18 @@
 		<!-- 商品一覧 -->
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
-				<a class="nav-link {%TYPE_ALL%}" href="?ODR={%ODR%}&VIEW={%VIEW%}">All Items</a>
+				<a class="nav-link {%TYPE_ALL%}" href="?ODR={%ODR%}&VIEW={%VIEW%}">全商品</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link {%TYPE_IN%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=IN">Now Accepting Applications</a>
+				<a class="nav-link {%TYPE_IN%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=IN">応募受付中</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link {%TYPE_OUT%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=OUT">End of  Lotteries </a>
+				<a class="nav-link {%TYPE_OUT%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=OUT">抽選終了</a>
 			</li>
 		</ul>
 		<div class="row">
 			<div class="col-md-6">
-				There is no corresponding item.
+				該当の商品がありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -79,7 +79,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
@@ -87,13 +87,13 @@
 		<!-- 商品一覧 -->
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
-				<a class="nav-link {%TYPE_ALL%}" href="?ODR={%ODR%}&VIEW={%VIEW%}">All Items</a>
+				<a class="nav-link {%TYPE_ALL%}" href="?ODR={%ODR%}&VIEW={%VIEW%}">全商品</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link {%TYPE_IN%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=IN">Now Accepting Applications</a>
+				<a class="nav-link {%TYPE_IN%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=IN">応募受付中</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link {%TYPE_OUT%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=OUT">End of  Lotteries</a>
+				<a class="nav-link {%TYPE_OUT%}" href="?ODR={%ODR%}&VIEW={%VIEW%}&TYPE=OUT">抽選終了</a>
 			</li>
 		</ul>
 		<div id="myTabContent" class="tab-content">
@@ -117,22 +117,22 @@
 								</div>
 								<ul class="list-group list-group-flush prize-info">
 									<li class="list-group-item d-flex w-100 justify-content-between">
-										<span class="text-muted">Number of Winning</span>
+										<span class="text-muted">当選数</span>
 										<span>{%WIN_COUNT_LABEL%}</span>
 									</li>
 									<li class="list-group-item d-flex w-100 justify-content-between">
-										<span class="text-muted">Number of Applications</span>
-										<span>{%NOW_COUNT_LABEL%} / {%RECEPT_COUNT_LABEL%} (You : {%SELF_COUNT_LABEL%} / {%REQUEST_COUNT%})</span>
+										<span class="text-muted">申込数</span>
+										<span>{%NOW_COUNT_LABEL%} / {%RECEPT_COUNT_LABEL%} (あなた：{%SELF_COUNT_LABEL%} / {%REQUEST_COUNT%})</span>
 									</li>
 								</ul>
 								<div class="row mt-3">
 									<div class="col-6">
-										<a href="goods_status.php?NO={%NO%}" class="btn btn-block btn-secondary">Application Status</a>
+										<a href="goods_status.php?NO={%NO%}" class="btn btn-block btn-secondary">応募状況</a>
 									</div>
 									
 									<!--if:{GOODS_STATUS_BLOCK_OUT}-->
 									<div class="col-6 outofrange">
-										<a href="#" class="btn btn-block btn-outline-secondary disabled">Outside the Application Period</a>
+										<a href="#" class="btn btn-block btn-outline-secondary disabled">応募期間外</a>
 									</div>
 									<!--/if:{GOODS_STATUS_BLOCK_OUT}-->
 									
@@ -144,13 +144,13 @@
 									
 									<!--if:{GOODS_STATUS_BLOCK_READY}-->
 									<div class="col-6 draw">
-										<a href="javaScript:void(0);" data-toggle="modal" data-target=".apply-modal" class="btn btn-block btn-primary">Apply</a>
+										<a href="javaScript:void(0);" data-toggle="modal" data-target=".apply-modal" class="btn btn-block btn-primary apply_modal_btn">応募する</a>
 									</div>
 									<!--/if:{GOODS_STATUS_BLOCK_READY}-->
 									
 									<!--if:{GOODS_STATUS_BLOCK_NOT_ENOUGH}-->
 									<div class="col-6 draw_not_enough">
-										<a  href="#" class="btn btn-block btn-outline-secondary disabled">Apply</a>
+										<a  href="#" class="btn btn-block btn-outline-secondary disabled">応募する</a>
 									</div>
 									<!--/if:{GOODS_STATUS_BLOCK_NOT_ENOUGH}-->
 									
@@ -178,7 +178,7 @@
 	<!-- /.container -->
 
 	<!-- Modal -->
-	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作を追加する -->
+	<!-- javascriptを改修してモーダルが開くときに各パラメータのDOM操作をAddする -->
 	<div class="modal fade apply-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -188,10 +188,10 @@
 				<div class="modal-body">
 					
 					<div class="card-subtitle text-center">
-						<span class="apply_draw_point"></span> is required to apply for this item.
+						この商品に応募するには、<span class="apply_draw_point"></span>必要です。
 						<br>
 						<br>
-						<a href="" class="apply_send_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">Apply</a>
+						<a href="" class="apply_send_btn btn btn-block btn-primary" style="display:inline-block;width:180px;">応募する</a>
 					</div>
 					
 					
@@ -208,13 +208,13 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Name of Items</h5>
+					<h5 class="modal-title">商品の名前</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<h6 class="card-subtitle text-info text-center"><i class="far fa-clock"></i> START_DT - END_DT</h6>
+					<h6 class="card-subtitle text-info text-center"><i class="far fa-clock"></i> START_DT ～ END_DT</h6>
 					<div class="prize-bg-pill border">
 						STATUS
 					</div>
@@ -227,7 +227,7 @@
 						</div>
 						<div class="col-lg-7 mt-2">
 							<div class="alert alert-secondary">
-								<p>item detail</p>
+								<p>ここに商品説明ここに商品説明ここに商品説明ここに商品説明</p>
 								<hr class="my-2">
 								<div class="w-100 text-right text-muted"><small>ID：<span></span></small></div>
 							</div>
@@ -236,27 +236,27 @@
 							</div>
 							<ul class="list-group list-group-flush prize-info mt-4">
 								<li class="list-group-item d-flex w-100 justify-content-between">
-									<span class="text-muted">Number of Winning :</span>
+									<span class="text-muted">当選数：</span>
 									<span>WIN</span>
 								</li>
 								<li class="list-group-item d-flex w-100 justify-content-between">
-									<span class="text-muted">Minimum Number of Applicants for Conducting a Lottery :</span>
+									<span class="text-muted">抽選実施最低人数：</span>
 									<span>MIN</span>
 								</li>
 								<li class="list-group-item d-flex w-100 justify-content-between">
-									<span class="text-muted">Maximum Number of Applications per person :</span>
+									<span class="text-muted">申込制限数/1人：</span>
 									<span>REQUEST</span>
 								</li>
 								<li class="list-group-item d-flex w-100 justify-content-between">
-									<span class="text-muted">Number of Applications：</span>
-									<span>NOW／REXEPT(You : SELF)</span>
+									<span class="text-muted">申込数：</span>
+									<span>NOW／REXEPT(あなた：SELF)</span>
 								</li>
 							</ul>
 							<div class="mt-2">
-								<a href="" class="btn btn-block btn-secondary">Application Status</a>
-								<a href="#" class="btn btn-block btn-outline-secondary disabled">Outside the Application Period</a>
+								<a href="" class="btn btn-block btn-secondary">応募状況</a>
+								<a href="#" class="btn btn-block btn-outline-secondary disabled">応募期間外</a>
 								<a href="#" class="btn btn-block btn-outline-secondary disabled">SOLD OUT</a>
-								<a href="javaScript:void(0);" class="btn btn-block btn-primary" id="inmodal_aplly">Apply</a>
+								<a href="javaScript:void(0);" class="btn btn-block btn-primary" id="inmodal_aplly">応募する</a>
 							</div>
 						</div>
 					</div>
@@ -269,7 +269,7 @@
 	</div>
 
 	<!--#include file="inc_footer.html"-->
-
+	
 	<!--#include file="inc_script.html"-->
 	<!-- Page script -->
 <!--#include file="{%PAGESCRIPT%}goods.html"-->

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<meta name="format-detection" content="telephone=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<title>PLAY GROUND</title>
 
-		<!-- Bootstrap core CSS -->
-		<link href="/data/play_v2/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<!-- Webfont -->
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/css?family=Chakra+Petch" rel="stylesheet">
-		<!-- Custom styles for this template -->
-		<link href="css/styles_ls_v001_pachi.css?{%TIMESTAMP%}" rel="stylesheet">
+
+		<!-- New Design Play CSS -->
+		<link href="/css/play.css?{%TIMESTAMP%}" rel="stylesheet">
 
 	</head>
 	<script>
@@ -24,7 +24,7 @@
 		var memberno       = '{%MEMBERNO%}';
 		var authID         = '{%AUTHID%}';
 		var sigHost        = '{%SIGHOST%}';
-		/* 2020-09-18 Port追加 */
+		/* 2020-09-18 PortAdd */
 		var sigPort        = '{%SIGPORT%}';
 		var iceServers     = {%ICESERVERS%};
 		var autopush       = '{%AUTO_PUSH%}';
@@ -35,9 +35,13 @@
 		var convPlaypoint  = {%CONVPLAYPOINT%};
 		var browserVersion = '{%BROWSERVERSION%}';
 		var username       = '{%USERNAME%}';
-		// 2021-06-04 追加
+		// 2021-06-04 Add
 		var closeTime      = '{%CLOSETIME%}';
 		var pachi_rate     = '{%PACHI_RATE%}';
+		// 通貨対応
+		var userCurrency   = '{%CURRENCY%}';
+		var currencySymbol = '{%CURRENCY_SYMBOL%}';
+		var currencyName   = '{%CURRENCY_NAME%}';
 	</script>
 	<script>
 		/* ピッチインピッチアウトによる拡大縮小を禁止 */
@@ -56,7 +60,7 @@
 			t = now;
 		}, false);
 	</script>
-	<body class="playground" oncontextmenu="return false;">
+	<body class="play-page" oncontextmenu="return false;">
 		<div id="loading">
 			<div class="loader">Loading...</div>
 			<div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
@@ -78,7 +82,7 @@
 		<div class="container">
 			<div class="game_status">
 				<div class="machine-no">
-					<div>台番</div>
+					<div>Machine番</div>
 					<span id="machine_no">99</span>
 				</div>
 				<div class="game-situation-group">
@@ -101,7 +105,7 @@
 				<div class="num-value">
 					<span id="playpoint">999999</span>
 				</div>
-				<button class="btn btn-info" id="buypt-button" data-toggle="modal" data-target="#buypt-modal">購入</button>
+				<button class="btn btn-info" id="buypt-button" data-toggle="modal" data-target="#buypt-modal">Purchase</button>
 			</div>
 		</div>
 	</nav>
@@ -110,12 +114,12 @@
 	<div class="d-inline d-lg-none">
 		<div class="slidemenu-bg" style="display:none;"></div>
 		<button type="button" class="btn-slidemenu-reel"><i class="fas fa-database"></i><br /><span>リール</span></button>
-		<!--<button type="button" class="btn-slidemenu-set"><i class="fas fa-cog"></i><br /><span>設定</span></button>-->
+		<!--<button type="button" class="btn-slidemenu-set"><i class="fas fa-cog"></i><br /><span>Settings</span></button>-->
 		<!-- リール配列 -->
 		<div id="slide-reel" class="slide-reel">
 			<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
 		</div>
-		<!-- 設定 -->
+		<!-- Settings -->
 		<div id="slide-setting" class="slide-setting">
 			<!--if:{PUSH_BONUS}-->
 			<div class="form-group push_select">
@@ -129,7 +133,7 @@
 			</div>
 			<!--/if:{PUSH_BONUS}-->
 			<div class="mt-4">
-				<div class="mb-2">オートプレイ<span id="pushorder_sp">（押し順対応）</span><span id="nonepushorder_sp">（押し順非対応）</span></div>
+				<div class="mb-2">オートPlay<span id="pushorder_sp">（押し順対応）</span><span id="nonepushorder_sp">（押し順非対応）</span></div>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 					<label class="btn btn-secondary">
 						<input type="radio" name="ctrl-autoplay" value="1" autocomplete="off"> ON
@@ -143,7 +147,7 @@
 				<div class="mb-2">パネル切替</div>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 					<label id="ctrl-panel-play" class="btn btn-secondary active">
-						<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> プレイ
+						<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> Play
 					</label>
 					<label id="ctrl-panel-menu" class="btn btn-secondary">
 						<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
@@ -164,7 +168,7 @@
 					</li>
 					<!--
 					<li class="nav-item">
-						<a id="tab-setting" class="nav-link active" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">設定</a>
+						<a id="tab-setting" class="nav-link active" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">Settings</a>
 					</li>
 					-->
 				</ul>
@@ -173,7 +177,7 @@
 					<div id="reel" class="tab-pane fade show active text-center" role="tabpanel" aria-labelledby="tab-reel">
 						<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
 					</div>
-					<!-- 設定タブ -->
+					<!-- Settingsタブ -->
 					<div id="setting" class="tab-pane fade" role="tabpanel" aria-labelledby="tab-setting">
 						<!--if:{PUSH_BONUS}-->
 						<div class="form-group push_select">
@@ -187,7 +191,7 @@
 						</div>
 						<!--/if:{PUSH_BONUS}-->
 						<div class="mt-4">
-							<div class="mb-2">オートプレイ<span id="pushorder_pc">（押し順対応）</span><span id="nonepushorder_pc">（押し順非対応）</span></div>
+							<div class="mb-2">オートPlay<span id="pushorder_pc">（押し順対応）</span><span id="nonepushorder_pc">（押し順非対応）</span></div>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<label class="btn btn-secondary">
 									<input type="radio" name="ctrl-autoplay" value="1" autocomplete="off"> ON
@@ -201,7 +205,7 @@
 							<div class="mb-2">パネル切替</div>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<label id="ctrl-panel-play" class="btn btn-secondary active">
-									<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> プレイ
+									<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> Play
 								</label>
 								<label id="ctrl-panel-menu" class="btn btn-secondary">
 									<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
@@ -243,7 +247,7 @@
 							<audio id="audio"></audio>
 							<!-- <div id="consolelog"></div> -->
 						</div>
-						<!-- プレイパネルボタン -->
+						<!-- Playパネルボタン -->
 						<div id="panel-play" class="d-flex flex-column controls-area">
 							<!-- sound -->
 							<a class="btn-pressable sound-off sound-tr" id="audiostart"></a>
@@ -284,7 +288,7 @@
 								</div>
 
 							</div>
-							<!-- オートプレイ -->
+							<!-- オートPlay -->
 							<div id="play-auto" class="flex-column mx-2" style="display:none;">
 							</div>
 						</div>
@@ -329,18 +333,18 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">決済手続き</h5>
+					<h5 class="modal-title">Checkout手続き</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					引き続き、決済手続きを行って処理を完了させてください。
+					引き続き、Checkout手続きを行って処理を完了させてください。
 				</div>
 				<div class="modal-footer">
 					<form id="settleform" action="{%PAYMENT_URL%}" method="POST" target="_blank">
 						{%PAYMENT_HIDDEN%}
-						<button type="button" class="btn btn-primary" id="send_settle">決済手続きへ</button>
+						<button type="button" class="btn btn-primary" id="send_settle">Checkout手続きへ</button>
 					</form>
 				</div>
 			</div>
@@ -351,13 +355,13 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">{%CURRENCY_1%}購入</h5>
+					<h5 class="modal-title">{%CURRENCY_1%}Purchase</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					{%CURRENCY_1%}の購入方法を選択してください。
+					{%CURRENCY_1%}のPurchase方法をPlease select。
 					<div>
 						所持{%CURRENCY_3%}:<span class="coin"></span>{%CURRENCY_3%}
 					</div>
@@ -433,15 +437,15 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">精算確認</h5>
+					<h5 class="modal-title">精算Confirm</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<p>現在持っている{%CURRENCY_2%}を{%CURRENCY_3%}に変換してゲームを終了しますか？<br>※すでに投入した期間限定付き（キャンペーンなどで取得）{%CURRENCY_1%}/{%CURRENCY_3%}は差し引かれます。</p>
-					<a id="pay" class="btn btn-block btn-primary" data-dismiss="modal">同意する</a>
-					<a id="payno" class="btn btn-block btn-primary" data-dismiss="modal">キャンセルする</a>
+					<a id="pay" class="btn btn-block btn-primary" data-dismiss="modal">Agree</a>
+					<a id="payno" class="btn btn-block btn-primary" data-dismiss="modal">Cancelする</a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -482,7 +486,7 @@
 							<span><span id="pay_total_draw_point">4</span></span>
 						</li>
 					</ul>
-					<a id="endgame_a" class="btn btn-block btn-primary game-after-button">サイトに戻る</a>
+					<a id="endgame_a" class="btn btn-block btn-primary game-after-button" href="/gameafter.php">サイトにBack</a>
 				</div>
 				<div class="modal-footer">
 				</div>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{%SITE_TITLE%} - Benefits Detail</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+	<style>
+		:root {
+			--admin-primary: #0376C9;
+			--admin-dark: #1a1d2e;
+			--admin-darker: #0f1117;
+			--admin-card: #252839;
+			--admin-success: #00C48C;
+			--admin-danger: #FF647C;
+			--admin-warning: #FFA26B;
+			--admin-info: #3DD9EB;
+			--admin-text: #E5E9F2;
+			--admin-text-muted: #99A1B7;
+			--admin-border: #2e3447;
+		}
+
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--admin-dark); color: var(--admin-text); line-height: 1.6; }
+
+		#wrapper { min-height: 100vh; }
+		#content-wrapper { padding: 20px; }
+
+		.container-fluid { max-width: 1200px; margin: 0 auto; }
+
+		.page-header { font-size: 28px; font-weight: 600; color: var(--admin-text); margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid var(--admin-border); display: flex; align-items: center; gap: 10px; }
+		.page-header i { color: var(--admin-primary); }
+
+		.alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+		.alert-danger { background: rgba(255, 100, 124, 0.1); border-left: 4px solid var(--admin-danger); color: var(--admin-danger); }
+
+		.table-input { width: 100%; background: var(--admin-card); border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; }
+		.table-input th, .table-input td { padding: 20px; border-bottom: 1px solid var(--admin-border); }
+		.table-input th { background: rgba(3, 118, 201, 0.1); color: var(--admin-text); font-weight: 600; width: 200px; vertical-align: top; }
+		.table-input td { color: var(--admin-text); }
+		.table-input tr:last-child th, .table-input tr:last-child td { border-bottom: none; }
+
+		.form-control { width: 100%; padding: 10px 15px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); font-size: 14px; transition: all 0.3s; }
+		.form-control:focus { outline: none; border-color: var(--admin-primary); box-shadow: 0 0 0 3px rgba(3, 118, 201, 0.1); }
+
+		.input-group { display: flex; width: 180px; }
+		.input-group .form-control { border-radius: 6px 0 0 6px; }
+		.input-group-append { display: flex; }
+		.input-group-text { padding: 10px 15px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-left: none; border-radius: 0 6px 6px 0; color: var(--admin-text-muted); }
+
+		.custom-select { padding: 8px 12px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-radius: 6px; color: var(--admin-text); font-size: 14px; }
+
+		.text-danger { color: var(--admin-danger) !important; }
+		.ml-2 { margin-left: 8px; }
+		.mr-3 { margin-right: 15px; }
+
+		.d-flex { display: flex; }
+		.justify-content-start { justify-content: flex-start; }
+		.align-items-center { align-items: center; }
+
+		.flatpickr { position: relative; }
+		.flatpickr .form-control { padding-right: 40px; }
+		.flatpickr .input-group-append button { padding: 10px 15px; background: var(--admin-darker); border: 1px solid var(--admin-border); border-left: none; color: var(--admin-text-muted); cursor: pointer; border-radius: 0 6px 6px 0; }
+
+		hr { border: none; border-top: 1px solid var(--admin-border); margin: 30px 0; }
+
+		.row { display: flex; margin: 0 -10px; }
+		.col-6 { flex: 0 0 50%; padding: 0 10px; }
+		.text-right { text-align: right; }
+
+		.btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+		.btn-primary { background: var(--admin-primary); color: white; }
+		.btn-primary:hover { background: #0261a8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(3, 118, 201, 0.3); }
+		.btn-danger { background: var(--admin-danger); color: white; }
+		.btn-danger:hover { background: #e54d63; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 100, 124, 0.3); }
+		.btn-warning { background: var(--admin-warning); color: white; }
+		.btn-warning:hover { background: #e68952; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 162, 107, 0.3); }
+
+		@media (max-width: 768px) {
+			.page-header { font-size: 20px; }
+			.table-input th { width: 120px; font-size: 12px; padding: 15px; }
+			.table-input td { padding: 15px; }
+			.row { flex-direction: column; }
+			.col-6 { flex: 0 0 100%; margin-bottom: 10px; }
+			.text-right { text-align: left; }
+			.d-flex { flex-direction: column; align-items: flex-start !important; gap: 10px; }
+			.input-group { width: 100%; }
+		}
+	</style>
+</head>
+<body id="page-top">
+	<!--#include file="navigation_sub.html"-->
+
+	<div id="wrapper">
+		<div id="content-wrapper">
+			<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+				<input type="hidden" name="USE_COUNT" value="{%USE_COUNT%}">
+
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fas fa-trophy"></i> Benefits Detail</h3>
+					<!--if:{ERRMSG}-->
+					<div class="alert alert-danger">
+						{%ERRMSG%}
+					</div>
+					<!--/if:{ERRMSG}-->
+					<table class="table-input">
+						<tbody>
+							<tr>
+								<th>Grant Points&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+								<td>
+									<div class="input-group" style="width:180px;">
+										<input type="text" class="form-control" name="POINT" value="{%POINT%}" maxlength="5">
+										<div class="input-group-append">
+											<span class="input-group-text">{%CURRENCY_3%}</span>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th>Validity Period (Days)&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+								<td><input type="text" class="form-control" name="LIMIT_DAYS" value="{%LIMIT_DAYS%}" maxlength="3"> <span class="text-danger"><i class="fas fa-asterisk"></i> Set "0" for no expiration</span></td>
+							</tr>
+							<tr>
+								<th>End Date<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+								<td>
+									<div class="d-flex justify-content-start align-items-center">
+										<div class="input-group flatpickr mr-3" data-wrap="true" data-clickOpens="false" style="width:180px;">
+											<input type="text" class="form-control" data-altinput=true data-input name="END_DT" value="{%END_DT%}" maxlength="10" placeholder="e.g. 2000/01/01">
+											<div class="input-group-append">
+												<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+											</div>
+										</div>
+										<div>
+											Time
+											<select class="custom-select custom-select-sm" name="END_TIME_HR">
+												{%SEL_END_TIME_HR%}
+											</select>
+											:
+											<select class="custom-select custom-select-sm" name="END_TIME_MIN">
+												{%SEL_END_TIME_MIN%}
+											</select>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th>Issued Count&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+								<td><input type="text" class="form-control" name="ISSUED" value="{%ISSUED%}" maxlength="4"></td>
+							</tr>
+							<!--if:{UPD}-->
+							<tr>
+								<th>Used Count</th>
+								<td>
+									{%DSP_USE_COUNT%}
+								</td>
+							</tr>
+							<!--/if:{UPD}-->
+						</tbody>
+					</table>
+					<hr>
+					<div class="row">
+						<div class="col-6">
+							<!--if:{DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">Delete</a><!--/if:{DEL}-->
+							<!--if:{STOP}--><a href="javascript:void(0);" class="btn btn-danger" onClick="stop();">Stop</a><!--/if:{STOP}-->
+						</div>
+						<div class="col-6 text-right">
+							<!--if:{NEW}--><input type="submit" class="btn btn-primary" value="Register"><!--/if:{NEW}-->
+							<!--if:{UPD}--><a href="javascript:void(0);" class="btn btn-warning" onClick="output();">Download</a><!--/if:{UPD}-->
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!--#include file="inc_script.html"-->
+	<script type="text/javascript">
+	<!--
+		function check() {
+			var frm = window.document.MAINFORM;
+
+			if (!chk_indis("{%A2818%}", frm["POINT"].value)) return false;
+			if (!chk_number("{%A2819%}", frm["POINT"].value)) return false;
+			if (!chk_indis("{%A2820%}", frm["LIMIT_DAYS"].value)) return false;
+			if (!chk_number("{%A2821%}", frm["LIMIT_DAYS"].value)) return false;
+			if (!chk_indis("{%A2822%}", frm["END_DT"].value)) return false;
+			if (!chk_date( "{%A2823%}", frm["END_DT"].value)) return false;
+			if (!chk_indis("{%A2824%}", frm["END_TIME_HR"].value)) return false;
+			if (!chk_indis("{%A2825%}", frm["END_TIME_MIN"].value)) return false;
+			if (!compare_date("{%A2826%}", "{%TODAY%}", frm["END_DT"].value)) return false;
+			if ("{%TODAY%}" == frm["END_DT"].value) {
+				if (!compare_numeric("{%A2826%}", '{%HOURS%}', frm["END_TIME_HR"].value)) return false;
+				if ('{%HOURS%}' == frm["END_TIME_HR"].value) {
+					if (!compare_numeric("{%A2826%}", '{%MINUTES%}', frm["END_TIME_MIN"].value)) return false;
+				}
+			}
+			if (!chk_indis("{%A2827%}", frm["ISSUED"].value)) return false;
+			if (!chk_number("{%A2828%}", frm["ISSUED"].value)) return false;
+			if (parseInt(frm["ISSUED"].value, 10) < 1) {
+				chkAlert("{%A2829%}");
+				return false;
+			}
+
+			swal({
+				title: 'Register Benefits',
+				text: "{%A0001%}",
+				type: 'question',
+				showCancelButton: true
+			}).then(function() {
+				frm.submit();
+			});
+
+			return false;
+		}
+
+		function del() {
+			var frm = window.document.MAINFORM;
+			swal({
+				title: 'Delete Benefits',
+				text: "{%A0002%}",
+				type: 'warning',
+				showCancelButton: true
+			}).then(function() {
+				location.href = frm.action + "&ACT=del&NO={%NO%}";
+			});
+			return;
+		}
+
+		function stop() {
+			var frm = window.document.MAINFORM;
+			swal({
+				title: 'Update Benefits',
+				text: "{%A2830%}",
+				type: 'warning',
+				showCancelButton: true
+			}).then(function() {
+				location.href = frm.action + "&ACT=stop&NO={%NO%}";
+			});
+			return;
+		}
+
+		function output() {
+			location.href = "{%SELF%}?M=output&NO={%NO%}";
+		}
+	-->
+	</script>
+</body>
+</html>

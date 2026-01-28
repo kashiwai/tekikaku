@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - ダッシュボード</title>
+		<style>
+			/* Dashboard specific styles */
+			.dashboard-header {
+				background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+				color: #fff;
+				padding: 1.5rem;
+				border-radius: 0.5rem;
+				margin-bottom: 1.5rem;
+				box-shadow: 0 0.25rem 1rem rgba(78, 115, 223, 0.3);
+			}
+			.dashboard-header .date-main { font-size: 1.75rem; font-weight: 700; }
+			.dashboard-header .date-sub { font-size: 0.9rem; opacity: 0.9; }
+
+			.stat-card {
+				background: #fff;
+				border-radius: 0.5rem;
+				padding: 1.25rem;
+				box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.1);
+				border-left: 4px solid #4e73df;
+				margin-bottom: 1rem;
+				transition: transform 0.2s;
+			}
+			.stat-card:hover { transform: translateY(-3px); }
+			.stat-card.success { border-left-color: #1cc88a; }
+			.stat-card.warning { border-left-color: #f6c23e; }
+			.stat-card.info { border-left-color: #36b9cc; }
+			.stat-card.danger { border-left-color: #e74a3b; }
+
+			.stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #858796; margin-bottom: 0.5rem; }
+			.stat-value { font-size: 1.5rem; font-weight: 700; color: #5a5c69; }
+			.stat-detail { font-size: 0.8rem; color: #858796; margin-top: 0.5rem; }
+			.stat-icon { font-size: 2rem; color: #e3e6f0; }
+
+			.profit-positive { color: #1cc88a !important; }
+			.profit-negative { color: #e74a3b !important; }
+
+			.summary-card {
+				background: #fff;
+				border-radius: 0.5rem;
+				box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.1);
+				margin-bottom: 1.5rem;
+			}
+			.summary-card .card-header { background: #f8f9fc; font-weight: 700; color: #4e73df; }
+
+			.summary-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 0.75rem 0;
+				border-bottom: 1px solid #f1f1f1;
+			}
+			.summary-item:last-child { border-bottom: none; }
+			.summary-item-label { font-size: 0.85rem; color: #858796; }
+			.summary-item-value { font-size: 1rem; font-weight: 600; color: #5a5c69; }
+
+			.action-card {
+				display: block;
+				background: #fff;
+				border-radius: 0.5rem;
+				padding: 1.25rem;
+				box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.1);
+				border-left: 4px solid #36b9cc;
+				text-decoration: none;
+				transition: all 0.2s;
+				margin-bottom: 1rem;
+			}
+			.action-card:hover { transform: translateY(-3px); text-decoration: none; }
+			.action-card.success { border-left-color: #1cc88a; }
+			.action-card.danger { border-left-color: #e74a3b; }
+			.action-card-icon { font-size: 1.75rem; color: #e3e6f0; margin-bottom: 0.5rem; }
+			.action-card-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #858796; }
+			.action-card-value { font-size: 1.25rem; font-weight: 700; color: #5a5c69; }
+			.action-card-footer { font-size: 0.8rem; color: #4e73df; display: flex; justify-content: space-between; }
+
+			.section-header { margin: 1.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e3e6f0; }
+			.section-header h5 { font-weight: 700; color: #5a5c69; margin: 0; }
+			.section-header h5 i { color: #4e73df; margin-right: 0.5rem; }
+
+			.period-badge {
+				display: inline-block;
+				padding: 0.2rem 0.5rem;
+				font-size: 0.65rem;
+				font-weight: 600;
+				border-radius: 0.25rem;
+				background: #f8f9fc;
+				color: #858796;
+			}
+		</style>
+	</head>
+
+	<body id="page-top">
+
+		<!--#include file="navigation.html"-->
+
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fas fa-tachometer-alt"></i> ダッシュボード</h3>
+
+					<!-- Date Header -->
+					<div class="dashboard-header">
+						<div class="row align-items-center">
+							<div class="col-md-8">
+								<div class="date-main">
+									<i class="far fa-calendar-alt mr-2"></i>{%DISP_TODAY_DATE%}（{%DISP_TODAY_WEEKDAY%}）
+								</div>
+								<div class="date-sub">
+									<i class="fas fa-clock mr-1"></i>基準時間: {%REFERENCE_TIME%} ｜
+									<i class="fas fa-chart-bar mr-1"></i>昨日: {%DISP_YESTERDAY_DATE%}（{%DISP_YESTERDAY_WEEKDAY%}）
+								</div>
+							</div>
+							<div class="col-md-4 text-md-right">
+								<div class="mb-2" style="opacity:0.8;">
+									<i class="fas fa-user-circle mr-1"></i>{%LOGIN_NAME%}
+								</div>
+								<a href="javascript:location.reload();" class="btn btn-light btn-sm mr-1">
+									<i class="fas fa-sync-alt"></i> 更新
+								</a>
+								<a href="logout.php" class="btn btn-outline-light btn-sm">
+									<i class="fas fa-sign-out-alt"></i> Logout
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Quick Stats -->
+					<div class="row">
+						<div class="col-xl-3 col-md-6">
+							<div class="stat-card">
+								<div class="d-flex justify-content-between align-items-start">
+									<div>
+										<div class="stat-label"><i class="fas fa-user-plus mr-1"></i>昨日の新規会員</div>
+										<div class="stat-value">{%DISP_REGIST_MEMBER_Y%}<small class="text-muted ml-1">人</small></div>
+										<div class="stat-detail">今月累計: {%DISP_REGIST_MEMBER_M%}人</div>
+									</div>
+									<div class="stat-icon"><i class="fas fa-users"></i></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="stat-card success">
+								<div class="d-flex justify-content-between align-items-start">
+									<div>
+										<div class="stat-label"><i class="fas fa-gamepad mr-1"></i>昨日のゲーム数</div>
+										<div class="stat-value">{%DISP_GAME_COUNT_Y%}<small class="text-muted ml-1">回</small></div>
+										<div class="stat-detail">今月累計: {%DISP_GAME_COUNT_M%}回</div>
+									</div>
+									<div class="stat-icon"><i class="fas fa-dice"></i></div>
+								</div>
+							</div>
+						</div>
+						<!--if:{MENU_sales}-->
+						<div class="col-xl-3 col-md-6">
+							<div class="stat-card warning">
+								<div class="d-flex justify-content-between align-items-start">
+									<div>
+										<div class="stat-label"><i class="fas fa-yen-sign mr-1"></i>昨日の売上</div>
+										<div class="stat-value">¥{%DISP_SALES_VALUE_Y%}</div>
+										<div class="stat-detail">今月累計: ¥{%DISP_SALES_VALUE_M%}</div>
+									</div>
+									<div class="stat-icon"><i class="fas fa-coins"></i></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="stat-card info">
+								<div class="d-flex justify-content-between align-items-start">
+									<div>
+										<div class="stat-label"><i class="fas fa-chart-line mr-1"></i>昨日の利益</div>
+										<div class="stat-value">
+											<!--if:{PROFIT_Y_POSITIVE}--><span class="profit-positive">¥{%DISP_PROFIT_Y%}</span><!--/if:{PROFIT_Y_POSITIVE}-->
+											<!--if:{PROFIT_Y_NEGATIVE}--><span class="profit-negative">¥{%DISP_PROFIT_Y%}</span><!--/if:{PROFIT_Y_NEGATIVE}-->
+										</div>
+										<div class="stat-detail">ゲーム収支: {%DISP_GAME_INCOME_Y%}円</div>
+									</div>
+									<div class="stat-icon"><i class="fas fa-piggy-bank"></i></div>
+								</div>
+							</div>
+						</div>
+						<!--/if:{MENU_sales}-->
+					</div>
+
+					<!-- Summary Cards Row -->
+					<div class="row">
+						<!-- Revenue Summary -->
+						<!--if:{MENU_sales}-->
+						<div class="col-lg-4">
+							<div class="summary-card card">
+								<div class="card-header">
+									<i class="fas fa-chart-pie mr-2"></i>収益サマリー
+								</div>
+								<div class="card-body">
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-circle text-warning mr-2" style="font-size:0.5rem"></i>売上金額</span>
+										<span class="summary-item-value"><span class="period-badge mr-2">昨日</span>¥{%DISP_SALES_VALUE_Y%}</span>
+									</div>
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-circle text-info mr-2" style="font-size:0.5rem"></i>売上件数</span>
+										<span class="summary-item-value"><span class="period-badge mr-2">昨日</span>{%DISP_SALES_COUNT_Y%}件</span>
+									</div>
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-circle text-success mr-2" style="font-size:0.5rem"></i>ゲーム収支</span>
+										<span class="summary-item-value"><span class="period-badge mr-2">昨日</span>{%DISP_GAME_INCOME_Y%}円</span>
+									</div>
+									<div class="summary-item bg-light mx-n3 mb-n3 p-3" style="border-radius:0 0 0.5rem 0.5rem;">
+										<span class="summary-item-label"><i class="fas fa-calculator text-primary mr-2"></i><strong>総利益</strong></span>
+										<span class="summary-item-value">
+											<!--if:{PROFIT_Y_POSITIVE}--><span class="profit-positive" style="font-size:1.25rem;">¥{%DISP_PROFIT_Y%}</span><!--/if:{PROFIT_Y_POSITIVE}-->
+											<!--if:{PROFIT_Y_NEGATIVE}--><span class="profit-negative" style="font-size:1.25rem;">¥{%DISP_PROFIT_Y%}</span><!--/if:{PROFIT_Y_NEGATIVE}-->
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--/if:{MENU_sales}-->
+
+						<!-- Member Summary -->
+						<div class="col-lg-4">
+							<div class="summary-card card">
+								<div class="card-header">
+									<i class="fas fa-users mr-2"></i>会員サマリー
+								</div>
+								<div class="card-body">
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-user-plus text-success mr-2"></i>Sign Up</span>
+										<span class="summary-item-value">
+											<!--if:{MENU_member}--><a href="member.php?JOIN_DT_FROM={%DT_FROM_Y%}&JOIN_DT_TO={%DT_TO_Y%}"><!--/if:{MENU_member}-->{%DISP_REGIST_MEMBER_Y%}人<!--if:{MENU_member}--></a><!--/if:{MENU_member}-->
+											<small class="text-muted">/ 今月 {%DISP_REGIST_MEMBER_M%}人</small>
+										</span>
+									</div>
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-user-minus text-danger mr-2"></i>退会</span>
+										<span class="summary-item-value">{%DISP_UNSUB_MEMBER_Y%}人 <small class="text-muted">/ 今月 {%DISP_UNSUB_MEMBER_M%}人</small></span>
+									</div>
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-gamepad text-info mr-2"></i>ゲームPlay</span>
+										<span class="summary-item-value">{%DISP_GAME_COUNT_Y%}回 <small class="text-muted">/ 今月 {%DISP_GAME_COUNT_M%}回</small></span>
+									</div>
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-coins text-warning mr-2"></i>クレジット差分</span>
+										<span class="summary-item-value">{%DISP_CREDIT_Y%} <small class="text-muted">/ 今月 {%DISP_CREDIT_M%}</small></span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Period Comparison -->
+						<div class="col-lg-4">
+							<div class="summary-card card">
+								<div class="card-header">
+									<i class="fas fa-calendar-alt mr-2"></i>期間比較
+								</div>
+								<div class="card-body p-0">
+									<div class="table-responsive">
+										<table class="table table-sm mb-0" style="font-size:0.85rem;">
+											<thead class="bg-light">
+												<tr class="text-center">
+													<th></th>
+													<th><span class="badge badge-primary">昨日</span><br><small>{%DISP_YESTADAY%}</small></th>
+													<th><span class="badge badge-info">今月</span><br><small>{%DISP_MONTH%}</small></th>
+													<th><span class="badge badge-secondary">先月</span><br><small>{%DISP_LASTMONTH%}</small></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td><i class="fas fa-user-plus text-success mr-1"></i>Register</td>
+													<td class="text-center">{%DISP_REGIST_MEMBER_Y%}</td>
+													<td class="text-center">{%DISP_REGIST_MEMBER_M%}</td>
+													<td class="text-center">{%DISP_REGIST_MEMBER_L%}</td>
+												</tr>
+												<!--if:{MENU_sales}-->
+												<tr>
+													<td><i class="fas fa-yen-sign text-warning mr-1"></i>売上</td>
+													<td class="text-center">¥{%DISP_SALES_VALUE_Y%}</td>
+													<td class="text-center">¥{%DISP_SALES_VALUE_M%}</td>
+													<td class="text-center">¥{%DISP_SALES_VALUE_L%}</td>
+												</tr>
+												<tr>
+													<td><i class="fas fa-chart-line text-info mr-1"></i>利益</td>
+													<td class="text-center">
+														<!--if:{PROFIT_Y_POSITIVE}--><span class="text-success">¥{%DISP_PROFIT_Y%}</span><!--/if:{PROFIT_Y_POSITIVE}-->
+														<!--if:{PROFIT_Y_NEGATIVE}--><span class="text-danger">¥{%DISP_PROFIT_Y%}</span><!--/if:{PROFIT_Y_NEGATIVE}-->
+													</td>
+													<td class="text-center">
+														<!--if:{PROFIT_M_POSITIVE}--><span class="text-success">¥{%DISP_PROFIT_M%}</span><!--/if:{PROFIT_M_POSITIVE}-->
+														<!--if:{PROFIT_M_NEGATIVE}--><span class="text-danger">¥{%DISP_PROFIT_M%}</span><!--/if:{PROFIT_M_NEGATIVE}-->
+													</td>
+													<td class="text-center">
+														<!--if:{PROFIT_L_POSITIVE}--><span class="text-success">¥{%DISP_PROFIT_L%}</span><!--/if:{PROFIT_L_POSITIVE}-->
+														<!--if:{PROFIT_L_NEGATIVE}--><span class="text-danger">¥{%DISP_PROFIT_L%}</span><!--/if:{PROFIT_L_NEGATIVE}-->
+													</td>
+												</tr>
+												<!--/if:{MENU_sales}-->
+												<tr>
+													<td><i class="fas fa-gamepad text-primary mr-1"></i>ゲーム</td>
+													<td class="text-center">{%DISP_GAME_COUNT_Y%}</td>
+													<td class="text-center">{%DISP_GAME_COUNT_M%}</td>
+													<td class="text-center">{%DISP_GAME_COUNT_L%}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!--if:{MENU_gifthistory}-->
+					<!--if:{GIFT_AGENT}-->
+					<!--if:{ADMTOP_GIFT_AGENT}-->
+					<!-- Agent Gift Summary -->
+					<div class="summary-card card">
+						<div class="card-header">
+							<i class="fas fa-gift mr-2"></i>{%GIFT_AGENT_DISPNAME%} Gift状況
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-paper-plane text-info mr-2"></i>Submit</span>
+										<span class="summary-item-value">
+											<a href="gifthistory.php?S_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_Y%}&S_GIFT_DT_TO={%DT_TO_Y%}">{%DISP_AGENT_GIFTSEND_POINT_Y%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTSEND_COUNT_Y%}件</a>
+										</span>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="summary-item">
+										<span class="summary-item-label"><i class="fas fa-inbox text-success mr-2"></i>受信</span>
+										<span class="summary-item-value">
+											<a href="gifthistory.php?S_RECEIVE_AGENT=1&S_GIFT_DT_FROM={%DT_FROM_Y%}&S_GIFT_DT_TO={%DT_TO_Y%}">{%DISP_AGENT_GIFTRECV_POINT_Y%}{%CURRENCY_3%} / {%DISP_AGENT_GIFTRECV_COUNT_Y%}件</a>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--/if:{ADMTOP_GIFT_AGENT}-->
+					<!--/if:{GIFT_AGENT}-->
+					<!--/if:{MENU_gifthistory}-->
+
+					<!--if:{MENU_goods}-->
+					<!-- Lottery Status -->
+					<div class="section-header">
+						<h5><i class="fas fa-gift"></i> 抽選状況</h5>
+						<!--if:{DATE_SWITCH_ABNORMAL}--><small class="text-muted ml-2">現在: {%DSP_NOW%}</small><!--/if:{DATE_SWITCH_ABNORMAL}-->
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<a href="goods.php?RECEPT_START_DT_TO={%DT_NOW%}&RECEPT_END_DT_FROM={%DT_NOW%}&S_DRAW_STATE=0" class="action-card">
+								<div class="action-card-icon"><i class="far fa-check-square"></i></div>
+								<div class="action-card-title">受付中</div>
+								<div class="action-card-value">{%DISP_IN_GOODS%}<small class="text-muted ml-1">件</small></div>
+								<div class="action-card-footer"><span>詳細を見る</span><i class="fas fa-chevron-right"></i></div>
+							</a>
+						</div>
+						<div class="col-lg-4">
+							<a href="goods.php?DRAW_DT_TO={%DT_NOW%}&S_DRAW_STATE=0&S_DRAW_TYPE=1" class="action-card success">
+								<div class="action-card-icon"><i class="fas fa-dice"></i></div>
+								<div class="action-card-title">自動抽選待ち</div>
+								<div class="action-card-value">{%DISP_WAIT_GOODS%}<small class="text-muted ml-1">件</small></div>
+								<div class="action-card-footer"><span>詳細を見る</span><i class="fas fa-chevron-right"></i></div>
+							</a>
+						</div>
+						<div class="col-lg-4">
+							<a href="goods.php?DRAW_DT_TO={%DT_NOW%}&S_DRAW_STATE=0&S_DRAW_TYPE=2" class="action-card danger">
+								<div class="action-card-icon"><i class="far fa-hand-paper"></i></div>
+								<div class="action-card-title">手動抽選待ち</div>
+								<div class="action-card-value">{%DISP_WAIT_MANUAL_GOODS%}<small class="text-muted ml-1">件</small></div>
+								<div class="action-card-footer"><span>詳細を見る</span><i class="fas fa-chevron-right"></i></div>
+							</a>
+						</div>
+					</div>
+					<!--/if:{MENU_goods}-->
+
+					<!--if:{MENU_shipping}-->
+					<!-- Shipping Status -->
+					<div class="section-header">
+						<h5><i class="fas fa-truck"></i> 発送状況</h5>
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
+							<a href="shipping.php?CHK_STATUS%5B%5D=0" class="action-card success">
+								<div class="action-card-icon"><i class="far fa-edit"></i></div>
+								<div class="action-card-title">Address入力待ち</div>
+								<div class="action-card-value">{%DISP_WAIT_INPUT_ADDRESS%}<small class="text-muted ml-1">件</small></div>
+								<div class="action-card-footer"><span>詳細を見る</span><i class="fas fa-chevron-right"></i></div>
+							</a>
+						</div>
+						<div class="col-lg-6">
+							<a href="shipping.php?CHK_STATUS%5B%5D=1&&CHK_STATUS%5B%5D=2" class="action-card danger">
+								<div class="action-card-icon"><i class="fas fa-boxes"></i></div>
+								<div class="action-card-title">発送待ち</div>
+								<div class="action-card-value">{%DISP_WAIT_SEND%}<small class="text-muted ml-1">件</small></div>
+								<div class="action-card-footer"><span>詳細を見る</span><i class="fas fa-chevron-right"></i></div>
+							</a>
+						</div>
+					</div>
+					<!--/if:{MENU_shipping}-->
+
+				</div><!-- /.container-fluid -->
+
+				<!--#include file="footer.html"-->
+
+			</div><!-- /#content-wrapper -->
+
+		</div><!-- /#wrapper -->
+
+		<!--#include file="inc_script.html"-->
+
+	</body>
+</html>

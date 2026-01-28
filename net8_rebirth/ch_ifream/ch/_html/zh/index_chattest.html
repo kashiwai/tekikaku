@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%}</title>
+	</head>
+	
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!--if:{HAVE_NOTICE}-->
+	<header>
+		<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+			<div class="carousel-inner" role="listbox">
+				<!--loop:{NOTICE_LIST2}-->
+				<!-- <div class="carousel-item{%ACTIVE%}" style="background-image: url('./img/notice/{%TOP_IMAGE%}')"> -->
+				<div class="carousel-item{%ACTIVE%}">
+				<!--if:{NOLINK}--><a href="{%LINK_URL%}"{%OTHER_LINK%}><!--/if:{NOLINK}-->
+					<img src="img/notice/{%TOP_IMAGE%}" class="d-block w-100">
+						<div class="carousel-caption d-none d-md-block">
+							<h3>{%TITLE%}</h3>
+							<p>{%SUB_TITLE%}</p>
+						</div>
+				<!--if:{NOLINK}--></a><!--/if:{NOLINK}-->
+				</div>
+				<!--/loop:{NOTICE_LIST2}-->
+			</div>
+			<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+	</header>
+	<!--/if:{HAVE_NOTICE}-->
+
+	<div class="flow">
+		<ul class="flow-tab">
+			<!--loop:{FLOW_CORNER}-->
+			<li class="flow-item{%FLOW_ACTIVE%}"><!--if:{FLOW_LINK}--><a href="{%SITE_SSL_URL%}?CN={%CNO%}">{%CORNER_NAME%}</a><!--/if:{FLOW_LINK}--></li>
+			<!--/loop:{FLOW_CORNER}-->
+		</ul>
+	</div>
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">{%TARGET_CORNER%}</h1>
+		<!--#include file="parts_machine_list.html"-->
+
+		<hr class="mb-0">
+		<div class="row mb-4">
+			<div class="col-md-6 mt-2 text-muted">
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
+			</div>
+			<div class="col-md-6 mt-2">
+				<ul class="pagination pagination-sm float-right mb-0">
+					{%PAGING%}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="parts_machine_modal.html"-->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+
+	<script src="/chat/chatplugin.php"></script>
+
+	</body>
+</html>

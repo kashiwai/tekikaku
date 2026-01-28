@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Payment History</title>
+		<title>{%SITE_TITLE%} - Checkout履歴</title>
 	</head>
 
 	<body>
@@ -11,13 +11,13 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Payment History</h1>
+		<h1 class="h3 text-center my-4">Checkout履歴</h1>
 		<hr>
 		
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				There is no payment history.
+				Checkout履歴はありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -30,30 +30,30 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
 		<table class="table table-bordered table-striped table-recomb mb-2">
 			<thead>
 				<tr>
-					<th>Date and Time of the Purchase</th>
-					<th>Purchase Methods</th>
-					<th>Status</th>
-					<th style="width:120px;">Items</th>
-					<th style="width:120px;">Amount of Money</th>
-					<th>Settled Date and Time</th>
+					<th>Purchase受付日時</th>
+					<th>Purchase方法</th>
+					<th>ステータス</th>
+					<th style="width:120px;">商品</th>
+					<th style="width:120px;">金額</th>
+					<th>Confirm日時</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--loop:{LIST}-->
 				<tr>
-					<td aria-label="Date and Time of the Purchase" class="text-center">{%RECEPT_DT%}</td>
-					<td aria-label="Purchase Methods" class="text-center">{%PURCHASE_TYPE_LABEL%}</td>
-					<td aria-label="Status" class="text-center">{%RESULT_STATUS_LABEL%}</td>
-					<td aria-label="Items" class="text-right">{%POINT%}{%CURRENCY_1%}</td>
-					<td aria-label="Amount of Money" class="text-right">{%AMOUNT%}{%CURRENCY%}</td>
-					<td aria-label="Settled Date and Time" class="text-center">{%PURCHASE_DT%}</td>
+					<td aria-label="Purchase受付日時" class="text-center">{%RECEPT_DT%}</td>
+					<td aria-label="Purchase方法" class="text-center">{%PURCHASE_TYPE_LABEL%}</td>
+					<td aria-label="ステータス" class="text-center">{%RESULT_STATUS_LABEL%}</td>
+					<td aria-label="商品" class="text-right">{%POINT%}{%CURRENCY_1%}</td>
+					<td aria-label="金額" class="text-right">{%AMOUNT%}{%CURRENCY%}</td>
+					<td aria-label="Confirm日時" class="text-center">{%PURCHASE_DT%}</td>
 				</tr>
 				<!--/loop:{LIST}-->
 			</tbody>
@@ -66,7 +66,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		<!--/if:{LISTS}-->

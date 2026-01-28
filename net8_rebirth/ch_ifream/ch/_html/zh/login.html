@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 登录页面</title>
+	</head>
+
+	<body id="login" class="ip-page">
+
+	<!-- ローディング表示 -->
+	<div id="loginLoading" class="loading-overlay hidden">
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+			<div class="loading-text">登录中...</div>
+			<div class="loading-dots">
+				<div class="loading-dot"></div>
+				<div class="loading-dot"></div>
+				<div class="loading-dot"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="wrapper">
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Main Content -->
+	<div id="content">
+	<main id="main_content">
+
+	<div class="content-wrapper">
+	<h2><img src="/content/images/icon/login_icon.svg" class="page-icon">登录</h2>
+	<div class="contents">
+
+	<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+		<input type="hidden" name="M" value="proc">
+		<input type="hidden" name="NO" value="{%NO%}">
+		<input type="hidden" name="TRANS" value="{%TRANS%}">
+
+		<!--if:{ERRMSG}-->
+		<div class="alert-error" style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 4px; margin-bottom: 20px; color: #c62828;">
+			{%ERRMSG%}
+		</div>
+		<!--/if:{ERRMSG}-->
+
+		<label for="mail">电子邮件地址<span class="required">必填</span></label>
+		<input type="email" id="mail" name="MAIL" value="{%MAIL%}" maxlength="{%MAIL_LIMIT%}" placeholder="请输入电子邮件地址。">
+
+		<label for="password">密码<span class="required">必填</span></label>
+		<input type="password" id="password" name="PASS" maxlength="{%MEMBER_PASS_MAX%}" placeholder="请输入密码。">
+
+		<label class="pw-memory">
+			<input type="checkbox" id="cmail" name="CMAIL" value="1" {%CMAIL_CHECKED%}>
+			保存电子邮件地址
+		</label>
+
+		<button type="submit">登录</button>
+	</form>
+
+	<a href="{%SITE_SSL_URL%}pass_reset.php" class="center" style="display: block; text-align: center; margin: 20px 0;">忘记密码请点击这里</a>
+
+	<div class="sign-up-set">
+		<p>新用户请点击这里→<a href="{%SITE_SSL_URL%}regist.php">新用户注册</a></p>
+	</div>
+
+	</div>
+	</div>
+
+	</main>
+	</div>
+	<!-- /Main Content -->
+
+	</div>
+	<!-- /wrapper -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+	<!--#include file="{%PAGESCRIPT%}login.html"-->
+
+	<script>
+	// フォームバリデーション関数
+	function check() {
+		var mail = document.getElementById('mail').value;
+		var pass = document.getElementById('password').value;
+
+		if (mail == '') {
+			alert('请输入电子邮件地址');
+			return false;
+		}
+		if (pass == '') {
+			alert('请输入密码');
+			return false;
+		}
+
+		// バリデーション通過後、ローディング表示
+		showLoading();
+		return true;
+	}
+
+	// ローディング表示関数
+	function showLoading() {
+		var loading = document.getElementById('loginLoading');
+		if (loading) {
+			loading.classList.remove('hidden');
+		}
+	}
+
+	// ローディング非表示関数
+	function hideLoading() {
+		var loading = document.getElementById('loginLoading');
+		if (loading) {
+			loading.classList.add('hidden');
+		}
+	}
+
+	// ページ読み込み完了時にローディング非表示
+	window.addEventListener('load', function() {
+		hideLoading();
+	});
+	</script>
+
+	</body>
+</html>

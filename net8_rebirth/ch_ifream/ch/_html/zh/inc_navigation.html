@@ -9,10 +9,10 @@
 			</a>
 		</div>
 
-		<!-- ========== 移动版导航 ========== -->
+		<!-- ========== モバイル版ナビゲーション ========== -->
 		<div class="smp">
 
-			<!-- 登录按钮（仅限未登录时） -->
+			<!-- 登录ボタン（非登录時のみ） -->
 			<!--if:{NON_LOGIN}-->
 			<div class="smp-login">
 				<a href="{%SITE_SSL_URL%}login.php" class="login smp">
@@ -21,10 +21,10 @@
 			</div>
 			<!--/if:{NON_LOGIN}-->
 
-			<!-- 顶部菜单 -->
+			<!-- 上部メニュー -->
 			<nav class="up-menu">
 				<ul>
-					<li><a href="{%SITE_SSL_URL%}search.php" class="installation">机型列表</a></li>
+					<li><a href="{%SITE_SSL_URL%}search.php" class="installation">設置机型</a></li>
 					<!--if:{NAVIGATION_MYPAGE}-->
 						<li><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">我的页面</a></li>
 					<!--/if:{NAVIGATION_MYPAGE}-->
@@ -34,7 +34,7 @@
 				</ul>
 			</nav>
 
-			<!-- 汉堡菜单 -->
+			<!-- ハンバーガーメニュー -->
 			<div class="menu-set">
 				<input type="checkbox" id="menu-toggle">
 				<label for="menu-toggle" class="menu-button">
@@ -48,20 +48,20 @@
 					<p>MENU</p>
 					<ul class="nav navbar-nav navbar-right">
 						<!--if:{NON_LOGIN}-->
-							<li><a href="{%SITE_SSL_URL%}regist.php" title="创建账户">创建账户</a></li>
+							<li><a href="{%SITE_SSL_URL%}regist.php" title="アカウントの作成">アカウントの作成</a></li>
 						<!--/if:{NON_LOGIN}-->
-						<li><a href="{%SITE_SSL_URL%}rule.php" title="规则">规则</a></li>
+						<li><a href="{%SITE_SSL_URL%}rule.php" title="ハウスルール">ハウスルール</a></li>
 						<!--if:{NAVIGATION_inquiry}-->
-							<li><a href="{%SITE_SSL_URL%}inquiry.php" title="联系我们">联系我们</a></li>
+							<li><a href="{%SITE_SSL_URL%}inquiry.php" title="联系我们">联系我们フォーム</a></li>
 						<!--/if:{NAVIGATION_inquiry}-->
-						<li><a href="{%SITE_SSL_URL%}beginner.php" title="新手指南">新手指南</a></li>
+						<li><a href="{%SITE_SSL_URL%}beginner.php" title="初めての方へ">初めての方へ</a></li>
 						<li><a href="{%SITE_SSL_URL%}privacy.php" title="隐私政策">隐私政策</a></li>
-						<li><a href="{%SITE_SSL_URL%}guideline.php" title="使用指南">使用指南</a></li>
+						<li><a href="{%SITE_SSL_URL%}guideline.php" title="ガイドライン">ガイドライン</a></li>
 						<li><a href="{%SITE_SSL_URL%}terms.php" title="使用条款">使用条款</a></li>
-						<li><a href="{%SITE_SSL_URL%}faq.php" title="常见问题">常见问题</a></li>
+						<li><a href="{%SITE_SSL_URL%}faq.php" title="FAQ（常见问题）">FAQ（常见问题）</a></li>
 						<!--if:{LOGIN}-->
 							<!--if:{NAVIGATION_logout}-->
-								<li class="last"><a href="{%SITE_SSL_URL%}logout.php" title="登出">登出</a></li>
+								<li class="last"><a href="{%SITE_SSL_URL%}logout.php" title="退出">退出</a></li>
 							<!--/if:{NAVIGATION_logout}-->
 						<!--/if:{LOGIN}-->
 					</ul>
@@ -69,15 +69,15 @@
 			</div>
 
 		</div>
-		<!-- ========== /移动版导航 ========== -->
+		<!-- ========== /モバイル版ナビゲーション ========== -->
 
 
-		<!-- ========== PC版导航 ========== -->
+		<!-- ========== PC版ナビゲーション ========== -->
 		<div class="menu-container">
 			<div class="navi pc">
 				<nav class="menu pc">
 					<ul>
-						<li class="n-navi"><a href="{%SITE_SSL_URL%}search.php" class="installation">机型列表</a></li>
+						<li class="n-navi"><a href="{%SITE_SSL_URL%}search.php" class="installation">設置机型</a></li>
 						<!--if:{NAVIGATION_MYPAGE}-->
 							<li class="n-navi"><a href="{%SITE_SSL_URL%}mypage.php" class="mypage">我的页面</a></li>
 						<!--/if:{NAVIGATION_MYPAGE}-->
@@ -88,7 +88,7 @@
 					<ul>
 						<!--if:{LOGIN}-->
 							<!--if:{COIN_TRADE}-->
-								<li><a href="{%SITE_SSL_URL%}wallet.php" class="walet">钱包</a></li>
+								<li><a href="{%SITE_SSL_URL%}wallet.php" class="walet">ウォレット</a></li>
 							<!--/if:{COIN_TRADE}-->
 						<!--/if:{LOGIN}-->
 						<!--if:{NON_LOGIN}-->
@@ -99,11 +99,11 @@
 				</nav>
 			</div>
 		</div>
-		<!-- ========== /PC版导航 ========== -->
+		<!-- ========== /PC版ナビゲーション ========== -->
 
 	</header>
 
-	<!-- ========== 登录后菜单 ========== -->
+	<!-- ========== 登录後メニュー ========== -->
 	<!--if:{LOGIN}-->
 	<div class="login-menu-wrapper">
 		<ul class="login-menu">
@@ -132,7 +132,7 @@
 		</ul>
 	</div>
 	<!--/if:{LOGIN}-->
-	<!-- ========== /登录后菜单 ========== -->
+	<!-- ========== /登录後メニュー ========== -->
 
 	</div>
 	<!-- /Header Wrapper -->

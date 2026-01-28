@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - オーナー管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fab fa-fw fa-fort-awesome"></i> オーナー管理</h3>
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新用户注册</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th>オーナーNo<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="owner_no asc" onClick="reSort('owner_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="owner_no desc" onClick="reSort('owner_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>オーナーCD<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="owner_cd asc" onClick="reSort('owner_cd asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="owner_cd desc" onClick="reSort('owner_cd desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>昵称</th>
+											<th>都道府県</th>
+											<th>电子邮件地址</th>
+											<th>机型台数<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="machine_count asc" onClick="reSort('machine_count asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="machine_count desc" onClick="reSort('machine_count desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>ダミーフラグ</th>
+											<th>実機リスト</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%OWNER_NO%}');">{%OWNER_NO_PAD%}</a></td>
+											<td class="text-center">{%OWNER_CD%}</td>
+											<td>{%OWNER_NICKNAME%}</td>
+											<td class="text-center">{%OWNER_PREF_LABEL%}</td>
+											<td>{%MAIL%}</td>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetailSales('{%OWNER_NO%}');">{%MACHINE_COUNT%}</a></td>
+											<td class="text-center">{%DUMMY_FLG%}</td>
+											<td class="text-center">
+												<!--if:{EXISTS_LIST}--><a href="search.php?S_OWNER_NO={%OWNER_NO%}">表示</a><!--/if:{EXISTS_LIST}-->
+												<!--if:{NO_EXISTS_LIST}-->なし<!--/if:{NO_EXISTS_LIST}-->
+											</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 搜索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クエリ操作
+				
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "owner_detail", 820, 900);
+			}
+			// 売上詳細画面Open
+			function openDetailSales(key) {
+				win_open("{%SELF%}", "M=sales&NO=" + key, "owner_sales", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

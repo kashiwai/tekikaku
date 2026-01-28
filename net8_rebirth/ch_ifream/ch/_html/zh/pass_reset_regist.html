@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 密码再设置</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">密码再设置</h1>
+
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist&RID={%RID%}" method="POST" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<div class="input-form mb-5">
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				<!--if:{NO_ERROR}-->
+				<div class="form-group">
+					<label class="col-form-label" for="password">密码<span class="badge badge-indis">必填</span></label>
+					<input type="password" class="form-control" placeholder="字母和数字混合{%MEMBER_PASS_MIN%}个字符以上" id="password" name="PASS" value="{%PASS%}" maxlength="{%MEMBER_PASS_MAX%}">
+				</div>
+				
+				<div class="form-group">
+					<label class="col-form-label" for="password">密码（确认用）<span class="badge badge-indis">必填</span></label>
+					<input type="password" class="form-control" placeholder="上と同じ请输入密码。" id="password" name="PASS_CONF" value="{%PASS_CONF%}" maxlength="{%MEMBER_PASS_MAX%}">
+				</div>
+				
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary">再设置</button>
+				</div>
+				<!--/if:{NO_ERROR}-->
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}pass_reset_regist.html"-->
+	
+	</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 実機情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<input type="hidden" name="NO" value="{%NO%}">
+					<input type="hidden" name="H_OWNER_NO" value="{%H_OWNER_NO%}">
+					<input type="hidden" name="H_REAL_SETTING" value="{%REAL_SETTING%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-database"></i> 実機情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								
+								<tr>
+									<th>ステータス</th>
+									<td>
+										{%RDO_MACHINE_STATUS%}
+									</td>
+								</tr>
+								<tr>
+									<th>実機CD&nbsp;&nbsp;<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="MACHINE_CD" value="{%MACHINE_CD%}" maxlength="20">
+									</td>
+								</tr>
+								<tr>
+									<th>オーナー&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" id="OWNER_NO" name="OWNER_NO">
+											{%SEL_OWNER_NO%}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>カメラ&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" id="CAMERA_NO" name="CAMERA_NO">
+											{%SEL_CAMERA_NO%}
+										</select>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>机型&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="d-flex flex-row align-items-center">
+											<select class="custom-select mr-2" id="MAKER_NO" name="MAKER_NO">
+												<option value="" selected>制造商絞り込み</option>
+												{%SEL_MAKER_NO%}
+											</select>
+											<select class="custom-select" id="MODEL_NO" name="MODEL_NO">
+												{%SEL_MODEL_NO%}
+											</select>
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>変換レート&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" id="CONVERT_NO" name="CONVERT_NO">
+											{%SEL_CONVERT_NO%}
+										</select>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>シグナリング&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="d-flex flex-row align-items-center">
+											<div style="float:left; margin-right:20px">
+												<select class="custom-select" id="SIGNALING_ID" name="SIGNALING_ID">
+													{%SEL_SIGNALING_ID%}
+												</select>
+											</div>
+											<div>
+												{%SIGNALING_ID_COUNT%}
+											</div>
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>所属コーナー</th>
+									<td>
+										{%CHK_CONERS%}
+									</td>
+								</tr>
+								
+								<tr class="settinglist">
+									<th>设置値&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<select class="custom-select" id="SETTING" name="SETTING">
+											{%SEL_SETTING%}
+										</select>
+										<!--if:{NOW_SETTING}-->&nbsp;&nbsp;<span class="h6"><span class="badge badge-secondary">&nbsp;&nbsp;現在设置値：{%REAL_SETTING%}&nbsp;&nbsp;</span></span><!--/if:{NOW_SETTING}-->
+										<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+											<i class="fas fa-fw fa-info-circle text-secondary"></i> 设置更改する場合はステータスを「{%STATUS_MAINTE%}」にしてください
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>公開開始日&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+											<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE" value="{%RELEASE_DATE%}" maxlength="10" placeholder="例：2000/01/01">
+											<div class="input-group-append">
+												<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+											</div>
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>公開終了日</th>
+									<td>
+										<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false" style="width:180px;">
+											<input type="text" class="form-control" data-altinput=true data-input name="END_DATE" value="{%END_DATE%}" maxlength="10" placeholder="例：2000/01/01">
+											<div class="input-group-append">
+												<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+											</div>
+										</div>
+										<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+											<i class="fas fa-fw fa-info-circle text-secondary"></i> 未指定時は「{%DEFAULT_END_DATE%}」に设置されます
+										</div>
+									</td>
+								</tr>
+								
+								<!--if:{PLAY_PAST_MAX}-->
+								<!--if:{EDIT}-->
+								<tr>
+									<th>過去最大数</th>
+									<td>
+										<div class="custom-control custom-checkbox custom-control-inline">
+											<input type="checkbox" class="custom-control-input" id="CLS_PAST_MAX" name="CLS_PAST_MAX" value="0" {%CHK_PAST_MAX%}>
+											<label class="custom-control-label" for="CLS_PAST_MAX" style="display:block!important;">クリアする</label>
+										</div>
+										（出玉：{%PAST_MAX_CREDIT%}、BB：{%PAST_MAX_BB%}、RB：{%PAST_MAX_RB%}）
+										<input type="hidden" name="PAST_MAX_CREDIT" value="{%PAST_MAX_CREDIT%}">
+										<input type="hidden" name="PAST_MAX_BB" value="{%PAST_MAX_BB%}">
+										<input type="hidden" name="PAST_MAX_RB" value="{%PAST_MAX_RB%}">
+									</td>
+								</tr>
+								<!--/if:{EDIT}-->
+								<!--/if:{PLAY_PAST_MAX}-->
+								<tr>
+									<th>備考</th>
+									<td><textarea class="form-control" rows="4" name="REMARKS">{%REMARKS%}</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{EDIT}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{EDIT}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			var settingList = new Array();
+			$(function(){
+				// 设置値リスト初期化
+				<!--loop:{SETTING_LIST}-->
+				settingList[{%MODEL%}] = "{%SETTING_LIST%}";
+				<!--/loop:{SETTING_LIST}-->
+				// 制造商选择更改
+				$('#MAKER_NO').on('change', selModel)
+				// 実機选择更改
+				$('#MODEL_NO').on('change', chgModel)
+			});
+			$(document).ready(function () {selModel(); chgModel();});	// 読込時
+
+			// 制造商でモデルを絞込
+			function selModel() {
+				var _target = $('#MAKER_NO').val();
+				if( _target != ""){
+					//モデル选择を初期化
+					var _bk = $('#MODEL_NO').val();
+					$('#MODEL_NO').val("");
+					//制造商絞り込み
+					$("#MODEL_NO option").each(function(){
+						if( $(this).hasClass('maker'+$.trim(_target))){
+							$(this).show();
+							$(this).prop('disabled', false);
+							if ($(this).val() == _bk) $('#MODEL_NO').val(_bk);
+						}else{
+							$(this).hide();
+							$(this).prop('disabled', true);
+						}
+					});
+				}else{
+					$("#MODEL_NO option").each(function(){
+						$(this).show();
+						$(this).prop('disabled', false);
+					});
+				}
+			}
+
+			// 実機选择更改
+			function chgModel() {
+				var _target = $('#MODEL_NO').val();
+				var setList = "";
+				var _bk = $('#SETTING').val();
+				$('#SETTING').val("");
+				if( _target != ""){
+					if (settingList[_target]) setList = settingList[_target];
+				}
+				var isSet = false;
+				if (setList.length > 0) {
+					var setAry = setList.split(",");
+					$("#SETTING option").each(function(){
+						var thisCls = $(this).attr("class");
+						var setVal = thisCls.replace("setval", "");
+						if (setAry.indexOf(setVal) >= 0) {
+							$(this).show();
+							$(this).prop('disabled', false);
+							if ($(this).val() == _bk) $('#SETTING').val(_bk);
+							isSet = true;
+						} else {
+							$(this).hide();
+							$(this).prop('disabled', true);
+						}
+					});
+				}
+				if (isSet) {
+					$('.settinglist').show();
+				} else {
+					$('.settinglist').hide();
+				}
+			}
+
+			
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				// 実機コード
+				if (!chk_indis("{%A1821%}", frm["MACHINE_CD"].value)) return false;
+				if (!chk_alnum("{%A1822%}", frm["MACHINE_CD"].value, false, "-\_")) return false;
+				// 必填項目
+				if (!chk_indis("{%A1801%}", frm["OWNER_NO"].value)) return false;
+				if (!chk_indis("{%A1802%}", frm["CAMERA_NO"].value)) return false;
+				if (!chk_indis("{%A1803%}", frm["MODEL_NO"].value)) return false;
+				if (!chk_indis("{%A1804%}", frm["CONVERT_NO"].value)) return false;
+				if (!chk_indis("{%A1805%}", frm["SIGNALING_ID"].value)) return false;
+
+				// 设置値
+				if ($(".settinglist").is(":visible")) {
+					if (!chk_indis("{%A1825%}", frm["SETTING"].value)) return false;
+				}
+
+				// 公開日
+				if (!chk_indis("{%A1807%}", frm["RELEASE_DATE"].value)) return false;
+				if (!chk_date( "{%A1808%}", frm["RELEASE_DATE"].value)) return false;
+				if (chk_indis("", frm["END_DATE"].value)) {
+					if (!chk_date( "{%A1810%}", frm["END_DATE"].value)) return false;
+					if (!compare_date("{%A1817%}", frm["RELEASE_DATE"].value, frm["END_DATE"].value, false)) return false;
+				}
+				
+				swal({
+					title: '実機情報注册',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// 删除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '実機情報删除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

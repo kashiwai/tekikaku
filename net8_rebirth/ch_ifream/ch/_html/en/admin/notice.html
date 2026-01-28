@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - お知らせ管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-bell"></i> お知らせ管理</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">Search条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">お知らせ名称</div>
+											<div>
+												<input type="text" class="form-control" name="S_NOTICE_NAME" value="{%S_NOTICE_NAME%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">リンクタイプ</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_LINK_TYPE">
+													{%SEL_LINK_TYPE%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">タイトル</div>
+											<div>
+												<input type="text" class="form-control" name="S_TITLE" value="{%S_TITLE%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">サブタイトル</div>
+											<div>
+												<input type="text" class="form-control" name="S_SUB_TITLE" value="{%S_SUB_TITLE%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">お知らせ内容</div>
+											<div>
+												<input type="text" class="form-control" name="S_CONTENTS" value="{%S_CONTENTS%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">Search</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">Sign Up</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0">
+									<thead>
+										<tr>
+											<th>お知らせ名称</th>
+											<th>リンクタイプ</th>
+											<th>リンクURL</th>
+											<th>公開開始日
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="start_dt asc" onClick="reSort('start_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="start_dt desc" onClick="reSort('start_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>公開終了日
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="end_dt asc" onClick="reSort('end_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="end_dt desc" onClick="reSort('end_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td><a href="javascript:void(0);" onClick="openDetail('{%NOTICE_NO%}');">{%NOTICE_NAME%}</a></td>
+											<td>{%DISP_LINK_TYPE%}</td>
+											<td>{%LINK_URL%}</td>
+											<td class="text-center">{%RELEASE_START_DT%}</td>
+											<td class="text-center">{%RELEASE_END_DT%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// Search実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "notice_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

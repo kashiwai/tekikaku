@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Shipping Procedures</title>
+		<title>{%SITE_TITLE%} - 発送手続き</title>
 	</head>
 
 	<body>
@@ -11,13 +11,13 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Shipping Procedures</h1>
+		<h1 class="h3 text-center my-4">発送手続き</h1>
 		<hr>
 		
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				There is no shipping procedures.
+				発送手続きはありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -30,36 +30,36 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
 		<table class="table table-bordered table-striped table-recomb mb-2">
 			<thead>
 				<tr>
-					<th>Name of Items</th>
-					<th>Date of Winning</th>
-					<th>Status</th>
-					<th>Shipping Number</th>
+					<th>商品名</th>
+					<th>当選日</th>
+					<th>状態</th>
+					<th>発送番号</th>
 					<th>Address</th>
-					<th>Name</th>
+					<th>Full Name</th>
 					<th>Phone Number</th>
-					<th>Shipping address</th>
+					<th>発送先</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--loop:{LIST}-->
 				<tr>
-					<td aria-label="Name of Items" class="text-center">{%GOODS_NAME%}</td>
-					<td aria-label="Date of Winning" class="text-center">{%DISP_ADD_DT%}</td>
-					<td aria-label="Status" class="text-center">{%STATE%}</td>
+					<td aria-label="商品名" class="text-center">{%GOODS_NAME%}</td>
+					<td aria-label="当選日時" class="text-center">{%DISP_ADD_DT%}</td>
+					<td aria-label="状態" class="text-center">{%STATE%}</td>
 					<td aria-label="発送番号" class="text-center">{%SHIPPING_NO%}</td>
 					<td aria-label="Address" class="text-left"><!--if:{POSTAL}-->〒<!--/if:{POSTAL}-->{%POSTAL%} {%ADDRESS1%} {%ADDRESS2%} {%ADDRESS3%} {%ADDRESS4%}</td>
-					<td aria-label="Name" class="text-left">{%SYLL%} {%NAME%}</td>
+					<td aria-label="Full Name" class="text-left">{%SYLL%} {%NAME%}</td>
 					<td aria-label="Phone Number" class="text-left">{%TEL%}</td>
 					<td class="text-center">
 						<!--if:{EDIT}-->
-						<a href="{%SELF%}?M=select&SEQ={%SEQ%}&NO={%GOODS_NO%}">Selection</a>
+						<a href="{%SELF%}?M=select&SEQ={%SEQ%}&NO={%GOODS_NO%}">Select</a>
 						<!--/if:{EDIT}-->
 						<!--if:{NOEDIT}-->
 						-
@@ -77,7 +77,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		<!--/if:{LISTS}-->

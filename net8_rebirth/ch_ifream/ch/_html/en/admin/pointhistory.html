@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - {%CURRENCY_1%}履歴</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="M" value="">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-history"></i> {%CURRENCY_1%}履歴</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">Search条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">
+												<!--if:{POINTHISTORY_SEL_AGENT}-->&nbsp;
+												<div class="custom-control custom-checkbox custom-control-inline">
+													<input type="checkbox" class="custom-control-input" id="S_AGENT" name="S_AGENT" value="1" {%CHK_S_AGENT%}>
+													<label class="custom-control-label" for="S_AGENT" style="display:block!important;">{%GIFT_AGENT_DISPNAME%}</label>
+												</div>
+												<!--/if:{POINTHISTORY_SEL_AGENT}-->
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">処理種別</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_PROC_CD" style="width:180px;">
+													{%SEL_PROC_CD%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">処理日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_PROC_DT_FROM" value="{%S_PROC_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="S_PROC_DT_TO" value="{%S_PROC_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">Search</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						<!--if:{POINTHISTORY_DISP_TOTAL}-->
+						<div class="row mx-0">
+							<div class="col-lg-4 p-2">
+								<table class="table table-bordered th-center-bg mt-3 mb-0">
+									<tbody>
+										<tr>
+											<th>合計消費</th>
+											<td class="text-right">{%DISP_TOTAL_SUB_POINT%}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-lg-4 p-2">
+								<table class="table table-bordered th-center-bg mt-3 mb-0">
+									<tbody>
+										<tr>
+											<th>合計増加</th>
+											<td class="text-right">{%DISP_TOTAL_ADD_POINT%}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!--/if:{POINTHISTORY_DISP_TOTAL}-->
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<!--if:{POINTHISTORY_DOWNLOAD}-->
+								<div>
+									<a href="javascript:void(0);" class="btn btn-warning" onClick="output();">ダウンロード</a>
+								</div>
+								<!--/if:{POINTHISTORY_DOWNLOAD}-->
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th style="width:140px;">処理日時
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="his.proc_dt asc" onClick="reSort('his.proc_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="his.proc_dt desc" onClick="reSort('his.proc_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:120px;">会員No
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="his.member_no asc, his.proc_dt desc" onClick="reSort('his.member_no asc, his.proc_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="his.member_no desc, his.proc_dt desc" onClick="reSort('his.member_no desc, his.proc_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>Nickname</th>
+											<th style="width:150px;">処理種別
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="his.proc_cd asc, his.proc_dt desc" onClick="reSort('his.proc_cd asc, his.proc_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="his.proc_cd desc, his.proc_dt desc" onClick="reSort('his.proc_cd desc, his.proc_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:120px;">消費</th>
+											<th style="width:120px;">増加</th>
+											<th style="width:140px;">有効期限
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="his.limit_dt asc, his.proc_dt desc" onClick="reSort('his.limit_dt asc, his.proc_dt desc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="his.limit_dt desc, his.proc_dt desc" onClick="reSort('his.limit_dt desc, his.proc_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:140px;">残高</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center">{%PROC_DT%}</td>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetailMember('{%MEMBER_NO%}');">{%MEMBER_NO_PAD%}</a></td>
+											<td>
+												{%NICKNAME%}
+												<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+												<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+												<!--if:{POINTHISTORY_SEL_AGENT}--><!--if:{IS_AGENT}-->{%MEMBER_BADGE_AGENT%}<!--/if:{IS_AGENT}--><!--/if:{POINTHISTORY_SEL_AGENT}-->
+											</td>
+											<td>
+												<!--if:{NONE_PLAY}-->{%PROC_NAME%}<!--/if:{NONE_PLAY}-->
+												<!--if:{IS_PLAY}--><a href="memberplayhistory.php?S_MEMBER_NO={%MEMBER_NO%}&S_MACHINE_NO={%MACHINE_NO%}&S_START_DT_FROM={%BASE_PROC_DT%}&S_START_DT_TO={%BASE_PROC_DT%}">{%PROC_NAME%}</a><!--/if:{IS_PLAY}-->
+											</td>
+											<td class="text-right">{%SUB_POINT%}</td>
+											<td class="text-right">{%ADD_POINT%}</td>
+											<td class="text-center">{%LIMIT_DT%}</td>
+											<td class="text-right">{%AFTER_POINT%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			
+			// Search実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				// クエリ操作
+				if (!chk_number("{%A0126%}", frm["S_MEMBER_NO"].value, false)) return false;
+				if (!chk_date("{%A0127%}", frm["S_PROC_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A0128%}", frm["S_PROC_DT_TO"].value, false)) return false;
+				if (frm["S_PROC_DT_FROM"].value.length > 0 && frm["S_PROC_DT_TO"].value.length > 0) {
+					if (!compare_date("{%A0129%}", frm["S_PROC_DT_FROM"].value, frm["S_PROC_DT_TO"].value, false)) return false;
+				}
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 会員詳細画面Open
+			function openDetailMember(key) {
+				win_open("member.php", "M=detail&NO=" + key, "admin_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			<!--if:{POINTHISTORY_DOWNLOAD}-->
+			// CSV出力
+			function output() {
+				var frm = window.document.MAINFORM;
+				frm.reset();		// フォームリセット
+				frm["M"].value = "output";
+				frm.submit();
+				frm["M"].value = "";
+			}
+			<!--/if:{POINTHISTORY_DOWNLOAD}-->
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

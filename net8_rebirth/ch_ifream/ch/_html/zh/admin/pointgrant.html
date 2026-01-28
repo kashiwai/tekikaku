@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 点数付与设置</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				
+				<div class="container-fluid">
+					<h3 class="page-header"><i class="fab fa-fw fa-product-hunt"></i> 点数付与设置</h3>
+					
+					<!--loop:{LIST}-->
+					<div class="card mt-3">
+						<div class="card-header d-flex justify-content-between">
+							<span class="panel-title">{%PROC_LABEL%}</span>
+						</div>
+						<div>
+							<table class="table table-input">
+								<tbody>
+									<tr>
+										<th>付与点数</th>
+										<td class="text-right" style="width:100px;">{%POINT%}</td>
+										<td colspan="2">
+											有効期限 <!--if:{LIMIT_DAYS}-->{%LIMIT_DAYS%}日<!--/if:{LIMIT_DAYS}--><!--if:{NO_LIMIT_DAYS}-->なし<!--/if:{NO_LIMIT_DAYS}-->
+										</td>
+									</tr>
+									<tr>
+										<th style="width:200px;">期間限定付与点数</th>
+										<!--if:{EDIT_SPECIAL}-->
+										<td class="text-right" style="width:100px;">{%SPECIAL_POINT%}</td>
+										<td style="width:150px;">
+											有効期限 <!--if:{SPECIAL_LIMIT_DAYS}-->{%SPECIAL_LIMIT_DAYS%}日<!--/if:{SPECIAL_LIMIT_DAYS}--><!--if:{NO_SPECIAL_LIMIT_DAYS}-->なし<!--/if:{NO_SPECIAL_LIMIT_DAYS}-->
+										</td>
+										<td>期間：{%SPECIAL_START_DT%} ～ {%SPECIAL_END_DT%}</td>
+										<!--/if:{EDIT_SPECIAL}-->
+										<!--if:{EDIT_SPECIAL_NONE}-->
+										<td class="text-right">设置なし</td>
+										<td colspan="2">&nbsp;</td>
+										<!--/if:{EDIT_SPECIAL_NONE}-->
+									</tr>
+									<tr>
+										<td colspan="4" class="text-right">
+											<a href="javascript:void(0);" onClick="openDetail('{%PROC_CD%}');" class="btn btn-primary">更改</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div><!-- /.card -->
+					<!--/loop:{LIST}-->
+					
+				</div><!-- /.container-fluid -->
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "pointgrant_detail", 820, 900);
+			}
+		</script>
+		
+	</body>
+</html>

@@ -3,7 +3,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Machine</h5>
+					<h5 class="modal-title">Machineの名前</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -29,11 +29,11 @@
 											<div class="w-50 cnt-reg text-center"><small><span>REG</span></small><span></span></div>
 										</div>
 										<div class="d-flex w-100 justify-content-between cnt-total">
-											<div>Total Games</div>
+											<div>総ゲーム数</div>
 											<div>1,000</div>
 										</div>
 										<div class="d-flex w-100 justify-content-between cnt-game">
-											<div>Games</div>
+											<div>ゲーム数</div>
 											<div>0</div>
 										</div>
 									</div>
@@ -42,30 +42,30 @@
 							<div class="alert alert-primary">
 								<ul class="list-group list-group-flush base-info">
 									<li class="list-group-item d-flex w-100 justify-content-between">
-										<span>Machine No :</span>
+										<span>Machine番号：</span>
 										<span>0000</span>
 									</li>
 									<li class="list-group-item d-flex w-100 justify-content-between">
-										<span>ID :</span>
+										<span>ID：</span>
 										<span>00000000000</span>
 									</li>
 									<li class="list-group-item d-flex w-100 justify-content-between">
-										<span>Manufacturer :</span>
-										<span>Manufacturer Name</span>
+										<span>Manufacturer：</span>
+										<span>Manufacturer名</span>
 									</li>
 									<li class="list-group-item d-flex w-100 justify-content-between">
-										<span>Model Name</span>
+										<span>5号機</span>
 										<span>スロット (ノーマルA)</span>
 									</li>
 								</ul>
 							</div>
 							<ul class="list-group list-group-flush base-info mt-4">
 								<li class="list-group-item medal-change d-flex w-100 justify-content-between">
-									<span>Conversion :</span>
+									<span>変換：</span>
 									<span></span>
 								</li>
 								<li class="list-group-item medal-rate d-flex w-100 justify-content-between">
-									<span>Settlement :</span>
+									<span>精算：</span>
 									<span></span>
 								</li>
 							</ul>
@@ -73,22 +73,22 @@
 								<i class="far fa-clock"></i> {%GLOBAL_OPEN_TIME%}～{%GLOBAL_CLOSE_TIME%}
 							</div>
 							<!--if:{NON_TESTER}-->
-							<p class="closed">After Hours</p>
-							<p class="maintenance">Under Maintenance</p>
+							<p class="closed">営業時間外</p>
+							<p class="maintenance">メンテナンス中</p>
 							<p class="notavailable">In Use</p>
 							<!--if:{NON_LOGIN}-->
-							<a href="{%SITE_SSL_URL%}login.php?NO=" class="btn btn-block btn-primary play">Login and Play</a>
+							<a href="{%SITE_SSL_URL%}login.php?NO=" class="btn btn-block btn-primary play">LoginしてPlay</a>
 							<!--/if:{NON_LOGIN}-->
 							<!--if:{LOGIN}-->
 							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary play">Play</a>
 							<!--/if:{LOGIN}-->
 							<!--/if:{NON_TESTER}-->
 							<!--if:{TESTER}-->
-							<p class="maintenance">Under Maintenance</p>
+							<p class="maintenance">メンテナンス中</p>
 							<p class="notavailable">In Use</p>
-							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary preparation">In Preparation</a>
-							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary closed">After Hours</a>
-							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary maintenance">Under Maintenance</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary preparation">Preparing</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary closed">営業時間外</a>
+							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary maintenance">メンテナンス中</a>
 							<a href="{%SITE_SSL_URL%}play/?NO=" class="btn btn-block btn-primary play">Play</a>
 							<!--/if:{TESTER}-->
 						</div>

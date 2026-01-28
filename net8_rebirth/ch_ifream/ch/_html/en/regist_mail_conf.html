@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Account Creation</title>
+		<title>{%SITE_TITLE%} - Create Account</title>
 	</head>
 
 	<body>
@@ -13,22 +13,28 @@
 	<div class="container">
 		
 		<!--if:{ERROR}-->
-		<h1 class="h3 text-center my-4">Registration Failure</h1>
+		<h1 class="h3 text-center my-4">Register失敗</h1>
 		<div class="alert alert-secondary text-center">
 			<div class="alert alert-danger">
 				{%ERRMSG%}
 			</div>
-			<a href="{%SITE_SSL_URL%}{%SELF%}" class="btn btn-primary btn-block">Redo the new member registration.</a>
+			<a href="{%SITE_SSL_URL%}{%SELF%}" class="btn btn-primary btn-block">新規会員Registerをやり直す</a>
 		</div>
 		<!--/if:{ERROR}-->
 		
 		<!--if:{NO_ERROR}-->
-		<h1 class="h3 text-center my-4">Registration Completed</h1>
+		<h1 class="h3 text-center my-4">Register完了</h1>
 		<div class="alert alert-secondary text-center">
 			<div class="alert-heading">
-				The definitive registration has been completed at the following email address.<br />
-				First of all, please confirm the operation methods in <a href="info.php?M=beginners">For the First Time Users</a>.
-
+				以下のEmail Addressにて本Registerが完了致しました。<br />
+				まずは<a href="info.php?M=beginners">「はじめての方へ」</a>にて操作方法をConfirmして下さい。
+				<!--if:{MEMBER_BENEFITS}-->
+				<!--if:{NO_BENEFITS}-->
+				<div class="font-weight-bold text-warning">
+					Benefit Codeが無効なため、特典は適応されませんでした。
+				</div>
+				<!--/if:{NO_BENEFITS}-->
+				<!--/if:{MEMBER_BENEFITS}-->
 			</div>
 			<hr>
 			<h3><i class="icon-envelope-o"></i> Email Address</h3>

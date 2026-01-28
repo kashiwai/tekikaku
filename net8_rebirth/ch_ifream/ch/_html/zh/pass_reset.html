@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 密码再设置</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">密码再设置</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="M" value="proc">
+			<div class="input-form mb-5">
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				
+				<div class="alert alert-secondary">
+					<small>注册されている电子邮件地址宛に密码再设置情報を发送します。</small>
+				</div>
+				<div class="form-group">
+					<label class="col-form-label" for="mail">电子邮件地址</label>
+					<input type="text" class="form-control" placeholder="注册している请输入电子邮件地址" id="mail" name="MAIL" maxlength="{%MAIL_LIMIT%}">
+				</div>
+				<hr>
+				<div class="text-center">
+					<button type="submit" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　发送する</button>
+					<hr>
+					<a href="{%SITE_SSL_URL%}login.php" class="btn btn-sm btn-secondary mt-2">登录へ返回</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}pass_reset.html"-->
+	
+	</body>
+</html>

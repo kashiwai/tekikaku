@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>カメラ詳細 - MillionNet8 管理画面</title>
+
+    <style>
+        /* MillionNet8 Admin Premium Design */
+        :root {
+            --admin-primary: #0376C9;
+            --admin-dark: #1a1d2e;
+            --admin-darker: #0f1117;
+            --admin-card: #252839;
+            --admin-accent: #A88A59;
+            --admin-success: #00C48C;
+            --admin-danger: #FF647C;
+            --admin-warning: #FFA26B;
+            --admin-text: #E5E9F2;
+            --admin-text-muted: #99A1B7;
+            --admin-border: #2e3447;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--admin-dark);
+            color: var(--admin-text);
+            line-height: 1.6;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--admin-darker);
+            border-right: 1px solid var(--admin-border);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--admin-border);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo h2 {
+            color: var(--admin-primary);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--admin-text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background: rgba(3, 118, 201, 0.1);
+            color: var(--admin-primary);
+            border-left: 3px solid var(--admin-primary);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .topbar {
+            background: var(--admin-card);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .topbar h1 {
+            font-size: 20px;
+            color: var(--admin-text);
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--admin-primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--admin-success);
+            color: white;
+        }
+
+        .form-wrapper {
+            background: var(--admin-card);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            font-size: 18px;
+            color: var(--admin-text);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--admin-border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--admin-text-muted);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-group label .required {
+            color: var(--admin-danger);
+            margin-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--admin-dark);
+            border: 1px solid var(--admin-border);
+            border-radius: 6px;
+            color: var(--admin-text);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--admin-primary);
+        }
+
+        .form-control:disabled {
+            background: var(--admin-darker);
+            cursor: not-allowed;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(3, 118, 201, 0.1);
+            border: 1px solid var(--admin-primary);
+            border-radius: 6px;
+            color: var(--admin-primary);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--admin-darker);
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--admin-text-muted);
+        }
+
+        td {
+            padding: 12px;
+            border-top: 1px solid var(--admin-border);
+            color: var(--admin-text);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.success {
+            background: rgba(0, 196, 140, 0.2);
+            color: var(--admin-success);
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+
+<!--#include file="../admin/inc_script.html"-->
+
+<div class="admin-layout">
+    <!-- サイドバー -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2><i class="fas fa-dragon"></i> MillionNet8 管理画面</h2>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="index.php"><i class="fas fa-tachometer-alt"></i> ダッシュボード</a></li>
+            <li><a href="member.php"><i class="fas fa-users"></i> 会員管理</a></li>
+            <li><a href="model.php"><i class="fas fa-gamepad"></i> Model管理</a></li>
+            <li><a href="machines.php"><i class="fas fa-desktop"></i> Machine管理</a></li>
+            <li><a href="camera.php" class="active"><i class="fas fa-video"></i> カメラ管理</a></li>
+            <li><a href="camera_settings.php"><i class="fas fa-cog"></i> カメラ割り当て</a></li>
+            <li><a href="signaling.php"><i class="fas fa-server"></i> シグナリング</a></li>
+            <li><a href="streaming.php"><i class="fas fa-broadcast-tower"></i> 配信管理</a></li>
+        </ul>
+    </aside>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- Topバー -->
+        <div class="topbar">
+            <h1><i class="fas fa-video"></i> カメラ{if $mode == 'new'}Sign Up{else}編集{/if}</h1>
+            <div class="topbar-actions">
+                <a href="camera.php" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> 一覧にBack
+                </a>
+            </div>
+        </div>
+
+        <!-- フォーム -->
+        <form method="post" action="camera.php?mode=save">
+            <input type="hidden" name="camera_no" value="{$camera_data.camera_no|default:0}">
+
+            <div class="form-wrapper">
+                <!-- 基本情報 -->
+                <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> 基本情報</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>MACアドレス<span class="required">*</span></label>
+                            <input type="text" name="camera_mac" class="form-control"
+                                   value="{$camera_data.camera_mac}"
+                                   placeholder="00:00:00:00:00:00"
+                                   pattern="^([0-9A-Fa-f]{literal}{2}{/literal}[:-]){literal}{5}{/literal}([0-9A-Fa-f]{literal}{2}{/literal})$"
+                                   required>
+                            <small style="color: var(--admin-text-muted);">例: 00:11:22:33:44:55</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>カメラ名<span class="required">*</span></label>
+                            <input type="text" name="camera_name" class="form-control"
+                                   value="{$camera_data.camera_name}"
+                                   placeholder="カメラ名を入力"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                {if $mode == 'edit'}
+                <!-- カメラリスト情報 -->
+                <div class="form-section">
+                    <h3><i class="fas fa-server"></i> システム情報</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>IPアドレス</label>
+                            <input type="text" class="form-control" value="{$camera_data.ip_address}" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label>システム名</label>
+                            <input type="text" class="form-control" value="{$camera_data.system_name}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>製品名</label>
+                            <input type="text" class="form-control" value="{$camera_data.product_name}" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label>CPU</label>
+                            <input type="text" class="form-control" value="{$camera_data.cpu_name}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>UUID</label>
+                            <input type="text" class="form-control" value="{$camera_data.uuid}" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ライセンスID</label>
+                            <input type="text" class="form-control" value="{$camera_data.license_id}" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 割り当てMachine一覧 -->
+                {if $machine_list}
+                <div class="form-section">
+                    <h3><i class="fas fa-desktop"></i> 割り当てMachine一覧</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Machine番号</th>
+                                <th>MachineCD</th>
+                                <th>Model名</th>
+                                <th>公開日</th>
+                                <th>状態</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {section name=i loop=$machine_list}
+                            <tr>
+                                <td>#{$machine_list[i].machine_no}</td>
+                                <td>{$machine_list[i].machine_cd}</td>
+                                <td>{$machine_list[i].model_name}</td>
+                                <td>{$machine_list[i].release_date}</td>
+                                <td>
+                                    {if $machine_list[i].machine_status == 1}
+                                        <span class="badge success">稼働中</span>
+                                    {else}
+                                        <span class="badge">停止中</span>
+                                    {/if}
+                                </td>
+                            </tr>
+                            {/section}
+                        </tbody>
+                    </table>
+                </div>
+                {/if}
+                {/if}
+
+                <!-- ボタングループ -->
+                <div class="button-group">
+                    <a href="camera.php" class="btn" style="background: var(--admin-text-muted); color: white;">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+</body>
+</html>

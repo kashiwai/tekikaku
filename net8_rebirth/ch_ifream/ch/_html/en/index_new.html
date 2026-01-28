@@ -3,973 +3,18 @@
 	<head>
 		<!--#include file="inc_head.html"-->
 		<title>{%SITE_TITLE%}</title>
-		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-		<style>
-		/* ================================================
-		   Modern Pachinko Top Page - Mobile First Design
-		   ================================================ */
-
-		:root {
-			--primary-purple: #1a0a2e;
-			--secondary-purple: #2d1b4e;
-			--accent-gold: #ffd700;
-			--accent-orange: #ff6b35;
-			--text-white: #ffffff;
-			--text-gray: #b8b8c8;
-			--card-bg: rgba(45, 27, 78, 0.8);
-			--gradient-cosmic: linear-gradient(180deg, #1a0a2e 0%, #0d0618 100%);
-		}
-
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-
-		body#index {
-			background: var(--gradient-cosmic) !important;
-			min-height: 100vh;
-			min-width: auto !important;
-			font-family: 'Noto Sans JP', sans-serif;
-			color: var(--text-white);
-			overflow-x: hidden;
-		}
-
-		#wrapper {
-			background: transparent !important;
-			min-height: 100vh;
-			position: relative;
-		}
-
-		/* Override ip.css restrictions */
-		body#index #content {
-			max-width: 100% !important;
-			width: 100%;
-		}
-
-		/* 背景エフェクト - コイン */
-		body#index::before {
-			content: '';
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-image:
-				radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 20%),
-				radial-gradient(circle at 90% 30%, rgba(255, 215, 0, 0.08) 0%, transparent 15%),
-				radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.06) 0%, transparent 25%),
-				radial-gradient(circle at 80% 90%, rgba(255, 215, 0, 0.1) 0%, transparent 20%);
-			pointer-events: none;
-			z-index: 0;
-		}
-
-		#content {
-			position: relative;
-			z-index: 1;
-		}
-
-		/* ip-pageのmain白背景を上書き */
-		body#index.ip-page main,
-		body#index main,
-		.ip-page main {
-			background: transparent !important;
-			width: 100% !important;
-			margin: 0 !important;
-		}
-
-		/* ================================================
-		   Hero Section - 大きな画像だけ
-		   ================================================ */
-		#index-visual {
-			position: relative;
-			text-align: center;
-			padding: 0;
-			background: transparent;
-		}
-
-		#index-visual img {
-			width: 100%;
-			height: auto;
-			display: block;
-		}
-
-		/* ================================================
-		   Service Introduction - 画像の下のセクション
-		   ================================================ */
-		.service-intro {
-			padding: 30px 20px 40px;
-			background: var(--gradient-cosmic);
-			text-align: center;
-		}
-
-		.intro-content {
-			max-width: 600px;
-			margin: 0 auto;
-		}
-
-		.intro-title {
-			font-size: 1.5rem;
-			font-weight: 900;
-			background: linear-gradient(135deg, var(--accent-gold), #fff5cc, var(--accent-gold));
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			background-clip: text;
-			margin-bottom: 15px;
-			letter-spacing: 0.05em;
-		}
-
-		.intro-text {
-			font-size: 0.9rem;
-			color: var(--text-gray);
-			line-height: 1.8;
-		}
-
-		/* ================================================
-		   Section Title
-		   ================================================ */
-		.section-header {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 15px;
-			margin-bottom: 20px;
-			padding: 0 20px;
-		}
-
-		.section-header::before,
-		.section-header::after {
-			content: '';
-			flex: 1;
-			max-width: 80px;
-			height: 1px;
-			background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
-		}
-
-		.section-header h2 {
-			font-size: 1.2rem;
-			font-weight: 700;
-			color: var(--accent-gold);
-			white-space: nowrap;
-		}
-
-		/* ================================================
-		   News Section - Horizontal Scroll
-		   ================================================ */
-		.news-section {
-			padding: 40px 0;
-		}
-
-		.news-scroll-container {
-			position: relative;
-			padding: 0 20px;
-		}
-
-		.news-scroll {
-			display: flex;
-			gap: 15px;
-			overflow-x: auto;
-			scroll-snap-type: x mandatory;
-			-webkit-overflow-scrolling: touch;
-			padding-bottom: 15px;
-			scrollbar-width: none;
-		}
-
-		.news-scroll::-webkit-scrollbar {
-			display: none;
-		}
-
-		.news-card {
-			flex: 0 0 280px;
-			scroll-snap-align: start;
-			background: var(--card-bg);
-			border-radius: 15px;
-			overflow: hidden;
-			border: 1px solid rgba(255, 215, 0, 0.2);
-			transition: transform 0.3s, box-shadow 0.3s;
-		}
-
-		.news-card:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
-		}
-
-		.news-card a {
-			text-decoration: none;
-			color: inherit;
-			display: block;
-		}
-
-		.news-card-image {
-			width: 100%;
-			height: 160px;
-			object-fit: cover;
-		}
-
-		.news-card-content {
-			padding: 15px;
-		}
-
-		.news-card-date {
-			font-size: 0.8rem;
-			color: var(--text-gray);
-			margin-bottom: 8px;
-		}
-
-		.news-card-title {
-			font-size: 0.95rem;
-			font-weight: 600;
-			line-height: 1.5;
-			color: var(--text-white);
-		}
-
-		/* Scroll Arrows */
-		.scroll-arrow {
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
-			width: 32px;
-			height: 32px;
-			background: rgba(255, 215, 0, 0.85);
-			border: none;
-			border-radius: 50%;
-			cursor: pointer;
-			display: none; /* モバイルでは非表示 */
-			align-items: center;
-			justify-content: center;
-			z-index: 10;
-			transition: all 0.3s;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-		}
-
-		.scroll-arrow:hover {
-			background: var(--accent-gold);
-			transform: translateY(-50%) scale(1.15);
-			box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-		}
-
-		.scroll-arrow.prev { left: 10px; }
-		.scroll-arrow.next { right: 10px; }
-
-		.scroll-arrow svg {
-			width: 16px;
-			height: 16px;
-			fill: var(--primary-purple);
-		}
-
-		/* タブレット以上でスクロールボタンを表示 */
-		@media (min-width: 768px) {
-			.scroll-arrow {
-				display: flex;
-			}
-		}
-
-		/* ================================================
-		   Machine Sections (New/Event/All)
-		   ================================================ */
-		.machine-section {
-			padding: 40px 0;
-		}
-
-		.machine-grid {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 15px;
-			padding: 0 20px;
-		}
-
-		.machine-card {
-			background: var(--card-bg);
-			border-radius: 15px;
-			overflow: hidden;
-			border: 1px solid rgba(255, 215, 0, 0.15);
-			transition: all 0.3s;
-			position: relative;
-		}
-
-		.machine-card:hover {
-			transform: translateY(-5px);
-			border-color: var(--accent-gold);
-			box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
-		}
-
-		.machine-card a {
-			text-decoration: none;
-			color: inherit;
-			display: block;
-		}
-
-		.machine-card-image {
-			width: 100%;
-			aspect-ratio: 1;
-			object-fit: cover;
-		}
-
-		.machine-card-badge {
-			position: absolute;
-			top: 10px;
-			left: 10px;
-			padding: 4px 10px;
-			border-radius: 20px;
-			font-size: 0.7rem;
-			font-weight: 700;
-			z-index: 5;
-		}
-
-		.badge-new {
-			background: linear-gradient(135deg, #ff6b35, #ff8c5a);
-			color: white;
-		}
-
-		.badge-event {
-			background: linear-gradient(135deg, #ff3366, #ff6699);
-			color: white;
-		}
-
-		.badge-slot {
-			background: linear-gradient(135deg, #667eea, #764ba2);
-			color: white;
-		}
-
-		.badge-pachinko {
-			background: linear-gradient(135deg, #11998e, #38ef7d);
-			color: white;
-		}
-
-		/* Machine Status Badge */
-		.machine-status {
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			padding: 4px 10px;
-			border-radius: 20px;
-			font-size: 0.65rem;
-			font-weight: 700;
-			z-index: 5;
-		}
-
-		.status-available {
-			background: #4ade80;
-			color: #0a3d1c;
-		}
-
-		.status-playing {
-			background: #f59e0b;
-			color: #451a03;
-		}
-
-		.status-maintenance {
-			background: #ef4444;
-			color: white;
-		}
-
-		.machine-card-info {
-			padding: 12px;
-		}
-
-		.machine-card-type {
-			font-size: 0.7rem;
-			color: var(--accent-gold);
-			margin-bottom: 5px;
-		}
-
-		.machine-card-name {
-			font-size: 0.85rem;
-			font-weight: 600;
-			line-height: 1.4;
-			color: var(--text-white);
-		}
-
-
-	/* ================================================
-	   Machine Status Styles (稼働状態別スタイル)
-	   ================================================ */
-
-	/* 停止中 (Status 0) - Gray and disabled */
-	.machine-card-status-0 {
-		opacity: 0.5;
-		filter: grayscale(80%);
-		pointer-events: none;
-	}
-
-	.machine-card-status-0 .machine-card-link {
-		cursor: not-allowed !important;
-		pointer-events: none;
-	}
-
-	.machine-card-status-0::after {
-		content: '停止中';
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		background: rgba(0, 0, 0, 0.85);
-		color: #ffffff;
-		padding: 8px 20px;
-		border-radius: 8px;
-		font-size: 0.9rem;
-		font-weight: 700;
-		z-index: 10;
-		border: 2px solid #666;
-	}
-
-	/* メンテナンス中 (Status 2) - Maintenance indicator */
-	.machine-card-status-2 {
-		border-color: rgba(239, 68, 68, 0.5);
-	}
-
-	.machine-card-status-2::before {
-		content: 'メンテナンス中';
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		background: linear-gradient(135deg, #ef4444, #dc2626);
-		color: white;
-		padding: 4px 12px;
-		border-radius: 20px;
-		font-size: 0.65rem;
-		font-weight: 700;
-		z-index: 15;
-		box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-	}
-
-	.machine-card-status-2:hover {
-		border-color: rgba(239, 68, 68, 0.8);
-	}
-
-	/* 稼働中 (Status 1) - Normal active state (default styles apply) */
-	.machine-card-status-1:hover {
-		transform: translateY(-5px);
-		border-color: var(--accent-gold);
-		box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
-	}
-		/* ================================================
-		   Category Section
-		   ================================================ */
-		.category-section {
-			padding: 40px 0;
-		}
-
-		.category-grid {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 15px;
-			padding: 0 20px;
-		}
-
-		.category-item {
-			text-decoration: none;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 10px;
-			padding: 20px 10px;
-			background: var(--card-bg);
-			border-radius: 15px;
-			border: 1px solid rgba(255, 215, 0, 0.15);
-			transition: all 0.3s;
-		}
-
-		.category-item:hover {
-			border-color: var(--accent-gold);
-			transform: translateY(-3px);
-			box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
-		}
-
-		.category-icon {
-			width: 50px;
-			height: 50px;
-			background: linear-gradient(135deg, var(--accent-gold), #ffed4a);
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 1.5rem;
-		}
-
-		.category-name {
-			font-size: 0.8rem;
-			font-weight: 600;
-			color: var(--text-white);
-			text-align: center;
-		}
-
-		/* ================================================
-		   Footer Actions
-		   ================================================ */
-		.footer-actions {
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			padding: 15px 20px;
-			padding-bottom: calc(15px + env(safe-area-inset-bottom));
-			background: linear-gradient(180deg, transparent, rgba(13, 6, 24, 0.95) 30%);
-			display: flex;
-			gap: 10px;
-			z-index: 100;
-		}
-
-		.footer-btn {
-			flex: 1;
-			padding: 15px 20px;
-			border-radius: 30px;
-			font-size: 1rem;
-			font-weight: 700;
-			text-decoration: none;
-			text-align: center;
-			transition: all 0.3s;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 8px;
-		}
-
-		.btn-secondary {
-			background: transparent;
-			border: 2px solid var(--accent-gold);
-			color: var(--accent-gold);
-		}
-
-		.btn-secondary:hover {
-			background: rgba(255, 215, 0, 0.1);
-		}
-
-		.btn-primary {
-			background: linear-gradient(135deg, var(--accent-gold), #ffed4a);
-			border: none;
-			color: var(--primary-purple);
-		}
-
-		.btn-primary:hover {
-			transform: scale(1.02);
-			box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
-		}
-
-		/* Footer Spacer */
-		.footer-spacer {
-			height: 100px;
-		}
-
-		/* ================================================
-		   All Machines Section (Existing rec-list)
-		   ================================================ */
-		.all-machines-section {
-			padding: 40px 0;
-		}
-
-		.rec-list {
-			padding: 0;
-			background: transparent;
-		}
-
-		.rec-list h4 {
-			display: none;
-		}
-
-		.rec-list ul {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 15px;
-			padding: 0 20px;
-			list-style: none;
-		}
-
-		.rec-list li {
-			background: var(--card-bg);
-			border-radius: 15px;
-			overflow: hidden;
-			border: 1px solid rgba(255, 215, 0, 0.15);
-			transition: all 0.3s;
-			position: relative;
-		}
-
-		.rec-list li:hover {
-			transform: translateY(-5px);
-			border-color: var(--accent-gold);
-		}
-
-		.rec-list .image-wrapper {
-			display: block;
-			width: 100%;
-			aspect-ratio: 1;
-			overflow: hidden;
-		}
-
-		.rec-list .image-wrapper img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			transition: transform 0.3s;
-		}
-
-		.rec-list li:hover .image-wrapper img {
-			transform: scale(1.05);
-		}
-
-		.rec-list .m-type {
-			position: absolute;
-			top: 10px;
-			left: 10px;
-			padding: 4px 10px;
-			border-radius: 20px;
-			font-size: 0.7rem;
-			font-weight: 700;
-			background: linear-gradient(135deg, #667eea, #764ba2);
-			color: white;
-			z-index: 5;
-		}
-
-		.rec-list .m-list-title {
-			display: block;
-			padding: 12px;
-			font-size: 0.85rem;
-			font-weight: 600;
-			color: var(--text-white);
-			line-height: 1.4;
-		}
-
-		/* Machine Status in rec-list */
-		.rec-list .machine-status-badge {
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			padding: 4px 10px;
-			border-radius: 20px;
-			font-size: 0.65rem;
-			font-weight: 700;
-			z-index: 10;
-		}
-
-		/* ================================================
-		   Notice Section
-		   ================================================ */
-		.site-info {
-			padding: 40px 20px;
-			background: transparent;
-		}
-
-		.site-info h4 {
-			display: none;
-		}
-
-		.site-info ul {
-			list-style: none;
-		}
-
-		.site-info .p-postList__item {
-			background: var(--card-bg);
-			border-radius: 12px;
-			margin-bottom: 10px;
-			border: 1px solid rgba(255, 215, 0, 0.15);
-			transition: all 0.3s;
-		}
-
-		.site-info .p-postList__item:hover {
-			border-color: var(--accent-gold);
-		}
-
-		.site-info .p-postList__item a {
-			display: flex;
-			flex-wrap: wrap;
-			align-items: center;
-			gap: 10px;
-			padding: 15px;
-			text-decoration: none;
-			color: var(--text-white);
-		}
-
-		.site-info .new-date {
-			font-size: 0.75rem;
-			color: var(--text-gray);
-		}
-
-		.site-info .new-m-type {
-			font-size: 0.7rem;
-			padding: 3px 8px;
-			background: var(--accent-gold);
-			color: var(--primary-purple);
-			border-radius: 10px;
-			font-weight: 600;
-		}
-
-		.site-info .m-list-title {
-			width: 100%;
-			font-size: 0.9rem;
-			line-height: 1.5;
-		}
-
-		/* ================================================
-		   Slider Section
-		   ================================================ */
-		.slider-section {
-			display: none; /* Hide original slider, use news-scroll instead */
-		}
-
-		/* ================================================
-		   Corner Tabs
-		   ================================================ */
-		.corner-tabs {
-			background: rgba(45, 27, 78, 0.9);
-			padding: 15px 0;
-			position: sticky;
-			top: 0;
-			z-index: 100;
-			backdrop-filter: blur(10px);
-			border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-		}
-
-		.tab-container {
-			display: flex;
-			gap: 8px;
-			padding: 0 20px;
-			overflow-x: auto;
-			scrollbar-width: none;
-		}
-
-		.tab-container::-webkit-scrollbar {
-			display: none;
-		}
-
-		.tab-item {
-			padding: 10px 18px;
-			background: rgba(255, 255, 255, 0.1);
-			border-radius: 25px;
-			color: var(--text-gray);
-			text-decoration: none;
-			transition: all 0.3s;
-			font-size: 0.85rem;
-			font-weight: 500;
-			white-space: nowrap;
-			border: 1px solid transparent;
-		}
-
-		.tab-item:hover {
-			background: rgba(255, 215, 0, 0.2);
-			color: var(--accent-gold);
-		}
-
-		.tab-item.flow-active,
-		.tab-item.active {
-			background: var(--accent-gold);
-			color: var(--primary-purple);
-			font-weight: 700;
-		}
-
-		/* ================================================
-		   Responsive - Tablet
-		   ================================================ */
-		@media (min-width: 768px) {
-			.intro-title {
-				font-size: 2rem;
-			}
-
-			.intro-text {
-				font-size: 1rem;
-			}
-
-			.service-intro {
-				padding: 40px 30px 50px;
-			}
-
-			.machine-grid,
-			.rec-list ul {
-				grid-template-columns: repeat(3, 1fr);
-				gap: 20px;
-			}
-
-			.news-card {
-				flex: 0 0 320px;
-			}
-
-			.category-grid {
-				grid-template-columns: repeat(6, 1fr);
-			}
-
-			.footer-actions {
-				max-width: 500px;
-				left: 50%;
-				transform: translateX(-50%);
-			}
-		}
-
-		/* ================================================
-		   Responsive - Desktop
-		   ================================================ */
-		@media (min-width: 1024px) {
-			.machine-grid,
-			.rec-list ul {
-				grid-template-columns: repeat(4, 1fr);
-				max-width: 1200px;
-				margin: 0 auto;
-				padding: 0 40px;
-			}
-
-			.category-grid {
-				max-width: 1000px;
-				margin: 0 auto;
-			}
-
-			.intro-title {
-				font-size: 2.2rem;
-			}
-
-			.intro-content {
-				max-width: 800px;
-			}
-
-			.news-scroll-container {
-				max-width: 1200px;
-				margin: 0 auto;
-			}
-
-			.section-header {
-				max-width: 1200px;
-				margin: 0 auto 20px;
-			}
-		}
-
-		/* ================================================
-		   Responsive - Large Desktop
-		   ================================================ */
-		@media (min-width: 1400px) {
-			.machine-grid,
-			.rec-list ul {
-				grid-template-columns: repeat(5, 1fr);
-				max-width: 1400px;
-				gap: 25px;
-			}
-
-			.news-scroll-container,
-			.section-header {
-				max-width: 1400px;
-			}
-
-			.machine-card-name {
-				font-size: 1rem;
-			}
-		}
-
-		/* ================================================
-		   Responsive - Extra Large Desktop
-		   ================================================ */
-		@media (min-width: 1800px) {
-			.machine-grid,
-			.rec-list ul {
-				grid-template-columns: repeat(6, 1fr);
-				max-width: 1700px;
-				gap: 30px;
-			}
-
-			.news-scroll-container,
-			.section-header {
-				max-width: 1700px;
-			}
-		}
-
-		/* ================================================
-		   Loading Overlay
-		   ================================================ */
-		.loading-overlay {
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: var(--primary-purple);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			z-index: 9999;
-			transition: opacity 0.3s, visibility 0.3s;
-		}
-
-		.loading-overlay.hidden {
-			opacity: 0;
-			visibility: hidden;
-		}
-
-		.loading-container {
-			text-align: center;
-		}
-
-		.loading-spinner-double {
-			width: 60px;
-			height: 60px;
-			border: 4px solid rgba(255, 215, 0, 0.2);
-			border-top-color: var(--accent-gold);
-			border-radius: 50%;
-			animation: spin 1s linear infinite;
-			margin: 0 auto 20px;
-		}
-
-		@keyframes spin {
-			to { transform: rotate(360deg); }
-		}
-
-		.loading-text {
-			color: var(--accent-gold);
-			font-size: 0.9rem;
-		}
-
-		/* Hide original elements we're redesigning */
-		.index-contents .slider {
-			display: none;
-		}
-
-		/* ================================================
-		   Language Selector - 言語切り替え
-		   ================================================ */
-		.lang-selector {
-			position: fixed;
-			top: 20px;
-			right: 20px;
-			z-index: 1000;
-			display: flex;
-			gap: 10px;
-			background: rgba(45, 27, 78, 0.9);
-			padding: 10px 15px;
-			border-radius: 25px;
-			box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-		}
-
-		.lang-selector a {
-			color: var(--text-white);
-			text-decoration: none;
-			padding: 5px 12px;
-			border-radius: 15px;
-			transition: all 0.3s;
-			font-size: 14px;
-			font-weight: 500;
-		}
-
-		.lang-selector a:hover {
-			background: rgba(255, 215, 0, 0.2);
-			transform: translateY(-2px);
-		}
-
-		.lang-selector a.active {
-			background: var(--accent-gold);
-			color: var(--primary-purple);
-		}
-		</style>
 	</head>
 
 	<body id="index" class="ip-page">
 
-	<!-- Language Selector -->
-	<div class="lang-selector">
-		<a href="?lang=zh" class="active">中文</a>
-		<a href="?lang=ko">한국어</a>
-		<a href="?lang=en">English</a>
-		<a href="?lang=ja">日本語</a>
-	</div>
-
-	<!-- Loading -->
+	<!-- ローディング表示 -->
 	<div id="pageLoading" class="loading-overlay">
 		<div class="loading-container">
 			<div class="loading-spinner-double"></div>
-			<div class="loading-text">読み込み中...</div>
+			<div class="loading-text">Loading...</div>
+			<div class="loading-progress">
+				<div class="loading-progress-bar"></div>
+			</div>
 		</div>
 	</div>
 
@@ -984,29 +29,11 @@
 	<div class="content-wrapper">
 	<div class="contents">
 
-	<!-- Hidden SLIDER_LIST for PHP compatibility -->
-	<div style="display:none;">
-		<!--loop:{SLIDER_LIST}-->
-		<div data-no="{%NO%}" data-machine-cd="{%MACHINE_CD%}" data-model-cd="{%MODEL_CD%}" data-name="{%MODEL_NAME%}" data-generation="{%GENERATION%}" data-image="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}"></div>
-		<!--/loop:{SLIDER_LIST}-->
-	</div>
-
-	<!-- Hero Section - 大きな画像のみ -->
+	<!-- Top Visual -->
 	<section id="index-visual">
 		<picture>
-			<img src="/content/images/index/top.jpg" alt="MillionNet8">
+			<img src="/content/images/index/top.jpg" sizes="(max-width: 4368px) 100vw, 4368px" decoding="async" alt="MillionNet8">
 		</picture>
-	</section>
-
-	<!-- Service Introduction -->
-	<section class="service-intro">
-		<div class="intro-content">
-			<h1 class="intro-title">在线弹珠机和老虎机</h1>
-			<p class="intro-text">
-				通过Milliongodonline&Millionnet服务，<br>
-				享受远程游戏的乐趣。
-			</p>
-		</div>
 	</section>
 
 	<!-- Corner Tabs -->
@@ -1015,91 +42,99 @@
 			<!--loop:{FLOW_CORNER}-->
 			<!--if:{FLOW_LINK}-->
 			<a href="./?CN={%CNO%}" class="tab-item{%FLOW_ACTIVE%}">
-				{%CORNER_NAME%}
+				<span>{%CORNER_NAME%}</span>
 			</a>
 			<!--/if:{FLOW_LINK}-->
 			<!--if_not:{FLOW_LINK}-->
-			<span class="tab-item{%FLOW_ACTIVE%}">{%CORNER_NAME%}</span>
+			<span class="tab-item{%FLOW_ACTIVE%}">
+				<span>{%CORNER_NAME%}</span>
+			</span>
 			<!--/if_not:{FLOW_LINK}-->
 			<!--/loop:{FLOW_CORNER}-->
 		</div>
 	</section>
 
-	<!-- News Section -->
-	<!--if:{HAVE_NOTICE}-->
-	<section class="news-section">
-		<div class="section-header">
-			<h2>最新消息</h2>
-		</div>
-		<div class="news-scroll-container">
-			<button class="scroll-arrow prev" onclick="scrollNews(-1)">
-				<svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-			</button>
-			<div class="news-scroll" id="newsScroll">
-				<!--loop:{NOTICE_LIST2}-->
-				<div class="news-card">
-					<a href="{%LINK_URL%}"{%OTHER_LINK%}>
-						<!--if:{TOP_IMAGE}-->
-						<img src="{%TOP_IMAGE%}" alt="{%TITLE%}" class="news-card-image">
-						<!--/if:{TOP_IMAGE}-->
-						<!--if_not:{TOP_IMAGE}-->
-						<div class="news-card-image" style="background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">NEWS</div>
-						<!--/if_not:{TOP_IMAGE}-->
-						<div class="news-card-content">
-							<div class="news-card-date">{%DISP_DT%}</div>
-							<div class="news-card-title">{%TITLE%}</div>
-						</div>
-					</a>
-				</div>
-				<!--/loop:{NOTICE_LIST2}-->
-			</div>
-			<button class="scroll-arrow next" onclick="scrollNews(1)">
-				<svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
-			</button>
-		</div>
-	</section>
-	<!--/if:{HAVE_NOTICE}-->
-
-	<!-- New Machines / Event Machines Section -->
-	<section class="machine-section">
-		<div class="section-header">
-			<h2>設置機種</h2>
-		</div>
-		<div class="machine-grid">
-			<!--loop:{LIST}-->
-			<div class="machine-card machine-card-status-{%MACHINE_STATUS%}" data-status="{%MACHINE_STATUS%}">
-				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="machine-card-link">
-					<!-- Machine Type Badge -->
-					<span class="machine-card-badge badge-slot">{%GENERATION%}</span>
-
-					<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}" class="machine-card-image">
-					<div class="machine-card-info">
-						<div class="machine-card-type">{%MAKER_NAME%}</div>
-						<div class="machine-card-name">{%MODEL_NAME%}</div>
-					</div>
+	<!-- Slick Slider -->
+	<section>
+		<div class="slider">
+			<!--loop:{SLIDER_LIST}-->
+			<div class="item">
+				<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
+					<span class="image-wrapper">
+						<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}">
+					</span>
+					<span class="m-type">{%GENERATION%}</span>
+					<span class="p-postList__title">{%MODEL_NAME%}</span>
 				</a>
 			</div>
-			<!--/loop:{LIST}-->
+			<!--/loop:{SLIDER_LIST}-->
 		</div>
 	</section>
 
-	<!-- Category Section -->
-	<section class="category-section">
-		<div class="section-header">
-			<h2>おすすめ機体</h2>
-		</div>
-		<div class="category-grid">
-			<!--loop:{RECOMMENDED_LIST}-->
-			<a href="{%LINK_URL%}" class="category-item">
-				<div class="category-icon">{%CATEGORY_ICON%}</div>
-				<span class="category-name">{%CATEGORY_NAME%}</span>
-			</a>
-			<!--/loop:{RECOMMENDED_LIST}-->
-		</div>
-	</section>
+	<!-- Content Sections -->
+	<div class="index-contents">
 
-	<!-- Footer Spacer -->
-	<div class="footer-spacer"></div>
+		<!-- 設置Model -->
+		<section class="rec-list">
+			<h4>設置Model</h4>
+			<ul>
+				<!--loop:{LIST}-->
+				<li>
+					<!-- ステータスバッジ -->
+					<!--if:{CLOSED}-->
+					<div class="machine-status-badge status-closed">営業時間外</div>
+					<!--/if:{CLOSED}-->
+					<!--if:{LINK_MAINTENANCE}-->
+					<div class="machine-status-badge status-maintenance">メンテナンス中</div>
+					<!--/if:{LINK_MAINTENANCE}-->
+					<!--if:{MAINTENANCE}-->
+					<div class="machine-status-badge status-maintenance">メンテナンス中</div>
+					<!--/if:{MAINTENANCE}-->
+					<!--if:{IN_PREPARATION}-->
+					<div class="machine-status-badge status-preparation">Preparing</div>
+					<!--/if:{IN_PREPARATION}-->
+					<!--if:{IS_OPEN}-->
+						<!--if:{IS_NORMAL}-->
+							<!--if:{AVAILABLE}-->
+							<div class="machine-status-badge status-available">空き</div>
+							<!--/if:{AVAILABLE}-->
+							<!--if:{NOAVAIABLE}-->
+							<div class="machine-status-badge status-playing">稼働中</div>
+							<!--/if:{NOAVAIABLE}-->
+						<!--/if:{IS_NORMAL}-->
+					<!--/if:{IS_OPEN}-->
+
+					<div class="m-type"><span>{%GENERATION%}</span></div>
+					<a href="{%SITE_SSL_URL%}search.php?MODEL={%MODEL_CD%}" class="p-postList__link">
+						<span class="image-wrapper">
+							<img src="{%DIR_IMG_MODEL_DIR%}{%IMAGE_LIST%}" alt="{%MODEL_NAME%}">
+						</span>
+					</a>
+					<span class="m-list-title">{%MODEL_NAME%}</span>
+				</li>
+				<!--/loop:{LIST}-->
+			</ul>
+		</section>
+
+		<!-- お知らせ -->
+		<section class="site-info">
+			<h4>お知らせ</h4>
+			<ul class="p-postList -type-simple">
+				<!--loop:{NOTICE_LIST2}-->
+				<li class="p-postList__item">
+					<a href="{%LINK_URL%}"{%OTHER_LINK%}>
+						<span class="new-date" aria-label="公開日">{%DISP_DT%}</span>
+						<span class="new-m-type">{%CATEGORY%}</span>
+						<div class="m-list-title">
+							<p>{%TITLE%}</p>
+						</div>
+					</a>
+				</li>
+				<!--/loop:{NOTICE_LIST2}-->
+			</ul>
+		</section>
+
+	</div>
 
 	</div>
 	</div>
@@ -1108,30 +143,88 @@
 	</div>
 	<!-- /Main Content -->
 
-	<!-- Fixed Footer Actions -->
-	<div class="footer-actions">
-		<a href="./" class="footer-btn btn-secondary">機体選択</a>
-		<a href="search.php" class="footer-btn btn-primary">始める</a>
-	</div>
-
 	</div>
 	<!-- /wrapper -->
 
 	<!--#include file="inc_footer.html"-->
+
 	<!--#include file="inc_script.html"-->
 
-	<script>
-	// News Scroll Function
-	function scrollNews(direction) {
-		const container = document.getElementById('newsScroll');
-		const scrollAmount = 300;
-		container.scrollBy({
-			left: direction * scrollAmount,
-			behavior: 'smooth'
-		});
+	<style>
+	/* Modelステータス表示 */
+	.rec-list li {
+		position: relative;
 	}
+	.machine-status-badge {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		padding: 5px 12px;
+		border-radius: 50px;
+		font-size: 11px;
+		font-weight: bold;
+		z-index: 10;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+		white-space: nowrap;
+	}
+	.status-available {
+		background: #4ade80;
+		color: white;
+	}
+	.status-playing {
+		background: #f59e0b;
+		color: white;
+	}
+	.status-maintenance {
+		background: #ef4444;
+		color: white;
+	}
+	.status-closed {
+		background: #6b7280;
+		color: white;
+	}
+	.status-preparation {
+		background: #3b82f6;
+		color: white;
+	}
+	@media (max-width: 768px) {
+		.machine-status-badge {
+			font-size: 10px;
+			padding: 4px 10px;
+			top: 5px;
+			right: 5px;
+		}
+	}
+	</style>
 
-	// Hide Loading
+	<script>
+	$(document).ready(function(){
+		// Slick Slider初期化
+		$('.slider').slick({
+			autoplay: true,
+			autoplaySpeed: 3000,
+			dots: true,
+			arrows: true,
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			responsive: [
+				{
+					breakpoint: 600,
+					settings: {
+						slidesToShow: 1,
+						slidesToScroll: 1
+					}
+				}
+			]
+		});
+
+		// スライダー初期化完了後、ローディング非表示
+		setTimeout(function() {
+			hideLoading();
+		}, 300);
+	});
+
+	// ローディング非表示関数
 	function hideLoading() {
 		var loading = document.getElementById('pageLoading');
 		if (loading) {
@@ -1139,32 +232,23 @@
 		}
 	}
 
-	// Machine Status Click Prevention
-	function preventStoppedMachineClicks() {
-		// 停止中の台 (status=0) のクリックを無効化
-		const stoppedMachines = document.querySelectorAll('.machine-card-status-0');
-		stoppedMachines.forEach(function(machine) {
-			const link = machine.querySelector('a');
-			if (link) {
-				link.addEventListener('click', function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					return false;
-				});
-			}
-		});
-	}
-
-	// On DOM Ready
-	document.addEventListener('DOMContentLoaded', function() {
-		setTimeout(hideLoading, 500);
-		preventStoppedMachineClicks();
-	});
-
-	// On Window Load
+	// 画像読み込み完了後にもローディング非表示
 	window.addEventListener('load', function() {
 		hideLoading();
-		preventStoppedMachineClicks();
+	});
+
+	// ModelSelectリンククリック時にローディング表示
+	document.addEventListener('DOMContentLoaded', function() {
+		var machineLinks = document.querySelectorAll('.p-postList__link');
+		machineLinks.forEach(function(link) {
+			link.addEventListener('click', function() {
+				var loading = document.getElementById('pageLoading');
+				if (loading) {
+					loading.classList.remove('hidden');
+					document.querySelector('#pageLoading .loading-text').textContent = 'Model情報をLoading...';
+				}
+			});
+		});
 	});
 	</script>
 

@@ -1,0 +1,64 @@
+<!--include:header_admin.html-->
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12">
+			<h2 class="page-title">おすすめカテゴリー管理</h2>
+		</div>
+	</div>
+
+	<!--if:{MESSAGE}-->
+	<div class="row">
+		<div class="col-12">
+			<div class="alert alert-info">{%MESSAGE%}</div>
+		</div>
+	</div>
+	<!--/if:{MESSAGE}-->
+
+	<div class="row mb-3">
+		<div class="col-12 text-right">
+			<a href="?M=detail" class="btn btn-primary">
+				<i class="fas fa-plus"></i> 新規作成
+			</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th width="60">順序</th>
+								<th width="80">アイコン</th>
+								<th>カテゴリー名</th>
+								<th>英語名</th>
+								<th>リンク先</th>
+								<th width="120">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!--loop:{LIST}-->
+							<tr>
+								<td class="text-center">{%DISP_ORDER%}</td>
+								<td class="text-center" style="font-size: 2rem;">{%CATEGORY_ICON%}</td>
+								<td>{%CATEGORY_NAME%}</td>
+								<td>{%CATEGORY_ROMAN%}</td>
+								<td><code>{%LINK_URL%}</code></td>
+								<td class="text-center">
+									<a href="?M=detail&NO={%NO%}" class="btn btn-sm btn-info">
+										<i class="fas fa-edit"></i> 編集
+									</a>
+								</td>
+							</tr>
+							<!--/loop:{LIST}-->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--include:footer_admin.html-->

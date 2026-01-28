@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Procedures to Cancel the Membership</title>
+		<title>{%SITE_TITLE%} - 退会手続き</title>
 	</head>
 
 	<body>
@@ -12,13 +12,13 @@
 	<!-- Page Content -->
 	<div class="container">
 
-		<h1 class="h3 text-center my-4">Procedures to Cancel the Membership</h1>
+		<h1 class="h3 text-center my-4">退会手続き</h1>
 		<hr>
 		
 		<form action="{%SITE_SSL_URL%}{%SELF%}?M=conf" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
 			<div class="input-form mb-5">
 				<div class="alert alert-danger">
-					<small>* All your {%CURRENCY_1%} and {%CURRENCY_3%} will be revoked on canceling the membership.</small>
+					<small>※退会手続きをされますと所持{%CURRENCY_1%}、および所持{%CURRENCY_3%}が全て失効されます。</small>
 				</div>
 				<hr>
 				
@@ -30,17 +30,17 @@
 				
 				<div class="form-group">
 					<label class="col-form-label" for="password">Password</label>
-					<input type="password" class="form-control" id="password" name="PASS">
+					<input type="password" class="form-control" id="password" name="PASS" maxlength="{%MEMBER_PASS_MAX%}">
 				</div>
 				
 				<div class="form-group">
-					<label class="col-form-label" for="reason">Reasons for Canceling the Membership</label>
+					<label class="col-form-label" for="reason">退会理由</label>
 					<textarea rows="5" class="form-control" name="REASON" id="reason">{%REASON%}</textarea>
 				</div>
 				<hr>
 				
 				<div class="text-center">
-					<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary">Cancel the membership</a>
+					<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary">退会する</a>
 				</div>
 			</div>
 		</form>

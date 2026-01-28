@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=1" name="viewport" />
+	<meta charset="utf-8">
+	<title>camera server</title>
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+<body>
+	<div id="setting" style="display:none;">
+		ビデオ入力:<select id="videosorce"><option value="">请选择</option></select><br>
+		选择中（<span id="selectvideo"></span>）<br>
+		オーディオ入力:<select id="audiosorce"><option value="">请选择</option></select><br>
+		选择中（<span id="selectaudio"></span>）<br>
+		<button id="reboot">上記に设置し再起動</button>
+	</div>
+	<div id="running" style="display:block;">
+		<button id="goSetting">入力设置の更改</button> 
+		<button id="cameracheck">カメラチェック</button> 
+		<button id="mentebutton">メンテナンス中に切り替える</button>
+		<button id="exitbutton">カメラサーバを終了する</button><br>
+		<div id="container" style="display:none;">
+			<video id="localVideo" class="playing-screen" autoplay></video>
+			
+		</div>
+		<div id="errorMsg"></div>
+		ステータス<br>
+		<table border=1>
+			<tr>
+				<th width=120 id="peerserver">peer server</th>
+				<th width=120 id="keysocket">keysocket</th>
+				<th width=120 id="useractive">User active</th>
+			</tr>
+		</table>
+		接続情報
+		<table border=1>
+			<tr>
+				<th>時間:</th><td width=200><span id="nowTime"></span><br></td>
+				<th>リスタート:</th><td width=200><span id="restartTime"></span><br></td>
+			</tr>
+			<tr>
+				<th>台番号:</th><td width=200><span id="machine_no"></span><br></td>
+				<th>カメラ名:</th><td width=200><span id="camera_name"></span><br></td>
+			</tr>
+			<tr>
+				<th>机型名:</th><td colspan=3>{%MACHINE_NAME%}<br></td>
+			</tr>
+			<tr>
+				<th>Signal5:</th><td width=200><span id="drumtype"></span><br></td>
+				<th>配信サイズ:</th><td width=200><span id="videosize"></span><br></td>
+			</tr>
+			<tr>
+				<th>会員No:</th><td width=200><span id="member_no"></span> [<span id="languageMode"></span>]<br></td>
+				<th>play_dt:</th><td width=200><span id="play_dt"></span><br></td>
+			</tr>
+			<tr>
+				<th>総ゲーム数:</th><td><span id="total_count"></span><br></td>
+				<th>ゲーム数:</th><td><span id="count"></span><br></td>
+			</tr>
+			<tr>
+				<th>BB:</th><td><span id="bb_count"></span> <input type="checkbox" id="bb_on" /> <span id="bb_name" style="display:none;">ボーナス中</span><br></td>
+				<th>RB:</th><td><span id="rb_count"></span> <input type="checkbox" id="rb_on" /> <span id="rb_name" style="display:none;">ボーナス中</span><br></td>
+			</tr>
+			<tr>
+				<th>IN_CREDIT:</th><td><span id="mc_in_credit"></span><br></td>
+				<th>OUT_CREDIT:</th><td><span id="mc_out_credit"></span><br></td>
+			</tr>
+		</table>
+		<p>※Signal_2点灯 => RB、Signal_3点灯 => BB</p>
+		点数情報
+		<table border=1>
+			<tr>
+				<th>PlayPoint:</th><td width=300><span id="playpoint"></span> IN(<span id="in_point"></span>) OUT(<span id="out_point"></span>)</td>
+			</tr>
+			<tr>
+				<th>Credit:</th><td width=300><span id="credit"></span> IN(<span id="in_credit"></span>) OUT(<span id="out_credit"></span>)</td>
+			</tr>
+		</table>
+		シグナル情報
+		<table border=1>
+			<tr><th width=250>user signal</th><th width=250>socket signal</th></tr>
+			<tr><td id="usersignal"></td><td id="socketsignal"></td></tr>
+		</table>
+		API情報
+		<table border=1>
+			<tr>
+				<th>userAuth</th><td width=300><span id="userAuth"></span><br><span id="userAuth_err"></span></td>
+			</tr>
+			<tr>
+				<th>buyPlaypoint</th><td><span id="buyPlaypoint"></span><br><span id="buyPlaypoint_err"></span></td>
+			</tr>
+			<tr>
+				<th>usePlayPoint</th><td><span id="usePlayPoint"></span><br><span id="usePlayPoint_err"></span></td>
+			</tr>
+			<tr>
+				<th>playLog</th><td><span id="playLog"></span><br><span id="playLog_err"></span></td>
+			</tr>
+			<tr>
+				<th>pay</th><td><span id="pay"></span><br><span id="pay_err"></span></td>
+			</tr>
+			<tr>
+				<th>requestBuyPlayPoint</th><td><span id="requestBuyPlayPoint"></span><br><span id="requestBuyPlayPoint_err"></span></td>
+			</tr>
+			<tr>
+				<th>cameraAPI</th><td><span id="cameraAPI"></span><br><span id="cameraAPI_err"></span></td>
+			</tr>
+			<tr>
+				<th>clientMessageAPI</th><td><span id="clientMessage"></span><br><span id="clientMessage_err"></span></td>
+			</tr>
+		</table>
+		<br>
+		
+	</div>
+	
+	<script>
+		var machineMode       = 2;
+		var cameraid          = '{%CAMERA_ID%}';
+		var machine_no        = '{%MACHINE_NO%}';
+		var peerjskey         = '{%PEERJSKEY%}';
+		var authID            = '{%AUTHID%}';
+		var sigHost           = '{%SIGHOST%}';
+		var iceServers        = {%ICESERVERS%};
+		var autoPayTime       = {%AUTOPAYTIME%};
+		var gameOpenTime      = '{%GAMEOPENTIME%}';
+		var gameCloseTime     = '{%GAMECLOSETIME%}';
+		var noticeTime        = '{%NOTICECLOSETIME%}';
+		var layoutOption      = {%LAYOUTOPTION%};
+		var serverRestartTime = '{%RESTARTTIME%}';
+		var resetBonus        = '{%RESETBONUS%}';
+	</script>
+	
+	<script src="js/peer_ie.js" type="text/javascript"></script>
+	<script src="js/jquery.min.js" type="text/javascript"></script>
+	<script src="js/jquery.cookie.js" type="text/javascript"></script>
+	
+	<script src="https://cdn.temasys.com.sg/adapterjs/0.15.x/adapter.screenshare.js"></script>
+
+	<script src="js/cameraServer_slot.js?{%TIMESTAMP%}"></script>
+	<script src="js/cameraServer_functions.js?{%TIMESTAMP%}"></script>
+	<script src="js/main.js"></script>
+	
+</body>
+</html>

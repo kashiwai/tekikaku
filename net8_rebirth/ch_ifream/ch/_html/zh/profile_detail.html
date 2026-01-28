@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 个人资料设置</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">个人资料设置</h1>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<div class="input-form mb-5">
+				
+				<!--if:{ERRMSG}-->
+				<div class="alert alert-danger">
+					{%ERRMSG%}
+				</div>
+				<!--/if:{ERRMSG}-->
+				
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="lastname">苗字<span class="badge badge-indis">必填</span></label>
+						<input type="text" class="form-control" id="lastname" placeholder="" name="LASTNAME" value="{%LASTNAME%}" maxlength="{%PROFILE_SYLL_LIMIT%}">
+					</div>
+					<div class="form-group col-md-6">
+						<label for="firstname">名前<span class="badge badge-indis">必填</span></label>
+						<input type="text" class="form-control" id="firstname" placeholder="" name="FIRSTNAME" value="{%FIRSTNAME%}" maxlength="{%PROFILE_NAME_LIMIT%}">
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="birthYear">誕生年</label>
+						<input type="text" class="form-control" id="birthYear" placeholder="西暦" name="BIRTHYEAR" value="{%BIRTHYEAR%}" maxlength="4">
+					</div>
+					<div class="form-group col-md-3">
+						<label for="birthMonth">誕生月</label>
+						<select id="birthMonth" class="custom-select" name="BIRTHMONTH">
+							{%SEL_BIRTHMONTH%}
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<label for="birthDay">誕生日</label>
+						<select id="birthDay" class="custom-select" name="BIRTHDAY">
+							{%SEL_BIRTHDAY%}
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-form-label" for="address2">性别</label>
+					<div>
+						{%RDO_SEX%}
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-form-label" for="address2">接收设置6活动和新机型信息</label>
+					<div>
+						{%RDO_MAGAZINE%}
+					</div>
+				</div>
+				
+				<hr>
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="if(check()){ document.MAINFORM.submit();} return false;" class="btn btn-block btn-primary">登　録</a>
+					<hr>
+					<a href="profile.php" class="btn btn-block btn-secondary">返回</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}profile_detail.html"-->
+	
+	</body>
+</html>

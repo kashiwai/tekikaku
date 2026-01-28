@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 礼物发送确认</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+		
+		<h1 class="h3 text-center my-4">礼物发送确认</h1>
+		
+		<div id="errorform" style="display:none;">
+			<div id="nologin" class="alert alert-danger" style="display:none;">
+				長時間操作がないため退出しました。<br>
+				登录して操作をやり直してください。<br>
+			</div>
+			<div id="other" class="alert alert-danger" style="display:none;">
+				PINコードを入力した电话号码に发送できませんでした。<br>
+			</div>
+			<div id="error" class="alert alert-danger" style="display:none;"></div>
+		</div>
+		
+		<div id="inputform">
+		
+		<!--if:{ERRMSG}--><div class="alert alert-danger">{%ERRMSG%}</div><!--/if:{ERRMSG}-->
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+			<input type="hidden" name="INV_CODE" value="{%INV_CODE%}">
+			<input type="hidden" name="SEND_COIN" value="{%SEND_COIN%}">
+			<input type="hidden" name="AGREE" value="1">
+			<input type="hidden" name="INIT" value="{%INIT%}">
+			<div class="input-form">
+				
+				<div class="form-group row">
+					<label for="invitationCode" class="col-sm-4 col-form-label">发送先</label>
+					<div class="col-sm-8">
+						{%SEND_NICKNAME%} （{%INV_CODE%}）
+					</div>
+				</div>
+				
+				<div class="form-group row">
+					<label for="international_cd" class="col-sm-4 col-form-label">国際番号</label>
+					<div class="col-sm-8">
+						<select id="international_cd" class="custom-select" name="INTERNATIONAL_CD">
+							{%SEL_INTERNATIONAL_CD%}
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group row">
+					<label for="telephone_no" class="col-sm-4 col-form-label">携帯番号</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" name="TEL" id="telephone_no" value="{%TEL%}" placeholder="912345678" maxlength="{%GIFT_TEL_LIMIT%}">
+						<div class="alert alert-secondary mt-2">
+							<small class="text-muted">
+								先頭「0」を除く携帯番号を请输入。
+							</small>
+						</div>
+					</div>
+				</div>
+				
+				<div id="requestPinArea" class="input-form">
+					<div class="text-center">
+						<a href="javascript:void(0);" onclick="requestPinCode();" class="btn btn-block btn-primary">PINコードをSMSで发送</a>
+					</div>
+				</div>
+				
+				<div id="pinArea" style="display:none;">
+					<div class="form-group row">
+						<label for="pin_no" class="col-sm-4 col-form-label">PINコード</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" name="PIN" id="pin_no" value="" maxlength="{%SMS_PINCODE_LENGTH%}" placeholder="">
+						</div>
+					</div>
+					
+					<div class="input-form">
+						<div class="text-center">
+							<a href="javascript:void(0);" onclick="_submit();" class="btn btn-block btn-primary">礼物发送</a>
+						</div>
+					</div>
+					
+				</div>
+				
+				<div class="input-form">
+					<div class="text-center">
+						<a href="javascript:void(0);" onclick="_cancel();" class="btn btn-block btn-secondary">取消</a>
+					</div>
+				</div>
+				
+			</div>
+		</form>
+		</div>
+	</div>
+	<!-- /.container -->
+	
+	<!--#include file="inc_footer.html"-->
+	
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}gift_conf.html"-->
+	
+	</body>
+</html>

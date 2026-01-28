@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 発送管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-truck"></i> 発送管理</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">搜索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">商品No</div>
+											<div>
+												<input type="text" class="form-control" name="S_GOODS_NO" value="{%S_GOODS_NO%}">&nbsp;<small class="text-muted">（完全一致　※0詰め不要）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">会員No</div>
+											<div>
+												<input type="text" class="form-control" name="S_MEMBER_NO" value="{%S_MEMBER_NO%}">&nbsp;<small class="text-muted">（完全一致　※0詰め不要）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">発送日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="SHIPPING_DT_FROM" value="{%SHIPPING_DT_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="SHIPPING_DT_TO" value="{%SHIPPING_DT_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">発送No</div>
+											<div>
+												<input type="text" class="form-control" name="S_SHIPPING_NO" value="{%S_SHIPPING_NO%}">&nbsp;<small class="text-muted">（完全一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-12 d-flex align-items-center">
+											<div class="search-title">状態</div>
+											<div>
+												{%CHK_STATUS%}
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">搜索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<!--<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新用户注册</a>-->
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-list th-center-bg mb-0" style="min-width:980px;">
+									<thead>
+										<tr>
+											<th style="width:120px;">商品No
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="goods_no asc" onClick="reSort('goods_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="goods_no desc" onClick="reSort('goods_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>商品名</th>
+											<th style="width:120px;">会員No
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="member_no asc" onClick="reSort('member_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="member_no desc" onClick="reSort('member_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:200px;">昵称</th>
+											<th style="width:120px;">当選日
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="add_dt asc" onClick="reSort('add_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="add_dt desc" onClick="reSort('add_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:120px;">状態</th>
+											<th style="width:120px;">発送日
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="shipping_dt asc" onClick="reSort('shipping_dt asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="shipping_dt desc" onClick="reSort('shipping_dt desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:120px;">発送No</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetailGoods('{%GOODS_NO%}');">{%GOODS_NO_PAD%}</a></td>
+											<td>{%GOODS_NAME%}</td>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetailMember('{%MEMBER_NO%}');">{%MEMBER_NO_PAD%}</a></td>
+											<td>{%NICKNAME%}
+												<!--if:{IS_BLACK}-->{%MEMBER_BADGE_BLACK%}<!--/if:{IS_BLACK}-->
+												<!--if:{IS_TESTER}-->{%MEMBER_BADGE_TESTER%}<!--/if:{IS_TESTER}-->
+												<!--if:{IS_RETIRED}-->{%MEMBER_BADGE_RETIRED%}<!--/if:{IS_RETIRED}-->
+											</td>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%SEQ%}','{%GOODS_NO%}');">{%ADD_DT%}</a></td>
+											<td class="text-center">{%STATUS%}</td>
+											<td class="text-center">{%SHIPPING_DT%}</td>
+											<td class="text-center">{%SHIPPING_NO%}</td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			// 搜索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_number("{%A0112%}", frm["S_GOODS_NO"].value, false)) return false;
+				if (!chk_number("{%A0560%}", frm["S_MEMBER_NO"].value, false)) return false;
+				if (!chk_number("{%A2305%}", frm["S_SHIPPING_NO"].value, false)) return false;
+				if (!chk_date("{%A2303%}", frm["SHIPPING_DT_FROM"].value, false)) return false;
+				if (!chk_date("{%A2303%}", frm["SHIPPING_DT_TO"].value, false)) return false;
+				if (frm["SHIPPING_DT_FROM"].value.length > 0 && frm["SHIPPING_DT_TO"].value.length > 0) {
+					if (!compare_date("{%A2317%}", frm["SHIPPING_DT_FROM"].value, frm["SHIPPING_DT_TO"].value, false)) return false;
+				}
+				
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(seq, gno) {
+				win_open("{%SELF%}", "M=detail&SEQ=" + seq + "&NO=" + gno, "shipping_detail", 820, 900);
+			}
+			
+			// 会員詳細画面Open
+			function openDetailMember(key) {
+				win_open("member.php", "M=detail&NO=" + key, "member_detail", 820, 900);
+			}
+			
+			// 商品詳細画面Open
+			function openDetailGoods(key) {
+				win_open("goods.php", "M=detail&NO=" + key, "goods_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

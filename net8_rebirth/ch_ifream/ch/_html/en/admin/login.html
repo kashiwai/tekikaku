@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 管理システム [Login]</title>
+	</head>
+
+	<body class="bg-dark">
+
+		<div class="container mt-5">
+			<h3 class="text-light text-center">{%SITE_TITLE%}</h3>
+			<div style="max-width:500px; margin:0 auto;">
+				<!--if:{ERRMSG}--><div class="alert alert-danger" style="margin-top:50px; margin-bottom:-30px;"><div>{%ERRMSG%}</div></div><!--/if:{ERRMSG}-->
+				<div class="card mx-auto mt-5">
+					<div class="card-header">Loginしてください</div>
+					<div class="card-body">
+						<form action="{%SELF%}" method="POST" name="MAINFORM" id="MAINFORM" class="form-horizontal" onSubmit="return check();">
+						<input type="hidden" name="M" value="proc">
+							<div class="form-group">
+								<label for="inputId">LoginID</label>
+								<input type="text" id="inputId" class="form-control" name="ID" value="{%ID%}">
+							</div>
+							<div class="form-group">
+								<label for="inputPassword">Password</label>
+								<input type="password" id="inputPassword" class="form-control" name="PASS" value="{%PASS%}">
+							</div>
+							<button type="submit" class="btn btn-primary btn-block">Login</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--#include file="inc_script.html"-->
+
+		<script type="text/javascript">
+		// 入力チェック
+		function check() {
+			var frm = window.document.MAINFORM;
+
+			if (!chk_indis("{%A0101%}", frm["ID"].value)) return false;			// LoginID
+			if (!chk_indis("{%A0102%}", frm["PASS"].value)) return false;		// Password
+		}
+
+		// 初期処理
+		function init() {
+			topFocus();
+		}
+
+		window.onload=init
+		</script>
+	</body>
+</html>

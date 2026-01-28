@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Application histry</title>
+		<title>{%SITE_TITLE%} - 応募履歴</title>
 	</head>
 
 	<body>
@@ -11,12 +11,12 @@
 
 	<!-- Page Content -->
 	<div class="container mb-5">
-		<h1 class="h3 text-center my-4">Application history</h1>
+		<h1 class="h3 text-center my-4">応募履歴</h1>
 		<hr>
 		<div class="d-flex w-100 justify-content-end">
 			<div class="input-group input-group-sm w-auto mb-3">
 				<div class="input-group-prepend">
-					<label class="input-group-text" for="listType">Type</label>
+					<label class="input-group-text" for="listType">種別</label>
 				</div>
 				<select class="custom-select" id="listType" name="TYPE">
 					{%SEL_TYPE%}
@@ -30,7 +30,7 @@
 		<!--if:{NONE}-->
 		<div class="row">
 			<div class="col-md-6">
-				There is no application history.
+				応募履歴はありません。
 			</div>
 		</div>
 		<!--/if:{NONE}-->
@@ -43,26 +43,26 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		
 		<table class="table table-bordered table-striped table-recomb mb-2">
 			<thead>
 				<tr>
-					<th>Name of Items</th>
+					<th>商品名</th>
 					<th>{%CURRENCY_3%}</th>
-					<th>Application Results</th>
-					<th>Date and Time of Applications</th>
+					<th>応募結果</th>
+					<th>応募日時</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--loop:{LIST}-->
 				<tr>
-					<td aria-label="Name of Items" class="text-center">{%GOODS_NAME%}</td>
-					<td aria-label="{%CURRENCY_3%}" class="text-right">{%DRAW_POINT%} {%CURRENCY_3%}</td>
-					<td aria-label="Application Results" class="text-center">{%RESULT%}</td>
-					<td aria-label="Date and Time of Applications" class="text-center">{%REQUEST_DT%}</td>
+					<td aria-label="商品名" class="text-center">{%GOODS_NAME%}</td>
+					<td aria-label="Coins" class="text-right">{%DRAW_POINT%} {%CURRENCY_3%}</td>
+					<td aria-label="応募結果" class="text-center">{%RESULT%}</td>
+					<td aria-label="当選日時" class="text-center">{%REQUEST_DT%}</td>
 				</tr>
 				<!--/loop:{LIST}-->
 			</tbody>
@@ -75,7 +75,7 @@
 				</ul>
 			</div>
 			<div class="col-md-6 text-right text-muted">
-				{%P%} / {%ALLP%} ({%ALLROW%} Entry in Total)
+				{%P%} / {%ALLP%} (全{%ALLROW%}件)
 			</div>
 		</div>
 		<!--/if:{LISTS}-->

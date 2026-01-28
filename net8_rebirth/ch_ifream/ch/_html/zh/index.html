@@ -47,7 +47,7 @@
 			width: 100%;
 		}
 
-		/* 背景エフェクト - コイン */
+		/* 背景エフェクト - 金币 */
 		body#index::before {
 			content: '';
 			position: fixed;
@@ -916,54 +916,10 @@
 		.index-contents .slider {
 			display: none;
 		}
-
-		/* ================================================
-		   Language Selector - 言語切り替え
-		   ================================================ */
-		.lang-selector {
-			position: fixed;
-			top: 20px;
-			right: 20px;
-			z-index: 1000;
-			display: flex;
-			gap: 10px;
-			background: rgba(45, 27, 78, 0.9);
-			padding: 10px 15px;
-			border-radius: 25px;
-			box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-		}
-
-		.lang-selector a {
-			color: var(--text-white);
-			text-decoration: none;
-			padding: 5px 12px;
-			border-radius: 15px;
-			transition: all 0.3s;
-			font-size: 14px;
-			font-weight: 500;
-		}
-
-		.lang-selector a:hover {
-			background: rgba(255, 215, 0, 0.2);
-			transform: translateY(-2px);
-		}
-
-		.lang-selector a.active {
-			background: var(--accent-gold);
-			color: var(--primary-purple);
-		}
 		</style>
 	</head>
 
 	<body id="index" class="ip-page">
-
-	<!-- Language Selector -->
-	<div class="lang-selector">
-		<a href="?lang=zh" class="active">中文</a>
-		<a href="?lang=ko">한국어</a>
-		<a href="?lang=en">English</a>
-		<a href="?lang=ja">日本語</a>
-	</div>
 
 	<!-- Loading -->
 	<div id="pageLoading" class="loading-overlay">
@@ -1001,10 +957,10 @@
 	<!-- Service Introduction -->
 	<section class="service-intro">
 		<div class="intro-content">
-			<h1 class="intro-title">在线弹珠机和老虎机</h1>
+			<h1 class="intro-title">オンラインパチスロ・パチンコ</h1>
 			<p class="intro-text">
-				通过Milliongodonline&Millionnet服务，<br>
-				享受远程游戏的乐趣。
+				オンラインパチスロ・パチンコ「Milliongodonline&Millionnet」のサービスで、<br>
+				遠隔で遊戯をお楽しみいただけます。
 			</p>
 		</div>
 	</section>
@@ -1029,7 +985,7 @@
 	<!--if:{HAVE_NOTICE}-->
 	<section class="news-section">
 		<div class="section-header">
-			<h2>最新消息</h2>
+			<h2>最新ニュース</h2>
 		</div>
 		<div class="news-scroll-container">
 			<button class="scroll-arrow prev" onclick="scrollNews(-1)">
@@ -1063,7 +1019,7 @@
 	<!-- New Machines / Event Machines Section -->
 	<section class="machine-section">
 		<div class="section-header">
-			<h2>設置機種</h2>
+			<h2>設置机型</h2>
 		</div>
 		<div class="machine-grid">
 			<!--loop:{LIST}-->
@@ -1110,7 +1066,7 @@
 
 	<!-- Fixed Footer Actions -->
 	<div class="footer-actions">
-		<a href="./" class="footer-btn btn-secondary">機体選択</a>
+		<a href="./" class="footer-btn btn-secondary">機体选择</a>
 		<a href="search.php" class="footer-btn btn-primary">始める</a>
 	</div>
 

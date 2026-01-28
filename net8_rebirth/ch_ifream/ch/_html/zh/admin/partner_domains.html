@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パートナードメイン管理 - NET8 Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .api-key-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .api-key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .api-key-info h3 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .api-key-meta {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        .api-key-value {
+            font-family: 'Courier New', monospace;
+            background: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .badge-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-test {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-production {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .domains-section {
+            margin-top: 20px;
+        }
+
+        .domains-section h4 {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .domains-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .domain-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .domain-url {
+            font-family: 'Courier New', monospace;
+            color: #2980b9;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .add-domain-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .add-domain-form input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .add-domain-form input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 パートナードメイン管理</h1>
+        <p class="subtitle">APIキーごとにiFrame埋め込みを許可するドメインを管理します</p>
+
+        <div class="alert alert-info">
+            <strong>ℹ️ 使い方:</strong> パートナーサイトからSDKでゲームを埋め込む際、ここに注册したドメインのみが許可されます。セキュリティのため、必ず正確なURLを注册してください。
+        </div>
+
+        <!-- APIキー一覧 -->
+        <!--{foreach from=$API_KEYS item=key}-->
+        <div class="api-key-card">
+            <div class="api-key-header">
+                <div class="api-key-info">
+                    <h3>
+                        <!--{$key.key_name}-->
+                        <span class="badge <!--{if $key.is_active == 1}-->badge-active<!--{else}-->badge-inactive<!--{/if}-->">
+                            <!--{if $key.is_active == 1}-->有効<!--{else}-->無効<!--{/if}-->
+                        </span>
+                        <span class="badge <!--{if $key.environment == 'production'}-->badge-production<!--{else}-->badge-test<!--{/if}-->">
+                            <!--{$key.environment}-->
+                        </span>
+                    </h3>
+                    <div class="api-key-meta">
+                        作成日: <!--{$key.created_at}-->
+                        <!--{if $key.last_used_at}-->
+                        | 最終使用: <!--{$key.last_used_at}-->
+                        <!--{/if}-->
+                    </div>
+                </div>
+                <div class="api-key-value">
+                    <!--{$key.key_value}-->
+                </div>
+            </div>
+
+            <div class="domains-section">
+                <h4>許可ドメイン (<!--{$key.domains|@count}-->件)</h4>
+
+                <!--{if $key.domains|@count > 0}-->
+                <ul class="domains-list">
+                    <!--{foreach from=$key.domains item=domain}-->
+                    <li class="domain-item">
+                        <span class="domain-url"><!--{$domain}--></span>
+                        <button class="btn btn-danger" onclick="removeDomain(<!--{$key.id}-->, '<!--{$domain}-->')">
+                            删除
+                        </button>
+                    </li>
+                    <!--{/foreach}-->
+                </ul>
+                <!--{else}-->
+                <div class="empty-state">
+                    まだドメインが注册されていません
+                </div>
+                <!--{/if}-->
+
+                <form class="add-domain-form" onsubmit="addDomain(event, <!--{$key.id}-->)">
+                    <input
+                        type="url"
+                        name="domain"
+                        placeholder="https://example.com"
+                        required
+                        pattern="https?://.*"
+                        id="domain-input-<!--{$key.id}-->"
+                    />
+                    <button type="submit" class="btn btn-success">
+                        ＋ ドメイン添加
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!--{/foreach}-->
+    </div>
+
+    <script>
+        // ドメイン添加
+        async function addDomain(event, apiKeyId) {
+            event.preventDefault();
+
+            const input = document.getElementById(`domain-input-${apiKeyId}`);
+            const domain = input.value.trim();
+
+            if (!domain) {
+                alert('ドメインを请输入');
+                return;
+            }
+
+            try {
+                const response = await fetch('/data/xxxadmin/partner_domains.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        mode: 'add_domain',
+                        api_key_id: apiKeyId,
+                        domain: domain
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    location.reload();
+                } else {
+                    alert('❌ ' + (result.error || '添加に失敗しました'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ 通信发生错误');
+            }
+        }
+
+        // ドメイン删除
+        async function removeDomain(apiKeyId, domain) {
+            if (!confirm(`「${domain}」を删除しますか？`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/data/xxxadmin/partner_domains.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        mode: 'remove_domain',
+                        api_key_id: apiKeyId,
+                        domain: domain
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    location.reload();
+                } else {
+                    alert('❌ ' + (result.error || '删除に失敗しました'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ 通信发生错误');
+            }
+        }
+    </script>
+</body>
+</html>

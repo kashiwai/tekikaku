@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="inc_head.html"-->
+		<title>{%SITE_TITLE%} - 联系我们 入力确认</title>
+	</head>
+
+	<body>
+
+	<!--#include file="inc_navigation.html"-->
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<h1 class="h3 text-center my-4">联系我们 入力确认</h1>
+		<hr>
+		
+		<form action="{%SITE_SSL_URL%}{%SELF%}?M=regist" method="POST" class="form-horizontal" name="MAINFORM" id="MAINFORM">
+			<input type="hidden" name="INQUIRY_TITLE" value="{%INQUIRY_TITLE%}">
+			<input type="hidden" name="MACHINENO" value="{%MACHINENO%}">
+			<input type="hidden" name="MAIL" value="{%MAIL%}">
+			<input type="hidden" name="TGDATE" value="{%TGDATE%}">
+			<input type="hidden" name="INQUIRY_BODY" value="{%INQUIRY_BODY%}">
+			
+			<div class="input-form mb-5">
+				<div class="alert alert-secondary text-center">
+					対応時間 平日 10:00～18:00<br />
+					<small>翌営業日以降に対応いたします</small>
+				</div>
+				<div class="alert alert-danger">
+					<p><small>※玩した台に関する联系我们は、台番号が必要ですので、<a href="playlist.php">玩履歴</a>から、联系我们をお選びください。</small></p>
+					<p class="mb-0"><small>※玩終了を行わず、通信障害などで、台が精算されてしまった場合、精算された点数は我的页面の<a href="message.php">連絡BOX</a>に届いております。ご确认ください</small></p>
+				</div>
+				<hr>
+				<div class="form-group">
+					<label for="inquirySubject">連絡先电子邮件地址</label>
+					<div class="panel-body">
+						{%MAIL%}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inquirySubject">联系我们種別</label>
+					<div class="panel-body">
+						{%DISP_INQUIRY_TITLE%}
+					</div>
+				</div>
+				<!--if:{LOGIN}-->
+				<!--if:{MACHINENO_BLOCK}-->
+				<div class="form-group">
+					<label class="col-form-label" for="baseid">台番号</label>
+					<div class="panel-body">
+						{%MACHINENO%}
+					</div>
+				</div>
+				<!--/if:{MACHINENO_BLOCK}-->
+				<!--if:{DATE_BLOCK}-->
+				<div class="form-group">
+					<label class="col-form-label" for="targetDate">対象日時</label>
+					<div class="panel-body">
+						{%TGDATE%}
+					</div>
+				</div>
+				<!--/if:{DATE_BLOCK}-->
+				<!--/if:{LOGIN}-->
+				<div class="form-group">
+					<label class="col-form-label" for="inquiryBody">联系我们内容</label>
+					<div class="panel-body">
+						{%DISP_INQUIRY_BODY%}
+					</div>
+				</div>
+				<hr>
+				
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="changeInput(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　入力内容を修正する</a>
+				</div>
+				<br>
+				<div class="text-center">
+					<a href="javascript:void(0);" onclick="document.MAINFORM.submit(); return false;" class="btn btn-block btn-primary"><i class="far fa-paper-plane"></i>　发送する</a>
+				</div>
+				
+			</div>
+		</form>
+
+	</div>
+	<!-- /.container -->
+
+	<!--#include file="inc_footer.html"-->
+
+	<!--#include file="inc_script.html"-->
+	<!-- Page script -->
+<!--#include file="{%PAGESCRIPT%}inquiry_conf.html"-->
+	
+	</body>
+</html>

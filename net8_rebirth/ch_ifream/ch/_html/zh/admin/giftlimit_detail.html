@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 礼物日制限设置詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();">
+					<!--if:{UPD_EDIT}-->
+					<input type="hidden" name="TOTAL_GIFT_POINT" value="{%TOTAL_GIFT_POINT%}">
+					<!--/if:{UPD_EDIT}-->
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-fw fa-gift"></i> 礼物日制限设置詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<!--if:{UPD_EDIT}-->
+								<tr>
+									<th>设置No</th>
+									<td>
+										{%NO_PAD%}
+									</td>
+								</tr>
+								<tr>
+									<th>プレミアム点数</th>
+									<td>
+										{%DSP_TOTAL_GIFT_POINT%}&nbsp以下
+									</td>
+								</tr>
+								<!--/if:{UPD_EDIT}-->
+								<!--if:{NEW_EDIT}-->
+								<tr>
+									<th>プレミアム点数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="TOTAL_GIFT_POINT" value="{%TOTAL_GIFT_POINT%}" maxlength="7">&nbsp以下
+									</td>
+								</tr>
+								<!--/if:{NEW_EDIT}-->
+								<tr>
+									<th>日发送可能{%CURRENCY_3%}<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="GIFT_LIMIT" value="{%GIFT_LIMIT%}" maxlength="7">&nbsp;まで
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{UPD_EDIT}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{UPD_EDIT}-->
+							</div>
+							<div class="col-6 text-right">
+								<input type="submit" class="btn btn-primary" value="登　録">
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				<!--if:{NEW_EDIT}-->
+				// 累計
+				if (!chk_indis("{%A2720%}", frm["TOTAL_GIFT_POINT"].value)) return false;
+				if (!chk_numeric("{%A2721%}", frm["TOTAL_GIFT_POINT"].value, false)) return false;
+				if (parseInt(frm["TOTAL_GIFT_POINT"].value, 10) < 1) {
+					chkAlert("{%A2722%}");
+					return false;
+				}
+				<!--/if:{NEW_EDIT}-->
+				
+				// 上限
+				if (!chk_indis("{%A2723%}", frm["GIFT_LIMIT"].value)) return false;
+				if (!chk_numeric("{%A2724%}", frm["GIFT_LIMIT"].value, false)) return false;
+				
+				// 注册确认
+				swal({
+					title: '礼物日制限设置注册',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// 删除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '礼物日制限设置删除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&no={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

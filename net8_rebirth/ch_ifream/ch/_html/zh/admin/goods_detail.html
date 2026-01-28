@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 商品情報詳細</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation_sub.html"-->
+		
+		<div id="wrapper">
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form action="{%SELF%}?M=regist&NO={%NO%}" method="POST" class="form-inline" role="form" name="MAINFORM" id="MAINFORM" onSubmit="return check();" enctype="multipart/form-data">
+					<input type="hidden" name="NO" value="{%NO%}">
+					<input type="hidden" name="DRAW_STATE" value="{%DRAW_STATE%}">
+					
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-gift"></i> 商品情報詳細</h3>
+						<!--if:{ERRMSG}-->
+						<div class="alert alert-danger">
+							{%ERRMSG%}
+						</div>
+						<!--/if:{ERRMSG}-->
+						<table class="table table-input">
+							<tbody>
+								<tr>
+									<th>商品CD<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<input type="text" class="form-control" name="GOODS_CD" value="{%GOODS_CD%}" maxlength="20" placeholder="半角英数字" style="width:200px;">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4">
+										<!--タブ-->
+										<ul class="nav nav-tabs" id="langChange">
+											<!--loop:{LANG_LIST_TAB}-->
+											<li class="{%ACTIVE%}"><a href="#tab{%INDEX%}" data-toggle="tab" aria-expanded="true">{%LANGAGE%}</a></li>
+											<!--/loop:{LANG_LIST_TAB}-->
+										</ul><!-- /.nav-tabs -->
+										
+										<div id="myTabContent" class="tab-content">
+											<!--loop:{LANG_LIST}-->
+											<div class="tab-pane fade {%SHOW_IN%} {%ACTIVE%}" id="tab{%INDEX%}">
+												<table class="table table-responsive table-input">
+													<tbody>
+														<tr>
+															<th style="width:22%;">商品名<!--if:{IS_DEF_LANG}-->&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span><!--/if:{IS_DEF_LANG}--></th>
+															<td style="width:78%;"><input style="width:100%;" class="form-control" type="text" class="form-control" name='GOODS_NAME[{%LANG%}]' value='{%GOODS_NAME%}' maxlength="50"></td>
+														</tr>
+														<tr>
+															<th>商品説明<!--if:{IS_DEF_LANG}-->&nbsp;&nbsp;<span class="text-danger"><i class="fa fa-asterisk"></i></span><!--/if:{IS_DEF_LANG}--></th>
+															<td colspan="3"><textarea class="form-control" rows="4" id="GOODS_INFO_{%LANG%}" name='GOODS_INFO[{%LANG%}]'>{%GOODS_INFO%}</textarea></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<!--/loop:{LANG_LIST}-->
+										</div>
+										
+									</td>
+								</tr>
+								<tr>
+									<th>商品画像<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<div id="preview1">
+											<!--if:{EDIT_IMG}--><img src="{%GOODS_IMAGE_URL%}" width="150"><!--/if:{EDIT_IMG}-->
+										</div>
+										<!--if:{EDIT}-->
+										<div class="mt-2">
+											<!--if:{UPD}-->新しい画像を选择<br /><!--/if:{UPD}-->
+											<input type="hidden" name="MAX_FILE_SIZE" value="{%UPFILE_IMG_MAXBYTE%}">
+											<input type="file" name="GOODS_IMAGE_NEW" id="upimg1" data-target="#preview1" accept="{%IMG_EXT%}">
+											<input type="hidden" name="GOODS_IMAGE" value="{%GOODS_IMAGE%}">
+											<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 推奨サイズ：縦200px × 横280px 以上<br />
+												<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> ファイルサイズ <strong class="text-danger">{%UPFILE_IMG_MAX%}MBまでの「{%UPFILE_IMG_EXT%}」形式</strong> の画像ファイルのみアップロード可能です。
+												
+											</div>
+										</div>
+										<!--/if:{EDIT}-->
+									</td>
+								</tr>
+								<tr>
+									<th>抽選点数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<div class="input-group" style="width:180px;">
+											<input type="text" class="form-control" name="DRAW_POINT" value="{%DRAW_POINT%}" maxlength="7">
+											<div class="input-group-append">
+												<span class="input-group-text">{%CURRENCY_3%}</span>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th class="required">公開日</th>
+									<td colspan="3">
+										<div class="d-flex justify-content-start align-items-center">
+											<div class="input-group flatpickr mr-3" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DT" value="{%RELEASE_DT%}" maxlength="10" placeholder="例：2000/01/01">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											<div>時刻
+												<select class="custom-select custom-select-sm" name="RELEASE_DT_TIME_HR">
+													{%SEL_RELEASE_DT_TIME_HR%}
+												</select>
+												：
+												<select class="custom-select custom-select-sm" name="RELEASE_DT_TIME_MIN">
+													{%SEL_RELEASE_DT_TIME_MIN%}
+												</select>
+											</div>
+										</div>
+										<!--if:{EDIT}-->
+										<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+											<i class="fas fa-fw fa-info-circle text-secondary"></i> 未指定時は応募受付開始日時に公開されます
+										</div>
+										<!--/if:{EDIT}-->
+									</td>
+								</tr>
+								<tr>
+									<th class="required">応募受付開始日<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<div class="d-flex justify-content-start align-items-center">
+											<div class="input-group flatpickr mr-3" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="RECEPT_START_DT" value="{%RECEPT_START_DT%}" maxlength="10" placeholder="例：2000/01/01">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											
+											<div>時刻
+												<select class="custom-select custom-select-sm" name="RECEPT_START_TIME_HR">
+													{%SEL_RECEPT_START_TIME_HR%}
+												</select>
+												：
+												<select class="custom-select custom-select-sm" name="RECEPT_START_TIME_MIN">
+													{%SEL_RECEPT_START_TIME_MIN%}
+												</select>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th class="required">応募受付終了日<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<div class="d-flex justify-content-start align-items-center">
+											<div class="input-group flatpickr mr-3" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="RECEPT_END_DT" value="{%RECEPT_END_DT%}" maxlength="10" placeholder="例：2000/01/01">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											
+											<div>
+												時刻
+												<select class="custom-select custom-select-sm" name="RECEPT_END_TIME_HR">
+													{%SEL_RECEPT_END_TIME_HR%}
+												</select>
+												：
+												<select class="custom-select custom-select-sm" name="RECEPT_END_TIME_MIN">
+													{%SEL_RECEPT_END_TIME_MIN%}
+												</select>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th class="required">抽選日<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										<div class="d-flex justify-content-start align-items-center">
+											<div class="input-group flatpickr mr-3" data-wrap="true" data-clickOpens="false" style="width:180px;">
+												<input type="text" class="form-control" data-altinput=true data-input name="DRAW_DT" value="{%DRAW_DT%}" maxlength="10" placeholder="例：2000/01/01">
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+												</div>
+											</div>
+											<div>時刻
+												<select class="custom-select custom-select-sm" name="DRAW_DT_TIME_HR">
+													{%SEL_DRAW_DT_TIME_HR%}
+												</select>
+												：
+												<select class="custom-select custom-select-sm" name="DRAW_DT_TIME_MIN">
+													{%SEL_DRAW_DT_TIME_MIN%}
+												</select>
+											</div>
+										</div>
+										<!--if:{EDIT}-->
+										<div class="alert alert-light border border-secondary py-2 mt-2 mb-0">
+											<i class="fas fa-fw fa-exclamation-triangle text-warning"></i> 応募受付終了日時より後を指定
+										</div>
+										<!--/if:{EDIT}-->
+									</td>
+								</tr>
+								<tr>
+									<th>抽選方法<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td colspan="3">
+										{%RDO_DRAW_TYPE%}
+									</td>
+								</tr>
+								<tr>
+									<th>抽選実施最小数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="DRAW_MIN_COUNT" value="{%DRAW_MIN_COUNT%}" maxlength="7" style="width:100px;">
+									</td>
+									<th>抽選受付最大数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="RECEPT_COUNT" value="{%RECEPT_COUNT%}" maxlength="7" style="width:100px;">
+									</td>
+								</tr>
+								<tr>
+									<th>当選数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span></th>
+									<td>
+										<input type="text" class="form-control" name="WIN_COUNT" value="{%WIN_COUNT%}" maxlength="7" style="width:100px;">
+									</td>
+									<th>申込制限数<span class="text-danger ml-2"><i class="fa fa-asterisk"></i></span><br /><small>（1人当たり）</small></th>
+									<td>
+										<input type="text" class="form-control" name="REQUEST_COUNT" value="{%REQUEST_COUNT%}" maxlength="7" style="width:100px;">
+									</td>
+								</tr>
+								<!--if:{UPD}-->
+								<tr>
+									<th>応募口数</th>
+									<td>
+										{%NOW_TOTAL_DRAW_COUNT%}
+									</td>
+									<th>ステータス</th>
+									<td>
+										{%DRAW_STATE_LABEL%}
+									</td>
+								</tr>
+								<!--/if:{UPD}-->
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<!--if:{DEL}--><a href="javascript:void(0);" class="btn btn-danger" onClick="del();">削　除</a><!--/if:{DEL}-->
+							</div>
+							<div class="col-6 text-right">
+								<!--if:{EDIT}--><input type="submit" class="btn btn-primary" value="登　録"><!--/if:{EDIT}-->
+							</div>
+						</div>
+					</div><!-- /.container-fluid -->
+				</form>
+			</div><!-- /#content-wrapper -->
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		<script type="text/javascript">
+		<!--
+			$(function(){
+				// 言語タブ
+				$('#langChange').find('li').each( function(){
+					$(this).click( function(){
+						$('#langChange').find('li').removeClass('active');
+						$(this).addClass('active');
+					});
+				});
+				
+				var img_exts = [{%UPFILE_IMG_TYPE%}];
+				
+				//画像ファイルプレビュー表示
+				$('form input[type=file]').each( function(){
+					$(this).on('change', function(e){
+						var file = e.target.files[0],
+							reader = new FileReader(),
+							$preview = $($(this).data('target'));
+
+						// 拡張子チェック
+						if (img_exts.indexOf(file.type) < 0) {
+							$preview.empty();
+							$(this).val('');
+							chkAlert("{%A1928%}");
+							return false;
+						}
+						// サイズチェック
+						if (file.size > parseInt('{%UPFILE_IMG_MAXBYTE%}', 10)) {
+							$preview.empty();
+							$(this).val('');
+							chkAlert("{%A1929%}");
+							return false;
+						}
+
+						// ファイル読み込みが完了した際のイベント注册
+						reader.onload = (function(file) {
+							return function(e) {
+								//既存のプレビューを删除
+								$preview.empty();
+								// .prevewの領域の中にロードした画像を表示するimageタグを添加
+								$preview.append($('<img>').attr({
+									src: e.target.result,
+									width: "150px",
+									class: "preview",
+									title: file.name
+								}));
+							};
+						})(file);
+						reader.readAsDataURL(file);
+					});
+				});
+			});
+
+			// 入力チェック
+			function check() {
+				var frm = window.document.MAINFORM;
+				
+				//CD
+				if (!chk_indis("{%A1901%}", frm["GOODS_CD"].value)) return false;
+				if (!chk_alnum("{%A1902%}", frm["GOODS_CD"].value)) return false;
+				if (frm["GOODS_CD"].value.length > 20) { chkAlert("{%A1903%}"); return false; }
+				//NAME
+				if (!chk_indis("{%A1904%}", frm['GOODS_NAME[{%DEF_LANG%}]'].value)) return false;
+				//INFO
+				if (!chk_indis("{%A1906%}", frm['GOODS_INFO[{%DEF_LANG%}]'].value)) return false;
+				//画像
+				if (!chk_indis("{%A1926%}", frm["GOODS_IMAGE_NEW"].value + frm["GOODS_IMAGE"].value)) return false;
+				
+				if (!chk_indis("{%A1908%}", frm["DRAW_POINT"].value)) return false;
+				if (!chk_number("{%A1909%}", frm["DRAW_POINT"].value)) return false;
+				
+				//公開日
+				if (!chk_date("{%A1911%}", frm["RELEASE_DT"].value, false)) return false;
+				if (frm["RELEASE_DT"].value.length > 0 || frm["RELEASE_DT_TIME_HR"].value.length > 0 || frm["RELEASE_DT_TIME_MIN"].value.length > 0) {
+					if (!chk_indis("{%A1910%}", frm["RELEASE_DT"].value)) return false;
+					if (!chk_indis("{%A1946%}", frm["RELEASE_DT_TIME_HR"].value)) return false;
+					if (!chk_indis("{%A1946%}", frm["RELEASE_DT_TIME_MIN"].value)) return false;
+				}
+				//応募開始
+				if (!chk_indis("{%A1912%}", frm["RECEPT_START_DT"].value)) return false;
+				if (!chk_date( "{%A1913%}", frm["RECEPT_START_DT"].value)) return false;
+				if (!chk_indis("{%A1931%}", frm["RECEPT_START_TIME_HR"].value)) return false;
+				if (!chk_indis("{%A1931%}", frm["RECEPT_START_TIME_MIN"].value)) return false;
+				//応募終了
+				if (!chk_indis("{%A1914%}", frm["RECEPT_END_DT"].value)) return false;
+				if (!chk_date( "{%A1915%}", frm["RECEPT_END_DT"].value)) return false;
+				if (!chk_indis("{%A1932%}", frm["RECEPT_END_TIME_HR"].value)) return false;
+				if (!chk_indis("{%A1932%}", frm["RECEPT_END_TIME_MIN"].value)) return false;
+				//抽選日
+				if (!chk_indis("{%A1916%}", frm["DRAW_DT"].value)) return false;
+				if (!chk_date( "{%A1917%}", frm["DRAW_DT"].value)) return false;
+				if (!chk_indis("{%A1949%}", frm["DRAW_DT_TIME_HR"].value)) return false;
+				if (!chk_indis("{%A1949%}", frm["DRAW_DT_TIME_MIN"].value)) return false;
+				// 公開日・応募開始
+				if (frm["RELEASE_DT"].value.length > 0) {
+					if (!compare_date("{%A1933%}", frm["RELEASE_DT"].value, frm["RECEPT_START_DT"].value)) return false;
+					if (frm["RELEASE_DT"].value == frm["RECEPT_START_DT"].value) {
+						if (!compare_numeric("{%A1933%}", frm["RELEASE_DT_TIME_HR"].value, frm["RECEPT_START_TIME_HR"].value)) return false;
+						if (frm["RELEASE_DT_TIME_HR"].value == frm["RECEPT_START_TIME_HR"].value) {
+							if (!compare_numeric("{%A1933%}", frm["RELEASE_DT_TIME_MIN"].value, frm["RECEPT_START_TIME_MIN"].value)) return false;
+						}
+					}
+				}
+				// 応募開始・終了
+				if (!compare_date("{%A1934%}", frm["RECEPT_START_DT"].value, frm["RECEPT_END_DT"].value)) return false;
+				if (frm["RECEPT_START_DT"].value == frm["RECEPT_END_DT"].value) {
+					if (!compare_numeric("{%A1934%}", frm["RECEPT_START_TIME_HR"].value, frm["RECEPT_END_TIME_HR"].value)) return false;
+					if (frm["RECEPT_START_TIME_HR"].value == frm["RECEPT_END_TIME_HR"].value) {
+						if (!compare_numeric("{%A1934%}", frm["RECEPT_START_TIME_MIN"].value, frm["RECEPT_END_TIME_MIN"].value, true)) return false;
+					}
+				}
+				// 応募終了・抽選日
+				if (!compare_date("{%A1935%}", frm["RECEPT_END_DT"].value, frm["DRAW_DT"].value)) return false;
+				if (frm["RECEPT_END_DT"].value == frm["DRAW_DT"].value) {
+					if (!compare_numeric("{%A1935%}", frm["RECEPT_END_TIME_HR"].value, frm["DRAW_DT_TIME_HR"].value)) return false;
+					if (frm["RECEPT_END_TIME_HR"].value == frm["DRAW_DT_TIME_HR"].value) {
+						if (!compare_numeric("{%A1935%}", frm["RECEPT_END_TIME_MIN"].value, frm["DRAW_DT_TIME_MIN"].value, true)) return false;
+					}
+				}
+				
+				//点数系
+				if (!chk_indis("{%A1918%}", frm["DRAW_MIN_COUNT"].value)) return false;
+				if (!chk_number("{%A1919%}", frm["DRAW_MIN_COUNT"].value)) return false;
+				if (!compare_numeric("{%A1936%}", "0", frm["DRAW_MIN_COUNT"].value, true)) return false;
+				
+				if (!chk_indis("{%A1920%}", frm["RECEPT_COUNT"].value)) return false;
+				if (!chk_number("{%A1921%}", frm["RECEPT_COUNT"].value)) return false;
+				if (!compare_numeric("{%A1937%}", "0", frm["RECEPT_COUNT"].value, true)) return false;
+				if (!compare_numeric("{%A1940%}", frm["DRAW_MIN_COUNT"].value, frm["RECEPT_COUNT"].value)) return false;
+				
+				if (!chk_indis("{%A1922%}", frm["WIN_COUNT"].value)) return false;
+				if (!chk_number("{%A1923%}", frm["WIN_COUNT"].value)) return false;
+				if (!compare_numeric("{%A1938%}", "0", frm["WIN_COUNT"].value, true)) return false;
+				
+				if (!chk_indis("{%A1924%}", frm["REQUEST_COUNT"].value)) return false;
+				if (!chk_number("{%A1925%}", frm["REQUEST_COUNT"].value)) return false;
+				if (!compare_numeric("{%A1939%}", "0", frm["REQUEST_COUNT"].value, true)) return false;
+				
+				//
+				swal({
+					title: '商品情報注册',
+					text: "{%A0001%}",
+					type: 'question',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					frm.submit();
+				});
+				
+				return false;
+			}
+			
+			// 删除
+			function del() {
+				var frm = window.document.MAINFORM;
+				swal({
+					title: '商品情報删除',
+					text: "{%A0002%}",
+					type: 'warning',
+					showCancelButton: true
+				}).then(function() {
+					// 実行
+					location.href = frm.action + "&ACT=del&NO={%NO%}";
+				});
+				return;
+			}
+		-->
+		</script>
+		
+	</body>
+
+</html>

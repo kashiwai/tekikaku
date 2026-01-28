@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--#include file="inc_head.html"-->
+    <title>観戦モード - {%MODEL_NAME%} | {%SITE_TITLE%}</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="/js/stream-forwarder.js"></script>
+    <style>
+    :root {
+        --primary-purple: #1a0a2e;
+        --secondary-purple: #2d1b4e;
+        --accent-gold: #ffd700;
+        --text-white: #ffffff;
+        --text-gray: #b8b8c8;
+        --card-bg: rgba(45, 27, 78, 0.8);
+        --gradient-cosmic: linear-gradient(180deg, #1a0a2e 0%, #0d0618 100%);
+    }
+
+    body#spectate {
+        background: var(--gradient-cosmic) !important;
+        min-height: 100vh;
+        font-family: 'Noto Sans JP', sans-serif;
+        color: var(--text-white);
+    }
+
+    body#spectate.ip-page main {
+        background: transparent !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .spectate-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .spectate-header {
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .spectate-header h1 {
+        font-size: 1.5rem;
+        color: var(--accent-gold);
+        margin-bottom: 10px;
+    }
+
+    .spectate-header .badge {
+        display: inline-block;
+        padding: 5px 15px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto 20px;
+        border-radius: 15px;
+        overflow: hidden;
+        background: #000;
+        aspect-ratio: 16/9;
+    }
+
+    .video-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .video-overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .live-badge {
+        padding: 5px 12px;
+        background: #ef4444;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .latency-badge {
+        padding: 5px 12px;
+        background: rgba(0,0,0,0.6);
+        border-radius: 5px;
+        font-size: 0.8rem;
+    }
+
+    .mode-selector {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .mode-btn {
+        padding: 10px 25px;
+        border: 2px solid var(--accent-gold);
+        background: transparent;
+        color: var(--accent-gold);
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .mode-btn.active {
+        background: var(--accent-gold);
+        color: var(--primary-purple);
+    }
+
+    .mode-btn:hover {
+        background: rgba(255, 215, 0, 0.2);
+    }
+
+    .machine-info {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .machine-info h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .not-playing-message {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-gray);
+    }
+
+    .not-playing-message h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        color: var(--text-white);
+    }
+
+    .share-section {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 10px;
+    }
+
+    .share-section h3 {
+        font-size: 0.9rem;
+        color: var(--text-gray);
+        margin-bottom: 10px;
+    }
+
+    .share-url {
+        display: flex;
+        gap: 10px;
+    }
+
+    .share-url input {
+        flex: 1;
+        padding: 10px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 5px;
+        color: var(--text-white);
+        font-size: 0.9rem;
+    }
+
+    .share-url button {
+        padding: 10px 20px;
+        background: var(--accent-gold);
+        color: var(--primary-purple);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: var(--accent-gold);
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+        .spectate-container {
+            padding: 10px;
+        }
+        .video-container {
+            border-radius: 10px;
+        }
+    }
+    </style>
+</head>
+<body id="spectate" class="ip-page">
+    <!--#include file="inc_header.html"-->
+
+    <main>
+        <div class="spectate-container">
+            <div class="spectate-header">
+                <h1>📺 観戦モード</h1>
+                <!--if:{IS_PLAYING}-->
+                <span class="badge">🔴 LIVE配信中</span>
+                <!--/if:{IS_PLAYING}-->
+            </div>
+
+            <!--if:{IS_PLAYING}-->
+            <div class="video-container">
+                <video id="spectateVideo" playsinline autoplay muted></video>
+                <div class="video-overlay">
+                    <span class="live-badge">🔴 LIVE</span>
+                    <span class="latency-badge" id="latencyBadge">遅延: --ms</span>
+                </div>
+            </div>
+
+            <div class="mode-selector">
+                <button class="mode-btn <!--if:{MODE_LLHLS}-->active<!--/if:{MODE_LLHLS}-->"
+                        onclick="switchMode('llhls')">
+                    LL-HLS (低遅延)
+                </button>
+                <button class="mode-btn <!--if:{MODE_WEBRTC}-->active<!--/if:{MODE_WEBRTC}-->"
+                        onclick="switchMode('webrtc')">
+                    WebRTC (超低遅延)
+                </button>
+            </div>
+
+            <div class="machine-info">
+                <h2>{%MODEL_NAME%}</h2>
+                <p>Machine番号: {%MACHINE_CD%}</p>
+
+                <div class="share-section">
+                    <h3>埋め込み用URL</h3>
+                    <div class="share-url">
+                        <input type="text" id="embedUrl" readonly
+                               value="{%MEDIA_SERVER_URL%}/machine/{%MACHINE_NO%}/index.m3u8">
+                        <button onclick="copyUrl()">コピー</button>
+                    </div>
+                </div>
+            </div>
+            <!--/if:{IS_PLAYING}-->
+
+            <!--if:{NOT_PLAYING}-->
+            <div class="not-playing-message">
+                <h2>現在このMachineは使用されていません</h2>
+                <p>Playが開始されると観戦できるようになります</p>
+                <a href="spectate.php" class="back-link">← 観戦可能なMachine一覧へ</a>
+            </div>
+            <!--/if:{NOT_PLAYING}-->
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="spectate.php" class="back-link">← 観戦可能なMachine一覧へ</a>
+            </div>
+        </div>
+    </main>
+
+    <!--#include file="inc_footer.html"-->
+
+    <script>
+    const mediaServerUrl = '{%MEDIA_SERVER_URL%}';
+    const machineNo = '{%MACHINE_NO%}';
+    const currentMode = '{%MODE%}';
+
+    let player = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        <!--if:{IS_PLAYING}-->
+        initPlayer();
+        <!--/if:{IS_PLAYING}-->
+    });
+
+    function initPlayer() {
+        const videoElement = document.getElementById('spectateVideo');
+        player = new SpectatorPlayer({
+            mediaServerUrl: mediaServerUrl,
+            videoElement: videoElement
+        });
+
+        if (currentMode === 'webrtc') {
+            player.playWebRTC(machineNo);
+        } else {
+            player.playLLHLS(machineNo);
+        }
+
+        // 遅延計測
+        setInterval(updateLatency, 1000);
+    }
+
+    function switchMode(mode) {
+        window.location.href = `spectate.php?NO=${machineNo}&MODE=${mode}`;
+    }
+
+    function updateLatency() {
+        const video = document.getElementById('spectateVideo');
+        if (video && video.buffered.length > 0) {
+            const latency = (video.buffered.end(0) - video.currentTime) * 1000;
+            document.getElementById('latencyBadge').textContent = `遅延: ${Math.round(latency)}ms`;
+        }
+    }
+
+    function copyUrl() {
+        const input = document.getElementById('embedUrl');
+        input.select();
+        document.execCommand('copy');
+        alert('URLをコピーしました');
+    }
+    </script>
+</body>
+</html>

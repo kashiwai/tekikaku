@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>アクセスエラー - 777ONLINE</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		body {
+			font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+		}
+		.error-container {
+			text-align: center;
+			padding: 40px;
+			max-width: 600px;
+			background: rgba(255, 255, 255, 0.05);
+			border-radius: 20px;
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+		}
+		.error-icon {
+			font-size: 80px;
+			margin-bottom: 20px;
+		}
+		h1 {
+			font-size: 28px;
+			margin-bottom: 20px;
+			color: #ff6b6b;
+		}
+		.message {
+			font-size: 18px;
+			line-height: 1.6;
+			margin-bottom: 30px;
+			color: #ddd;
+		}
+		.retry-button {
+			display: inline-block;
+			padding: 15px 40px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: #fff;
+			text-decoration: none;
+			border-radius: 50px;
+			font-size: 16px;
+			font-weight: bold;
+			transition: transform 0.3s, box-shadow 0.3s;
+			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+		}
+		.retry-button:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+		}
+		.countdown {
+			margin-top: 20px;
+			font-size: 14px;
+			color: #aaa;
+		}
+		#timer {
+			font-weight: bold;
+			color: #667eea;
+		}
+	</style>
+</head>
+<body>
+	<div class="error-container">
+		<div class="error-icon">⚠️</div>
+		<h1>アクセス制限エラー</h1>
+		<div class="message">
+			{%ERROR_MESSAGE%}
+		</div>
+		<a href="{%URL_SITE%}play_v2/?NO={%MACHINE_NO%}" class="retry-button" id="retryButton">
+			もう一度アクセスする
+		</a>
+		<div class="countdown">
+			<span id="timer">3</span> 秒後に自動的にリトライします...
+		</div>
+	</div>
+
+	<script>
+		// 3秒後に自動リトライ
+		let countdown = 3;
+		const timerElement = document.getElementById('timer');
+		const retryButton = document.getElementById('retryButton');
+
+		const interval = setInterval(() => {
+			countdown--;
+			timerElement.textContent = countdown;
+
+			if (countdown <= 0) {
+				clearInterval(interval);
+				// iframe内の場合は親ウィンドウを遷移
+				if (window.top !== window.self) {
+					window.top.location.href = retryButton.href;
+				} else {
+					window.location.href = retryButton.href;
+				}
+			}
+		}, 1000);
+	</script>
+</body>
+</html>

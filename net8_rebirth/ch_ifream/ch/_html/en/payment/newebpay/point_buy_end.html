@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - Purchase of {%CURRENCY_1%}</title>
+		<title>{%SITE_TITLE%} - {%CURRENCY_1%}Purchase</title>
 	</head>
 
 	<body>
@@ -11,17 +11,17 @@
 
 	<!-- Page Content -->
 	<div class="container mt-5 mb-5">
-		<h1 class="h3 text-center my-4">Purchase of {%CURRENCY_1%}</h1>
+		<h1 class="h3 text-center my-4">{%CURRENCY_1%}Purchase</h1>
 		<hr>
 		
 		<!--if:{DONE}-->
 		<div class="alert alert-secondary">
-			Process for purchasing {%CURRENCY_1%} has completed.<br>
+			{%CURRENCY_1%}のPurchase処理が完了しました。<br>
 		</div>
 		<!--/if:{DONE}-->
 		<!--if:{FAIL}-->
 		<div class="alert alert-danger">
-			Process for purchasing {%CURRENCY_1%} has failed. [{%ERROR_CODE%}]<br>
+			{%CURRENCY_1%}のPurchase処理に失敗しました。[{%ERROR_CODE%}]<br>
 		</div>
 		<!--/if:{FAIL}-->
 

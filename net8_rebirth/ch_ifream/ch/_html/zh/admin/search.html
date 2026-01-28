@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<!--#include file="head.html"-->
+		<title>{%SITE_TITLE%} - 実機管理</title>
+	</head>
+	
+	<body id="page-top">
+		
+		<!--#include file="navigation.html"-->
+		
+		<div id="wrapper" class="main-win">
+			<!--#include file="sidebar.html"-->
+			
+			<!-- Page Contents ================================================== -->
+			<div id="content-wrapper">
+				<form class="form-inline" role="form" action="{%SELF%}" method="GET" name="MAINFORM" id="MAINFORM">
+				<input type="hidden" name="ODR" value="{%ODR%}">
+				<input type="hidden" name="P" value="{%P%}">
+					<div class="container-fluid">
+						<h3 class="page-header"><i class="fas fa-database"></i> 実機管理</h3>
+						
+						<div class="card" id="accordion">
+							<div class="card-header d-flex justify-content-between collapsed" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapseOne" data-parent="#accordion" aria-expanded="false">
+								<span class="panel-title">搜索条件指定</span>
+								<div class="collapse-arrow"><i class="fas fa-chevron-circle-up"></i></div>
+							</div>
+							<div id="collapseOne" class="collapse {%S_OPEN%}">
+								<div class="card-body">
+									<div class="row search">
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">公開開始日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_FROM" value="{%RELEASE_DATE_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="RELEASE_DATE_TO" value="{%RELEASE_DATE_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">公開終了日</div>
+											<div class="d-flex flex-row align-items-center input-period">
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_FROM" value="{%END_DATE_FROM%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+												<div class="px-2">～</div>
+												<div class="input-group flatpickr" data-wrap="true" data-clickOpens="false">
+													<input type="text" class="form-control" data-altinput=true data-input name="END_DATE_TO" value="{%END_DATE_TO%}">
+													<div class="input-group-append">
+														<button class="btn btn-outline-secondary" type="button" data-toggle><i class="far fa-calendar-alt"></i></button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">オーナー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_OWNER_NO" style="width:200px;">
+													{%SEL_OWNER_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">カテゴリ</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_CATEGORY" style="width:200px;">
+													{%SEL_CATEGORY%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">コーナー</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_CORNER_NO" style="width:200px;">
+													{%SEL_CORNER_NO%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">制造商</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_MAKER_NO" style="width:200px;">
+													{%SEL_MAKER%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">机型名</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_NAME" value="{%S_MODEL_NAME%}" style="width:200px;">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">机型コード</div>
+											<div>
+												<input type="text" class="form-control" name="S_MODEL_CD" value="{%S_MODEL_CD%}">&nbsp;<small class="text-muted">（部分一致）</small>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">シグナリング</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_SIGNALING_ID" style="width:200px;">
+													{%SEL_SIGNALING_ID%}
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-6 d-flex align-items-center">
+											<div class="search-title">ステータス</div>
+											<div>
+												<select class="custom-select custom-select-sm" name="S_STATUS" style="width:200px;">
+													{%SEL_STATUS%}
+												</select>
+											</div>
+										</div>
+										<div class="col-12 text-center border-top">
+											<a href="javascript:void(0);" class="btn btn-reset" onClick="reset();">リセット</a>
+											<a href="javascript:void(0);" class="btn btn-search" onClick="reSearch();">搜索</a>
+										</div>
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /#collapseOne -->
+						</div><!-- /#accordion -->
+						
+						<div class="card mt-3">
+							<div class="card-header d-flex justify-content-between">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_TOP">
+										{%PAGING%}
+									</ul>
+								</div>
+								<a href="javascript:void(0);" onClick="openDetail('');" class="btn btn-primary">新用户注册</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover th-center-bg table-list mb-0">
+									<thead>
+										<tr>
+											<th style="width:80px;">実機No<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="machine_no asc" onClick="reSort('machine_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="machine_no desc" onClick="reSort('machine_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">実機CD<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="machine_cd asc" onClick="reSort('machine_cd asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="machine_cd desc" onClick="reSort('machine_cd desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="min-width:110px;">オーナー<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="owner_no asc" onClick="reSort('owner_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="owner_no desc" onClick="reSort('owner_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th>機　種</th>
+											<th style="width:100px;">カメラNo<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="camera_no asc" onClick="reSort('camera_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="camera_no desc" onClick="reSort('camera_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="min-width:105px;">変換レート<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="convert_no asc" onClick="reSort('convert_no asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="convert_no desc" onClick="reSort('convert_no desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">
+												公開開始日<br />
+												公開終了日
+											</th>
+											<th style="width:100px;">ステータス<br />
+												<div class="list-sort">
+													<a href="javascript:void(0);" class="sort-asc" name="machine_status asc" onClick="reSort('machine_status asc');"><i class="fas fa-angle-up"></i></a>
+													<a href="javascript:void(0);" class="sort-desc" name="machine_status desc" onClick="reSort('machine_status desc');"><i class="fas fa-angle-down"></i></a>
+												</div>
+											</th>
+											<th style="width:100px;">玩状況</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--loop:{LIST}-->
+										<tr>
+											<td class="text-center"><a href="javascript:void(0);" onClick="openDetail('{%MACHINE_NO%}');">{%MACHINE_NO_PAD%}</a></td>
+											<td>{%MACHINE_CD%}</td>
+											<td>{%OWNER_NICKNAME%}</td>
+											<td>
+												[{%MODEL_CD%}] {%MAKER_NAME%}<br />
+												{%MODEL_NAME%}
+											</td>
+											<td class="text-center">{%CAMERA_NO%}</td>
+											<td>{%CONVERT_NAME%}</td>
+											<td class="text-center">
+												{%RELEASE_DATE%}<br />
+												{%END_DATE%}
+											</td>
+											<td class="text-center">{%MACHINE_STATUS_LABEL%}</td>
+											<td class="text-center"><a href="playhistory.php?NO={%MACHINE_NO%}">玩状況</a></td>
+										</tr>
+										<!--/loop:{LIST}-->
+									</tbody>
+								</table>
+							</div><!-- /.table-responsive -->
+							<div class="card-footer d-flex justify-content-start">
+								<div class="vertical-center">
+									{%P%} / {%ALLP%} (全{%ALLROW%}件)
+									<ul class="pagination pagination-sm" id="PAGEMOVE_BTM">
+										{%PAGING%}
+									</ul>
+								</div>
+							</div>
+						</div><!-- /.card -->
+					</div><!-- /.container-fluid -->
+				</form>
+				
+				<!--#include file="footer.html"-->
+				
+			</div><!-- /#content-wrapper -->
+			
+		</div><!-- /#wrapper -->
+		
+		<!--#include file="inc_script.html"-->
+		
+		<script src="js/list.js"></script>
+		<script type="text/javascript">
+			
+			// 搜索実行
+			function reSearch() {
+				var frm = window.document.MAINFORM;
+				
+				if (!chk_date("{%A1811%}", frm["RELEASE_DATE_FROM"].value, false)) return false;
+				if (!chk_date("{%A1812%}", frm["RELEASE_DATE_TO"].value, false)) return false;
+				if (chk_indis("", frm["RELEASE_DATE_FROM"].value) && chk_indis("", frm["RELEASE_DATE_TO"].value)) {
+					if (!compare_date("{%A1815%}", frm["RELEASE_DATE_FROM"].value, frm["RELEASE_DATE_TO"].value, false)) return false;
+				}
+				if (!chk_date("{%A1813%}", frm["END_DATE_FROM"].value, false)) return false;
+				if (!chk_date("{%A1814%}", frm["END_DATE_TO"].value, false)) return false;
+				if (chk_indis("", frm["END_DATE_FROM"].value) && chk_indis("", frm["END_DATE_TO"].value)) {
+					if (!compare_date("{%A1816%}", frm["END_DATE_FROM"].value, frm["END_DATE_TO"].value, false)) return false;
+				}
+				
+				
+				// クエリ操作
+				// クリア
+				frm["P"].value = "1";
+				trans();
+			}
+			
+			// 詳細画面Open
+			function openDetail(key) {
+				win_open("{%SELF%}", "M=detail&NO=" + key, "search_detail", 820, 900);
+			}
+			
+			// 初期処理
+			function init() {
+				sortImageActive();
+			}
+			
+			window.onload=init
+		</script>
+		
+	</body>
+</html>

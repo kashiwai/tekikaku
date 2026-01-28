@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -37,8 +37,8 @@
 	<body class="playground">
 		<div id="loading">
 			<div class="loader">Loading...</div>
-			<div id="loading_connect">Now connecting. Please wait for a little while.<span id="phase"></span></div>
-			<div id="loading_pay">Now settling. Please wait for a little while.</div>
+			<div id="loading_connect">接続中です。しばらくお待ち下さい。<span id="phase"></span></div>
+			<div id="loading_pay">精算中です。しばらくお待ち下さい。</div>
 		</div>
 
 
@@ -47,12 +47,12 @@
 		<div class="container">
 			<div class="game_status">
 				<div class="machine-no">
-					<div>Machine</div>
+					<div>Machine番</div>
 					<span id="machine_no">99</span>
 				</div>
 				<div class="game-situation-group">
 					<div class="game-situation situation-gc">
-						<div>Games</div>
+						<div>ゲーム数</div>
 						<span id="count">0</span>
 					</div>
 					<div class="game-situation situation-bb">
@@ -78,22 +78,22 @@
 	<!-- タブレット以下サイズの場合のみ表示 -->
 	<div class="d-inline d-lg-none">
 		<div class="slidemenu-bg" style="display:none;"></div>
-		<button type="button" class="btn-slidemenu-reel"><i class="fas fa-database"></i><br /><span>Reel</span></button>
-		<button type="button" class="btn-slidemenu-set"><i class="fas fa-cog"></i><br /><span>Setup</span></button>
+		<button type="button" class="btn-slidemenu-reel"><i class="fas fa-database"></i><br /><span>リール</span></button>
+		<button type="button" class="btn-slidemenu-set"><i class="fas fa-cog"></i><br /><span>Settings</span></button>
 		<!-- リール配列 -->
 		<div id="slide-reel" class="slide-reel">
 			<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
 		</div>
-		<!-- 設定 -->
+		<!-- Settings -->
 		<div id="slide-setting" class="slide-setting">
 			<div class="form-group" style="display:none;">
-				<label for="form-meoshi">Push Order</label>
+				<label for="form-meoshi">目押し</label>
 				<select class="custom-select" id="form-meoshi">
-					<option selected></option>
+					<option selected>Select</option>
 				</select>
 			</div>
 			<div class="mt-4">
-				<div class="mb-2">Auto Play<span id="pushorder_sp">（Navi-enabled）</span><span id="nonepushorder_sp">（Navi-disabled）</span></div>
+				<div class="mb-2">オートPlay<span id="pushorder_sp">（押し順対応）</span><span id="nonepushorder_sp">（押し順非対応）</span></div>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 					<label class="btn btn-secondary">
 						<input type="radio" name="ctrl-autoplay" value="1" autocomplete="off"> ON
@@ -104,13 +104,13 @@
 				</div>
 			</div>
 			<div class="mt-4" id="changePanel_sp">
-				<div class="mb-2">Panel Switching</div>
+				<div class="mb-2">パネル切替</div>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 					<label id="ctrl-panel-play" class="btn btn-secondary active">
 						<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> Play
 					</label>
 					<label id="ctrl-panel-menu" class="btn btn-secondary">
-						<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> Menu
+						<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
 					</label>
 				</div>
 			</div>
@@ -124,27 +124,27 @@
 			<div class="col-lg-4 d-none d-lg-inline p-4">
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
-						<a id="tab-reel" class="nav-link" data-toggle="tab" href="#reel" role="tab" aria-controls="reel" aria-selected="true">Reel Arrangement</a>
+						<a id="tab-reel" class="nav-link" data-toggle="tab" href="#reel" role="tab" aria-controls="reel" aria-selected="true">リール配列</a>
 					</li>
 					<li class="nav-item">
-						<a id="tab-setting" class="nav-link active" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">設定</a>
+						<a id="tab-setting" class="nav-link active" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">Settings</a>
 					</li>
 				</ul>
 				<div class="tab-content">
 					<!-- リール配列タブ -->
 					<div id="reel" class="tab-pane fade text-center" role="tabpanel" aria-labelledby="tab-reel">
-						<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="Reel Arrangement">
+						<img src="../img/base/{%IMAGE_REEL%}" class="img-reel" alt="リール配列">
 					</div>
-					<!-- 設定タブ -->
+					<!-- Settingsタブ -->
 					<div id="setting" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-setting">
 						<div class="form-group" style="display:none;">
 							<label for="form-meoshi">目押し</label>
 							<select class="custom-select" id="form-meoshi">
-								<option selected>選択</option>
+								<option selected>Select</option>
 							</select>
 						</div>
 						<div class="mt-4">
-							<div class="mb-2">Auto Play<span id="pushorder_pc">（Navi-enabled）</span><span id="nonepushorder_pc">（Navi-disabled）</span></div>
+							<div class="mb-2">オートPlay<span id="pushorder_pc">（押し順対応）</span><span id="nonepushorder_pc">（押し順非対応）</span></div>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<label class="btn btn-secondary">
 									<input type="radio" name="ctrl-autoplay" value="1" autocomplete="off"> ON
@@ -155,13 +155,13 @@
 							</div>
 						</div>
 						<div class="mt-4" id="changePanel_pc">
-							<div class="mb-2">Panel Switching</div>
+							<div class="mb-2">パネル切替</div>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<label id="ctrl-panel-play" class="btn btn-secondary active">
 									<input type="radio" name="ctrl-panel" value="1" autocomplete="off" checked> Play
 								</label>
 								<label id="ctrl-panel-menu" class="btn btn-secondary">
-									<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> Menu
+									<input type="radio" name="ctrl-panel" value="2" autocomplete="off"> メニュー
 								</label>
 							</div>
 						</div>
@@ -177,13 +177,13 @@
 					<audio id="audio"></audio>
 					<div id="consolelog"></div>
 				</div>
-				<!-- プレイパネルボタン -->
+				<!-- Playパネルボタン -->
 				<div id="panel-play" class="d-flex flex-column controls-area">
 					<!-- sound -->
 					<a class="btn-pressable sound-off sound-tr" id="audiostart"></a>
 
 					<div class="d-flex justify-content-between mx-2">
-						<button class="btn-pressable" id="pay-button" data-toggle="modal" data-target="#pay-modal">Settlement</button>
+						<button class="btn-pressable" id="pay-button" data-toggle="modal" data-target="#pay-modal">精算</button>
 						<div class="game_status txt-btn-group" id="creditbox">
 							<span>{%CURRENCY_2%}</span>
 							<div class="num-value">
@@ -192,7 +192,7 @@
 							<div id="animeField">
 								<span id="animeNumber">0</span>
 							</div>
-							<button class="btn btn-info" id="convcr-button" data-toggle="modal" data-target="#convcr-modal">Conversion</button>
+							<button class="btn btn-info" id="convcr-button" data-toggle="modal" data-target="#convcr-modal">変換</button>
 						</div>
 					</div>
 					<!-- 手動 -->
@@ -217,7 +217,7 @@
 							<a href="javascript:void(0);" class="btn-pressable reel-stop sendBtn" id="sendBtns3"></a>
 						</div>
 					</div>
-					<!-- オートプレイ -->
+					<!-- オートPlay -->
 					<div id="play-auto" class="flex-column mx-2" style="display:none;">
 						<div class="playing-btn d-flex align-items-center mt-2 mb-3">
 							<div class="mr-2">
@@ -225,7 +225,7 @@
 									<div class="col-5 pr-1">
 										<input type="tel" id="maxpoint" class="form-control">
 									</div>
-									<label class="col-7 col-form-label pl-0">{%CURRENCY_1%} Automatic Conversion</label>
+									<label class="col-7 col-form-label pl-0">{%CURRENCY_1%}まで自動変換</label>
 								</div>
 							</div>
 							<a id="autoplay_credit" class="btn-pressable reel-start autoplay-off" href="javascript:void(0);" startlabel="START" stoplabel="STOP" waitlabel="WAIT" >START</a>
@@ -274,13 +274,13 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">決済手続き</h5>
+					<h5 class="modal-title">Checkout手続き</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					引き続き、決済手続きを行って処理を完了させてください。
+					引き続き、Checkout手続きを行って処理を完了させてください。
 				</div>
 				<div class="modal-footer">
 					<form id="settleform" action="https://lavy.shop/ssl_settlement.php" method="POST" target="_blank">
@@ -290,7 +290,7 @@
 						<input type="hidden" name="sendid" value="">
 						<input type="hidden" name="payment_code" value="">
 						<input type="hidden" name="email" value="">
-						<button type="button" class="btn btn-primary" id="send_settle">決済手続きへ</button>
+						<button type="button" class="btn btn-primary" id="send_settle">Checkout手続きへ</button>
 					</form>
 				</div>
 			</div>
@@ -301,13 +301,13 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">{%CURRENCY_1%} Purchase</h5>
+					<h5 class="modal-title">{%CURRENCY_1%}Purchase</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					 Please select how to purchase {%CURRENCY_1%}.
+					{%CURRENCY_1%}のPurchase方法をPlease select。
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -320,13 +320,13 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">{%CURRENCY_2%} Conversion</h5>
+					<h5 class="modal-title">{%CURRENCY_2%}変換</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<a id="convCredit" class="btn btn-block btn-primary" data-dismiss="modal">{%CURRENCY_2%} Conversion (<span id="conv_point"></span> {%CURRENCY_1%} → <span id="conv_credit"></span> {%CURRENCY_2%})</a>
+					<a id="convCredit" class="btn btn-block btn-primary" data-dismiss="modal">{%CURRENCY_2%}変換 (<span id="conv_point"></span> {%CURRENCY_1%} → <span id="conv_credit"></span> {%CURRENCY_2%})</a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -339,14 +339,35 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Settled</h5>
+					<h5 class="modal-title">精算</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<p>Do you want to convert the currently owned {%CURRENCY_2%} to{%CURRENCY_3%} and finish the game?</p>
-					<a id="pay" class="btn btn-block btn-primary" data-dismiss="modal">Yes</a>
+					<p>現在の{%CURRENCY_2%}を{%CURRENCY_3%}に変換してゲームを終了しますか？</p>
+					<a id="pay" class="btn btn-block btn-primary" data-dismiss="modal">はい</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="pay-conf" class="modal fade detail-modal base-detail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">失効クレジットConfirm</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>期限付きの{%CURRENCY_2%}が含まれています。<br>{%CURRENCY_3%}に変換されませんがゲームを終了しますか？</p>
+					<a id="payyes" class="btn btn-block btn-primary" data-dismiss="modal">はい</a>
+					<a id="payyes" class="btn btn-block btn-primary" data-dismiss="modal">いいえ</a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -359,7 +380,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Settlement has been completed.</h5>
+					<h5 class="modal-title">精算が完了しました。</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -367,23 +388,23 @@
 				<div class="modal-body">
 					<ul class="list-group list-group-flush base-info mt-4">
 						<li class="list-group-item d-flex w-100 justify-content-between">
-							<span>Your Owned {%CURRENCY_1%}：</span>
+							<span>所持{%CURRENCY_1%}：</span>
 							<span><span id="pay_play_point">1</span></span>
 						</li>
 						<li class="list-group-item d-flex w-100 justify-content-between">
-							<span>Settled {%CURRENCY_2%}：</span>
+							<span>精算{%CURRENCY_2%}：</span>
 							<span><span id="pay_credit">2</span></span>
 						</li>
 						<li class="list-group-item d-flex w-100 justify-content-between">
-							<span>Earned {%CURRENCY_3%}：</span>
+							<span>獲得{%CURRENCY_3%}：</span>
 							<span><span id="pay_draw_point">3</span></span>
 						</li>
 						<li class="list-group-item d-flex w-100 justify-content-between">
-							<span>Total {%CURRENCY_3%}：</span>
+							<span>合計{%CURRENCY_3%}：</span>
 							<span><span id="pay_total_draw_point">4</span></span>
 						</li>
 					</ul>
-					<a id="endgame_a" class="btn btn-block btn-primary" href="/gameafter.php">Return to the site.</a>
+					<a id="endgame_a" class="btn btn-block btn-primary" href="/gameafter.php">サイトにBack</a>
 				</div>
 				<div class="modal-footer">
 				</div>
@@ -395,14 +416,14 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Closing Time</h5>
+					<h5 class="modal-title">閉店時間</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<p>It is {%NOTICETIME%} minutes left to close.</p>
-					<a class="btn btn-block btn-primary" data-dismiss="modal">Roger</a>
+					<p>閉店まであと{%NOTICETIME%}分です。</p>
+					<a class="btn btn-block btn-primary" data-dismiss="modal">了解</a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -415,7 +436,7 @@
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="error-modal_title">Warning</h5>
+					<h5 class="modal-title" id="error-modal_title">警告</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
