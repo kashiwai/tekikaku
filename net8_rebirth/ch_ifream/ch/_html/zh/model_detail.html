@@ -2,7 +2,7 @@
 <html lang="zh">
 	<head>
 		<!--#include file="inc_head.html"-->
-		<title>{%SITE_TITLE%} - 機体詳細</title>
+		<title>{%SITE_TITLE%} - 机体详细</title>
 		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 		<style>
 		/* ================================================
@@ -889,7 +889,7 @@
 				<path d="M15 18l-6-6 6-6"/>
 			</svg>
 		</a>
-		<h1 class="header-title">機体詳細</h1>
+		<h1 class="header-title">机体详细</h1>
 		<button class="header-share" onclick="shareMachine()">
 			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
@@ -917,14 +917,14 @@
 		<!--if:{NEED_LOGIN}-->
 		<div class="login-notice">
 			<span class="login-notice-icon">&#x26A0;</span>
-			<span class="login-notice-text">ゲームを玩するには登录が必要です</span>
+			<span class="login-notice-text">需要登录才能玩游戏</span>
 			<a href="login.php" class="login-notice-btn">登录</a>
 		</div>
 		<!--/if:{NEED_LOGIN}-->
 
 		<!-- Game Info Section -->
 		<div class="section">
-			<h3 class="section-title">ゲーム情報</h3>
+			<h3 class="section-title">游戏信息</h3>
 			<div class="game-info-grid">
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x26A1;</span>
@@ -997,10 +997,10 @@
 		<!-- Machine Availability Section -->
 		<div class="availability-section">
 			<div class="availability-header">
-				<span class="availability-title">台の空き状況</span>
+				<span class="availability-title">台位空闲状态</span>
 				<div class="availability-count">
-					<span class="availability-badge badge-available">空き {%AVAILABLE_MACHINES%}台</span>
-					<span class="availability-badge badge-total">/ 全{%TOTAL_MACHINES%}台</span>
+					<span class="availability-badge badge-available">空闲 {%AVAILABLE_MACHINES%}台</span>
+					<span class="availability-badge badge-total">/ 共{%TOTAL_MACHINES%}台</span>
 				</div>
 			</div>
 			<div class="machine-list">
@@ -1026,16 +1026,16 @@
 					</div>
 					<div class="stats-days">
 						<div class="stat-day">
-							<div class="stat-label">本日</div>
-							<div class="stat-value bb-value">{%STATS_BB_TODAY%}<span class="stat-unit">回</span></div>
+							<div class="stat-label">今天</div>
+							<div class="stat-value bb-value">{%STATS_BB_TODAY%}<span class="stat-unit">次</span></div>
 						</div>
 						<div class="stat-day">
 							<div class="stat-label">1日前</div>
-							<div class="stat-value bb-value">{%STATS_BB_1DAY%}<span class="stat-unit">回</span></div>
+							<div class="stat-value bb-value">{%STATS_BB_1DAY%}<span class="stat-unit">次</span></div>
 						</div>
 						<div class="stat-day">
 							<div class="stat-label">2日前</div>
-							<div class="stat-value bb-value">{%STATS_BB_2DAY%}<span class="stat-unit">回</span></div>
+							<div class="stat-value bb-value">{%STATS_BB_2DAY%}<span class="stat-unit">次</span></div>
 						</div>
 					</div>
 				</div>
@@ -1048,16 +1048,16 @@
 					</div>
 					<div class="stats-days">
 						<div class="stat-day">
-							<div class="stat-label">本日</div>
-							<div class="stat-value rb-value">{%STATS_RB_TODAY%}<span class="stat-unit">回</span></div>
+							<div class="stat-label">今天</div>
+							<div class="stat-value rb-value">{%STATS_RB_TODAY%}<span class="stat-unit">次</span></div>
 						</div>
 						<div class="stat-day">
 							<div class="stat-label">1日前</div>
-							<div class="stat-value rb-value">{%STATS_RB_1DAY%}<span class="stat-unit">回</span></div>
+							<div class="stat-value rb-value">{%STATS_RB_1DAY%}<span class="stat-unit">次</span></div>
 						</div>
 						<div class="stat-day">
 							<div class="stat-label">2日前</div>
-							<div class="stat-value rb-value">{%STATS_RB_2DAY%}<span class="stat-unit">回</span></div>
+							<div class="stat-value rb-value">{%STATS_RB_2DAY%}<span class="stat-unit">次</span></div>
 						</div>
 					</div>
 				</div>
@@ -1071,11 +1071,11 @@
 					<div class="stats-total-grid">
 						<div class="total-item">
 							<div class="total-label">BB</div>
-							<div class="total-value bb-value">{%STATS_BB_TOTAL%}<span class="stat-unit">回</span></div>
+							<div class="total-value bb-value">{%STATS_BB_TOTAL%}<span class="stat-unit">次</span></div>
 						</div>
 						<div class="total-item">
 							<div class="total-label">RB</div>
-							<div class="total-value rb-value">{%STATS_RB_TOTAL%}<span class="stat-unit">回</span></div>
+							<div class="total-value rb-value">{%STATS_RB_TOTAL%}<span class="stat-unit">次</span></div>
 						</div>
 					</div>
 				</div>
@@ -1083,7 +1083,7 @@
 				<!-- Max Diff Today & Ever -->
 				<div class="stats-card stats-max-diff">
 					<div class="max-diff-item">
-						<div class="max-diff-label">本日の最大差枚数</div>
+						<div class="max-diff-label">今天的最大差额枚数</div>
 						<div class="max-diff-value">{%STATS_MAX_DIFF_TODAY%}<span class="stat-unit">枚</span></div>
 					</div>
 					<div class="max-diff-item highlight">
@@ -1104,11 +1104,11 @@
 
 		<!-- Description Section -->
 		<div class="section">
-			<h3 class="section-title">説明</h3>
+			<h3 class="section-title">说明</h3>
 			<div class="description-box">
-				この机型は人気の{%CATEGORY_NAME%}台です。<br>
-				高いゲーム性と多彩な演出で、玩ヤーを楽しませます。<br>
-				ぜひお試しください。
+				这款机型是受欢迎的{%CATEGORY_NAME%}机。<br>
+				具有高度的游戏性和丰富的演出效果，让玩家尽情享受。<br>
+				请一定要试试。
 			</div>
 		</div>
 
@@ -1136,21 +1136,21 @@
 	<!--#include file="inc_script.html"-->
 
 	<script>
-	// 选择した台番号
+	// 已选择的台位号
 	let selectedMachine = '{%FIRST_AVAILABLE_MACHINE%}';
 
-	// 台を选择
+	// 选择台位
 	function selectMachine(machineNo, status) {
 		if (status === 'in-use' || status === 'preparing') {
-			return; // 使用中・准备中の台は选择不可
+			return; // 使用中・准备中的台位无法选择
 		}
 
-		// 前の选择を解除
+		// 取消之前的选择
 		document.querySelectorAll('.machine-slot.selected').forEach(el => {
 			el.classList.remove('selected');
 		});
 
-		// 新しい台を选择
+		// 选择新台位
 		const slot = document.querySelector(`.machine-slot[data-machine="${machineNo}"]`);
 		if (slot) {
 			slot.classList.add('selected');
@@ -1180,7 +1180,7 @@
 		}
 	}
 
-	// 初期选择状態を设置
+	// 设置初始选择状态
 	document.addEventListener('DOMContentLoaded', function() {
 		if (selectedMachine) {
 			const slot = document.querySelector(`.machine-slot[data-machine="${selectedMachine}"]`);
@@ -1230,10 +1230,10 @@
 				<div class="chart-bar-group">
 					<div class="chart-label">${label}</div>
 					<div class="chart-bars">
-						${bbCount > 0 ? `<div class="chart-bar bb" style="width: ${bbWidth}%;" title="BB: ${bbCount}回">${bbCount > 0 ? bbCount : ''}</div>` : ''}
-						${rbCount > 0 ? `<div class="chart-bar rb" style="width: ${rbWidth}%;" title="RB: ${rbCount}回">${rbCount > 0 ? rbCount : ''}</div>` : ''}
+						${bbCount > 0 ? `<div class="chart-bar bb" style="width: ${bbWidth}%;" title="BB: ${bbCount}次">${bbCount > 0 ? bbCount : ''}</div>` : ''}
+						${rbCount > 0 ? `<div class="chart-bar rb" style="width: ${rbWidth}%;" title="RB: ${rbCount}次">${rbCount > 0 ? rbCount : ''}</div>` : ''}
 					</div>
-					<div class="chart-value">${totalCount}回</div>
+					<div class="chart-value">${totalCount}次</div>
 				</div>
 			`;
 		});
