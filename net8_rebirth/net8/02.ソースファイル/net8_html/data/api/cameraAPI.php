@@ -51,6 +51,25 @@ function main() {
 	try {
 		// API系表示コントロールのインスタンス生成
 		$DB = new NetDB();
+
+		// 自動ハートビート更新（全API呼び出し時に実行）
+		// Win側コード変更不要 - 既存のAPI呼び出しで自動的にlast_heartbeatを記録
+		if (isset($_GET["MACHINE_NO"]) && !empty($_GET["MACHINE_NO"])) {
+			try {
+				$sql = (new SqlString($DB))
+					->update("dat_machine")
+						->set()
+							->value("last_heartbeat", "CURRENT_TIMESTAMP", FD_FUNCTION)
+						->where()
+							->and("machine_no = ", $_GET["MACHINE_NO"], FD_NUM)
+					->createSQL("\n");
+				$DB->query($sql);
+			} catch (Exception $e) {
+				// ハートビート更新失敗は既存処理に影響を与えない
+				error_log("Heartbeat update failed for machine_no={$_GET['MACHINE_NO']}: " . $e->getMessage());
+			}
+		}
+
 		// 実処理
 		switch( $_GET["M"] ){
 			case "start" :
