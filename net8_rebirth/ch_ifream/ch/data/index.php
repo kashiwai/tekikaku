@@ -23,10 +23,7 @@
  * @since    2019/09/06 表示形態諸々の大幅改修 鶴野
  */
 
-// インクルード
-require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
-
-// ★多言語対応: 言語検出とテンプレートディレクトリ設定
+// ★多言語対応: 言語検出（require_files.phpより前に定義必須）
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'zh'; // デフォルトは中国語
 $allowedLangs = ['zh', 'ko', 'en', 'ja'];
 if (!in_array($lang, $allowedLangs)) {
@@ -37,6 +34,9 @@ if (!in_array($lang, $allowedLangs)) {
 if (!defined('FOLDER_LANG')) {
     define("FOLDER_LANG", $lang);
 }
+
+// インクルード
+require_once(__DIR__ . '/../_etc/require_files.php');			// requireファイル
 
 // 言語別テンプレートディレクトリを設定
 define("LANG_CODE", $lang);
