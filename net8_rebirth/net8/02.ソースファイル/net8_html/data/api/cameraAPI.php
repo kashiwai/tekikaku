@@ -52,17 +52,40 @@ function main() {
 		// API系表示コントロールのインスタンス生成
 		$DB = new NetDB();
 
-		// 自動ハートビート更新（全API呼び出し時に実行）
-		// Win側コード変更不要 - 既存のAPI呼び出しで自動的にlast_heartbeatを記録
+		// 自動ハートビート更新 + machine_status自動更新（全API呼び出し時に実行）
+		// Win側コード変更不要 - 既存のAPI呼び出しで自動的にlast_heartbeatとmachine_statusを記録
 		if (isset($_GET["MACHINE_NO"]) && !empty($_GET["MACHINE_NO"])) {
 			try {
-				$sql = (new SqlString($DB))
-					->update("dat_machine")
-						->set()
-							->value("last_heartbeat", "CURRENT_TIMESTAMP", FD_FUNCTION)
+				// 現在のmachine_statusを確認（メンテナンス中は保護）
+				$checkSql = (new SqlString($DB))
+					->select()
+						->field("machine_status")
+						->from("dat_machine")
 						->where()
 							->and("machine_no = ", $_GET["MACHINE_NO"], FD_NUM)
 					->createSQL("\n");
+				$currentStatus = $DB->getRow($checkSql);
+
+				// メンテナンス(3)以外は稼働(1)に自動更新
+				if (!empty($currentStatus) && $currentStatus['machine_status'] != '3') {
+					$sql = (new SqlString($DB))
+						->update("dat_machine")
+							->set()
+								->value("last_heartbeat", "CURRENT_TIMESTAMP", FD_FUNCTION)
+								->value("machine_status", "1", FD_NUM) // 稼働中に自動更新
+							->where()
+								->and("machine_no = ", $_GET["MACHINE_NO"], FD_NUM)
+						->createSQL("\n");
+				} else {
+					// メンテナンス中はheartbeatだけ更新（statusは保護）
+					$sql = (new SqlString($DB))
+						->update("dat_machine")
+							->set()
+								->value("last_heartbeat", "CURRENT_TIMESTAMP", FD_FUNCTION)
+							->where()
+								->and("machine_no = ", $_GET["MACHINE_NO"], FD_NUM)
+						->createSQL("\n");
+				}
 				$DB->query($sql);
 			} catch (Exception $e) {
 				// ハートビート更新失敗は既存処理に影響を与えない
