@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 
 # キャッシュ完全無効化（この行を実行することでキャッシュが破棄される）
-RUN echo "FORCE-REBUILD-2026-01-28-ch-ifream-v32-fix-zh-model-detail-translation" > /tmp/cache-bust
+RUN echo "FORCE-REBUILD-2026-01-28-ch-ifream-v33-complete-zh-translation" > /tmp/cache-bust
 
 # Debian Busterのリポジトリをアーカイブに変更（EOLのため）
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
