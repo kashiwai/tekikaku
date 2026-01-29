@@ -929,42 +929,42 @@
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x26A1;</span>
 					<div class="game-info-content">
-						<div class="game-info-label">最大連チャン:</div>
-						<div class="game-info-value">1000連</div>
+						<div class="game-info-label">最大连续奖励:</div>
+						<div class="game-info-value">1000连</div>
 					</div>
 				</div>
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x1F3AF;</span>
 					<div class="game-info-content">
-						<div class="game-info-label">ボーナス確率:</div>
+						<div class="game-info-label">奖金概率:</div>
 						<div class="game-info-value">1/100</div>
 					</div>
 				</div>
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x1F4B0;</span>
 					<div class="game-info-content">
-						<div class="game-info-label">最大賞金:</div>
-						<div class="game-info-value">100万円</div>
+						<div class="game-info-label">最大奖金:</div>
+						<div class="game-info-value">100万元</div>
 					</div>
 				</div>
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x23F1;</span>
 					<div class="game-info-content">
-						<div class="game-info-label">時短確率:</div>
+						<div class="game-info-label">时间缩短概率:</div>
 						<div class="game-info-value">1/10</div>
 					</div>
 				</div>
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x1F4CA;</span>
 					<div class="game-info-content">
-						<div class="game-info-label">平均還元率:</div>
+						<div class="game-info-label">平均回报率:</div>
 						<div class="game-info-value">98.5%</div>
 					</div>
 				</div>
 				<div class="game-info-item">
 					<span class="game-info-icon">&#x2699;</span>
 					<div class="game-info-content">
-						<div class="game-info-label">ART確率:</div>
+						<div class="game-info-label">ART概率:</div>
 						<div class="game-info-value">1/300</div>
 					</div>
 				</div>
@@ -977,15 +977,15 @@
 			<div class="features-grid">
 				<div class="feature-item">
 					<span class="feature-icon">&#x2699;</span>
-					<span>ART機能あり</span>
+					<span>ART功能可用</span>
 				</div>
 				<div class="feature-item">
 					<span class="feature-icon">&#x23F1;</span>
-					<span>時短機能あり</span>
+					<span>时间缩短功能可用</span>
 				</div>
 				<div class="feature-item">
 					<span class="feature-icon">&#x1F3AF;</span>
-					<span>ボーナス機能あり</span>
+					<span>奖金功能可用</span>
 				</div>
 				<div class="feature-item">
 					<span class="feature-icon">&#x2B50;</span>
@@ -1022,7 +1022,7 @@
 				<div class="stats-card">
 					<div class="stats-card-header">
 						<span class="stats-icon">🔴</span>
-						<span class="stats-title">BB（ビッグボーナス）</span>
+						<span class="stats-title">BB（大奖金）</span>
 					</div>
 					<div class="stats-days">
 						<div class="stat-day">
@@ -1044,7 +1044,7 @@
 				<div class="stats-card">
 					<div class="stats-card-header">
 						<span class="stats-icon">🟡</span>
-						<span class="stats-title">RB（レギュラーボーナス）</span>
+						<span class="stats-title">RB（常规奖金）</span>
 					</div>
 					<div class="stats-days">
 						<div class="stat-day">
@@ -1066,7 +1066,7 @@
 				<div class="stats-card stats-total">
 					<div class="stats-card-header">
 						<span class="stats-icon">📊</span>
-						<span class="stats-title">差枚数（最高）</span>
+						<span class="stats-title">差额枚数（最高）</span>
 					</div>
 					<div class="stats-total-grid">
 						<div class="total-item">
@@ -1087,7 +1087,7 @@
 						<div class="max-diff-value">{%STATS_MAX_DIFF_TODAY%}<span class="stat-unit">枚</span></div>
 					</div>
 					<div class="max-diff-item highlight">
-						<div class="max-diff-label">過去最高差枚数</div>
+						<div class="max-diff-label">历史最高差额枚数</div>
 						<div class="max-diff-value gold">{%STATS_MAX_DIFF_EVER%}<span class="stat-unit">枚</span></div>
 					</div>
 				</div>
@@ -1124,8 +1124,8 @@
 		<button class="play-btn disabled" disabled>現在玩できません</button>
 		<!--/if:{CANNOT_PLAY}-->
 		<div class="footer-links">
-			<a href="search.php" class="other-machines-link">または他の機体を選ぶ</a>
-			<a href="/data/" class="recommended-link">おすすめ機体</a>
+			<a href="search.php" class="other-machines-link">或选择其他机型</a>
+			<a href="/data/" class="recommended-link">推荐机型</a>
 		</div>
 	</div>
 
@@ -1164,7 +1164,7 @@
 		}
 	}
 
-	// シェア機能
+	// 分享功能
 	function shareMachine() {
 		if (navigator.share) {
 			navigator.share({
@@ -1219,7 +1219,7 @@
 			const rbCount = data.rb || 0;
 			const totalCount = bbCount + rbCount;
 
-			// ラベル（番号）
+			// 标签（编号）
 			const label = (index + 1);
 
 			// バーの幅（パーセンテージ）
