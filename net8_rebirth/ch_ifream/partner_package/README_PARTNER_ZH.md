@@ -31,9 +31,10 @@ Base URL: https://ifreamnet8-development.up.railway.app/api/v1
 
 | 文件名 | 大小 | 说明 | 优先级 |
 |-------|------|------|--------|
-| `PARTNER_ONBOARDING_PACKAGE_ZH.md` | 40KB | **从这里开始！** 完整的集成指南 | ⭐⭐⭐ 必读 |
+| `SIMPLE_INTEGRATION_GUIDE_ZH.md` | 15KB | **⭐ 从这里开始！** 最简集成指南（仅 iframe + 用户连接） | ⭐⭐⭐⭐ 推荐！ |
+| `PARTNER_ONBOARDING_PACKAGE_ZH.md` | 40KB | 完整的集成指南（详细版） | ⭐⭐⭐ 参考 |
 | `API_MANUAL_ZH.md` | 71KB | 全部18个 API 端点详细文档 | ⭐⭐ 参考 |
-| `REALTIME_CALLBACK_GUIDE_ZH.md` | 53KB | 实时数据回调实现指南 | ⭐⭐ 推荐 |
+| `REALTIME_CALLBACK_GUIDE_ZH.md` | 53KB | 实时数据回调实现指南 | ⭐⭐ 参考 |
 
 ### 💻 示例代码文件
 
@@ -45,35 +46,74 @@ Base URL: https://ifreamnet8-development.up.railway.app/api/v1
 
 ---
 
-## 🚀 快速开始（3步骤，5分钟）
+## 🎯 集成方式说明
 
-### 步骤 1: 测试认证（5秒）
+### 方式 1: 简单集成（推荐！2-3小时完成）
 
-```bash
-# Linux/Mac
-chmod +x test_auth.sh
-./test_auth.sh
+**适用于:** 只需要 iframe 嵌入游戏 + API 用户连接
 
-# Windows (Git Bash)
-bash test_auth.sh
-```
+**阅读文档:**
+1. ✅ `SIMPLE_INTEGRATION_GUIDE_ZH.md`（本包中）
+2. ✅ 运行 `test_auth.sh` 测试
 
-**期待结果:**
-```
-✅ 认证成功!
-JWT 令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
+**您只需要做3件事:**
+- 用 iframe 显示 NET8 游戏（游戏本身由 NET8 提供）
+- 用 API 管理用户信息和积分
+- 接收 Webhook 获取游戏结果
+
+### 方式 2: 完整集成（需要更多自定义功能）
+
+**适用于:** 需要使用全部 API 功能
+
+**阅读文档:**
+1. ✅ `PARTNER_ONBOARDING_PACKAGE_ZH.md`
+2. ✅ `API_MANUAL_ZH.md`
+3. ✅ `REALTIME_CALLBACK_GUIDE_ZH.md`
 
 ---
 
-### 步骤 2: 运行集成示例
+## 🚀 快速开始（推荐！最快2小时完成集成）
+
+### ⭐ 推荐: 简单集成路线
+
+如果您只需要 **iframe 嵌入游戏** + **用户连接 API**:
+
+**步骤 1: 测试认证（5秒）**
+
+```bash
+chmod +x test_auth.sh
+./test_auth.sh
+```
+
+**步骤 2: 阅读简单集成指南（20分钟）**
+
+打开 `SIMPLE_INTEGRATION_GUIDE_ZH.md` 了解:
+- 如何用 iframe 显示游戏（只需4行代码）
+- 如何用 API 管理用户积分
+- 如何接收游戏结果（Webhook）
+
+**步骤 3: 开始实现（1-2小时）**
+
+参考 `SIMPLE_INTEGRATION_GUIDE_ZH.md` 中的示例代码。
+
+---
+
+### 📖 可选: 完整集成路线
+
+如果您需要使用全部 API 功能:
+
+**步骤 1: 测试认证（5秒）**
+
+```bash
+chmod +x test_auth.sh
+./test_auth.sh
+```
+
+**步骤 2: 运行集成示例**
 
 **Node.js:**
 ```bash
-# 安装依赖（Node.js < 18）
-npm install node-fetch
-
-# 运行示例
+npm install node-fetch  # Node.js < 18
 node net8_integration_sample.js
 ```
 
@@ -82,9 +122,7 @@ node net8_integration_sample.js
 php net8_integration_sample.php
 ```
 
----
-
-### 步骤 3: 阅读文档
+**步骤 3: 阅读完整文档**
 
 打开 `PARTNER_ONBOARDING_PACKAGE_ZH.md` 开始完整的集成。
 
@@ -92,21 +130,45 @@ php net8_integration_sample.php
 
 ## 📚 推荐阅读顺序
 
-### 第1天 - 理解 API（1-2小时）
+### 🚀 快速路线（仅 iframe + 用户连接，2-3小时完成）
+
+**第1步 - 理解集成（30分钟）**
+
+1. ✅ `README_PARTNER_ZH.md`（本文件）- 10分钟
+2. ✅ `SIMPLE_INTEGRATION_GUIDE_ZH.md` - 20分钟 ⭐ **从这里开始！**
+3. ✅ 运行 `test_auth.sh` - 5分钟
+
+**第2步 - 实现集成（1-2小时）**
+
+4. ✅ 参考 `SIMPLE_INTEGRATION_GUIDE_ZH.md` 实现后端 API
+5. ✅ 实现 iframe 显示
+6. ✅ 实现 Webhook 接收端点
+
+**第3步 - 测试（30分钟）**
+
+7. ✅ 测试游戏开始
+8. ✅ 测试 Webhook 接收
+9. ✅ 测试用户余额更新
+
+---
+
+### 📖 完整路线（使用全部 API 功能，1-2天完成）
+
+**第1天 - 理解 API（1-2小时）**
 
 1. ✅ `README_PARTNER_ZH.md`（本文件）- 10分钟
 2. ✅ `PARTNER_ONBOARDING_PACKAGE_ZH.md` - 30分钟
 3. ✅ 运行测试脚本 `test_auth.sh` - 5分钟
 4. ✅ 运行集成示例（Node.js 或 PHP）- 15分钟
 
-### 第2天 - 实现集成（4-6小时）
+**第2天 - 实现集成（4-6小时）**
 
 5. ✅ `API_MANUAL_ZH.md` - 参考具体端点
 6. ✅ 实现游戏开始功能
 7. ✅ 实现 iframe 显示
 8. ✅ 测试基本游戏流程
 
-### 第3天 - 实时回调（2-4小时）
+**第3天 - 实时回调（2-4小时）**
 
 9. ✅ `REALTIME_CALLBACK_GUIDE_ZH.md` - 详细阅读
 10. ✅ 实现 Webhook 接收端点
