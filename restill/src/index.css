@@ -1,0 +1,203 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+==========================================================================
+【AI HANDOVER NOTE】
+1. DESIGN PHILOSOPHY:
+   - Techno-Transcendence & Digital Sovereignty: Reflecting the bold claim that RESTILL-AI remains operational even in a post-human world. The design uses a 'Void-Core' aesthetic—deep cosmic blacks contrasted with hyper-vibrant AI 'neural' glows.
+   - Visual Style: 'Cyber-Brutalism meets Glassmorphism'. Large, unapologetic typography (80% English) paired with semi-transparent glass surfaces that signify the orchestration of complex AI models (GPT, Claude, Gemini).
+   - Rationale: For a company serving giants like Tesla and Netflix with a lean 10-person team, the UI must scream 'Force Multiplier' and 'Technical Superiority'.
+
+2. TYPOGRAPHY:
+   - Sans (Outfit): Chosen for its geometric precision and futuristic flair. It balances high-end corporate elegance with the '突飛' (unconventional) nature of the brand.
+   - Mono (JetBrains Mono): Used strictly for the 'Power Stats' (320 AI Agents, 23 Projects) and technical orchestration diagrams to emphasize the 'AI Developer' DNA.
+
+3. COLOR SYSTEM:
+   - Brand Core: The primary hue (H: 272) is a 'Deep Intelligence Violet', representing the fusion of human intuition and machine logic.
+   - Mapping: --primary is high-chroma for call-to-actions; --accent uses a 'Cyan Pulse' (H: 195) to denote active AI processing.
+   - Semantic Logic: High-contrast OKLCH values ensure that even in the darkest 'Abyss' mode, critical alerts (destructive) and successes are piercingly visible.
+
+4. USAGE GUIDE:
+   - Layout: Use 'Bento Grid' layouts for the 320 AI Agent showcase. Implement 'Full-bleed' sections for client logos (Netflix, Tesla) with a grayscale-to-color hover effect.
+   - Effects: Use heavy `backdrop-blur` (20px+) and `rim-light` (1px inner borders with low opacity) to create a sense of physical hardware/chips.
+   - Specific Rule: Typography should be oversized (text-7xl or 8xl) for hero headers to maintain the 'Bold' and 'Unconventional' requirement.
+==========================================================================
+*/
+
+:root {
+  /* Typography */
+  --font-sans: Outfit, system-ui, sans-serif;
+  --font-mono: JetBrains Mono, monospace;
+  
+  /* Radius */
+  --radius: 0.5rem;
+
+  /* Core UI Tokens */
+  --background: oklch(0.98 0.01 272);
+  --foreground: oklch(0.12 0.05 272);
+  --card: oklch(1.0 0.0 0);
+  --card-foreground: oklch(0.12 0.05 272);
+  --popover: oklch(1.0 0.0 0);
+  --popover-foreground: oklch(0.12 0.05 272);
+  --primary: oklch(0.55 0.22 272);
+  --primary-foreground: oklch(0.98 0.01 272);
+  --secondary: oklch(0.94 0.02 272);
+  --secondary-foreground: oklch(0.25 0.06 272);
+  --muted: oklch(0.94 0.02 272);
+  --muted-foreground: oklch(0.45 0.04 272);
+  --accent: oklch(0.65 0.18 195);
+  --accent-foreground: oklch(0.12 0.05 272);
+  --destructive: oklch(0.60 0.18 25);
+  --destructive-foreground: oklch(0.98 0.01 25);
+  --border: oklch(0.88 0.03 272);
+  --input: oklch(0.88 0.03 272);
+  --ring: oklch(0.55 0.22 272);
+  
+  /* Chart Tokens */
+  --chart-1: oklch(0.65 0.20 272);
+  --chart-2: oklch(0.70 0.15 195);
+  --chart-3: oklch(0.60 0.15 150);
+  --chart-4: oklch(0.75 0.18 50);
+  --chart-5: oklch(0.65 0.18 320);
+  
+  /* Sidebar Tokens */
+  --sidebar: oklch(0.98 0.01 272);
+  --sidebar-foreground: oklch(0.25 0.06 272);
+  --sidebar-primary: oklch(0.55 0.22 272);
+  --sidebar-primary-foreground: oklch(0.98 0.01 272);
+  --sidebar-accent: oklch(0.94 0.02 272);
+  --sidebar-accent-foreground: oklch(0.12 0.05 272);
+  --sidebar-border: oklch(0.92 0.02 272);
+  --sidebar-ring: oklch(0.55 0.22 272);
+}
+
+.dark {
+  --background: oklch(0.10 0.03 272);
+  --foreground: oklch(0.95 0.02 272);
+  --card: oklch(0.14 0.04 272);
+  --card-foreground: oklch(0.95 0.02 272);
+  --popover: oklch(0.10 0.03 272);
+  --popover-foreground: oklch(0.95 0.02 272);
+  --primary: oklch(0.68 0.24 272);
+  --primary-foreground: oklch(0.10 0.03 272);
+  --secondary: oklch(0.18 0.05 272);
+  --secondary-foreground: oklch(0.95 0.02 272);
+  --muted: oklch(0.18 0.05 272);
+  --muted-foreground: oklch(0.65 0.04 272);
+  --accent: oklch(0.75 0.22 195);
+  --accent-foreground: oklch(0.10 0.03 272);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.95 0.02 25);
+  --border: oklch(0.22 0.05 272);
+  --input: oklch(0.22 0.05 272);
+  --ring: oklch(0.68 0.24 272);
+  
+  /* Chart Tokens */
+  --chart-1: oklch(0.68 0.24 272);
+  --chart-2: oklch(0.75 0.22 195);
+  --chart-3: oklch(0.70 0.20 150);
+  --chart-4: oklch(0.80 0.20 50);
+  --chart-5: oklch(0.72 0.22 320);
+  
+  /* Sidebar Tokens */
+  --sidebar: oklch(0.12 0.04 272);
+  --sidebar-foreground: oklch(0.95 0.02 272);
+  --sidebar-primary: oklch(0.68 0.24 272);
+  --sidebar-primary-foreground: oklch(0.10 0.03 272);
+  --sidebar-accent: oklch(0.18 0.05 272);
+  --sidebar-accent-foreground: oklch(0.95 0.02 272);
+  --sidebar-border: oklch(0.20 0.05 272);
+  --sidebar-ring: oklch(0.68 0.24 272);
+}
+
+@theme inline {
+  /* Shadcn Core Mapping */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts Mapping */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar Mapping */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* Radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans min-h-screen;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  code, pre {
+    @apply font-mono;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-primary;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+  }
+}
