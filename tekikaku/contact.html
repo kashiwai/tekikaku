@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="テキカク不動産へのお問い合わせ。訳あり物件の無料査定依頼・ご相談はこちらから。電話・メール・フォームでご連絡ください。">
+  <title>お問い合わせ｜テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .contact-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .contact-method {
+      background: var(--color-white);
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      border-top: 4px solid var(--color-primary);
+    }
+
+    .contact-method__icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .contact-method__type {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .contact-method__value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--color-dark);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .contact-method__value a {
+      color: var(--color-primary);
+    }
+
+    .contact-method__sub {
+      font-size: 0.8rem;
+      color: var(--color-gray);
+    }
+
+    .form-card {
+      background: var(--color-white);
+      border-radius: 8px;
+      padding: 48px;
+      box-shadow: var(--shadow-md);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .form-card__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .form-card__desc {
+      font-size: 0.85rem;
+      color: var(--color-gray);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .form-note {
+      background: var(--color-gray-light);
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-size: 0.82rem;
+      color: var(--color-gray);
+      line-height: 1.8;
+      margin-top: 24px;
+    }
+
+    .form-note strong {
+      color: var(--color-dark);
+    }
+
+    .prefecture-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .contact-methods {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        padding: 28px 20px;
+      }
+
+      .prefecture-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav class="nav nav--page" id="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJホールディングス株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="service.html" class="nav__link">サービス</a></li>
+      <li><a href="company.html" class="nav__link">会社概要</a></li>
+      <li><a href="recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel">
+        <span>無料査定受付</span>
+        03-6766-6178
+      </a>
+      <a href="contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav__mobile">
+    <a href="service.html" class="nav__mobile-link">サービス</a>
+    <a href="company.html" class="nav__mobile-link">会社概要</a>
+    <a href="recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+
+    <!-- ページヒーロー -->
+    <div class="page-hero">
+      <!-- ※実際の写真に差し替えてください -->
+      <img
+        class="page-hero__bg"
+        src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&auto=format&fit=crop"
+        alt="お問い合わせのイメージ写真"
+        width="1600"
+        height="900"
+        loading="eager"
+        style="filter:brightness(0.5);"
+      >
+      <div class="page-hero__content">
+        <div class="page-hero__en">Contact</div>
+        <div class="page-hero__ja">お問い合わせ・無料査定依頼</div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         お問い合わせ方法
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+
+        <div class="section-head section-head--center">
+          <p class="section-label section-label--center">Get in Touch</p>
+          <h2 class="section-title section-title--center">まずはお気軽にご相談ください</h2>
+          <p class="section-desc section-desc--center">
+            お電話・フォームどちらでも受け付けています。査定・相談は無料です。
+          </p>
+        </div>
+
+        <div class="contact-methods" data-fade>
+          <div class="contact-method">
+            <span class="contact-method__icon">📞</span>
+            <div class="contact-method__type">電話（受付 7:00〜24:00）</div>
+            <div class="contact-method__value">
+              <a href="tel:0367666178">03-6766-6178</a>
+            </div>
+            <div class="contact-method__sub">
+              携帯からも可<br>
+              <a href="tel:07040034882" style="color:var(--color-primary);">070-4003-4882</a>
+            </div>
+          </div>
+          <div class="contact-method">
+            <span class="contact-method__icon">📠</span>
+            <div class="contact-method__type">FAX</div>
+            <div class="contact-method__value">(050) 3172-7493</div>
+            <div class="contact-method__sub">24時間受信可能</div>
+          </div>
+          <div class="contact-method">
+            <span class="contact-method__icon">✉️</span>
+            <div class="contact-method__type">メール・フォーム</div>
+            <div class="contact-method__value" style="font-size:1rem;">下記フォームから</div>
+            <div class="contact-method__sub">24時間受付・翌営業日以内に返信</div>
+          </div>
+        </div>
+
+        <!-- フォーム -->
+        <div class="form-card" data-fade>
+          <div class="form-card__title">無料査定・お問い合わせフォーム</div>
+          <p class="form-card__desc">
+            ※印は必須項目です。内容を確認後、担当者よりご連絡いたします。<br>
+            どんな状況の物件でも、まずはご相談ください。強引な勧誘は一切しません。
+          </p>
+
+          <form id="contact-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="name">
+                  お名前<span class="required">必須</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="例：山田 太郎"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="kana">フリガナ</label>
+                <input
+                  type="text"
+                  id="kana"
+                  name="kana"
+                  class="form-control"
+                  placeholder="例：ヤマダ タロウ"
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="tel">
+                  電話番号<span class="required">必須</span>
+                </label>
+                <input
+                  type="tel"
+                  id="tel"
+                  name="tel"
+                  class="form-control"
+                  placeholder="例：03-1234-5678"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">
+                  メールアドレス<span class="required">必須</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="例：example@mail.com"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="property-type">物件の種類</label>
+              <select id="property-type" name="property-type" class="form-control">
+                <option value="">選択してください</option>
+                <option value="house">一軒家</option>
+                <option value="mansion">マンション</option>
+                <option value="apartment">アパート</option>
+                <option value="building">ビル</option>
+                <option value="shop">店舗</option>
+                <option value="land">土地</option>
+                <option value="other">その他</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">物件の所在地</label>
+              <div class="prefecture-row">
+                <select name="prefecture" class="form-control">
+                  <option value="">都道府県</option>
+                  <option value="hokkaido">北海道</option>
+                  <option value="aomori">青森県</option>
+                  <option value="iwate">岩手県</option>
+                  <option value="miyagi">宮城県</option>
+                  <option value="akita">秋田県</option>
+                  <option value="yamagata">山形県</option>
+                  <option value="fukushima">福島県</option>
+                  <option value="ibaraki">茨城県</option>
+                  <option value="tochigi">栃木県</option>
+                  <option value="gunma">群馬県</option>
+                  <option value="saitama">埼玉県</option>
+                  <option value="chiba">千葉県</option>
+                  <option value="tokyo">東京都</option>
+                  <option value="kanagawa">神奈川県</option>
+                  <option value="niigata">新潟県</option>
+                  <option value="toyama">富山県</option>
+                  <option value="ishikawa">石川県</option>
+                  <option value="fukui">福井県</option>
+                  <option value="yamanashi">山梨県</option>
+                  <option value="nagano">長野県</option>
+                  <option value="shizuoka">静岡県</option>
+                  <option value="aichi">愛知県</option>
+                  <option value="mie">三重県</option>
+                  <option value="shiga">滋賀県</option>
+                  <option value="kyoto">京都府</option>
+                  <option value="osaka">大阪府</option>
+                  <option value="hyogo">兵庫県</option>
+                  <option value="nara">奈良県</option>
+                  <option value="wakayama">和歌山県</option>
+                  <option value="tottori">鳥取県</option>
+                  <option value="shimane">島根県</option>
+                  <option value="okayama">岡山県</option>
+                  <option value="hiroshima">広島県</option>
+                  <option value="yamaguchi">山口県</option>
+                  <option value="tokushima">徳島県</option>
+                  <option value="kagawa">香川県</option>
+                  <option value="ehime">愛媛県</option>
+                  <option value="kochi">高知県</option>
+                  <option value="fukuoka">福岡県</option>
+                  <option value="saga">佐賀県</option>
+                  <option value="nagasaki">長崎県</option>
+                  <option value="kumamoto">熊本県</option>
+                  <option value="oita">大分県</option>
+                  <option value="miyazaki">宮崎県</option>
+                  <option value="kagoshima">鹿児島県</option>
+                  <option value="okinawa">沖縄県</option>
+                </select>
+                <input
+                  type="text"
+                  name="city"
+                  class="form-control"
+                  placeholder="市区町村・番地（任意）"
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="message">お問い合わせ内容</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-control"
+                placeholder="物件の状況・ご相談内容をできるだけ詳しくお聞かせください。どんな内容でも歓迎します。"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="photo">物件の写真（任意）</label>
+              <input
+                type="file"
+                id="photo"
+                name="photo"
+                class="form-control"
+                accept="image/*"
+                multiple
+                style="padding:8px;"
+              >
+              <p style="font-size:0.78rem;color:var(--color-gray);margin-top:6px;">
+                JPG・PNG・GIF 対応。複数枚選択可能。
+              </p>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--lg" style="width:100%;font-size:1rem;">
+              送信する（無料）
+            </button>
+
+            <div class="form-note">
+              <strong>ご注意事項</strong><br>
+              ・営業時間（7:00〜24:00）内のお問い合わせには当日中に、時間外は翌営業日にご連絡いたします。<br>
+              ・いただいた情報は査定・相談のみに使用し、第三者には提供しません。<br>
+              ・査定・相談は完全無料です。ご契約は任意です。
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">テキカク不動産</div>
+        <div class="footer__brand-sub">FJホールディングス株式会社</div>
+        <div class="footer__info">
+          <p>
+            〒105-0001<br>
+            東京都港区虎ノ門5-3-21 AUBE虎ノ門<br>
+            TEL: 03-6766-6178 / 070-4003-4882<br>
+            FAX: (050) 3172-7493<br>
+            営業時間: 7:00〜24:00（年中無休）
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class="footer__nav-title">Navigation</div>
+        <ul class="footer__nav-list">
+          <li><a href="index.html">トップ</a></li>
+          <li><a href="service.html">サービス</a></li>
+          <li><a href="company.html">会社概要</a></li>
+          <li><a href="recruit.html">採用情報</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__nav-title">Service</div>
+        <ul class="footer__nav-list">
+          <li><a href="service.html">訳あり物件買取</a></li>
+          <li><a href="service.html">再建築不可物件</a></li>
+          <li><a href="service.html">事故物件</a></li>
+          <li><a href="service.html">ゴミ屋敷・特殊清掃</a></li>
+          <li><a href="service.html">共有持分・底地</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__license">
+        <span>宅建業: 東京都知事（１）109938</span>
+        <span>古物商: 第30112 211 7418</span>
+        <span>加盟: 公社)全日本不動産協会</span>
+      </div>
+      <div>&copy; 2024 FJホールディングス株式会社 All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

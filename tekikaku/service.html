@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="テキカク不動産のサービス詳細。訳あり物件買取（再建築不可・事故物件・欠陥物件・ゴミ屋敷など）、付帯サービス、6つの強み、買取の流れを詳しくご紹介。">
+  <title>サービス｜テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .service-type-card {
+      background: var(--color-white);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .service-type-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .service-type-card__img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .service-type-card__body {
+      padding: 20px;
+    }
+    .service-type-card__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-dark);
+    }
+    .service-type-card__text {
+      font-size: 0.82rem;
+      color: var(--color-gray);
+      line-height: 1.7;
+    }
+
+    .service-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .addon-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .addon-item {
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 32px 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .addon-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .addon-item__icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(248,122,45,0.12) 0%, rgba(248,122,45,0.06) 100%);
+      border: 2px solid rgba(248,122,45,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+
+    .addon-item__icon svg {
+      width: 44px;
+      height: 44px;
+    }
+
+    .addon-item__name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-dark);
+    }
+
+    .addon-item__desc {
+      font-size: 0.82rem;
+      color: var(--color-gray);
+      line-height: 1.7;
+    }
+
+    /* 6つの強み 新デザイン */
+    .strength-card-new {
+      background: var(--color-white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative;
+    }
+    .strength-card-new:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    }
+    .strength-card-new__img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .strength-card-new__body {
+      padding: 24px;
+    }
+    .strength-card-new__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(248,122,45,0.35);
+      animation: numPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .strength-card-new__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      color: var(--color-dark);
+    }
+    .strength-card-new__text {
+      font-size: 0.83rem;
+      color: var(--color-gray);
+      line-height: 1.75;
+    }
+    @keyframes numPop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    [data-fade].strength-card-new .strength-card-new__num {
+      animation-play-state: paused;
+    }
+    [data-fade].in-view.strength-card-new .strength-card-new__num {
+      animation-play-state: running;
+    }
+
+    .cta-section {
+      background: var(--color-primary);
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .cta-section__title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .cta-section__desc {
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+
+    .cta-section__btns {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1024px) {
+      .service-grid-5 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .addon-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .service-grid-5 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .addon-list {
+        grid-template-columns: 1fr;
+      }
+      .cta-section {
+        padding: 64px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .service-grid-5 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav class="nav nav--page" id="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJホールディングス株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="service.html" class="nav__link">サービス</a></li>
+      <li><a href="company.html" class="nav__link">会社概要</a></li>
+      <li><a href="recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel">
+        <span>無料査定受付</span>
+        03-6766-6178
+      </a>
+      <a href="contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav__mobile">
+    <a href="service.html" class="nav__mobile-link">サービス</a>
+    <a href="company.html" class="nav__mobile-link">会社概要</a>
+    <a href="recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+
+    <!-- ページヒーロー -->
+    <div class="page-hero">
+      <!-- ※実際の物件写真に差し替えてください -->
+      <img
+        class="page-hero__bg"
+        src="https://images.unsplash.com/photo-1690042017564-be2a18dce18a?w=1600&auto=format&fit=crop"
+        alt="不動産サービスのイメージ写真"
+        width="1600"
+        height="900"
+        loading="eager"
+      >
+      <div class="page-hero__content">
+        <div class="page-hero__en">Service</div>
+        <div class="page-hero__ja">サービス詳細</div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         メインサービス紹介
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="grid-2">
+          <div data-fade>
+            <p class="section-label">Main Service</p>
+            <h2 class="section-title">訳あり物件買取</h2>
+            <p class="section-desc" style="margin-bottom:20px;">
+              テキカク不動産は、「訳あり物件」の買取を専門とする不動産会社です。
+              一般市場では売却が難しいとされる物件でも、弊社独自のルートと専門ノウハウで適正な価格で買取します。
+            </p>
+            <p class="section-desc" style="margin-bottom:20px;">
+              仲介手数料は一切かかりません。査定・相談は無料で、全国どこへでも無料出張対応いたします。
+              最短翌日の現金化も可能です。
+            </p>
+            <p class="section-desc" style="margin-bottom:32px;">
+              登記・残置物の処理・リフォームなど、売却に必要なすべての手続きを弊社が代行。
+              お客様は書類にサインするだけです。
+            </p>
+            <a href="contact.html" class="btn btn--primary">無料査定を依頼する</a>
+          </div>
+          <div data-fade>
+            <!-- ※実際の物件写真に差し替えてください -->
+            <img
+              src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&auto=format&fit=crop"
+              alt="訳あり物件のイメージ写真"
+              width="800"
+              height="600"
+              style="border-radius:8px;object-fit:cover;width:100%;height:400px;"
+              loading="lazy"
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         買取対象物件10種
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">Target Properties</p>
+          <h2 class="section-title section-title--center">買取対象物件</h2>
+          <p class="section-desc section-desc--center">
+            以下はすべてお買取り可能です。まずはご相談ください。
+          </p>
+        </div>
+        <div class="service-grid-5">
+          <!-- ※各物件の実際の写真に差し替えてください -->
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&auto=format&fit=crop" alt="再建築不可物件" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">再建築不可物件</div>
+              <p class="service-type-card__text">接道義務未履行など建替えができない土地・建物</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="images/jikobukken.jpg" alt="事故物件" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">事故物件</div>
+              <p class="service-type-card__text">死亡事故・自殺・孤独死・殺人などが発生した物件</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="https://images.unsplash.com/photo-1517581177682-a085bb7ffb15?w=400&auto=format&fit=crop" alt="欠陥物件" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">欠陥物件</div>
+              <p class="service-type-card__text">雨漏り・シロアリ・傾き・基礎不良など欠陥のある建物</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="images/gomiyashiki.jpg" alt="ゴミ屋敷" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">ゴミ屋敷</div>
+              <p class="service-type-card__text">大量のゴミ・残置物がある物件（片付け対応可）</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&auto=format&fit=crop" alt="地主トラブル" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">地主トラブル物件</div>
+              <p class="service-type-card__text">地主との紛争・境界問題を抱えた物件</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="images/musetudo_bukken.jpg" alt="無接道物件" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">無接道物件</div>
+              <p class="service-type-card__text">道路に接していない・接道幅不足の旗竿地など</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="https://images.unsplash.com/photo-1460317442991-0ec209397118?w=400&auto=format&fit=crop" alt="共有物件" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">共有物件</div>
+              <p class="service-type-card__text">複数の権利者（兄弟・親族など）が存在する物件</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" alt="底地・借地" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">底地・借地権</div>
+              <p class="service-type-card__text">底地・借地権付きの複雑な権利関係がある物件</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="images/kyokusho_bukken.jpg" alt="狭小住宅" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">狭小住宅</div>
+              <p class="service-type-card__text">狭い土地に建てられた再活用が難しい住宅</p>
+            </div>
+          </div>
+          <div class="service-type-card" data-fade>
+            <img class="service-type-card__img" src="https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400&auto=format&fit=crop" alt="土地のみ" width="400" height="300" loading="lazy">
+            <div class="service-type-card__body">
+              <div class="service-type-card__title">土地のみ</div>
+              <p class="service-type-card__text">建物がなく活用方法に困っている土地・更地</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         6つの強み
+         ============================================ -->
+    <section class="section" style="background:#F8F9FA;">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">Our Strengths</p>
+          <h2 class="section-title section-title--center">テキカク不動産 6つの強み</h2>
+          <p class="section-desc section-desc--center">専門性と実績で、お客様の不動産問題を確実に解決します。</p>
+        </div>
+        <div class="grid-3">
+
+          <!-- 01 -->
+          <div class="strength-card-new" data-fade>
+            <img class="strength-card-new__img"
+              src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=600&auto=format&fit=crop"
+              alt="訳あり物件買取イメージ" loading="lazy">
+            <div class="strength-card-new__body">
+              <div class="strength-card-new__num">01</div>
+              <div class="strength-card-new__title">訳あり物件を確実に買取</div>
+              <p class="strength-card-new__text">他社に断られた物件でも、弊社独自のルートと専門ノウハウで必ずお買取りします。どんな状況の不動産でもご相談ください。</p>
+            </div>
+          </div>
+
+          <!-- 02 -->
+          <div class="strength-card-new" data-fade>
+            <img class="strength-card-new__img"
+              src="https://images.unsplash.com/photo-1554224155-1696413565d3?w=600&auto=format&fit=crop"
+              alt="高い買取価格イメージ" loading="lazy">
+            <div class="strength-card-new__body">
+              <div class="strength-card-new__num">02</div>
+              <div class="strength-card-new__title">他社より50%高い実績（累計100件+）</div>
+              <p class="strength-card-new__text">独自の買取ルートと豊富な実績で、他社比50%高い価格での買取を実現。累計100件以上の実績が証明します。</p>
+            </div>
+          </div>
+
+          <!-- 03 -->
+          <div class="strength-card-new" data-fade>
+            <img class="strength-card-new__img"
+              src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop"
+              alt="全国出張査定イメージ" loading="lazy">
+            <div class="strength-card-new__body">
+              <div class="strength-card-new__num">03</div>
+              <div class="strength-card-new__title">全国無料出張査定</div>
+              <p class="strength-card-new__text">北海道から沖縄まで、全国どこへでも無料で出張査定にまいります。交通費・査定費用は一切かかりません。</p>
+            </div>
+          </div>
+
+          <!-- 04 -->
+          <div class="strength-card-new" data-fade>
+            <img class="strength-card-new__img"
+              src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&auto=format&fit=crop"
+              alt="仲介手数料0円イメージ" loading="lazy">
+            <div class="strength-card-new__body">
+              <div class="strength-card-new__num">04</div>
+              <div class="strength-card-new__title">仲介手数料0円</div>
+              <p class="strength-card-new__text">弊社が直接買取るため、仲介手数料は一切不要。査定額がそのままお受け取り額になります。登記費用も弊社負担。</p>
+            </div>
+          </div>
+
+          <!-- 05 -->
+          <div class="strength-card-new" data-fade>
+            <img class="strength-card-new__img"
+              src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=600&auto=format&fit=crop"
+              alt="スピード現金化イメージ" loading="lazy">
+            <div class="strength-card-new__body">
+              <div class="strength-card-new__num">05</div>
+              <div class="strength-card-new__title">最短翌日現金化</div>
+              <p class="strength-card-new__text">お急ぎの方にも対応。最短翌日での現金化が可能です。相続税の支払いや急な資金需要にも迅速に対応します。</p>
+            </div>
+          </div>
+
+          <!-- 06 -->
+          <div class="strength-card-new" data-fade>
+            <img class="strength-card-new__img"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop"
+              alt="丸投げOKサービスイメージ" loading="lazy">
+            <div class="strength-card-new__body">
+              <div class="strength-card-new__num">06</div>
+              <div class="strength-card-new__title">丸投げOK</div>
+              <p class="strength-card-new__text">登記・残置物の処理・リフォーム・特殊清掃など、売却に必要な手続きをすべて弊社が代行。お客様はサインするだけ。</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         付帯サービス
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">Additional Services</p>
+          <h2 class="section-title section-title--center">付帯サービス</h2>
+          <p class="section-desc section-desc--center">
+            売却に関わるすべての作業を弊社がワンストップで対応します。
+          </p>
+        </div>
+        <div class="addon-list">
+
+          <!-- 遺品整理 -->
+          <div class="addon-item" data-fade>
+            <div class="addon-item__icon">
+              <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="12" width="32" height="24" rx="3" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M6 18h32" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M16 12V8a2 2 0 012-2h8a2 2 0 012 2v4" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M15 26h14M15 31h9" stroke="#F87A2D" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="addon-item__name">遺品整理</div>
+            <p class="addon-item__desc">故人の遺品を丁寧に整理・仕分け。不用品と貴重品を区別してご対応します。</p>
+          </div>
+
+          <!-- 特殊清掃 -->
+          <div class="addon-item" data-fade>
+            <div class="addon-item__icon">
+              <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 32c0-4 4-8 8-8s8-4 8-8c0-2.5-1-5-4-7" stroke="#F87A2D" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M22 36a8 8 0 100-16 8 8 0 000 16z" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M22 28v4M18 32h8" stroke="#F87A2D" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="30" cy="12" r="4" stroke="#F87A2D" stroke-width="2.5"/>
+              </svg>
+            </div>
+            <div class="addon-item__name">特殊清掃</div>
+            <p class="addon-item__desc">孤独死・事故後の特殊清掃。においや汚染の除去まで専門スタッフが対応。</p>
+          </div>
+
+          <!-- 不用品回収 -->
+          <div class="addon-item" data-fade>
+            <div class="addon-item__icon">
+              <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="18" width="28" height="16" rx="2" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M32 22h4l4 4v8h-8V22z" stroke="#F87A2D" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="11" cy="36" r="3" stroke="#F87A2D" stroke-width="2.5"/>
+                <circle cx="33" cy="36" r="3" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M8 18l4-8h16l4 8" stroke="#F87A2D" stroke-width="2.5" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="addon-item__name">不用品回収</div>
+            <p class="addon-item__desc">家具・家電・その他の不用品をまとめて回収。分別・処分まで一括対応。</p>
+          </div>
+
+          <!-- 庭手入れ -->
+          <div class="addon-item" data-fade>
+            <div class="addon-item__icon">
+              <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 36V18" stroke="#F87A2D" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M22 18c0-6 5-10 10-10-2 4-4 6-10 10z" fill="rgba(248,122,45,0.15)" stroke="#F87A2D" stroke-width="2"/>
+                <path d="M22 22c0-6-5-10-10-10 2 4 4 6 10 10z" fill="rgba(248,122,45,0.15)" stroke="#F87A2D" stroke-width="2"/>
+                <path d="M8 36h28" stroke="#F87A2D" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="addon-item__name">庭手入れ</div>
+            <p class="addon-item__desc">空き家・放置された庭の草刈り・樹木の剪定・整地をいたします。</p>
+          </div>
+
+          <!-- ハウスクリーニング -->
+          <div class="addon-item" data-fade>
+            <div class="addon-item__icon">
+              <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 6L6 18h4v18h24V18h4L22 6z" stroke="#F87A2D" stroke-width="2.5" stroke-linejoin="round"/>
+                <rect x="16" y="26" width="12" height="10" rx="1" stroke="#F87A2D" stroke-width="2"/>
+                <path d="M30 12l6 3M14 12l-6 3" stroke="#F87A2D" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="30" cy="10" r="2" fill="#F87A2D"/>
+                <circle cx="14" cy="10" r="2" fill="#F87A2D"/>
+              </svg>
+            </div>
+            <div class="addon-item__name">ハウスクリーニング</div>
+            <p class="addon-item__desc">キッチン・浴室・トイレなど、プロによる徹底的な清掃サービス。</p>
+          </div>
+
+          <!-- リフォーム -->
+          <div class="addon-item" data-fade>
+            <div class="addon-item__icon">
+              <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M28 8l8 8-18 18H10v-8L28 8z" stroke="#F87A2D" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M24 12l8 8" stroke="#F87A2D" stroke-width="2.5"/>
+                <path d="M10 28l6 6" stroke="#F87A2D" stroke-width="2"/>
+                <path d="M6 38h12" stroke="#F87A2D" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="34" cy="10" r="3" fill="rgba(248,122,45,0.3)" stroke="#F87A2D" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="addon-item__name">リフォーム</div>
+            <p class="addon-item__desc">買取後のリフォームは弊社が対応。売却前に必要な修繕も相談可能です。</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         買取の流れ
+         ============================================ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">Process</p>
+          <h2 class="section-title section-title--center">買取の流れ</h2>
+          <p class="section-desc section-desc--center">
+            ご相談から現金化まで、最短翌日での完了も可能です。
+          </p>
+        </div>
+        <div class="steps">
+          <div class="step" data-fade>
+            <div class="step__number">1</div>
+            <div class="step__label">STEP 1</div>
+            <div class="step__title">お問い合わせ</div>
+            <p class="step__desc">電話・メール・フォームから。24時間受付中。どんな状況でもまずはご連絡ください。</p>
+          </div>
+          <div class="step" data-fade>
+            <div class="step__number">2</div>
+            <div class="step__label">STEP 2</div>
+            <div class="step__title">ヒアリング</div>
+            <p class="step__desc">物件の状況・お困りの内容などを詳しくお聞きします。守秘義務を厳守します。</p>
+          </div>
+          <div class="step" data-fade>
+            <div class="step__number">3</div>
+            <div class="step__label">STEP 3</div>
+            <div class="step__title">無料出張査定</div>
+            <p class="step__desc">全国無料で現地へお伺いし、適正価格をご提示します。もちろん強制はしません。</p>
+          </div>
+          <div class="step" data-fade>
+            <div class="step__number">4</div>
+            <div class="step__label">STEP 4</div>
+            <div class="step__title">ご契約・現金化</div>
+            <p class="step__desc">ご納得いただければご契約。最短翌日に現金でお支払いします。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         よくあるご質問
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">FAQ</p>
+          <h2 class="section-title section-title--center">よくあるご質問</h2>
+        </div>
+        <div style="max-width:800px;margin:0 auto;">
+          <div class="accordion" data-fade>
+            <div class="accordion__item">
+              <button class="accordion__header">
+                本当に仲介手数料は0円ですか？
+                <span class="accordion__icon">+</span>
+              </button>
+              <div class="accordion__body">
+                はい、完全無料です。テキカク不動産は仲介ではなく「直接買取」のため、仲介手数料は一切発生しません。査定から契約・決済まですべて無料でご対応しています。
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button class="accordion__header">
+                他社に断られた物件でも買取してもらえますか？
+                <span class="accordion__icon">+</span>
+              </button>
+              <div class="accordion__body">
+                はい、弊社は他社が断るような物件を専門に扱っています。再建築不可・事故物件・欠陥物件・ゴミ屋敷・共有物件など、どんな状況でもまずはご相談ください。お断りすることはほとんどありません。
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button class="accordion__header">
+                査定後に断ることはできますか？
+                <span class="accordion__icon">+</span>
+              </button>
+              <div class="accordion__body">
+                もちろんです。査定・相談は完全無料で、断ることへのプレッシャーは一切ありません。査定価格にご満足いただけない場合は、遠慮なくお断りください。
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button class="accordion__header">
+                物件にゴミや残置物があっても大丈夫ですか？
+                <span class="accordion__icon">+</span>
+              </button>
+              <div class="accordion__body">
+                大丈夫です。不用品回収・遺品整理・特殊清掃なども弊社が一括対応します。現状のままお引き渡しいただけますので、お客様が片付ける必要はありません。
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button class="accordion__header">
+                遠方の物件でも対応してもらえますか？
+                <span class="accordion__icon">+</span>
+              </button>
+              <div class="accordion__body">
+                はい、北海道から沖縄まで全国どこへでも無料出張査定いたします。交通費・宿泊費は弊社が負担しますので、お客様にご負担はありません。
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button class="accordion__header">
+                相続で取得した物件でも売れますか？
+                <span class="accordion__icon">+</span>
+              </button>
+              <div class="accordion__body">
+                はい、相続物件も多数お取り扱い実績があります。相続登記が未了の場合も、顧問弁護士・司法書士と連携して対応しますので、安心してご相談ください。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <p class="section-label" style="color:rgba(255,255,255,0.7);text-align:center;margin-bottom:12px;">Contact</p>
+      <h2 class="cta-section__title">まずは無料査定から<br>始めましょう</h2>
+      <p class="cta-section__desc">どんな状況の物件でも、確実に解決します。</p>
+      <div class="cta-section__btns">
+        <a href="contact.html" class="btn btn--dark btn--lg">無料査定フォームへ</a>
+        <a href="tel:0367666178" class="btn btn--outline-white btn--lg">03-6766-6178</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">テキカク不動産</div>
+        <div class="footer__brand-sub">FJホールディングス株式会社</div>
+        <div class="footer__info">
+          <p>
+            〒105-0001<br>
+            東京都港区虎ノ門5-3-21 AUBE虎ノ門<br>
+            TEL: 03-6766-6178 / 070-4003-4882<br>
+            FAX: (050) 3172-7493<br>
+            営業時間: 7:00〜24:00（年中無休）
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class="footer__nav-title">Navigation</div>
+        <ul class="footer__nav-list">
+          <li><a href="index.html">トップ</a></li>
+          <li><a href="service.html">サービス</a></li>
+          <li><a href="company.html">会社概要</a></li>
+          <li><a href="recruit.html">採用情報</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__nav-title">Service</div>
+        <ul class="footer__nav-list">
+          <li><a href="service.html">訳あり物件買取</a></li>
+          <li><a href="service.html">再建築不可物件</a></li>
+          <li><a href="service.html">事故物件</a></li>
+          <li><a href="service.html">ゴミ屋敷・特殊清掃</a></li>
+          <li><a href="service.html">共有持分・底地</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__license">
+        <span>宅建業: 東京都知事（１）109938</span>
+        <span>古物商: 第30112 211 7418</span>
+        <span>加盟: 公社)全日本不動産協会</span>
+      </div>
+      <div>&copy; 2024 FJホールディングス株式会社 All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
