@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="不動産売却で法人化すべきか？個人vs法人の税率比較・法人化が有利になるラインの試算・不動産管理会社設立スキームを公認会計士が解説。">
+  <title>不動産売却で法人化すべきか？公認会計士が判断基準を具体的に解説 | テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-hero { background: #1a1a1a; padding: 140px 40px 60px; }
+    .article-hero__inner { max-width: 800px; margin: 0 auto; }
+    .article-hero__cat { display: inline-block; background: var(--color-primary); color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+    .article-hero__title { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: white; line-height: 1.35; margin-bottom: 16px; }
+    .article-hero__meta { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+    .article-body { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+    .article-body h2 { font-size: 1.5rem; font-weight: 800; margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-primary); }
+    .article-body h3 { font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px; padding-left: 12px; border-left: 3px solid var(--color-primary); }
+    .article-body p { color: #444; line-height: 1.95; margin-bottom: 16px; }
+    .article-body ul { list-style: none; padding: 0; margin: 16px 0 24px; }
+    .article-body ul li { padding: 8px 0 8px 24px; position: relative; color: #444; border-bottom: 1px solid #f0f0f0; }
+    .article-body ul li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; font-size: 1.2rem; line-height: 1.5; }
+    .toc { background: #f8f8f8; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px 28px; margin: 32px 0 48px; }
+    .toc__title { font-weight: 800; margin-bottom: 12px; }
+    .toc__list { list-style: none; padding: 0; counter-reset: toc; }
+    .toc__list li { padding: 6px 0; counter-increment: toc; }
+    .toc__list li::before { content: counter(toc) '. '; color: var(--color-primary); font-weight: 700; }
+    .toc__list a { color: #333; text-decoration: underline; font-size: 0.9rem; }
+    .highlight-box { background: #fff8f5; border: 2px solid var(--color-primary); border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box__title { font-weight: 800; color: var(--color-primary); margin-bottom: 8px; }
+    .article-cta { background: #1a1a1a; padding: 48px 40px; text-align: center; margin-top: 60px; border-radius: 12px; }
+    .article-cta__title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 12px; }
+    .article-cta__desc { color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+    .breadcrumb { max-width: 800px; margin: 0 auto; padding: 20px 40px 0; font-size: 0.82rem; color: #888; }
+    .breadcrumb a { color: var(--color-primary); }
+    .tax-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+    .tax-table th { background: #1a1a1a; color: white; padding: 10px 14px; text-align: left; }
+    .tax-table td { padding: 10px 14px; border-bottom: 1px solid #e5e7eb; color: #444; }
+    .tax-table tr:nth-child(even) td { background: #f8f8f8; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../service.html" class="nav__link">サービス</a></li>
+      <li><a href="../company.html" class="nav__link">会社概要</a></li>
+      <li><a href="../recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="../contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel"><span>無料査定受付</span>03-6766-6178</a>
+      <a href="../contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav__mobile">
+    <a href="../service.html" class="nav__mobile-link">サービス</a>
+    <a href="../company.html" class="nav__mobile-link">会社概要</a>
+    <a href="../recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="../contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="../contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+    <div class="article-hero">
+      <div class="article-hero__inner">
+        <div class="article-hero__cat">公認会計士が運営</div>
+        <h1 class="article-hero__title">不動産売却で法人化すべきか？<br>公認会計士が判断基準を具体的に解説</h1>
+        <div class="article-hero__meta">テキカク不動産 編集部（代表・公認会計士 藤原彬晃 監修）</div>
+      </div>
+    </div>
+
+    <div class="breadcrumb">
+      <a href="../index.html">トップ</a> &gt; <a href="index.html">コラム</a> &gt; 不動産売却で法人化すべきか？
+    </div>
+
+    <div class="article-body">
+      <div class="toc">
+        <div class="toc__title">この記事の目次</div>
+        <ol class="toc__list">
+          <li><a href="#intro">なぜ不動産と法人化の話が出てくるのか</a></li>
+          <li><a href="#taxrate">個人vs法人の税率比較</a></li>
+          <li><a href="#threshold">法人化が有利になるラインの試算</a></li>
+          <li><a href="#scheme">不動産管理会社の設立スキーム</a></li>
+          <li><a href="#merit">法人化のメリット詳細</a></li>
+          <li><a href="#demerit">法人化のデメリット・コスト</a></li>
+          <li><a href="#consulting">テキカク不動産での法人化相談</a></li>
+        </ol>
+      </div>
+
+      <h2 id="intro">なぜ不動産と法人化の話が出てくるのか</h2>
+      <p>複数の不動産を保有していたり、売却益が大きくなりそうなケースでは、「法人化した方が税金が安くなるのではないか」という疑問が生じます。この判断は単純ではなく、所得水準・保有物件数・家族構成・将来的な売却計画など多くの要素が絡み合います。</p>
+      <p>テキカク不動産の代表・藤原彬晃は公認会計士として、法人化の要否を含めた総合的な税務アドバイスが可能です。「売却してみたら思わぬ税負担が発生した」という事態を防ぐためにも、売却前から法人化の選択肢を検討することが重要です。</p>
+
+      <h2 id="taxrate">個人vs法人の税率比較</h2>
+      <p>個人が不動産を売却して利益（譲渡所得）を得た場合、所得税と住民税が課されます。一方、法人が不動産を売却した場合は法人税等が課されます。この税率の差が「法人化すると得か」を判断する基本になります。</p>
+
+      <h3>個人（不動産譲渡所得）の税率</h3>
+      <table class="tax-table">
+        <thead>
+          <tr><th>保有期間</th><th>所得税</th><th>住民税</th><th>合計</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>5年以下（短期）</td><td>30%</td><td>9%</td><td>39%</td></tr>
+          <tr><td>5年超（長期）</td><td>15%</td><td>5%</td><td>20%</td></tr>
+        </tbody>
+      </table>
+
+      <h3>法人税等の実効税率</h3>
+      <table class="tax-table">
+        <thead>
+          <tr><th>所得区分</th><th>法人税実効税率（概算）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>中小法人（所得800万円以下の部分）</td><td>約22〜25%</td></tr>
+          <tr><td>中小法人（所得800万円超の部分）</td><td>約33〜35%</td></tr>
+          <tr><td>大法人（一般）</td><td>約30〜34%</td></tr>
+        </tbody>
+      </table>
+      <p>この比較から見えることは、長期保有（5年超）の個人売却は税率20%で収まるため、法人化しても中小法人の実効税率を下回ることはないという点です。一方、短期譲渡（5年以下）の39%は法人税率を大きく上回るため、法人化によるメリットが生じる可能性があります。</p>
+      <p>ただし実際には、給与所得など他の所得と合算される個人の所得税では、累進課税の仕組みにより税率が高くなるケースがあります。この点が法人化検討の重要なポイントです。</p>
+
+      <h3>個人の総合課税（給与＋不動産所得）の場合</h3>
+      <p>不動産の売却益ではなく、賃貸収入（不動産所得）で考えると、個人の所得税は累進税率が適用されます。給与所得と合算した課税所得が大きくなるほど税率は上がります。</p>
+      <table class="tax-table">
+        <thead>
+          <tr><th>課税所得（合算）</th><th>所得税率</th><th>住民税</th><th>合計</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>〜195万円</td><td>5%</td><td>10%</td><td>15%</td></tr>
+          <tr><td>195万〜330万円</td><td>10%</td><td>10%</td><td>20%</td></tr>
+          <tr><td>330万〜695万円</td><td>20%</td><td>10%</td><td>30%</td></tr>
+          <tr><td>695万〜900万円</td><td>23%</td><td>10%</td><td>33%</td></tr>
+          <tr><td>900万〜1,800万円</td><td>33%</td><td>10%</td><td>43%</td></tr>
+          <tr><td>1,800万〜4,000万円</td><td>40%</td><td>10%</td><td>50%</td></tr>
+          <tr><td>4,000万円超</td><td>45%</td><td>10%</td><td>55%</td></tr>
+        </tbody>
+      </table>
+      <p>課税所得が900万円を超えてくると、個人の税率が法人の実効税率を大きく上回ります。このラインを境に法人化のメリットが生じてきます。</p>
+
+      <h2 id="threshold">法人化が有利になるラインの試算</h2>
+      <p>公認会計士の観点から、「法人化が有利になる目安」を整理すると以下の通りです。</p>
+      <ul>
+        <li>個人の課税所得（給与＋不動産所得の合計）が年間900万円超になっている</li>
+        <li>複数の賃貸物件を保有しており、不動産収入が年間500万円以上ある</li>
+        <li>短期譲渡（5年以下保有）で高額の売却益が見込まれる</li>
+        <li>家族に役員として給与を支払うことで所得分散が可能</li>
+        <li>相続対策として将来的に資産を次世代に移転したい</li>
+      </ul>
+      <div class="highlight-box">
+        <div class="highlight-box__title">試算例：課税所得1,000万円の場合</div>
+        <p style="margin:0;color:#444;">
+          【個人の場合】<br>
+          課税所得1,000万円 × 33%（所得税）＋ 10%（住民税）＝ 430万円の税負担<br>
+          <br>
+          【法人化した場合（代表に600万円給与、法人所得400万円と仮定）】<br>
+          代表個人：給与所得控除後の課税所得 約400万円 → 税率20%程度<br>
+          法人：課税所得400万円 → 実効税率約25%<br>
+          合計税負担：約180万円（概算）<br>
+          <strong>→ 約250万円の節税効果（試算）</strong>
+        </p>
+      </div>
+      <p>ただし上記は概算であり、実際には個人の給与所得控除額・社会保険料・法人の各種控除など様々な要素が絡みます。正確な試算はテキカク不動産の代表・公認会計士に直接ご相談ください。</p>
+
+      <h2 id="scheme">不動産管理会社の設立スキーム</h2>
+      <p>法人化を検討する場合、一般的には「不動産管理会社」を設立するスキームが使われます。主なパターンは以下の3つです。</p>
+      <h3>①管理委託方式</h3>
+      <p>個人が不動産を所有したまま、法人が管理会社として管理業務を行い、管理費として法人に収入を移す方式です。移転できる所得は管理費相当分（賃料収入の5〜10%程度）に限られるため、節税効果は限定的です。設立コストが低く、簡易に始められる点がメリットです。</p>
+      <h3>②サブリース方式</h3>
+      <p>法人が個人から一括借上（サブリース）して、第三者に転貸する方式です。法人は転貸収入と支払賃料の差額（利ざや）が収益になります。個人への賃料を低めに設定することで所得移転効果を高められますが、税務調査での対価の合理性が問われます。</p>
+      <h3>③所有権移転方式</h3>
+      <p>個人が所有する不動産を法人に売却または現物出資し、不動産の所有権を法人に移す方式です。最も所得移転効果が高いですが、法人への売却・移転時に譲渡税が発生するリスクがあります。長期的な相続対策にも有効です。</p>
+
+      <h2 id="merit">法人化のメリット詳細</h2>
+      <ul>
+        <li>所得分散：役員（家族含む）への給与で所得を分散し、累進課税を緩和できる</li>
+        <li>法人税率の適用：個人の高い所得税率を回避できる</li>
+        <li>損益通算：法人内の複数の収入・費用を合算できる</li>
+        <li>欠損金の繰越控除：赤字を最大10年間繰越し、将来の黒字と相殺できる</li>
+        <li>決算期の自由設定：法人は事業年度を自由に設定できるため、税負担を平準化しやすい</li>
+        <li>相続対策：法人株式として資産を移転することで、相続税の評価を下げられる場合がある</li>
+      </ul>
+
+      <h2 id="demerit">法人化のデメリット・コスト</h2>
+      <p>法人化には節税メリットがある一方、以下のコストとデメリットが伴います。</p>
+      <ul>
+        <li>設立費用：株式会社で約20〜25万円、合同会社で約10〜15万円</li>
+        <li>毎年の維持費用：税理士費用・法人住民税均等割（最低7万円/年）など年間30〜100万円以上</li>
+        <li>社会保険の強制加入：役員報酬を支払う場合は社会保険に強制加入</li>
+        <li>事務負担の増加：決算書類・法人税申告・議事録など事務作業が増える</li>
+        <li>赤字でも法人住民税が発生：法人は赤字でも最低限の住民税（均等割）を納める義務がある</li>
+        <li>融資審査への影響：金融機関によっては個人より法人への融資条件が厳しい場合がある</li>
+      </ul>
+      <div class="highlight-box">
+        <div class="highlight-box__title">法人化の損益分岐点</div>
+        <p style="margin:0;color:#444;">法人維持コストを年間50万円と仮定した場合、法人化によって50万円以上の節税効果が得られなければ、コスト倒れになります。一般的に年間の不動産収入が500万円未満・課税所得が700万円未満の場合は、法人化より個人の税務最適化（特例活用など）を優先した方がよいケースが多いといえます。</p>
+      </div>
+
+      <h2 id="consulting">テキカク不動産での法人化相談</h2>
+      <p>法人化の判断は、現在の税負担・将来の売却計画・家族構成・相続への備えなど、複数の要素を総合的に考慮する必要があります。「法人化すれば必ず得」でも「法人化は不要」でもなく、個人の状況に応じた最適解を見つけることが重要です。</p>
+      <p>テキカク不動産では、公認会計士の資格を持つ代表・藤原彬晃が、法人化の要否を含めた総合的な税務相談に対応しています。不動産の売却・買取のご相談と合わせて、「法人化した方がよいか」という疑問も遠慮なくご相談ください。</p>
+      <p>仲介手数料0円・残置物そのまま買取・最短翌日現金化に加え、税務面での専門サポートを合わせて提供できるのが、テキカク不動産ならではの強みです。まずは無料査定からお気軽にお問い合わせください（電話：03-6766-6178）。</p>
+
+      <div class="article-cta">
+        <div class="article-cta__title">法人化の相談も含めた<br>不動産売却のご相談はこちら</div>
+        <p class="article-cta__desc">公認会計士が税務・法人化まで一貫サポート。無料査定受付中。</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+            LINEで無料相談
+          </a>
+          <a href="../contact.html" class="btn btn--primary btn--lg">無料査定フォーム</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div><div class="footer__brand-name">テキカク不動産</div><div class="footer__brand-sub">FJキャピタル株式会社</div><div class="footer__info"><p>〒105-0001 東京都港区虎ノ門5-3-21<br>TEL: 03-6766-6178</p></div></div>
+      <div><div class="footer__nav-title">Navigation</div><ul class="footer__nav-list"><li><a href="../index.html">トップ</a></li><li><a href="../service.html">サービス</a></li><li><a href="../contact.html">お問い合わせ</a></li></ul></div>
+      <div><div class="footer__nav-title">関連記事</div><ul class="footer__nav-list"><li><a href="cpa-zeimukankei-fudosan.html">不動産売却の税務完全ガイド</a></li><li><a href="cpa-jigyoyo-fudosan-hyoka.html">事業用不動産の売却で会計士が評価する5つのポイント</a></li><li><a href="cpa-other-company-difference.html">公認会計士が運営する会社と一般不動産会社の違い</a></li></ul></div>
+    </div>
+    <div class="footer__bottom"><div class="footer__license"><span>宅建業: 東京都知事（１）109938</span></div><div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div></div>
+  </footer>
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;" aria-label="LINEで無料相談">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+    LINE無料相談
+  </a>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="譲渡所得の計算式・取得費・長期短期の税率比較・3つのシミュレーションを公認会計士が具体例で徹底解説します。">
+  <title>譲渡所得の計算を具体例で徹底解説｜取得費・特例・税率の全パターン | テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-hero { background: #1a1a1a; padding: 140px 40px 60px; }
+    .article-hero__inner { max-width: 800px; margin: 0 auto; }
+    .article-hero__cat { display: inline-block; background: #555; color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+    .article-hero__title { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: white; line-height: 1.35; margin-bottom: 16px; }
+    .article-hero__meta { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+    .article-body { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+    .article-body h2 { font-size: 1.5rem; font-weight: 800; margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 2px solid #555; }
+    .article-body h3 { font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px; padding-left: 12px; border-left: 3px solid #555; }
+    .article-body p { color: #444; line-height: 1.95; margin-bottom: 16px; }
+    .article-body ul { list-style: none; padding: 0; margin: 16px 0 24px; }
+    .article-body ul li { padding: 8px 0 8px 24px; position: relative; color: #444; border-bottom: 1px solid #f0f0f0; }
+    .article-body ul li::before { content: '•'; position: absolute; left: 0; color: #555; font-weight: 700; font-size: 1.2rem; line-height: 1.5; }
+    .toc { background: #f8f8f8; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px 28px; margin: 32px 0 48px; }
+    .toc__title { font-weight: 800; margin-bottom: 12px; }
+    .toc__list { list-style: none; padding: 0; counter-reset: toc; }
+    .toc__list li { padding: 6px 0; counter-increment: toc; }
+    .toc__list li::before { content: counter(toc) '. '; color: #555; font-weight: 700; }
+    .toc__list a { color: #333; text-decoration: underline; font-size: 0.9rem; }
+    .highlight-box { background: #f8f8f8; border: 2px solid #555; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box__title { font-weight: 800; color: #333; margin-bottom: 8px; }
+    .article-cta { background: #1a1a1a; padding: 48px 40px; text-align: center; margin-top: 60px; border-radius: 12px; }
+    .article-cta__title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 12px; }
+    .article-cta__desc { color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+    .breadcrumb { max-width: 800px; margin: 0 auto; padding: 20px 40px 0; font-size: 0.82rem; color: #888; }
+    .breadcrumb a { color: #555; }
+    .formula-box { background: #1a1a1a; color: white; border-radius: 8px; padding: 24px 28px; margin: 24px 0; text-align: center; }
+    .formula-box__text { font-size: 1.1rem; font-weight: 700; line-height: 2; }
+    .formula-box__note { font-size: 0.82rem; color: rgba(255,255,255,0.6); margin-top: 8px; }
+    .sim-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .sim-card { background: #f8f8f8; border-radius: 8px; padding: 16px; }
+    .sim-card__title { font-size: 0.8rem; font-weight: 800; color: #555; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
+    .sim-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 3px 0; color: #555; }
+    .sim-total { font-weight: 800; color: #cc0000; border-top: 1px solid #ddd; margin-top: 6px; padding-top: 6px; }
+    @media (max-width: 600px) { .sim-grid { grid-template-columns: 1fr; } }
+    .tax-rate-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+    .tax-rate-table th { background: #333; color: white; padding: 10px 14px; text-align: left; }
+    .tax-rate-table td { padding: 10px 14px; border-bottom: 1px solid #e5e7eb; color: #444; }
+    .tax-rate-table tr:nth-child(even) td { background: #f8f8f8; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../service.html" class="nav__link">サービス</a></li>
+      <li><a href="../company.html" class="nav__link">会社概要</a></li>
+      <li><a href="../recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="../contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel"><span>無料査定受付</span>03-6766-6178</a>
+      <a href="../contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav__mobile">
+    <a href="../service.html" class="nav__mobile-link">サービス</a>
+    <a href="../company.html" class="nav__mobile-link">会社概要</a>
+    <a href="../recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="../contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="../contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+    <div class="article-hero">
+      <div class="article-hero__inner">
+        <div class="article-hero__cat">税金・費用</div>
+        <h1 class="article-hero__title">譲渡所得の計算を具体例で徹底解説｜<br>取得費・特例・税率の全パターン</h1>
+        <div class="article-hero__meta">テキカク不動産 編集部 / 訳あり物件専門</div>
+      </div>
+    </div>
+
+    <div class="breadcrumb">
+      <a href="../index.html">トップ</a> &gt; <a href="index.html">コラム</a> &gt; 譲渡所得の計算を具体例で徹底解説
+    </div>
+
+    <div class="article-body">
+      <div class="toc">
+        <div class="toc__title">この記事の目次</div>
+        <ol class="toc__list">
+          <li><a href="#formula">譲渡所得の計算式</a></li>
+          <li><a href="#shutokuhi">取得費の内訳と注意点</a></li>
+          <li><a href="#gaisan">概算取得費（5%）の使い方と注意点</a></li>
+          <li><a href="#zeiritsu">長期・短期譲渡の税率比較</a></li>
+          <li><a href="#simulation">3つのシミュレーション</a></li>
+          <li><a href="#cpa">公認会計士が試算するから見落としがない</a></li>
+        </ol>
+      </div>
+
+      <h2 id="formula">譲渡所得の計算式</h2>
+      <p>不動産を売却した場合の課税対象となる「譲渡所得」は、次の計算式で求めます。</p>
+      <div class="formula-box">
+        <div class="formula-box__text">
+          譲渡所得 ＝ 譲渡価額 − 取得費 − 譲渡費用<br>
+          課税譲渡所得 ＝ 譲渡所得 − 特別控除額（最大3,000万円等）
+        </div>
+        <div class="formula-box__note">※ 計算結果がマイナスの場合は「譲渡損失」となり、原則として税金はかかりません</div>
+      </div>
+      <ul>
+        <li><strong>譲渡価額：</strong>不動産の売却価格（消費税が課税される場合は含む）</li>
+        <li><strong>取得費：</strong>不動産を購入した際の費用一切（購入代金・仲介手数料・登記費用・リフォーム費用等）から減価償却相当額を差し引いたもの</li>
+        <li><strong>譲渡費用：</strong>不動産を売るために直接かかった費用（仲介手数料・印紙税・測量費用等）。テキカク不動産への買取の場合は仲介手数料が不要なのでゼロ</li>
+      </ul>
+
+      <h2 id="shutokuhi">取得費の内訳と注意点</h2>
+      <p>取得費は「いくらで買ったか」だけではなく、購入時にかかった諸費用も含めることができます。これらを漏れなく計上することで、課税される利益を合法的に減らすことができます。</p>
+      <h3>取得費に含められるもの</h3>
+      <ul>
+        <li>不動産の購入代金（土地＋建物）</li>
+        <li>購入時の仲介手数料</li>
+        <li>購入時の登記費用（登録免許税・司法書士報酬）</li>
+        <li>購入時の不動産取得税</li>
+        <li>購入時の印紙税</li>
+        <li>購入後に行ったリフォーム・増改築費用（修繕費は含まれない）</li>
+        <li>測量費・建物解体費（土地として売る場合）</li>
+      </ul>
+      <h3>建物は減価償却が必要</h3>
+      <p>建物については、経年によって価値が低下するものとして「減価償却費相当額」を取得費から差し引く必要があります。建物の取得費が500万円で、30年居住した木造建物の場合、取得費は大幅に圧縮されることになります。土地は減価償却の対象外です。</p>
+      <div class="highlight-box">
+        <div class="highlight-box__title">建物の減価償却費の計算式</div>
+        <p style="margin:0;color:#444;">減価償却費相当額 ＝ 建物の取得費 × 0.9 × 償却率 × 経過年数<br>（木造・居住用の償却率：0.031 / 鉄筋コンクリート：0.015）</p>
+      </div>
+
+      <h2 id="gaisan">概算取得費（5%）の使い方と注意点</h2>
+      <p>不動産を取得してから長年が経過し、購入当時の売買契約書や領収書を紛失してしまった場合、取得費を実際の金額で計算することができません。このような場合に使えるのが「概算取得費」です。</p>
+      <p>概算取得費とは、実際の取得費が不明な場合に、売却価格の5%を取得費として使うことを認める規定です（所得税法施行令第176条）。</p>
+      <h3>概算取得費の使い方</h3>
+      <ul>
+        <li>売却価格3,000万円の不動産を売る場合、取得費を「3,000万円×5%＝150万円」として計算できる</li>
+        <li>実際の取得費が概算取得費より少ない場合は、概算取得費を選択した方が有利</li>
+        <li>実際の取得費が概算取得費より多い場合は、実際の取得費を使った方が有利</li>
+      </ul>
+      <h3>概算取得費の注意点</h3>
+      <p>「書類がないから5%で計算するしかない」と諦める必要はありません。取得費を証明できる資料としては、通帳の出金記録、住宅ローンの返済明細、登記事項証明書の記載内容、市区町村の固定資産台帳などが使える場合があります。また、土地については国土交通省の地価公示の過去データなどから推計できるケースもあります。テキカク不動産の公認会計士代表が、最も有利な取得費の計算方法をアドバイスします。</p>
+
+      <h2 id="zeiritsu">長期・短期譲渡の税率比較</h2>
+      <p>譲渡所得に適用される税率は、不動産の所有期間によって大きく異なります。売却する年の1月1日時点で所有期間が5年を超えるかどうかが分かれ目です。</p>
+      <table class="tax-rate-table">
+        <thead>
+          <tr><th>区分</th><th>所有期間</th><th>所得税率</th><th>住民税率</th><th>合計税率</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>長期譲渡所得</td><td>5年超</td><td>15%（＋復興特別所得税0.315%）</td><td>5%</td><td>20.315%</td></tr>
+          <tr><td>短期譲渡所得</td><td>5年以下</td><td>30%（＋復興特別所得税0.63%）</td><td>9%</td><td>39.63%</td></tr>
+          <tr><td>居住用（10年超）</td><td>10年超の自宅</td><td>10%（6,000万円以下部分）</td><td>4%</td><td>14.21%</td></tr>
+        </tbody>
+      </table>
+      <p>短期と長期では約2倍の税率差があります。例えば課税譲渡所得が1,000万円の場合、長期なら約203万円の税金ですが、短期なら約396万円と約193万円も差が出ます。不動産の売却タイミングを5年の壁を意識して計画することが、賢い節税になります。</p>
+
+      <h2 id="simulation">3つのシミュレーション</h2>
+      <p>具体的な数字で3つのパターンをシミュレーションします。</p>
+      <div class="sim-grid">
+        <div class="sim-card">
+          <div class="sim-card__title">ケース1：売却益あり（長期）</div>
+          <div class="sim-row"><span>売却価格</span><span>5,000万</span></div>
+          <div class="sim-row"><span>取得費</span><span>▲2,500万</span></div>
+          <div class="sim-row"><span>譲渡費用</span><span>▲0円</span></div>
+          <div class="sim-row"><span>譲渡所得</span><span>2,500万</span></div>
+          <div class="sim-row"><span>税率（長期）</span><span>20.315%</span></div>
+          <div class="sim-row sim-total"><span>税額</span><span>約508万</span></div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card__title">ケース2：売却損（損益通算）</div>
+          <div class="sim-row"><span>売却価格</span><span>2,000万</span></div>
+          <div class="sim-row"><span>取得費</span><span>▲3,000万</span></div>
+          <div class="sim-row"><span>譲渡費用</span><span>▲0円</span></div>
+          <div class="sim-row"><span>譲渡所得</span><span>▲1,000万（損）</span></div>
+          <div class="sim-row"><span>他の所得との通算</span><span>要件あり</span></div>
+          <div class="sim-row sim-total"><span>税額</span><span>原則0円</span></div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card__title">ケース3：相続後売却</div>
+          <div class="sim-row"><span>売却価格</span><span>4,000万</span></div>
+          <div class="sim-row"><span>取得費（概算5%）</span><span>▲200万</span></div>
+          <div class="sim-row"><span>譲渡費用</span><span>▲0円</span></div>
+          <div class="sim-row"><span>譲渡所得</span><span>3,800万</span></div>
+          <div class="sim-row"><span>税率（長期）</span><span>20.315%</span></div>
+          <div class="sim-row sim-total"><span>税額</span><span>約772万</span></div>
+        </div>
+      </div>
+      <p>ケース3（相続後売却）で概算取得費5%を使った場合、約772万円の税負担が発生します。しかし、被相続人（亡くなった方）の当初購入代金が2,000万円であることを証明できれば取得費が増え、税額は約407万円に減少します。取得費の証明に取り組む価値は非常に大きいと言えます。</p>
+
+      <h2 id="cpa">公認会計士が試算するから見落としがない</h2>
+      <p>譲渡所得の計算は複雑で、「どの費用が取得費に入るか」「建物の減価償却をどう計算するか」「どの特例が使えるか」など、専門知識がなければ正確に判断できない項目が多くあります。一般の不動産業者は税務の専門家ではないため、税金の計算についての詳細なアドバイスには限界があります。</p>
+      <p>テキカク不動産の代表・藤原彬晃は公認会計士の資格を保有しており、売却前に税務上のシミュレーションを行うことが可能です。「仲介会社で売れば仲介手数料で200万円のコストがかかり、しかも税金の試算が甘くて後から追徴課税された」というような事態を防ぐため、買取価格の提示と同時に税引後の手取り額まで明示します。不動産売却をお考えの方は、TEL 03-6766-6178 またはLINEにてお気軽にご相談ください。</p>
+
+      <div class="article-cta">
+        <div class="article-cta__title">税引後の手取り額まで<br>公認会計士が試算します</div>
+        <p class="article-cta__desc">仲介手数料0円・最短翌日現金化・全国対応。売却前の税務シミュレーション付き。</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+            LINEで無料相談
+          </a>
+          <a href="../contact.html" class="btn btn--primary btn--lg">無料査定フォーム</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div><div class="footer__brand-name">テキカク不動産</div><div class="footer__brand-sub">FJキャピタル株式会社</div><div class="footer__info"><p>〒105-0001 東京都港区虎ノ門5-3-21<br>TEL: 03-6766-6178</p></div></div>
+      <div><div class="footer__nav-title">Navigation</div><ul class="footer__nav-list"><li><a href="../index.html">トップ</a></li><li><a href="../service.html">サービス</a></li><li><a href="../contact.html">お問い合わせ</a></li></ul></div>
+      <div><div class="footer__nav-title">関連記事</div><ul class="footer__nav-list"><li><a href="sozoku-fudosan-baikyaku.html">相続不動産の売却</a></li><li><a href="fudosan-kaitori-vs-chukai.html">買取 vs 仲介</a></li><li><a href="wakuari-fudosan-zeikin.html">税金・費用</a></li></ul></div>
+    </div>
+    <div class="footer__bottom"><div class="footer__license"><span>宅建業: 東京都知事（１）109938</span></div><div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div></div>
+  </footer>
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;" aria-label="LINEで無料相談">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+    LINE無料相談
+  </a>
+  <script src="../js/main.js"></script>
+</body>
+</html>

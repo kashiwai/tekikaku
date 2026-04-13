@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="相続税の基礎控除・計算方法・小規模宅地特例など、不動産を相続した方が知っておくべき税負担を公認会計士が詳しく解説します。">
+  <title>相続税の基礎控除と計算方法｜不動産を相続した場合の税負担を公認会計士が解説 | テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-hero { background: #1a1a1a; padding: 140px 40px 60px; }
+    .article-hero__inner { max-width: 800px; margin: 0 auto; }
+    .article-hero__cat { display: inline-block; background: #F87A2D; color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+    .article-hero__title { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: white; line-height: 1.35; margin-bottom: 16px; }
+    .article-hero__meta { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+    .article-body { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+    .article-body h2 { font-size: 1.5rem; font-weight: 800; margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 2px solid #F87A2D; }
+    .article-body h3 { font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px; padding-left: 12px; border-left: 3px solid #F87A2D; }
+    .article-body p { color: #444; line-height: 1.95; margin-bottom: 16px; }
+    .article-body ul { list-style: none; padding: 0; margin: 16px 0 24px; }
+    .article-body ul li { padding: 8px 0 8px 24px; position: relative; color: #444; border-bottom: 1px solid #f0f0f0; }
+    .article-body ul li::before { content: '•'; position: absolute; left: 0; color: #F87A2D; font-weight: 700; font-size: 1.2rem; line-height: 1.5; }
+    .toc { background: #f8f8f8; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px 28px; margin: 32px 0 48px; }
+    .toc__title { font-weight: 800; margin-bottom: 12px; }
+    .toc__list { list-style: none; padding: 0; counter-reset: toc; }
+    .toc__list li { padding: 6px 0; counter-increment: toc; }
+    .toc__list li::before { content: counter(toc) '. '; color: #F87A2D; font-weight: 700; }
+    .toc__list a { color: #333; text-decoration: underline; font-size: 0.9rem; }
+    .highlight-box { background: #fff8f5; border: 2px solid #F87A2D; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box__title { font-weight: 800; color: #F87A2D; margin-bottom: 8px; }
+    .article-cta { background: #1a1a1a; padding: 48px 40px; text-align: center; margin-top: 60px; border-radius: 12px; }
+    .article-cta__title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 12px; }
+    .article-cta__desc { color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+    .breadcrumb { max-width: 800px; margin: 0 auto; padding: 20px 40px 0; font-size: 0.82rem; color: #888; }
+    .breadcrumb a { color: #F87A2D; }
+    .tax-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+    .tax-table th { background: #F87A2D; color: white; padding: 10px 14px; text-align: left; }
+    .tax-table td { padding: 10px 14px; border-bottom: 1px solid #e5e7eb; color: #444; }
+    .tax-table tr:nth-child(even) td { background: #f8f8f8; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../service.html" class="nav__link">サービス</a></li>
+      <li><a href="../company.html" class="nav__link">会社概要</a></li>
+      <li><a href="../recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="../contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel"><span>無料査定受付</span>03-6766-6178</a>
+      <a href="../contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav__mobile">
+    <a href="../service.html" class="nav__mobile-link">サービス</a>
+    <a href="../company.html" class="nav__mobile-link">会社概要</a>
+    <a href="../recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="../contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="../contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+    <div class="article-hero">
+      <div class="article-hero__inner">
+        <div class="article-hero__cat">相続不動産</div>
+        <h1 class="article-hero__title">相続税の基礎控除と計算方法｜<br>不動産を相続した場合の税負担を公認会計士が解説</h1>
+        <div class="article-hero__meta">テキカク不動産 編集部 / 訳あり物件専門</div>
+      </div>
+    </div>
+
+    <div class="breadcrumb">
+      <a href="../index.html">トップ</a> &gt; <a href="index.html">コラム</a> &gt; 相続税の基礎控除と計算方法
+    </div>
+
+    <div class="article-body">
+      <div class="toc">
+        <div class="toc__title">この記事の目次</div>
+        <ol class="toc__list">
+          <li><a href="#kiso">相続税の基礎控除（3,000万円＋600万円×法定相続人数）</a></li>
+          <li><a href="#hyoka">不動産の相続税評価額の求め方</a></li>
+          <li><a href="#tokureii">小規模宅地等の特例（最大80%減額）</a></li>
+          <li><a href="#keisan">相続税の計算ステップ</a></li>
+          <li><a href="#harenakai">相続税を払えない場合の対処法</a></li>
+          <li><a href="#cpa">公認会計士が介在することで変わること</a></li>
+        </ol>
+      </div>
+
+      <h2 id="kiso">相続税の基礎控除（3,000万円＋600万円×法定相続人数）</h2>
+      <p>相続税は、亡くなった方（被相続人）の財産の総額が一定の金額（基礎控除額）を超えた場合にのみ課税されます。この基礎控除額は、以下の計算式で求められます。</p>
+      <div class="highlight-box">
+        <div class="highlight-box__title">基礎控除額の計算式</div>
+        <p style="margin:0;color:#444;font-size:1.05rem;">3,000万円 ＋ 600万円 × 法定相続人の数</p>
+      </div>
+      <p>例えば、法定相続人が配偶者と子2人の合計3人であれば、基礎控除額は3,000万円＋600万円×3＝4,800万円となります。遺産総額がこの4,800万円以下であれば、相続税は一切かかりません。国税庁の統計では、実際に相続税が発生するのは亡くなった方全体の約10%程度とされています。</p>
+      <h3>法定相続人の数え方</h3>
+      <p>基礎控除額を計算する際の「法定相続人の数」には注意点があります。相続放棄をした人も人数に含めてカウントします。また、養子は実子がいる場合は1人まで、実子がいない場合は2人まで法定相続人に含めることができます。これを利用して法定相続人を増やし、基礎控除額を増やす「養子縁組による節税」という手法があります（過度な節税目的の場合は否認されることがあります）。</p>
+
+      <h2 id="hyoka">不動産の相続税評価額の求め方</h2>
+      <p>相続税を計算する際には、財産を「相続税評価額」で評価します。現金・預貯金は額面通りですが、不動産は独自の評価方法があり、一般的に時価（実際に売れる価格）より低くなることが多いです。</p>
+      <h3>宅地（土地）の評価方法</h3>
+      <p>宅地の評価には主に2つの方法があります。</p>
+      <ul>
+        <li><strong>路線価方式：</strong>市街地にある土地の評価に使用。国税庁が毎年公表する「路線価」（道路に接した土地1平米あたりの価格）に基づいて計算する。路線価は時価の80%が目安とされている</li>
+        <li><strong>倍率方式：</strong>路線価が設定されていない地域（郊外・農村など）の評価に使用。固定資産税評価額に国税庁が定める倍率を乗じて計算する</li>
+      </ul>
+      <h3>建物の評価方法</h3>
+      <p>建物（家屋）の相続税評価額は、固定資産税評価額と同じです。固定資産税評価額は市区町村が決定しており、時価の60〜70%程度であることが多いです。賃貸中の建物（貸家）については、さらに借家権割合（通常30%）を差し引いて評価します。</p>
+      <div class="highlight-box">
+        <div class="highlight-box__title">評価額の計算例（路線価方式）</div>
+        <p style="margin:0;color:#444;">路線価：25万円/平米、地積：100平米の宅地の場合<br>25万円 × 100平米 = 2,500万円（基本評価額）<br>形状・奥行き等の補正を経て最終評価額が決まる</p>
+      </div>
+
+      <h2 id="tokureii">小規模宅地等の特例（最大80%減額）</h2>
+      <p>「小規模宅地等の特例」は、相続税における最も重要な節税特例の一つです。自宅や事業用地など一定の土地については、相続税評価額を大幅に減額できます。</p>
+      <table class="tax-table">
+        <thead>
+          <tr><th>区分</th><th>限度面積</th><th>減額割合</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>特定居住用宅地等（自宅）</td><td>330平米まで</td><td>80%減額</td></tr>
+          <tr><td>特定事業用宅地等（事業用）</td><td>400平米まで</td><td>80%減額</td></tr>
+          <tr><td>貸付事業用宅地等（賃貸物件）</td><td>200平米まで</td><td>50%減額</td></tr>
+        </tbody>
+      </table>
+      <p>例えば、相続税評価額が5,000万円の自宅（330平米以下）を配偶者または同居の子が相続する場合、80%減額が適用されて評価額は1,000万円になります。この特例を適用するか否かで相続税額が数百万円〜数千万円変わることもあり、非常に重要な特例です。</p>
+      <h3>小規模宅地の特例の適用要件（自宅の場合）</h3>
+      <ul>
+        <li>配偶者が相続する場合：要件なし（無条件で適用）</li>
+        <li>同居親族が相続する場合：相続後も引き続きその家に住み続けること</li>
+        <li>別居親族が相続する場合：「家なき子特例」の要件を満たす必要あり（相続開始前3年以内に自己または配偶者の持ち家に居住していないこと等）</li>
+      </ul>
+
+      <h2 id="keisan">相続税の計算ステップ</h2>
+      <p>相続税の計算は複数のステップを踏みます。専門家（税理士・公認会計士）でなければ正確に計算するのは難しいため、概念を理解しておきましょう。</p>
+      <ul>
+        <li>STEP1：遺産総額の把握（不動産・預金・株式・生命保険等すべての財産）</li>
+        <li>STEP2：非課税財産・債務の控除（葬儀費用、借入金等）</li>
+        <li>STEP3：課税遺産総額の計算（遺産総額 − 基礎控除額）</li>
+        <li>STEP4：法定相続分に応じた相続税の総額計算（累進税率を適用）</li>
+        <li>STEP5：各相続人の実際の取得割合に応じた按分</li>
+        <li>STEP6：税額控除の適用（配偶者控除・未成年者控除・障害者控除等）</li>
+      </ul>
+      <p>相続税の税率は10%〜55%の累進課税です。法定相続分に応じた各相続人の取得額が1,000万円以下であれば10%、6億円超であれば55%となります。</p>
+
+      <h2 id="harenakai">相続税を払えない場合の対処法</h2>
+      <p>相続税は原則として相続開始を知った日の翌日から10ヶ月以内に現金で一括納付しなければなりません。「不動産は相続したが現金がない」という状況は珍しくありません。</p>
+      <h3>延納（分割払い）</h3>
+      <p>相続税が10万円を超え、かつ延納税額に相当する担保を提供できる場合は、最長20年（不動産が多い場合）の分割払いが認められます。ただし利子税がかかります。</p>
+      <h3>物納（不動産で納税）</h3>
+      <p>延納でも難しい場合は、相続した不動産や有価証券で現物納税する「物納」が認められています。物納に使える財産には優先順位があり、不動産は第1順位です。ただし、担保価値のない土地や権利関係が複雑な不動産は物納が認められないケースがあります。</p>
+      <h3>売却して納税</h3>
+      <p>最も一般的な解決策が、相続した不動産を売却して相続税の納税資金を確保することです。テキカク不動産では最短翌日に現金化できるため、10ヶ月という期限が迫っている場合でも間に合わせることができます。仲介手数料0円なので、通常の仲介売却よりも手取りが多くなります。</p>
+
+      <h2 id="cpa">公認会計士が介在することで変わること</h2>
+      <p>テキカク不動産の代表・藤原彬晃は公認会計士の資格を持っています。不動産売却を専門とする会社に公認会計士が在籍することで、一般的な不動産業者にはできない「相続税と譲渡所得税の両方を考慮した売却タイミングの提案」が可能です。</p>
+      <h3>相続税と譲渡所得税のトレードオフ</h3>
+      <p>相続した不動産を売却すると、譲渡所得税が発生する場合があります。相続税の申告後3年10ヶ月以内に売却すると、取得費に「相続税の一部」を加算できる特例（相続税の取得費加算特例）があります。この特例を活用するタイミングを見極めるためには、相続税と譲渡税の両方に精通した専門家が必要です。</p>
+      <h3>物件の評価下げと売却価格の最大化</h3>
+      <p>相続税は評価額を合法的に下げることで節税できますが、売却は高い価格で行いたい。この一見矛盾した二つの目標を、どのように組み合わせるかを専門的な知見でアドバイスできるのが公認会計士資格を持つテキカク不動産の強みです。相続不動産の売却をお考えの方は、まずはお気軽に TEL 03-6766-6178 までご相談ください。</p>
+
+      <div class="article-cta">
+        <div class="article-cta__title">相続税・不動産売却のご相談は<br>テキカク不動産へ</div>
+        <p class="article-cta__desc">公認会計士が相続税と譲渡税の両方を考慮した最適な売却タイミングをご提案します。仲介手数料0円・全国対応。</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+            LINEで無料相談
+          </a>
+          <a href="../contact.html" class="btn btn--primary btn--lg">無料査定フォーム</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div><div class="footer__brand-name">テキカク不動産</div><div class="footer__brand-sub">FJキャピタル株式会社</div><div class="footer__info"><p>〒105-0001 東京都港区虎ノ門5-3-21<br>TEL: 03-6766-6178</p></div></div>
+      <div><div class="footer__nav-title">Navigation</div><ul class="footer__nav-list"><li><a href="../index.html">トップ</a></li><li><a href="../service.html">サービス</a></li><li><a href="../contact.html">お問い合わせ</a></li></ul></div>
+      <div><div class="footer__nav-title">関連記事</div><ul class="footer__nav-list"><li><a href="sozoku-fudosan-baikyaku.html">相続不動産の売却</a></li><li><a href="fudosan-kaitori-vs-chukai.html">買取 vs 仲介</a></li><li><a href="wakuari-fudosan-zeikin.html">税金・費用</a></li></ul></div>
+    </div>
+    <div class="footer__bottom"><div class="footer__license"><span>宅建業: 東京都知事（１）109938</span></div><div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div></div>
+  </footer>
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;" aria-label="LINEで無料相談">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+    LINE無料相談
+  </a>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="空き家の維持コストの実態を解説。固定資産税・火災保険・管理費など年間いくらかかるか、10年放置した場合の累計コストと資産価値の下落を専門家が試算します。">
+  <title>空き家の維持コストの実態｜年間いくらかかるか・放置すると何が起きるか | テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-hero { background: #1a1a1a; padding: 140px 40px 60px; }
+    .article-hero__inner { max-width: 800px; margin: 0 auto; }
+    .article-hero__cat { display: inline-block; background: #F87A2D; color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+    .article-hero__title { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: white; line-height: 1.35; margin-bottom: 16px; }
+    .article-hero__meta { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+    .article-body { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+    .article-body h2 { font-size: 1.5rem; font-weight: 800; margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 2px solid #F87A2D; }
+    .article-body h3 { font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px; padding-left: 12px; border-left: 3px solid #F87A2D; }
+    .article-body p { color: #444; line-height: 1.95; margin-bottom: 16px; }
+    .article-body ul { list-style: none; padding: 0; margin: 16px 0 24px; }
+    .article-body ul li { padding: 8px 0 8px 24px; position: relative; color: #444; border-bottom: 1px solid #f0f0f0; }
+    .article-body ul li::before { content: '•'; position: absolute; left: 0; color: #F87A2D; font-weight: 700; font-size: 1.2rem; line-height: 1.5; }
+    .toc { background: #f8f8f8; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px 28px; margin: 32px 0 48px; }
+    .toc__title { font-weight: 800; margin-bottom: 12px; }
+    .toc__list { list-style: none; padding: 0; counter-reset: toc; }
+    .toc__list li { padding: 6px 0; counter-increment: toc; }
+    .toc__list li::before { content: counter(toc) '. '; color: #F87A2D; font-weight: 700; }
+    .toc__list a { color: #333; text-decoration: underline; font-size: 0.9rem; }
+    .highlight-box { background: #fff8f5; border: 2px solid #F87A2D; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box__title { font-weight: 800; color: #F87A2D; margin-bottom: 8px; }
+    .cost-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.92rem; }
+    .cost-table th { background: #1a1a1a; color: white; padding: 10px 16px; text-align: left; }
+    .cost-table td { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; color: #444; }
+    .cost-table tr:nth-child(even) td { background: #f8f8f8; }
+    .cost-table .total td { font-weight: 800; color: #cc0000; background: #fff0f0; }
+    .article-cta { background: #1a1a1a; padding: 48px 40px; text-align: center; margin-top: 60px; border-radius: 12px; }
+    .article-cta__title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 12px; }
+    .article-cta__desc { color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+    .breadcrumb { max-width: 800px; margin: 0 auto; padding: 20px 40px 0; font-size: 0.82rem; color: #888; }
+    .breadcrumb a { color: #F87A2D; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../service.html" class="nav__link">サービス</a></li>
+      <li><a href="../company.html" class="nav__link">会社概要</a></li>
+      <li><a href="../recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="../contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel"><span>無料査定受付</span>03-6766-6178</a>
+      <a href="../contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav__mobile">
+    <a href="../service.html" class="nav__mobile-link">サービス</a>
+    <a href="../company.html" class="nav__mobile-link">会社概要</a>
+    <a href="../recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="../contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="../contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+    <div class="article-hero">
+      <div class="article-hero__inner">
+        <div class="article-hero__cat">空き家</div>
+        <h1 class="article-hero__title">空き家の維持コストの実態｜<br>年間いくらかかるか・放置すると何が起きるか</h1>
+        <div class="article-hero__meta">テキカク不動産 編集部 / 訳あり物件専門</div>
+      </div>
+    </div>
+
+    <div class="breadcrumb">
+      <a href="../index.html">トップ</a> &gt; <a href="index.html">コラム</a> &gt; 空き家の維持コストの実態
+    </div>
+
+    <div class="article-body">
+      <div class="toc">
+        <div class="toc__title">この記事の目次</div>
+        <ol class="toc__list">
+          <li><a href="#cost-breakdown">空き家にかかる年間コストの内訳</a></li>
+          <li><a href="#10year">10年放置した場合の累計コスト試算</a></li>
+          <li><a href="#decline">老朽化による資産価値の下落スピード</a></li>
+          <li><a href="#neighbor">近隣トラブルの実態</a></li>
+          <li><a href="#tokutei">特定空家指定前後の税負担の差</a></li>
+          <li><a href="#solution">早期売却が唯一の解決策である理由</a></li>
+        </ol>
+      </div>
+
+      <p>「とりあえず空き家のまま置いておこう」と考えているオーナー様は多くいらっしゃいます。しかし空き家は放置すればするほど、毎年確実にコストが積み上がり、資産価値は下落し、リスクは拡大していきます。本記事では、空き家の維持にかかるコストを項目別に分解し、10年間放置した場合の累計損失と、早期売却が最も経済合理的な選択である理由を詳しく解説します。</p>
+
+      <h2 id="cost-breakdown">空き家にかかる年間コストの内訳</h2>
+      <p>空き家を所有しているだけで、毎年必ずかかるコストがあります。「誰も住んでいないから費用はかからない」と思いがちですが、実態は逆です。居住者がいない分、管理が行き届かなくなるため、かえって問題が起きやすくなります。</p>
+
+      <h3>固定資産税・都市計画税</h3>
+      <p>不動産を保有している限り、毎年1月1日の所有者に課税されます。固定資産税は課税標準額の1.4%、都市計画税は0.3%が標準税率です。市街化区域内の住宅用地には「住宅用地特例」が適用されており、小規模住宅用地（200㎡以下の部分）では固定資産税が1/6、都市計画税が1/3に軽減されています。この特例が空き家にも適用されている間は税額は抑えられていますが、後述する特定空家の問題に直結します。</p>
+      <p>一般的な地方都市の一戸建て（土地・建物評価額合計2,000万円程度）の場合、年間の固定資産税・都市計画税の合計は概ね8〜15万円程度です。都心や人気エリアでは評価額が高くなるため、これを大きく上回るケースもあります。</p>
+
+      <h3>火災保険料</h3>
+      <p>建物を所有している以上、火災保険に加入しておく必要があります。空き家の場合、一般の居住用物件よりも保険料が割高になります。理由は、空き家は火災発生時に早期発見が遅れる可能性が高く、損害が拡大しやすいとみなされるためです。年間保険料は建物の規模・構造・補償内容によって異なりますが、木造一戸建ての場合、年間3〜8万円が一般的な相場です。なお、空き家状態であることを告知しないまま保険に加入していると、保険金が支払われない場合があるため注意が必要です。</p>
+
+      <h3>管理費・草刈り・清掃費</h3>
+      <p>空き家を適切に維持するためには、定期的な管理が必要です。最低限必要な管理業務には次のものがあります。定期的な換気・通水（配管の乾燥・錆防止）、庭木・草の定期的な刈り取り、雨漏りや破損箇所の点検、郵便物の回収、外観の清掃などです。これらを自分で行う場合は交通費と時間がかかり、専門業者に依頼する場合は年間5〜20万円程度の費用が発生します。遠方に空き家がある場合は、月1回の管理訪問だけでも相当な負担になります。</p>
+
+      <h3>修繕費</h3>
+      <p>人が住んでいない建物は、驚くほど速いスピードで劣化します。雨水の浸入、シロアリの被害、湿気によるカビ・腐食が進行します。放置期間が長くなるほど修繕費は高額になり、小さな雨漏りを放置すると数年で天井・床・柱が腐食し、修繕費が数百万円規模になるケースも珍しくありません。</p>
+
+      <table class="cost-table">
+        <thead>
+          <tr><th>費用項目</th><th>年間コスト目安</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>固定資産税・都市計画税</td><td>8〜20万円</td></tr>
+          <tr><td>火災保険料</td><td>3〜8万円</td></tr>
+          <tr><td>管理費・草刈り・清掃</td><td>5〜20万円</td></tr>
+          <tr><td>軽微な修繕・メンテナンス</td><td>5〜30万円</td></tr>
+          <tr class="total"><td>合計（目安）</td><td>21〜78万円/年</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="10year">10年放置した場合の累計コスト試算</h2>
+      <p>上記のコストを前提に、10年間空き家を放置した場合の累計コストを試算してみましょう。ここでは保守的な試算（年間30万円ペース）と現実的な試算（年間50万円ペース）の2パターンで計算します。</p>
+
+      <div class="highlight-box">
+        <div class="highlight-box__title">10年間の累計コスト試算</div>
+        <p style="margin:0 0 8px;color:#444;"><strong>保守的試算（年間30万円）：</strong>10年合計 <span style="color:#cc0000;font-weight:800;">300万円</span></p>
+        <p style="margin:0 0 8px;color:#444;"><strong>現実的試算（年間50万円）：</strong>10年合計 <span style="color:#cc0000;font-weight:800;">500万円</span></p>
+        <p style="margin:0;color:#444;"><strong>大規模修繕が発生した場合：</strong>10年合計 <span style="color:#cc0000;font-weight:800;">700万円超</span>も</p>
+      </div>
+
+      <p>さらに恐ろしいのは、この「出ていくコスト」に加えて、建物の資産価値が下落し続けるという「機会損失」が同時に発生していることです。10年前に3,000万円で売れた物件が、10年後には1,000万円でも売れなくなっているという事態は、空き家問題では日常的に起きています。</p>
+
+      <h2 id="decline">老朽化による資産価値の下落スピード</h2>
+      <p>建物の価値は、居住者がいない状態では急激に低下します。一般的に木造建物の法定耐用年数は22年ですが、実態としては管理状態によって大きく差が出ます。適切に管理された建物は30〜40年以上使用できる一方、放置された建物は10年もしないうちに解体不可避な状態になるケースがあります。</p>
+      <p>空き家の資産価値低下には、以下のメカニズムが働きます。まず、人が出入りしないため湿気が籠もり、木材や断熱材の腐食が進みます。次に、雨漏りを早期に発見・修繕できないため、被害が広範囲に及びます。また、シロアリは土台・柱・梁に被害を与え、構造的な安全性を脅かします。さらに外観の荒廃が進むと、同じ地域の他の物件の印象にも悪影響を与え、地域全体の地価を押し下げる要因にもなります。</p>
+      <p>建物の価値がゼロになると、次は「負動産」になります。解体費用（木造一戸建てで100〜200万円程度）を負担した上で更地にしなければならず、それでも土地の売却が難しい地域では、処分に困る状況に陥ります。</p>
+
+      <h2 id="neighbor">近隣トラブルの実態</h2>
+      <p>空き家放置による近隣トラブルは、年々深刻化しています。自治体への相談件数も増加の一途をたどっており、近隣住民とのトラブルが所有者に対する法的請求に発展するケースも出てきました。</p>
+
+      <h3>草木の繁茂</h3>
+      <p>庭木や雑草が管理されないまま繁茂すると、隣地や道路にはみ出し、近隣住民からの苦情の原因になります。民法上、隣地にはみ出した枝の切除は、原則として所有者が対応しなければなりません（2023年民法改正で一定の要件のもと隣地所有者も対応可能になりましたが、基本的には空き家オーナーの責任です）。</p>
+
+      <h3>害虫・害獣の発生</h3>
+      <p>人の出入りがなくなると、ゴキブリ・ネズミ・ハチ・ムカデなどの害虫・害獣が棲みつきやすくなります。これらが隣家に移動し、近隣住民が被害を受けると、損害賠償請求に発展するケースがあります。</p>
+
+      <h3>不審者・犯罪の温床</h3>
+      <p>管理されていない空き家は、不法侵入・不法投棄・放火などの犯罪の舞台になりやすいことが知られています。万が一、空き家内で犯罪が起きた場合、管理責任を問われる可能性があります。</p>
+
+      <h3>外壁・屋根の崩落リスク</h3>
+      <p>老朽化が進んだ建物は、台風・地震などの自然災害によって外壁材や屋根瓦が崩落し、隣家や通行人に被害を与えるリスクがあります。この場合、工作物責任（民法717条）に基づく損害賠償責任を負う可能性があります。</p>
+
+      <h2 id="tokutei">特定空家指定前後の税負担の差</h2>
+      <p>2015年に施行された「空家等対策の推進に関する特別措置法」（空き家特措法）により、市区町村は管理が不十分な空き家を「特定空家」に指定し、段階的な行政措置を講じることができるようになりました。2023年の改正では、さらに「管理不全空家」という類型も追加され、行政の介入がより早い段階でできるようになっています。</p>
+      <p>特定空家に指定されると、住宅用地特例の適用から除外されます。これにより、固定資産税は最大6倍に跳ね上がります。</p>
+
+      <div class="highlight-box">
+        <div class="highlight-box__title">固定資産税6倍の計算例</div>
+        <p style="margin:0 0 8px;color:#444;">土地の固定資産税評価額：1,500万円（小規模住宅用地）の場合</p>
+        <p style="margin:0 0 8px;color:#444;">特例適用中：1,500万円 × 1/6 × 1.4% ＝ <strong>約35,000円/年</strong></p>
+        <p style="margin:0;color:#444;">特定空家指定後：1,500万円 × 1.4% ＝ <strong>約210,000円/年（約6倍）</strong></p>
+      </div>
+
+      <p>さらに、特定空家に対しては「勧告」「命令」「行政代執行」という段階的な行政措置が取られます。行政代執行による解体費用は、後日オーナーに請求されます。この費用は数百万円に上ることもあり、また相当な精神的ストレスも伴います。</p>
+
+      <h2 id="solution">早期売却が唯一の解決策である理由</h2>
+      <p>ここまで見てきたように、空き家の放置は「毎年コストが出ていく」「資産価値が下がる」「リスクが拡大する」という三重苦です。これらの問題を一度に解決できる手段は、早期売却以外にありません。</p>
+      <p>「リフォームして賃貸に出せば」と考える方も多いですが、老朽化した建物のリフォーム費用は数百万〜数千万円に及ぶことが多く、賃料収入だけで回収するには長年かかります。立地条件が悪い場合は入居者が付かず、リフォーム費用だけが無駄になるケースも少なくありません。</p>
+      <p>テキカク不動産では、空き家の現状買取を行っています。残置物（家具・家電・衣類など）がそのままの状態でも、追加費用なしで買取が可能です。代表は公認会計士であり、売却に伴う税務（譲渡所得税・相続税の申告など）についても同時に相談いただけます。また、仲介手数料は0円、最短翌日の現金化にも対応しており、全国どこでも無料査定を実施しています。</p>
+      <p>「まず査定だけ」という形でのご相談も歓迎しています。現在の空き家の状態を確認し、売却した場合にいくらになるかを把握するだけでも、今後の判断の大きな助けになります。TEL 03-6766-6178、またはLINEからお気軽にご相談ください。</p>
+
+      <div class="article-cta">
+        <div class="article-cta__title">空き家の売却は<br>テキカク不動産にご相談ください</div>
+        <p class="article-cta__desc">残置物そのまま・全国対応・最短翌日現金化。仲介手数料0円。無料査定受付中。</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+            LINEで無料相談
+          </a>
+          <a href="../contact.html" class="btn btn--primary btn--lg">無料査定フォーム</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div><div class="footer__brand-name">テキカク不動産</div><div class="footer__brand-sub">FJキャピタル株式会社</div><div class="footer__info"><p>〒105-0001 東京都港区虎ノ門5-3-21<br>TEL: 03-6766-6178</p></div></div>
+      <div><div class="footer__nav-title">Navigation</div><ul class="footer__nav-list"><li><a href="../index.html">トップ</a></li><li><a href="../service.html">サービス</a></li><li><a href="../contact.html">お問い合わせ</a></li></ul></div>
+      <div><div class="footer__nav-title">関連記事</div><ul class="footer__nav-list"><li><a href="sozoku-fudosan-baikyaku.html">相続不動産の売却</a></li><li><a href="fudosan-kaitori-vs-chukai.html">買取 vs 仲介</a></li><li><a href="wakuari-fudosan-zeikin.html">税金・費用</a></li></ul></div>
+    </div>
+    <div class="footer__bottom"><div class="footer__license"><span>宅建業: 東京都知事（１）109938</span></div><div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div></div>
+  </footer>
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;" aria-label="LINEで無料相談">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+    LINE無料相談
+  </a>
+  <script src="../js/main.js"></script>
+</body>
+</html>
