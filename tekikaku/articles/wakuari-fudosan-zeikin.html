@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="訳あり物件売却にかかる税金を専門家が解説。譲渡所得税の計算・3000万円控除・節税のポイントまで完全ガイド。">
+  <title>訳あり物件売却にかかる税金｜譲渡所得・控除の計算 | テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-hero { background: #1a1a1a; padding: 140px 40px 60px; }
+    .article-hero__inner { max-width: 800px; margin: 0 auto; }
+    .article-hero__cat { display: inline-block; background: #555; color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+    .article-hero__title { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: white; line-height: 1.35; margin-bottom: 16px; }
+    .article-hero__meta { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+    .article-body { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+    .article-body h2 { font-size: 1.5rem; font-weight: 800; margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-primary); }
+    .article-body h3 { font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px; padding-left: 12px; border-left: 3px solid var(--color-primary); }
+    .article-body p { color: #444; line-height: 1.95; margin-bottom: 16px; }
+    .article-body ul { list-style: none; padding: 0; margin: 16px 0 24px; }
+    .article-body ul li { padding: 8px 0 8px 24px; position: relative; color: #444; border-bottom: 1px solid #f0f0f0; }
+    .article-body ul li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; font-size: 1.2rem; line-height: 1.5; }
+    .toc { background: #f8f8f8; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px 28px; margin: 32px 0 48px; }
+    .toc__title { font-weight: 800; margin-bottom: 12px; }
+    .toc__list { list-style: none; padding: 0; counter-reset: toc; }
+    .toc__list li { padding: 6px 0; counter-increment: toc; }
+    .toc__list li::before { content: counter(toc) '. '; color: var(--color-primary); font-weight: 700; }
+    .toc__list a { color: #333; text-decoration: underline; font-size: 0.9rem; }
+    .formula-box { background: #f0f8ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px 24px; margin: 24px 0; font-family: monospace; }
+    .formula-box p { color: #1e3a8a; font-size: 1rem; margin: 0; line-height: 1.8; }
+    .highlight-box { background: #fff8f5; border: 2px solid var(--color-primary); border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box__title { font-weight: 800; color: var(--color-primary); margin-bottom: 8px; }
+    .tax-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+    .tax-table th { background: #1a1a1a; color: white; padding: 12px 16px; text-align: left; font-weight: 700; }
+    .tax-table td { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; color: #444; }
+    .tax-table tr:nth-child(even) td { background: #fafafa; }
+    .article-cta { background: #1a1a1a; padding: 48px 40px; text-align: center; margin-top: 60px; border-radius: 12px; }
+    .article-cta__title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 12px; }
+    .article-cta__desc { color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+    .breadcrumb { max-width: 800px; margin: 0 auto; padding: 20px 40px 0; font-size: 0.82rem; color: #888; }
+    .breadcrumb a { color: var(--color-primary); }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../service.html" class="nav__link">サービス</a></li>
+      <li><a href="../company.html" class="nav__link">会社概要</a></li>
+      <li><a href="../recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="../contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel"><span>無料査定受付</span>03-6766-6178</a>
+      <a href="../contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav__mobile">
+    <a href="../service.html" class="nav__mobile-link">サービス</a>
+    <a href="../company.html" class="nav__mobile-link">会社概要</a>
+    <a href="../recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="../contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="../contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+    <div class="article-hero">
+      <div class="article-hero__inner">
+        <div class="article-hero__cat">税金・費用</div>
+        <h1 class="article-hero__title">訳あり物件売却にかかる税金｜<br>譲渡所得・控除の計算</h1>
+        <div class="article-hero__meta">テキカク不動産 編集部 / 訳あり物件専門</div>
+      </div>
+    </div>
+
+    <div class="breadcrumb">
+      <a href="../index.html">トップ</a> &gt; <a href="index.html">コラム</a> &gt; 訳あり物件売却の税金
+    </div>
+
+    <div class="article-body">
+      <div class="toc">
+        <div class="toc__title">この記事の目次</div>
+        <ol class="toc__list">
+          <li><a href="#types">売却時にかかる税金の種類</a></li>
+          <li><a href="#譲渡">譲渡所得税の計算方法</a></li>
+          <li><a href="#rates">税率（長期・短期）</a></li>
+          <li><a href="#controls">使える控除・特例</a></li>
+          <li><a href="#tips">節税のポイント</a></li>
+        </ol>
+      </div>
+
+      <h2 id="types">売却時にかかる税金の種類</h2>
+      <ul>
+        <li>譲渡所得税（所得税＋住民税）— 売却益に課税</li>
+        <li>印紙税 — 売買契約書に貼付（数千円〜数万円）</li>
+        <li>登録免許税 — 名義変更の際に必要（買主負担が多い）</li>
+        <li>消費税 — 土地は非課税、建物は課税（個人売主は多くの場合免税）</li>
+      </ul>
+
+      <h2 id="譲渡">譲渡所得税の計算方法</h2>
+      <p>最も重要な税金が「譲渡所得税」です。計算式は以下の通りです。</p>
+      <div class="formula-box">
+        <p>譲渡所得 = 売却価格 − 取得費 − 譲渡費用</p>
+        <p>税額 = 譲渡所得 × 税率</p>
+      </div>
+      <h3>取得費とは</h3>
+      <p>物件の購入価格＋購入時の仲介手数料・登記費用・リフォーム費用などの合計額。取得費が不明な場合は売却価格の5%を用います（概算取得費）。</p>
+      <h3>譲渡費用とは</h3>
+      <p>売却時の仲介手数料・印紙代・解体費用・測量費用など。専門業者による買取の場合、仲介手数料は0円なので譲渡費用が少なくなります。</p>
+
+      <h2 id="rates">税率（長期・短期）</h2>
+      <table class="tax-table">
+        <tr><th>所有期間</th><th>所得税率</th><th>住民税率</th><th>合計</th></tr>
+        <tr><td>5年超（長期）</td><td>15%</td><td>5%</td><td><strong>20.315%</strong>（復興税含む）</td></tr>
+        <tr><td>5年以下（短期）</td><td>30%</td><td>9%</td><td><strong>39.63%</strong>（復興税含む）</td></tr>
+      </table>
+      <p>所有期間は売却した年の1月1日時点の年数で判定します。5年超の方が税率が大幅に低くなります。</p>
+
+      <h2 id="controls">使える控除・特例</h2>
+      <h3>3,000万円特別控除（居住用財産）</h3>
+      <p>マイホームを売った場合に譲渡所得から最大3,000万円を控除できる特例です。事故物件・空き家でも一定条件下で適用可能な場合があります。</p>
+      <h3>相続空き家の3,000万円控除（措法35条3項）</h3>
+      <p>相続した実家を売る場合に適用できる特例。昭和56年5月31日以前の建築、1人居住、3年以内の売却などが条件です。</p>
+      <h3>軽減税率の特例</h3>
+      <p>10年超所有したマイホームを売る場合、6,000万円以下の部分は税率が14.21%に軽減されます。</p>
+
+      <h2 id="tips">節税のポイント</h2>
+      <div class="highlight-box">
+        <div class="highlight-box__title">訳あり物件売却での節税ポイント</div>
+        <ul style="margin:0;">
+          <li>取得費の記録（契約書・領収書）を保管しておく</li>
+          <li>リフォーム・修繕費用も取得費に算入できる場合がある</li>
+          <li>控除適用条件を事前に税理士に確認する</li>
+          <li>5年超の所有なら売却タイミングを年末に合わせる</li>
+          <li>仲介手数料0円の専門買取なら譲渡費用が抑えられる</li>
+        </ul>
+      </div>
+
+      <div class="article-cta">
+        <div class="article-cta__title">税務相談もテキカク不動産へ<br>顧問税理士と連携対応</div>
+        <p class="article-cta__desc">売却価格の最大化と節税を同時に実現。無料査定受付中。</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+            LINEで無料相談
+          </a>
+          <a href="../contact.html" class="btn btn--primary btn--lg">無料査定フォーム</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div><div class="footer__brand-name">テキカク不動産</div><div class="footer__brand-sub">FJキャピタル株式会社</div><div class="footer__info"><p>〒105-0001 東京都港区虎ノ門5-3-21<br>TEL: 03-6766-6178</p></div></div>
+      <div><div class="footer__nav-title">Navigation</div><ul class="footer__nav-list"><li><a href="../index.html">トップ</a></li><li><a href="../service.html">サービス</a></li><li><a href="../contact.html">お問い合わせ</a></li></ul></div>
+      <div><div class="footer__nav-title">関連記事</div><ul class="footer__nav-list"><li><a href="fudosan-kaitori-vs-chukai.html">買取 vs 仲介</a></li><li><a href="sozoku-fudosan-baikyaku.html">相続不動産の売却</a></li><li><a href="jiko-bukken-baikyaku.html">事故物件の売却</a></li></ul></div>
+    </div>
+    <div class="footer__bottom"><div class="footer__license"><span>宅建業: 東京都知事（１）109938</span></div><div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div></div>
+  </footer>
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;" aria-label="LINEで無料相談">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+    LINE無料相談
+  </a>
+  <script src="../js/main.js"></script>
+</body>
+</html>

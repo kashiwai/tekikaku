@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="共有持分・共有名義の不動産専門買取｜テキカク不動産。相続・離婚・共有名義トラブルもスピード解決。仲介手数料0円・最短翌日現金化。">
+  <title>共有持分・共有名義買取 | テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .cat-hero { background: linear-gradient(135deg, #1a1a2d 0%, #1f1a2a 100%); padding: 140px 40px 80px; text-align: center; position: relative; overflow: hidden; }
+    .cat-hero::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1400&auto=format&fit=crop') center/cover; opacity: 0.12; }
+    .cat-hero__inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+    .cat-hero__label { display: inline-block; background: var(--color-primary); color: white; font-size: 0.72rem; font-weight: 700; padding: 5px 14px; border-radius: 2px; letter-spacing: 0.15em; margin-bottom: 20px; }
+    .cat-hero__title { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; color: white; line-height: 1.25; margin-bottom: 20px; }
+    .cat-hero__desc { font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.9; margin-bottom: 32px; }
+    .cat-hero__badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .cat-hero__badge { background: rgba(248,122,45,0.15); border: 1px solid rgba(248,122,45,0.4); border-radius: 4px; padding: 8px 18px; color: white; font-size: 0.82rem; font-weight: 700; }
+    .cat-section { padding: 80px 40px; }
+    .cat-section--gray { background: var(--color-gray-light); }
+    .cat-container { max-width: 900px; margin: 0 auto; }
+    .cat-h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 24px; position: relative; padding-left: 16px; }
+    .cat-h2::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--color-primary); border-radius: 2px; }
+    .cat-p { color: #444; line-height: 1.9; margin-bottom: 16px; }
+    .cat-list { list-style: none; padding: 0; }
+    .cat-list li { padding: 10px 0 10px 28px; position: relative; border-bottom: 1px solid #eee; color: #444; line-height: 1.7; }
+    .cat-list li::before { content: '✓'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; }
+    .info-box { background: #fff8f5; border: 2px solid #F87A2D; border-radius: 8px; padding: 24px 28px; margin: 24px 0; }
+    .info-box__title { font-weight: 800; color: var(--color-primary); margin-bottom: 8px; }
+    .warn-box { background: #fff9f0; border-left: 4px solid #e09000; padding: 16px 20px; border-radius: 0 6px 6px 0; margin: 20px 0; }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 24px; }
+    .result-card { background: white; border-radius: 8px; padding: 20px; border: 1px solid #eee; }
+    .result-card__area { font-size: 0.78rem; color: #888; font-weight: 700; margin-bottom: 6px; }
+    .result-card__title { font-size: 0.9rem; color: #333; margin-bottom: 12px; }
+    .result-card__price { font-size: 1.6rem; font-weight: 800; color: var(--color-primary); }
+    .result-card__price span { font-size: 0.85rem; font-weight: 400; color: #666; }
+    .faq-item { border-bottom: 1px solid #e5e7eb; padding: 20px 0; }
+    .faq-item__q { font-weight: 700; margin-bottom: 10px; display: flex; gap: 10px; }
+    .faq-item__q::before { content: 'Q'; color: var(--color-primary); font-weight: 800; }
+    .faq-item__a { color: #555; line-height: 1.8; padding-left: 20px; font-size: 0.95rem; }
+    .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 24px; }
+    .scenario-card { background: white; border-radius: 8px; padding: 24px; border: 1px solid #e5e7eb; }
+    .scenario-card__icon { font-size: 2rem; margin-bottom: 12px; }
+    .scenario-card__title { font-weight: 800; margin-bottom: 8px; font-size: 1rem; }
+    .scenario-card__desc { color: #555; font-size: 0.88rem; line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../service.html" class="nav__link">サービス</a></li>
+      <li><a href="../company.html" class="nav__link">会社概要</a></li>
+      <li><a href="../recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="../contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel"><span>無料査定受付</span>03-6766-6178</a>
+      <a href="../contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav__mobile">
+    <a href="../service.html" class="nav__mobile-link">サービス</a>
+    <a href="../company.html" class="nav__mobile-link">会社概要</a>
+    <a href="../recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="../contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="../contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+    <div class="cat-hero">
+      <div class="cat-hero__inner">
+        <div class="cat-hero__label">共有持分・共有名義専門買取</div>
+        <h1 class="cat-hero__title">共有名義・持分のみでも<br>買取できます</h1>
+        <p class="cat-hero__desc">相続・離婚・名義変更トラブルで共有状態になった不動産は、<br>他の共有者の同意がなくても持分だけを売却できます。</p>
+        <div class="cat-hero__badges">
+          <div class="cat-hero__badge">✓ 他の共有者の同意不要</div>
+          <div class="cat-hero__badge">✓ 弁護士連携で法的サポート</div>
+          <div class="cat-hero__badge">✓ 最短翌日現金化</div>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+            LINEで無料相談
+          </a>
+          <a href="../contact.html" class="btn btn--outline-white btn--lg">無料査定フォーム</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="cat-section">
+      <div class="cat-container">
+        <h2 class="cat-h2">このような状況でお困りではないですか？</h2>
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <div class="scenario-card__icon">👨‍👩‍👧</div>
+            <div class="scenario-card__title">相続で共有名義になった</div>
+            <div class="scenario-card__desc">親が亡くなり兄弟で共有相続。売りたい人と住み続けたい人で意見が割れている。</div>
+          </div>
+          <div class="scenario-card">
+            <div class="scenario-card__icon">💔</div>
+            <div class="scenario-card__title">離婚で共有名義が残った</div>
+            <div class="scenario-card__desc">離婚後もローンが残り元配偶者と共有状態。連絡が取れず手続きが進まない。</div>
+          </div>
+          <div class="scenario-card">
+            <div class="scenario-card__icon">⚖️</div>
+            <div class="scenario-card__title">共有者と音信不通・対立中</div>
+            <div class="scenario-card__desc">共有者が遠方・音信不通で話し合いができない。法的手段も検討している。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat-section cat-section--gray">
+      <div class="cat-container">
+        <h2 class="cat-h2">共有持分のみでも売れる理由</h2>
+        <p class="cat-p">民法上、共有持分は各共有者が自由に処分できる権利です。他の共有者の同意は法律上不要です。テキカク不動産は共有持分のみを買取り、その後の権利調整（共有物分割請求等）を弊社が対応します。</p>
+        <div class="warn-box">
+          <strong>注意：</strong> 持分のみの売却は可能ですが、評価額は全体の持分割合より低くなる場合があります。まずは無料査定でご確認ください。
+        </div>
+        <h3 style="font-weight:800;margin:24px 0 16px;">テキカク不動産の対応内容</h3>
+        <ul class="cat-list">
+          <li>持分のみの現金買取（他の共有者の同意不要）</li>
+          <li>共有物分割請求（弁護士と連携）</li>
+          <li>相続登記・持分移転登記の代行</li>
+          <li>遺産分割協議のサポート</li>
+          <li>買取後の権利整理まで一括対応</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cat-section">
+      <div class="cat-container">
+        <h2 class="cat-h2">よくある質問</h2>
+        <div class="faq-item">
+          <div class="faq-item__q">1/3の持分しかなくても売れますか？</div>
+          <div class="faq-item__a">はい、売れます。持分割合がどれだけ少なくても買取可能です。ただし買取価格は持分割合と市場状況により変動します。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-item__q">共有者が反対しても売れますか？</div>
+          <div class="faq-item__a">法律上、自分の持分は自由に処分できます。共有者の同意は不要です。ただし売却後に共有物分割請求が行われる場合があります。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-item__q">相続登記が未了ですが対応できますか？</div>
+          <div class="faq-item__a">対応可能です。相続登記（司法書士手配）も弊社でサポートします。2024年から相続登記が義務化されましたので、お早めにご相談ください。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <p class="section-label section-label--white" style="color:rgba(255,255,255,0.7);">Contact</p>
+      <h2 class="cta-section__title">共有名義物件の無料査定<br>まずはご相談ください</h2>
+      <p class="cta-section__desc">弁護士連携・秘密厳守・24時間対応。</p>
+      <div class="cta-section__tel">03-6766-6178</div>
+      <p class="cta-section__hours" style="margin-bottom:28px;">営業時間 7:00〜24:00（年中無休）</p>
+      <div class="cta-section__btns">
+        <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" class="btn btn--lg" style="background:#06C755;color:white;border:none;display:inline-flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+          LINEで相談する（無料）
+        </a>
+        <a href="../contact.html" class="btn btn--dark btn--lg">無料査定フォームへ</a>
+        <a href="tel:0367666178" class="btn btn--outline-white btn--lg">今すぐ電話する</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">テキカク不動産</div>
+        <div class="footer__brand-sub">FJキャピタル株式会社</div>
+        <div class="footer__info"><p>〒105-0001<br>東京都港区虎ノ門5-3-21 AUBE虎ノ門<br>TEL: 03-6766-6178<br>営業時間: 7:00〜24:00（年中無休）</p></div>
+      </div>
+      <div>
+        <div class="footer__nav-title">Navigation</div>
+        <ul class="footer__nav-list">
+          <li><a href="../index.html">トップ</a></li>
+          <li><a href="../service.html">サービス</a></li>
+          <li><a href="../company.html">会社概要</a></li>
+          <li><a href="../contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__nav-title">物件カテゴリ</div>
+        <ul class="footer__nav-list">
+          <li><a href="jiko-bukken.html">事故物件</a></li>
+          <li><a href="saiken-chiku-fuka.html">再建築不可物件</a></li>
+          <li><a href="kyoyu-mochibun.html">共有持分</a></li>
+          <li><a href="akiya.html">空き家</a></li>
+          <li><a href="shakkichi-sokuchi.html">借地・底地</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__license"><span>宅建業: 東京都知事（１）109938</span></div>
+      <div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener"
+     style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;"
+     aria-label="LINEで無料相談">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>
+    LINE無料相談
+  </a>
+  <script src="../js/main.js"></script>
+</body>
+</html>
