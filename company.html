@@ -23,11 +23,148 @@
       align-items: start;
     }
 
-    .president-img {
+    .president-logo-box {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 32px 32px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      text-align: center;
+    }
+
+    .president-logo-box img {
       width: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-      aspect-ratio: 3/4;
+      max-width: 220px;
+      height: auto;
+    }
+
+    .president-logo-box__badge {
+      display: inline-block;
+      background: var(--color-primary);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 16px;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      margin-top: 16px;
+    }
+
+    .president-logo-box__name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-top: 12px;
+      color: #1a1a1a;
+    }
+
+    .president-logo-box__title {
+      font-size: 0.78rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .cpa-highlight {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin-top: 28px;
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .cpa-highlight__label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cpa-highlight__title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .cpa-highlight__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .cpa-highlight__list li {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.82rem;
+      padding: 5px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.6;
+    }
+
+    .cpa-highlight__list li::before {
+      content: '✓';
+      color: var(--color-primary);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .advisor-feature {
+      background: linear-gradient(135deg, #F87A2D 0%, #e56b1f 100%);
+      border-radius: 10px;
+      padding: 32px;
+      color: white;
+      margin-bottom: 24px;
+    }
+
+    .advisor-feature__label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+
+    .advisor-feature__title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .advisor-feature__desc {
+      font-size: 0.88rem;
+      opacity: 0.9;
+      line-height: 1.85;
+    }
+
+    .advisor-feature__points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .advisor-feature__point {
+      background: rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .advisor-feature__point span {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .advisor-feature__points { grid-template-columns: 1fr; }
     }
 
     .president-content {
@@ -199,20 +336,27 @@
     <section class="president-section">
       <div class="president-grid">
         <div data-fade>
-          <!-- ※代表者の実際の写真に差し替えてください -->
-          <img
-            class="president-img"
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&auto=format&fit=crop"
-            alt="代表取締役 藤原彬晃の写真"
-            width="400"
-            height="533"
-            loading="eager"
-          >
+          <div class="president-logo-box">
+            <img src="images/fj-capital-logo.png" alt="FJキャピタル株式会社 ロゴ">
+            <div class="president-logo-box__badge">公認会計士</div>
+            <div class="president-logo-box__name">藤原　彬晃</div>
+            <div class="president-logo-box__title">代表取締役 / 公認会計士</div>
+          </div>
+          <div class="cpa-highlight">
+            <div class="cpa-highlight__label">CPA Advantage</div>
+            <div class="cpa-highlight__title">公認会計士が直接運営する<br>不動産会社</div>
+            <ul class="cpa-highlight__list">
+              <li>売却時の譲渡所得税・節税戦略を即時試算</li>
+              <li>相続・法人化の最適スキーム提案</li>
+              <li>会計処理・確定申告まで一貫サポート</li>
+              <li>事業用物件の実態価値を正確に評価</li>
+            </ul>
+          </div>
         </div>
         <div class="president-content" data-fade>
           <div class="president-label">Message from CEO</div>
           <h2 class="president-name-ja">代表挨拶</h2>
-          <div class="president-name-title">代表取締役 藤原　彬晃</div>
+          <div class="president-name-title">代表取締役 藤原　彬晃（公認会計士）</div>
           <p class="president-message">
             私どもテキカク不動産は、訳あり物件・トラブル物件を抱えるお客様に寄り添い、確実な解決策を提供することを使命としています。
           </p>
@@ -222,15 +366,14 @@
             一般の不動産会社では対応が難しいとされるケースでも、弊社は14年以上の専門実績と豊富な専門家ネットワークを活かして、お客様に最適な解決をご提供します。
           </p>
           <p class="president-message">
-            「他社に断られた」「どこに相談すればいいかわからない」——そんなお客様のお役に立てることが、私どもの存在意義です。
-            お客様一人ひとりの状況に真摯に向き合い、必ず前に進める道を一緒に見つけます。
+            弊社の最大の強みは、<strong>代表である私自身が公認会計士の資格を持ち、不動産売却における税務・会計処理を直接監修している</strong>点です。一般の不動産会社では「税理士に確認してください」とお断りされる場面でも、弊社では売却価格の試算と同時に、譲渡所得税の概算・節税スキームの検討・会計処理の適正化まで、ワンストップでご提案できます。
           </p>
           <p class="president-message">
-            不動産の問題は、放置すれば問題は複雑になるばかりです。
-            どんな状況でも、まずはテキカク不動産にご連絡ください。
+            「他社に断られた」「どこに相談すればいいかわからない」——そんなお客様のお役に立てることが、私どもの存在意義です。
+            どんな状況でも、まずはテキカク不動産にご連絡ください。必ず前に進める道を一緒に見つけます。
           </p>
           <div class="president-sig">
-            <span>代表取締役</span>
+            <span>代表取締役 / 公認会計士</span>
             藤原　彬晃
           </div>
         </div>
@@ -364,10 +507,35 @@
           <p class="section-label">Advisors</p>
           <h2 class="section-title section-title--center">顧問・専門家チーム</h2>
           <p class="section-desc section-desc--center">
-            専門家ネットワークを活かし、法的・税務・労務問題まで一貫してサポートします。
+            代表が公認会計士として税務・会計を直接担当。弁護士・税理士と連携し、法的・税務問題を一貫してサポートします。
           </p>
         </div>
-        <div class="advisor-grid" data-fade>
+
+        <!-- 公認会計士フィーチャーカード -->
+        <div class="advisor-feature" data-fade>
+          <div class="advisor-feature__label">Representative CPA</div>
+          <div class="advisor-feature__title">代表・藤原彬晃は公認会計士。<br>税務・会計処理を社内で完結できる唯一の専門会社です。</div>
+          <p class="advisor-feature__desc">
+            不動産売却における最大の悩みのひとつが「税金がいくらかかるか」という問題です。通常の不動産会社では売却後に税理士を別途手配する必要がありますが、テキカク不動産では代表自身が公認会計士として、譲渡所得税の試算・節税スキームの立案・確定申告のサポートまでをワンストップで提供します。
+          </p>
+          <div class="advisor-feature__points">
+            <div class="advisor-feature__point">
+              税務・節税戦略
+              <span>譲渡所得税の試算と控除・特例の最適活用</span>
+            </div>
+            <div class="advisor-feature__point">
+              会計処理の適正化
+              <span>売却に伴う会計・確定申告を正確に処理</span>
+            </div>
+            <div class="advisor-feature__point">
+              事業監修・価値最大化
+              <span>財務目線で物件価値と出口戦略を評価</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 顧問弁護士・税理士 -->
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;" data-fade>
           <div class="advisor-card">
             <div class="advisor-card__type">顧問弁護士</div>
             <div class="advisor-card__firm">青山北町法律事務所</div>
@@ -377,11 +545,6 @@
             <div class="advisor-card__type">顧問税理士</div>
             <div class="advisor-card__firm">曽我会計事務所</div>
             <div class="advisor-card__name">税理士</div>
-          </div>
-          <div class="advisor-card">
-            <div class="advisor-card__type">顧問社会保険労務士</div>
-            <div class="advisor-card__firm">なかむら経営労務管理事務所</div>
-            <div class="advisor-card__name">社会保険労務士</div>
           </div>
         </div>
       </div>
