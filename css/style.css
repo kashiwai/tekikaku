@@ -1180,3 +1180,156 @@ textarea.form-control {
     padding: 40px 16px 20px;
   }
 }
+
+/* ============================================
+   スマホ追加対応 (全ページ共通)
+   ============================================ */
+@media (max-width: 768px) {
+  /* ナビ: ロゴ小さく */
+  .nav__logo-main {
+    font-size: 1rem;
+  }
+  .nav__logo-sub {
+    font-size: 0.6rem;
+  }
+
+  /* ページヒーロー */
+  .page-hero__title {
+    font-size: 1.6rem;
+  }
+
+  /* ボタン全幅 */
+  .btn--lg {
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 14px 20px;
+  }
+
+  /* hero btns stack */
+  .hero__btns {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  /* section-title スケール */
+  .section-title {
+    font-size: 1.55rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* advisor grid in company */
+  .advisor-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* president grid company */
+  .president-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* advisor-feature points */
+  .advisor-feature__points {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* info-table スクロール対応 */
+  .info-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* article pages */
+  .article-hero {
+    padding: 100px 20px 40px !important;
+  }
+  .article-body {
+    padding: 40px 20px !important;
+  }
+  .article-body h2 {
+    font-size: 1.3rem !important;
+  }
+  .article-body h3 {
+    font-size: 1.1rem !important;
+  }
+  .article-body table,
+  .compare-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .comparison-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .article-cta {
+    padding: 36px 20px !important;
+    border-radius: 0 !important;
+  }
+  .breadcrumb {
+    padding: 16px 20px 0 !important;
+  }
+
+  /* FAQ */
+  .faq-wrap {
+    max-width: 100%;
+  }
+
+  /* contact form */
+  .contact-form {
+    padding: 32px 20px;
+  }
+
+  /* footer logo */
+  .footer__logo-main {
+    font-size: 1.1rem;
+  }
+
+  /* steps arrow hide already in 1024px block - ensure 1col */
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  /* ナビ高さ縮小 */
+  .nav {
+    height: 56px;
+  }
+
+  /* hero title */
+  .hero__title {
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+  }
+  .hero__desc {
+    font-size: 0.82rem;
+  }
+
+  /* section label */
+  .section-label {
+    font-size: 0.65rem;
+  }
+
+  /* stat 数字 */
+  .stat__number {
+    font-size: 2rem;
+  }
+
+  /* btn full width always on tiny screens */
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* footer inner spacing */
+  .footer__inner {
+    gap: 28px;
+  }
+
+  /* page-hero height */
+  .page-hero {
+    height: 220px;
+  }
+}
