@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="テキカク不動産（FJキャピタル株式会社）の採用情報。不動産買取営業の正社員を募集中。未経験歓迎・宅建士資格者優遇。">
+  <title>採用情報｜テキカク不動産</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .recruit-message {
+      padding: 80px 40px;
+      text-align: center;
+      background: var(--color-gray-light);
+    }
+
+    .recruit-message__title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .recruit-message__desc {
+      font-size: 0.95rem;
+      color: var(--color-gray);
+      line-height: 1.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .appeal-card {
+      background: var(--color-white);
+      border-radius: 8px;
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .appeal-card__icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .appeal-card__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .appeal-card__text {
+      font-size: 0.85rem;
+      color: var(--color-gray);
+      line-height: 1.8;
+    }
+
+    .cta-section {
+      background: var(--color-primary);
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .cta-section__title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .cta-section__desc {
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+
+    .cta-section__btns {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .recruit-message {
+        padding: 56px 20px;
+      }
+      .cta-section {
+        padding: 64px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav class="nav nav--page" id="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="nav__logo-main">テキカク不動産</span>
+      <span class="nav__logo-sub">FJキャピタル株式会社</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="service.html" class="nav__link">サービス</a></li>
+      <li><a href="company.html" class="nav__link">会社概要</a></li>
+      <li><a href="recruit.html" class="nav__link">採用情報</a></li>
+      <li><a href="contact.html" class="nav__link">お問い合わせ</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:0367666178" class="nav__tel">
+        <span>無料査定受付</span>
+        03-6766-6178
+      </a>
+      <a href="contact.html" class="nav__cta">無料査定を依頼</a>
+    </div>
+    <button class="nav__hamburger" aria-label="メニューを開く">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav__mobile">
+    <a href="service.html" class="nav__mobile-link">サービス</a>
+    <a href="company.html" class="nav__mobile-link">会社概要</a>
+    <a href="recruit.html" class="nav__mobile-link">採用情報</a>
+    <a href="contact.html" class="nav__mobile-link">お問い合わせ</a>
+    <p class="nav__mobile-tel">📞 03-6766-6178</p>
+    <a href="contact.html" class="nav__mobile-cta">無料査定を依頼する</a>
+  </div>
+
+  <main>
+
+    <!-- ページヒーロー -->
+    <div class="page-hero">
+      <!-- ※実際のオフィス・社員写真に差し替えてください -->
+      <img
+        class="page-hero__bg"
+        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&auto=format&fit=crop"
+        alt="チームワークのイメージ写真"
+        width="1600"
+        height="900"
+        loading="eager"
+      >
+      <div class="page-hero__content">
+        <div class="page-hero__en">Recruit</div>
+        <div class="page-hero__ja">採用情報</div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         採用メッセージ
+         ============================================ -->
+    <section class="recruit-message">
+      <div data-fade>
+        <h2 class="recruit-message__title">
+          不動産の可能性を、<br>
+          一緒に広げていきましょう。
+        </h2>
+        <p class="recruit-message__desc">
+          テキカク不動産では、「訳あり物件」という社会的な課題に取り組む仲間を募集しています。
+          不動産の問題で困っているお客様を助けながら、自分自身も成長できる環境がここにあります。
+          未経験でも、やる気があれば大歓迎です。
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         仕事の魅力
+         ============================================ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">Why Us</p>
+          <h2 class="section-title section-title--center">テキカク不動産で働く魅力</h2>
+        </div>
+        <div class="grid-3">
+          <div class="appeal-card" data-fade>
+            <span class="appeal-card__icon">📈</span>
+            <div class="appeal-card__title">成長機会</div>
+            <p class="appeal-card__text">
+              複雑な訳あり物件を扱うことで、一般の不動産会社では得られない高度な知識・スキルが身につきます。
+              宅建士取得支援など資格サポートも充実。
+            </p>
+          </div>
+          <div class="appeal-card" data-fade>
+            <span class="appeal-card__icon">🤝</span>
+            <div class="appeal-card__title">チームワーク</div>
+            <p class="appeal-card__text">
+              8名の少数精鋭チームで、全員がお互いをサポートする文化があります。
+              困ったときはすぐに相談できる、アットホームな職場環境です。
+            </p>
+          </div>
+          <div class="appeal-card" data-fade>
+            <span class="appeal-card__icon">🌏</span>
+            <div class="appeal-card__title">社会貢献</div>
+            <p class="appeal-card__text">
+              不動産の問題で悩むお客様を直接救う仕事です。
+              成約のたびにお客様から感謝の声をいただける、やりがいのある仕事です。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         募集要項
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Job Description</p>
+          <h2 class="section-title">募集要項</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;" data-fade>
+          <div style="background:var(--color-white);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow-sm);border-left:5px solid var(--color-primary);">
+            <div style="font-size:0.7rem;font-weight:700;color:var(--color-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">職種 / 雇用形態</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-bottom:6px;">不動産買取営業</div>
+            <div style="font-size:0.88rem;color:var(--color-gray);">正社員</div>
+          </div>
+          <div style="background:var(--color-white);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow-sm);border-left:5px solid var(--color-primary);">
+            <div style="font-size:0.7rem;font-weight:700;color:var(--color-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">給与</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-bottom:6px;">月給 250,000円〜</div>
+            <div style="font-size:0.88rem;color:var(--color-gray);">経験・能力による。各種手当・インセンティブ制度あり</div>
+          </div>
+          <div style="background:var(--color-white);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow-sm);border-left:5px solid var(--color-primary);">
+            <div style="font-size:0.7rem;font-weight:700;color:var(--color-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">勤務地 / 時間</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-bottom:6px;">東京都港区虎ノ門（本社）</div>
+            <div style="font-size:0.88rem;color:var(--color-gray);">9:00〜18:00（休憩1時間）※全国出張あり</div>
+          </div>
+          <div style="background:var(--color-white);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow-sm);border-left:5px solid var(--color-primary);">
+            <div style="font-size:0.7rem;font-weight:700;color:var(--color-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">休日・休暇</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-bottom:6px;">週休2日制（土日祝休み）</div>
+            <div style="font-size:0.88rem;color:var(--color-gray);">有給休暇・慶弔休暇・夏季休暇・年末年始休暇</div>
+          </div>
+          <div style="background:var(--color-white);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow-sm);border-left:5px solid var(--color-primary);">
+            <div style="font-size:0.7rem;font-weight:700;color:var(--color-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">福利厚生</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-bottom:6px;">社会保険完備・交通費全額支給</div>
+            <div style="font-size:0.88rem;color:var(--color-gray);">資格取得支援制度（宅建士・不動産鑑定士など）・社員研修制度</div>
+          </div>
+          <div style="background:var(--color-white);border-radius:8px;padding:24px 28px;box-shadow:var(--shadow-sm);border-left:5px solid var(--color-primary);">
+            <div style="font-size:0.7rem;font-weight:700;color:var(--color-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">応募資格 / 選考</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-bottom:6px;">学歴・経験不問（宅建士資格者優遇）</div>
+            <div style="font-size:0.88rem;color:var(--color-gray);">書類選考 → 面接（1〜2回）→ 内定</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <p class="section-label" style="color:rgba(255,255,255,0.7);text-align:center;margin-bottom:12px;">Apply</p>
+      <h2 class="cta-section__title">ご応募・お問い合わせはこちら</h2>
+      <p class="cta-section__desc">
+        採用に関するご質問もお気軽にどうぞ。<br>
+        お問い合わせフォームの「お問い合わせ内容」に「採用応募」とご記入ください。
+      </p>
+      <div class="cta-section__btns">
+        <a href="contact.html" class="btn btn--dark btn--lg">応募・お問い合わせフォーム</a>
+        <a href="tel:0367666178" class="btn btn--outline-white btn--lg">03-6766-6178</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">テキカク不動産</div>
+        <div class="footer__brand-sub">FJキャピタル株式会社</div>
+        <div class="footer__info">
+          <p>
+            〒105-0001<br>
+            東京都港区虎ノ門5-3-21 AUBE虎ノ門<br>
+            TEL: 03-6766-6178 / 070-4003-4882<br>
+            FAX: (050) 3172-7493<br>
+            営業時間: 7:00〜24:00（年中無休）
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class="footer__nav-title">Navigation</div>
+        <ul class="footer__nav-list">
+          <li><a href="index.html">トップ</a></li>
+          <li><a href="service.html">サービス</a></li>
+          <li><a href="company.html">会社概要</a></li>
+          <li><a href="recruit.html">採用情報</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__nav-title">Service</div>
+        <ul class="footer__nav-list">
+          <li><a href="service.html">訳あり物件買取</a></li>
+          <li><a href="service.html">再建築不可物件</a></li>
+          <li><a href="service.html">事故物件</a></li>
+          <li><a href="service.html">ゴミ屋敷・特殊清掃</a></li>
+          <li><a href="service.html">共有持分・底地</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__license">
+        <span>宅建業: 東京都知事（１）109938</span>
+        <span>古物商: 第30112 211 7418</span>
+        <span>加盟: 公社)全日本不動産協会</span>
+      </div>
+      <div>&copy; 2024 FJキャピタル株式会社 All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <!-- フローティングLINEボタン -->
+  <a href="https://line.me/ti/p/XFc7uer5NW" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#06C755;color:white;border-radius:50px;padding:14px 22px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(6,199,85,0.4);text-decoration:none;" aria-label="LINEで無料相談"><svg width="24" height="24" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.95 4 4 11.82 4 21.5c0 5.85 3.5 11.03 8.9 14.24-.35 1.3-1.25 4.72-1.43 5.46-.22.9.33 1.06.7.77.3-.22 4.8-3.27 6.74-4.6A22.7 22.7 0 0024 39c11.05 0 20-7.82 20-17.5S35.05 4 24 4z"/></svg>LINE無料相談</a>
+  <script src="js/main.js"></script>
+</body>
+</html>

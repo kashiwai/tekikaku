@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+.AppleDouble
+
+# Screenshot/preview images (dev only)
+*.png
+screenshots/
+chk_*.png
+prev_*.png
+prev2_*.png
+final_*.png
+preview_section*.png
+vp_*.png
+test_photo*.png
+
+# AI Designer
+.aidesigner/
+
+# Data directory (if local only)
+data/
