@@ -1,0 +1,86 @@
+scene_template:
+  id: cosmetics_reel_v1
+  name: "コスメリール型 v1"
+  category: "コスメ"
+  total_duration: 30
+  resolution: "1080x1920"
+
+scenes:
+  - id: 1
+    name: "フック"
+    duration: 2
+    material_folder: "scene1"
+    material_type: "video"
+    zoom_effect: "zoom_in"
+    caption_position: "center"
+    caption_size: "large"
+    caption_style: "impact"
+
+  - id: 2
+    name: "悩み提示"
+    duration: 4
+    material_folder: "scene2"
+    material_type: "image"
+    zoom_effect: "static"
+    caption_position: "bottom"
+    caption_size: "medium"
+    caption_style: "normal"
+
+  - id: 3
+    name: "商品紹介"
+    duration: 5
+    material_folder: "scene3"
+    material_type: "image"
+    zoom_effect: "zoom_in_slow"
+    caption_position: "bottom"
+    caption_size: "medium"
+    caption_style: "normal"
+
+  - id: 4
+    name: "使用方法"
+    duration: 6
+    material_folder: "scene4"
+    material_type: "video"
+    zoom_effect: "slide_left"
+    caption_position: "bottom"
+    caption_size: "medium"
+    caption_style: "normal"
+
+  - id: 5
+    name: "Before/After"
+    duration: 6
+    material_folder: "scene5"
+    material_type: "image"
+    zoom_effect: "static"
+    caption_position: "top"
+    caption_size: "medium"
+    caption_style: "comparison"
+
+  - id: 6
+    name: "価格・特徴"
+    duration: 4
+    material_folder: "scene6"
+    material_type: "image"
+    zoom_effect: "zoom_in_slow"
+    caption_position: "center"
+    caption_size: "small"
+    caption_style: "list"
+
+  - id: 7
+    name: "CTA"
+    duration: 3
+    material_folder: "scene7"
+    material_type: "image"
+    zoom_effect: "static"
+    caption_position: "center"
+    caption_size: "large"
+    caption_style: "cta"
+
+bgm:
+  volume: 0.15
+  folder: "./materials/bgm"
+  random: true
+
+narration:
+  volume: 1.0
+  speed: 1.1

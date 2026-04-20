@@ -1,0 +1,33 @@
+{
+  "name": "snsmkplan",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "run": "bun index.ts run",
+    "dry-run": "bun index.ts dry-run",
+    "analyze": "bun index.ts analyze",
+    "schedule": "bun index.ts schedule",
+    "dev": "bun --watch index.ts schedule"
+  },
+  "devDependencies": {
+    "@remotion/renderer": "^4.0.448",
+    "@types/axios": "^0.14.4",
+    "@types/bun": "latest",
+    "@types/node-cron": "^3.0.11",
+    "remotion": "^4.0.448"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
+    "@slack/web-api": "^7.15.1",
+    "@slack/webhook": "^7.0.9",
+    "axios": "^1.15.1",
+    "dotenv": "^17.4.2",
+    "form-data": "^4.0.5",
+    "node-cron": "^4.2.1",
+    "yaml": "^2.8.3"
+  }
+}

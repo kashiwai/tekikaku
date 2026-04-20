@@ -1,0 +1,28 @@
+products:
+  - id: cosme_001
+    name: "モイスチャーエッセンス"
+    category: "コスメ"
+    price: 3980
+    affiliate_url: "https://example.com/affiliate/cosme001"
+    reward: 518
+    description: "乾燥肌に悩む20-30代女性向けの美容液。保湿力が高く、1週間で肌の変化を実感できると口コミ多数。"
+    target_audience: "乾燥肌・ゆらぎ肌の20代〜40代女性"
+    keywords:
+      - "保湿"
+      - "美容液"
+      - "乾燥肌"
+      - "スキンケア"
+    hashtags:
+      instagram:
+        - "#スキンケア"
+        - "#美容液"
+        - "#保湿ケア"
+        - "#乾燥肌"
+        - "#美肌"
+        - "#コスメ好き"
+      tiktok:
+        - "#スキンケア"
+        - "#美容液"
+        - "#保湿"
+        - "#美肌"
+    active: true

@@ -1,0 +1,144 @@
+templates:
+  - id: pattern_a
+    name: "悩み解決型"
+    scenes:
+      1:
+        narration: "えっ、これ知らないの？乾燥肌が一瞬で変わる美容液"
+        caption: "えっ、これ\n知らないの？"
+      2:
+        narration: "毎朝起きるたびに感じる、あの肌のつっぱり感。もう嫌になりませんか？"
+        caption: "朝の\nつっぱり感\nもう嫌じゃない？"
+      3:
+        narration: "そんな悩みを解決してくれたのが、{product_name}です"
+        caption: "{product_name}\nがすごかった"
+      4:
+        narration: "使い方はとっても簡単。洗顔後に2〜3プッシュして、顔全体になじませるだけ"
+        caption: "洗顔後に\n2〜3プッシュ\nするだけ！"
+      5:
+        narration: "使い始めて1週間。肌のトーンが明らかに変わりました"
+        caption: "1週間後\nトーンが\n変わった..."
+      6:
+        narration: "しかも今なら特別価格で購入できます。詳しくはプロフィールのリンクから"
+        caption: "今なら\n特別価格！\nプロフのリンクから"
+      7:
+        narration: "プロフィールのリンクから詳細を見てみてください"
+        caption: "プロフィール\nのリンクを\nチェック！"
+    caption_instagram: |
+      乾燥肌に悩む方必見🌿
+      {product_name}を使って1週間で肌が変わりました✨
+
+      詳しくはプロフのリンクから👇
+
+      {hashtags}
+    caption_tiktok: |
+      乾燥肌が1週間で変わった美容液🌿{product_name}
+      プロフのリンクから詳細チェック！
+      {hashtags}
+
+  - id: pattern_b
+    name: "驚き発見型"
+    scenes:
+      1:
+        narration: "ドラッグストアで見つけた神アイテム、これやばすぎる"
+        caption: "ドラッグストアで\n見つけた\n神アイテム"
+      2:
+        narration: "正直半信半疑で買ったんですが、想像の3倍よかったです"
+        caption: "半信半疑で\n買ったけど\n想像の3倍よかった"
+      3:
+        narration: "{product_name}という美容液なんですけど"
+        caption: "{product_name}\nが予想外に\nよかった話"
+      4:
+        narration: "テクスチャーがとろっとしていて、伸びが抜群。肌にすっと入っていく感覚です"
+        caption: "とろっとした\nテクスチャーが\n気持ちいい..."
+      5:
+        narration: "使い続けたら毛穴も目立たなくなってきて、すっぴん肌に自信が出てきました"
+        caption: "毛穴が\n目立たなく\nなってきた！"
+      6:
+        narration: "値段も手頃なのにこのクオリティは本当にコスパ最強です"
+        caption: "このコスパは\n反則すぎる"
+      7:
+        narration: "気になる方はプロフィールのリンクから見てみてください"
+        caption: "詳細は\nプロフの\nリンクから"
+    caption_instagram: |
+      ドラッグストアで発見した神コスメ✨
+      {product_name}のコスパが最強すぎた🥺
+
+      プロフのリンクから詳細チェック👇
+
+      {hashtags}
+    caption_tiktok: |
+      コスパ最強コスメ発見🔥{product_name}
+      プロフリンクから詳細！
+      {hashtags}
+
+  - id: pattern_c
+    name: "比較型"
+    scenes:
+      1:
+        narration: "高い美容液はもう買わなくていい。これで十分すぎる"
+        caption: "高い美容液は\nもう買わなく\nていい理由"
+      2:
+        narration: "有名ブランドの高級美容液を使っていたんですが、正直そこまで差を感じなかった"
+        caption: "高級品と\n比べてみた\n結果..."
+      3:
+        narration: "それが{product_name}を使ったら、もう戻れなくなりました"
+        caption: "{product_name}で\n高級品に\n戻れなくなった"
+      4:
+        narration: "成分をよく見ると、美容液に必要なものがしっかり配合されていて納得の品質"
+        caption: "成分が\n高級品と\nほぼ同じ..."
+      5:
+        narration: "実際に使い比べてみると、保湿力は正直こっちの方が上かもしれない"
+        caption: "保湿力は\nこっちの方が\n上かも？"
+      6:
+        narration: "価格は高級品の4分の1以下。これは使わない理由がないです"
+        caption: "価格は\n高級品の\n1/4以下！"
+      7:
+        narration: "プロフィールのリンクから購入できます"
+        caption: "プロフの\nリンクから\n購入できます"
+    caption_instagram: |
+      高級美容液と比べてみた🧪
+      {product_name}の保湿力が想像以上だった件💦
+
+      プロフのリンクから詳細チェック👇
+
+      {hashtags}
+    caption_tiktok: |
+      高級品vs{product_name}比較してみた結果🧪
+      プロフリンクから！
+      {hashtags}
+
+  - id: pattern_d
+    name: "日常系"
+    scenes:
+      1:
+        narration: "毎日のスキンケアに追加したら人生変わった話"
+        caption: "毎日のスキンケアに\n追加したら\n人生変わった"
+      2:
+        narration: "もともと面倒くさがりでスキンケアをサボりがちだったんですが"
+        caption: "スキンケア\nサボりがちな\n私が..."
+      3:
+        narration: "{product_name}を使い始めてから、スキンケアが楽しくなりました"
+        caption: "{product_name}で\nスキンケアが\n楽しくなった"
+      4:
+        narration: "朝の洗顔後に1プロセス追加するだけで、1日中肌がしっとり"
+        caption: "1プロセス\n追加するだけで\n1日中しっとり"
+      5:
+        narration: "3週間で肌の調子が明らかによくなって、友達にも何使ってるの？って聞かれました"
+        caption: "3週間で\n友達に\n何使ってる？と聞かれた"
+      6:
+        narration: "続けやすい価格なので毎月買い続けられるのも嬉しいポイント"
+        caption: "続けやすい\n価格なのも\n嬉しい"
+      7:
+        narration: "詳しくはプロフィールのリンクから確認してみてください"
+        caption: "詳細は\nプロフの\nリンクから"
+    caption_instagram: |
+      スキンケアサボりがちだった私が変わった理由🌸
+      {product_name}を使い始めて3週間✨
+
+      プロフのリンクから詳細チェック👇
+
+      {hashtags}
+    caption_tiktok: |
+      サボりがち女子のスキンケア改革🌸{product_name}
+      プロフリンクから！
+      {hashtags}
