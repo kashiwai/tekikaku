@@ -67,10 +67,14 @@ cp .env.example .env
 - `TTS_PROVIDER` + 対応するAPIキー
 - `SLACK_WEBHOOK_URL` — 通知用
 
-投稿する場合:
-- `INSTAGRAM_ACCESS_TOKEN` + `INSTAGRAM_ACCOUNT_ID`
-- `TIKTOK_ACCESS_TOKEN` + `TIKTOK_OPEN_ID`
-- `VIDEO_UPLOAD_URL` — 動画を公開URLに変換するエンドポイント（S3等）
+投稿する場合（snsautodash.biz）:
+- `SNSAUTODASH_EMAIL` — snsautodash.biz のログインメール
+- `SNSAUTODASH_PASSWORD` — snsautodash.biz のパスワード
+- `SNSAUTODASH_URL` — デフォルト `https://snsautodash.biz`
+
+snsautodash.biz は自前のSNS管理システム（Manus上で開発）。
+`mediaUpload.upload` tRPC でBase64動画をアップロード、`mediaUpload.postNow` で即時投稿。
+内部で LateAPI 経由でInstagram/TikTok/X に実際に投稿される。
 
 ### 2. 商品登録
 

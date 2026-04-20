@@ -1,29 +1,22 @@
-import { postToInstagram } from "../social/instagram.ts";
-import { postToTikTok } from "../social/tiktok.ts";
+import { postViaSnsautodash } from "../social/snsautodash.ts";
 import type { PostResult } from "../config/types.ts";
 import type { PostTexts } from "./post-text-generator.ts";
 
 export async function autoPost(
   videoPath: string,
   postTexts: PostTexts,
-  platforms: Array<"instagram" | "tiktok"> = ["instagram", "tiktok"],
+  platforms: Array<"instagram" | "tiktok" | "x"> = ["instagram", "tiktok"],
 ): Promise<PostResult[]> {
-  const results: PostResult[] = [];
+  try {
+    const caption = postTexts.instagram;
+    const hashtagMatch = caption.match(/(#\S+(\s+#\S+)*)\s*$/);
+    const hashtags = hashtagMatch ? hashtagMatch[0].trim() : "";
+    const captionBody = hashtagMatch ? caption.slice(0, hashtagMatch.index).trim() : caption;
 
-  for (const platform of platforms) {
-    try {
-      let result: PostResult;
-      if (platform === "instagram") {
-        result = await postToInstagram(videoPath, postTexts.instagram);
-      } else {
-        result = await postToTikTok(videoPath, postTexts.tiktok);
-      }
-      results.push(result);
-      await new Promise((r) => setTimeout(r, 3000));
-    } catch (e) {
-      console.error(`[自動投稿] ${platform} 投稿エラー:`, e);
-    }
+    const results = await postViaSnsautodash(videoPath, captionBody, hashtags, platforms);
+    return results;
+  } catch (e) {
+    console.error("[自動投稿] 投稿エラー:", e);
+    return [];
   }
-
-  return results;
 }
