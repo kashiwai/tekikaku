@@ -391,6 +391,9 @@
 
       /* ヒーローバッジ: 2列グリッドに */
       .hero-badges { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+
+      /* LPバナー: スマホは縦並び */
+      .lp-banner-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -521,9 +524,7 @@
           <div style="text-align:center;flex-shrink:0;">
             <div style="background:white;border-radius:12px;padding:20px 24px;display:inline-block;">
               <img src="images/fj-capital-logo.png" alt="FJキャピタル" style="width:140px;height:auto;display:block;margin-bottom:12px;">
-              <div style="font-size:0.72rem;color:#888;margin-bottom:4px;">代表取締役</div>
-              <div style="font-size:0.92rem;font-weight:800;color:#1a1a1a;">藤原　彬晃</div>
-              <div style="display:inline-block;background:#F87A2D;color:white;font-size:0.68rem;font-weight:700;padding:3px 12px;border-radius:20px;margin-top:8px;">公認会計士</div>
+              <div style="display:inline-block;background:#F87A2D;color:white;font-size:0.68rem;font-weight:700;padding:3px 12px;border-radius:20px;margin-top:4px;">公認会計士が代表</div>
             </div>
           </div>
         </div>
@@ -969,8 +970,7 @@
             <!-- 公認会計士カード -->
             <div style="background:var(--color-primary);border-radius:8px;padding:24px 28px;">
               <div style="font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:10px;">Business Owner / CPA</div>
-              <div style="font-size:1.15rem;font-weight:800;color:white;margin-bottom:6px;">藤原　彬晃</div>
-              <div style="display:inline-block;background:white;color:var(--color-primary);font-size:0.72rem;font-weight:800;padding:3px 12px;border-radius:20px;margin-bottom:14px;">公認会計士</div>
+              <div style="display:inline-block;background:white;color:var(--color-primary);font-size:0.72rem;font-weight:800;padding:3px 12px;border-radius:20px;margin-bottom:14px;">公認会計士が代表</div>
               <p style="font-size:0.85rem;color:rgba(255,255,255,0.9);line-height:1.9;margin:0;">
                 公認会計士として税務・会計処理を直接監修。売却価格の提示と同時に、譲渡所得税の試算・節税スキームをご提案します。「売った後どうなるか」まで責任を持ってサポートします。
               </p>
@@ -1200,6 +1200,48 @@
         </div>
         <div style="text-align:center;margin-top:32px;">
           <a href="articles/" class="btn btn--dark">すべての記事を見る（30本+）</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         LP バナー
+         ============================================ -->
+    <section class="section section--gray">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="section-label">Special Page</p>
+          <h2 class="section-title section-title--center">特集ページをご覧ください</h2>
+          <p class="section-desc section-desc--center">訳あり物件のお悩み別に、詳しい解説・実績・査定フォームをご用意しています。</p>
+        </div>
+        <div class="lp-banner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto;">
+
+          <!-- LP01 バナー -->
+          <a href="/lp01/" style="text-decoration:none;display:block;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.12);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(248,122,45,0.25)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.12)'">
+            <div style="background:#1a1a1a;padding:32px 28px 0;">
+              <div style="display:inline-block;background:#F87A2D;color:white;font-size:0.68rem;font-weight:700;padding:4px 12px;border-radius:2px;letter-spacing:0.1em;margin-bottom:14px;">訳あり物件 高価買取</div>
+              <div style="font-size:1.35rem;font-weight:800;color:white;line-height:1.4;margin-bottom:10px;">事故物件・再建築不可<br>どんな訳あり物件でも<br><span style="color:#F87A2D;">高価買取します</span></div>
+              <div style="color:rgba(255,255,255,0.7);font-size:0.82rem;line-height:1.7;margin-bottom:24px;">仲介手数料0円・最短翌日現金化<br>公認会計士が代表の安心対応</div>
+            </div>
+            <div style="background:#F87A2D;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="color:white;font-weight:800;font-size:0.95rem;">無料査定はこちら</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+
+          <!-- LP02 バナー -->
+          <a href="/lp02/" style="text-decoration:none;display:block;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.12);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(248,122,45,0.25)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.12)'">
+            <div style="background:#fff8f5;padding:32px 28px 0;border:2px solid #F87A2D;border-bottom:none;">
+              <div style="display:inline-block;background:#1a1a1a;color:white;font-size:0.68rem;font-weight:700;padding:4px 12px;border-radius:2px;letter-spacing:0.1em;margin-bottom:14px;">公認会計士が代表</div>
+              <div style="font-size:1.35rem;font-weight:800;color:#1a1a1a;line-height:1.4;margin-bottom:10px;">税務まで<span style="color:#F87A2D;">一気通貫</span>で<br>サポートします</div>
+              <div style="color:#666;font-size:0.82rem;line-height:1.7;margin-bottom:24px;">売却後の譲渡所得税・節税・<br>確定申告まで専門家が対応</div>
+            </div>
+            <div style="background:#1a1a1a;border:2px solid #F87A2D;border-top:none;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 12px 12px;">
+              <span style="color:white;font-weight:800;font-size:0.95rem;">詳しい説明を見る</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+
         </div>
       </div>
     </section>
