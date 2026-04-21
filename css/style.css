@@ -1182,6 +1182,85 @@ textarea.form-control {
 }
 
 /* ============================================
+   監修者ボックス（全記事共通）
+   ============================================ */
+.supervisor-box {
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 48px 0 32px;
+  background: #fafafa;
+}
+
+.supervisor-box__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.supervisor-box__badge {
+  flex-shrink: 0;
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+.supervisor-box__logo {
+  flex-shrink: 0;
+}
+
+.supervisor-box__logo img {
+  width: 56px;
+  height: auto;
+  display: block;
+}
+
+.supervisor-box__meta {
+  flex: 1;
+}
+
+.supervisor-box__name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.supervisor-box__title {
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.supervisor-box__license {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.supervisor-box__comment {
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.9;
+}
+
+@media (max-width: 768px) {
+  .supervisor-box {
+    padding: 18px 16px;
+  }
+  .supervisor-box__logo img {
+    width: 44px;
+  }
+}
+
+/* ============================================
    スマホ追加対応 (全ページ共通)
    ============================================ */
 @media (max-width: 768px) {
