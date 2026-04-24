@@ -16,9 +16,11 @@ import { editVideo } from "./agents/video-editor.ts";
 import { autoPost } from "./agents/auto-poster.ts";
 import { analyzeAndSuggest } from "./agents/improvement-suggester.ts";
 import { notifyPostComplete, notifyError } from "./notification/slack.ts";
+import { setupMaterialsFromUrl } from "./utils/product-scraper.ts";
 import type { PostResult } from "./config/types.ts";
 
 const OUTPUT_DIR = process.env.OUTPUT_DIR ?? "./output";
+const MATERIALS_DIR = process.env.MATERIALS_DIR ?? "./materials";
 const VIDEOS_PER_DAY = parseInt(process.env.VIDEOS_PER_DAY ?? "3", 10);
 const PLATFORMS = (process.env.PLATFORMS ?? "instagram,tiktok").split(",") as Array<"instagram" | "tiktok">;
 const DRY_RUN = process.env.DRY_RUN === "true";
@@ -63,6 +65,11 @@ export async function runPipeline(count = VIDEOS_PER_DAY): Promise<void> {
       const captionTemplate = selectCaptionTemplate(captionTemplates, state.used_template_ids);
 
       console.log(`[設定] 商品: ${product.name} / テンプレート: ${captionTemplate.name}`);
+
+      // 商品画像を自動取得（affiliate_urlから）
+      if (product.affiliate_url && !product.affiliate_url.includes("example.com")) {
+        await setupMaterialsFromUrl(product.affiliate_url, MATERIALS_DIR);
+      }
 
       // 台本作成
       const script = await createScript(product, captionTemplate);
