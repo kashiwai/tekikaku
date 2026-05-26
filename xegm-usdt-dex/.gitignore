@@ -1,0 +1,14 @@
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/.env
+contracts/broadcast/*/31337/
+
+# Next.js
+frontend/.next/
+frontend/node_modules/
+frontend/.env.local
+
+# macOS
+.DS_Store
+data/
