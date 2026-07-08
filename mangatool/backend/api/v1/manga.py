@@ -202,12 +202,24 @@ async def _stage_script_task(
                     f"前作の続きとして自然につながる新しいエピソードを作ってください。"
                 )
 
+        # 進捗コールバック（スクリプト生成中の進捗表示）
+        async def progress_callback(percent):
+            progress_data = {"status": "generating_script", "progress": percent}
+            await _save_manga_field(manga_id, script_data=progress_data)
+            print(f"[{manga_id}] 台本生成進度: {percent}%")
+
         script = await gpt_service.generate_script(
             story_input=story_input,
             num_pages=num_pages,
             style=style,
             language=data["language"] or language,
+            progress_callback=progress_callback,
         )
+
+        # エラーチェック
+        if not script or script.get("error"):
+            raise Exception(f"台本生成失敗: {script.get('error', '不明なエラー')}")
+
         # 続き作成時は前作のキャラクター定義を引き継ぐ (見た目の一貫性)
         if prev_characters:
             existing = {c.get("name") for c in script.get("characters", [])}
@@ -229,15 +241,39 @@ async def _stage_script_task(
 
 
 async def _stage_storyboard_task(manga_id: str, style: str):
-    """段階2: コマ割り生成タスク"""
+    """段階2: コマ割り生成タスク（進捗表示付き）"""
     data = await _load_manga(manga_id)
     if not data or not data["script_data"]:
         return
+
+    # スクリプトデータが完成しているか確認（台本生成中の場合は待機）
+    script_data = data["script_data"]
+    if isinstance(script_data, dict) and script_data.get("status") == "generating_script":
+        print(f"[{manga_id}] 台本生成中のためコマ割り開始を遅延")
+        return
+
+    # エラーチェック
+    if isinstance(script_data, dict) and script_data.get("error"):
+        print(f"[{manga_id}] 台本生成エラー: {script_data.get('error')}")
+        return
+
     try:
+        # 進捗コールバック
+        async def progress_callback(percent):
+            progress_data = {"status": "generating_storyboard", "progress": percent}
+            await _save_manga_field(manga_id, storyboard_data=progress_data)
+            print(f"[{manga_id}] コマ割り生成進度: {percent}%")
+
         storyboard = await gpt_service.generate_storyboard(
             script_data=data["script_data"],
             style=style,
+            progress_callback=progress_callback,
         )
+
+        # エラーチェック
+        if not storyboard or storyboard.get("error"):
+            raise Exception(f"コマ割り生成失敗: {storyboard.get('error', '不明なエラー')}")
+
         await _save_manga_field(manga_id, storyboard_data=storyboard)
     except Exception as e:
         print(f"Error generating storyboard: {e}")
